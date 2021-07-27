@@ -77,17 +77,59 @@ namespace XmlExtensions
                 float xval2 = float.Parse(str2);
                 result = (xval1 / xval2).ToString();
             }
+            else if (operation == "/2")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = (xval2 / xval1).ToString();
+            }
             else if (operation == "-")
             {
                 float xval1 = float.Parse(str1);
                 float xval2 = float.Parse(str2);
                 result = (xval1 - xval2).ToString();
             }
+            else if (operation == "-2")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = (xval2 - xval1).ToString();
+            }
             else if (operation == "%")
             {
                 float xval1 = float.Parse(str1);
                 float xval2 = float.Parse(str2);
                 result = (xval1 % xval2).ToString();
+            }
+            else if (operation == "%2")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = (xval2 % xval1).ToString();
+            }
+            else if (operation == "^")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = Math.Pow(xval1, xval2).ToString();
+            }
+            else if (operation == "^2")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = Math.Pow(xval2, xval1).ToString();
+            }
+            else if (operation == "log")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = Math.Log(xval1, xval2).ToString();
+            }
+            else if (operation == "log2")
+            {
+                float xval1 = float.Parse(str1);
+                float xval2 = float.Parse(str2);
+                result = Math.Log(xval2, xval1).ToString();
             }
             else if (operation == "min")
             {
@@ -110,6 +152,10 @@ namespace XmlExtensions
             else if (operation == "concat")
             {
                 result = str1 + str2;
+            }
+            else if (operation == "concat2")
+            {
+                result = str2 + str1;
             }
             return result;
         }

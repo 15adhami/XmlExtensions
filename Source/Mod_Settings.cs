@@ -13,14 +13,16 @@ namespace XmlExtensions
         public Dictionary<string, bool> boolDict;
         public Dictionary<string, string> stringDict;
         public Dictionary<string, string> textDict;
+        public float testFloat = 2;
 
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref intDict, "intDict");
-            Scribe_Values.Look(ref floatDict, "floatDict");
-            Scribe_Values.Look(ref boolDict, "boolDict");
-            Scribe_Values.Look(ref stringDict, "stringDict");
-            Scribe_Values.Look(ref textDict, "textDict");
+            Scribe_Collections.Look(ref intDict, "intDict", LookMode.Value);
+            Scribe_Collections.Look(ref floatDict, "floatDict", LookMode.Value);
+            Scribe_Collections.Look(ref boolDict, "boolDict", LookMode.Value);
+            Scribe_Collections.Look(ref stringDict, "stringDict", LookMode.Value);
+            Scribe_Collections.Look(ref textDict, "textDict", LookMode.Value);
+            Scribe_Values.Look(ref testFloat, "textFloat");
             base.ExposeData();
         }
     }

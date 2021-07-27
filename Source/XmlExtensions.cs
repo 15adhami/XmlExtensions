@@ -12,12 +12,11 @@ namespace XmlExtensions
         public XmlExtensions(ModContentPack content) : base(content)
         {
             settings = GetSettings<Mod_Settings>();
-            typeof(XmlExtensions).GetMethod("").
         }
 
         public override string SettingsCategory()
         {
-            return "XmlExtensions";
+            return "XML Extensions";
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

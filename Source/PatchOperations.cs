@@ -6,8 +6,8 @@ namespace XmlExtensions
 {
     public class PatchOperationMath : PatchOperationPathed
     {
-        protected string value;
-        protected string type = "float";
+        //Make this an optional input (unary operations)
+        protected string value = "0";
         protected bool fromXml = false;
         protected string operation = "+";
 
