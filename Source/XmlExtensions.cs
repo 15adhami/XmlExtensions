@@ -8,14 +8,12 @@ namespace XmlExtensions
 { 
     public class XmlExtensions : Mod
     {
-        public Mod_Settings settings;
-        public Dictionary<string, Mod_Settings> modSettingsDict;
+
 
         public XmlExtensions(ModContentPack content) : base(content)
         {
             var harmony = new Harmony("Imranfish.XmlExtensions.patch");
             harmony.PatchAll();
-            settings = GetSettings<Mod_Settings>();
         }
 
         public override string SettingsCategory()
@@ -28,4 +26,6 @@ namespace XmlExtensions
            // settings.DoSettingsWindowContents(inRect);
         }
     }
+
+
 }

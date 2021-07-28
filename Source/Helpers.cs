@@ -32,6 +32,14 @@ namespace XmlExtensions
             return str.Replace(variable, val);
         }
 
+        public static XmlContainer substituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
+        {
+            string oldXml = container.node.OuterXml;
+            string newXml;
+            newXml = Helpers.substituteVariable(oldXml, var, val, brackets);
+            return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
+        }
+
         public static PatchOperation getPatchFromString(string str)
         {
             XmlDocument doc = new XmlDocument();
@@ -164,6 +172,15 @@ namespace XmlExtensions
         {
             string ans = "";
             return ans;
+        }
+
+        public static void runPatchesInXmlContainer(XmlContainer container, XmlDocument xml)
+        {
+            for (int j = 0; j < container.node.ChildNodes.Count; j++)
+            {
+                PatchOperation patch = Helpers.getPatchFromString(container.node.ChildNodes[j].OuterXml);
+                patch.Apply(xml);
+            }
         }
 
     }

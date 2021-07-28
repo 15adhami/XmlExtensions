@@ -27,28 +27,16 @@ namespace XmlExtensions
             {
                 newStr2 = xml.SelectSingleNode(this.value2).InnerXml;
             }
-            string oldXml = this.apply.node.OuterXml;
-            string newXml;
             if (value2 == "")
             {
-                newXml = Helpers.substituteVariable(oldXml, this.storeIn, newStr1, this.brackets);
-                XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-                for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
-                {
-                    PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                    patch.Apply(xml);
-                }
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
+                Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
             else
             {
                 string result = Helpers.operationOnString(newStr1, newStr2, this.operation);
-                newXml = Helpers.substituteVariable(oldXml, this.storeIn, result, this.brackets);
-                XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-                for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
-                {
-                    PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                    patch.Apply(xml);
-                }
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, result, this.brackets);
+                Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
             return true;
         }
@@ -108,16 +96,8 @@ namespace XmlExtensions
             {
                 newStr1 = sum.ToString();
             }
-            string oldXml = this.apply.node.OuterXml;
-            string newXml = Helpers.substituteVariable(oldXml, this.storeIn, newStr1, this.brackets);
-            XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-            for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
-            {
-                PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                patch.Apply(xml);
-            }
-
-
+            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
+            Helpers.runPatchesInXmlContainer(newContainer, xml);
             return result;
         }
     }
@@ -150,15 +130,32 @@ namespace XmlExtensions
             {
                 newStr = "true";
             }
-            string oldXml = this.apply.node.OuterXml;
-            string newXml;
-            newXml = Helpers.substituteVariable(oldXml, this.storeIn, newStr, this.brackets);
-            XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-            for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
+            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
+            Helpers.runPatchesInXmlContainer(newContainer, xml);
+            return true;
+        }
+    }
+
+    public class UseSetting : PatchOperation
+    {
+        protected string modId;
+        protected string key;
+        protected string brackets = "{}";
+        protected string defaultValue;
+        protected XmlContainer apply;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            string value;
+            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + "." + this.key, out value);
+            XmlContainer newContainer;
+            if (!didContain)
             {
-                PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                patch.Apply(xml);
+                value = defaultValue;
+                XmlMod.allSettings.dataDict.Add(this.modId + "." + this.key, defaultValue);
             }
+            newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
+            Helpers.runPatchesInXmlContainer(newContainer, xml);
             return true;
         }
     }

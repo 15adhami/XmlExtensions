@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Collections.Generic;
 using Verse;
 
 namespace XmlExtensions
@@ -19,26 +20,16 @@ namespace XmlExtensions
             {
                 for (int i = this.from; i < this.to; i += increment)
                 {
-                    string newXml = Helpers.substituteVariable(oldXml, this.storeIn, i.ToString(), this.brackets);
-                    XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-                    for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
-                    {
-                        PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                        patch.Apply(xml);
-                    }
+                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
+                    Helpers.runPatchesInXmlContainer(newContainer, xml);
                 }
             }
             else if (this.increment < 0)
             {
                 for (int i = this.from - 1; i >= this.to; i -= increment)
                 {
-                    string newXml = Helpers.substituteVariable(oldXml, this.storeIn, i.ToString(), this.brackets);
-                    XmlContainer newContainer = new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
-                    for (int j = 0; j < this.apply.node.ChildNodes.Count; j++)
-                    {
-                        PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[j].OuterXml);
-                        patch.Apply(xml);
-                    }
+                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
+                    Helpers.runPatchesInXmlContainer(newContainer, xml);
                 }
             }       
             return true;
@@ -53,20 +44,24 @@ namespace XmlExtensions
         protected int prefixLength = 2;
         protected override bool ApplyWorker(XmlDocument xml)
         {
-
+            if (XmlMod.allSettings.dataDict == null)
+            {
+                XmlMod.allSettings.dataDict = new Dictionary<string, string>();
+            }
+            //XmlMod.allSettings.dataDict.Add("key","value");
+            Log.Message(XmlMod.allSettings.testFloat.ToString());
+            if (XmlMod.allSettings.dataDict.Count >= 1)
+            {
+                Log.Message(XmlMod.allSettings.dataDict.TryGetValue<string, string>("key"));
+            }
             foreach (object obj in xml.SelectNodes(this.xpath))
             {
                 //Calculate prefix for variable
                 XmlNode xmlNode = obj as XmlNode;
                 string path = xmlNode.GetXPath();
                 string prefix = Helpers.getPrefix(path, prefixLength);
-                string temp = Helpers.substituteVariable(this.apply.node.OuterXml, storeIn, prefix, brackets);
-                XmlContainer newContainer = new XmlContainer() { node =  Helpers.getNodeFromString(temp)};
-                for (int i = 0; i < this.apply.node.ChildNodes.Count; i++)
-                {
-                    PatchOperation patch = Helpers.getPatchFromString(newContainer.node.ChildNodes[i].OuterXml);
-                    patch.Apply(xml);
-                }
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
+                Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
             return true;
         }
@@ -85,11 +80,7 @@ namespace XmlExtensions
             {
                 if (this.caseTrue != null)
                 {
-                    for (int i = 0; i < this.caseTrue.node.ChildNodes.Count; i++)
-                    {
-                        PatchOperation patch = Helpers.getPatchFromString(this.caseTrue.node.ChildNodes[i].OuterXml);
-                        patch.Apply(xml);
-                    }
+                    Helpers.runPatchesInXmlContainer(this.caseTrue, xml);
                     return true;
                 }
             }
@@ -97,12 +88,7 @@ namespace XmlExtensions
             {
                 if (this.caseFalse != null)
                 {
-                    for (int i = 0; i < this.caseFalse.node.ChildNodes.Count; i++)
-                    {
-                        PatchOperation patch = Helpers.getPatchFromString(this.caseFalse.node.ChildNodes[i].OuterXml);
-                        patch.Apply(xml);
-                    }
-                    return true;
+                    Helpers.runPatchesInXmlContainer(this.caseFalse, xml);
                 }
             }
                 return false;
