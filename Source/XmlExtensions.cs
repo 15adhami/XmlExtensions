@@ -1,6 +1,8 @@
 ﻿using Verse;
 using System.Xml;
 using System.Collections.Generic;
+using UnityEngine;
+using HarmonyLib;
 
 namespace XmlExtensions
 { 
@@ -11,6 +13,8 @@ namespace XmlExtensions
 
         public XmlExtensions(ModContentPack content) : base(content)
         {
+            var harmony = new Harmony("Imranfish.XmlExtensions.patch");
+            harmony.PatchAll();
             settings = GetSettings<Mod_Settings>();
         }
 
@@ -21,29 +25,7 @@ namespace XmlExtensions
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            settings.DoSettingsWindowContents(inRect);
+           // settings.DoSettingsWindowContents(inRect);
         }
-    }
-
-
-    public abstract class PatchOperationBoolean : PatchOperationPathed
-    {
-        public override string ToString()
-        {
-            return string.Format("{0}({1})", base.ToString(), this.xpath);
-        }
-
-        public bool evaluate(XmlDocument xml)
-        {
-            if (!this.valid)
-            {
-                this.flag = evaluation(xml);
-            }
-            return this.flag;
-        }
-
-        protected abstract bool evaluation(XmlDocument xml);
-        private bool valid = false;
-        protected bool flag = false;
     }
 }
