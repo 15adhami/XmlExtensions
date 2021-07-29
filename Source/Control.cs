@@ -44,16 +44,6 @@ namespace XmlExtensions
         protected int prefixLength = 2;
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (XmlMod.allSettings.dataDict == null)
-            {
-                XmlMod.allSettings.dataDict = new Dictionary<string, string>();
-            }
-            //XmlMod.allSettings.dataDict.Add("key","value");
-            Log.Message(XmlMod.allSettings.testFloat.ToString());
-            if (XmlMod.allSettings.dataDict.Count >= 1)
-            {
-                Log.Message(XmlMod.allSettings.dataDict.TryGetValue<string, string>("key"));
-            }
             foreach (object obj in xml.SelectNodes(this.xpath))
             {
                 //Calculate prefix for variable

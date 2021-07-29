@@ -136,27 +136,5 @@ namespace XmlExtensions
         }
     }
 
-    public class UseSetting : PatchOperation
-    {
-        protected string modId;
-        protected string key;
-        protected string brackets = "{}";
-        protected string defaultValue;
-        protected XmlContainer apply;
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            string value;
-            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + "." + this.key, out value);
-            XmlContainer newContainer;
-            if (!didContain)
-            {
-                value = defaultValue;
-                XmlMod.allSettings.dataDict.Add(this.modId + "." + this.key, defaultValue);
-            }
-            newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
-            Helpers.runPatchesInXmlContainer(newContainer, xml);
-            return true;
-        }
-    }
+    
 }

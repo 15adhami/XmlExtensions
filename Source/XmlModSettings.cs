@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
-using Verse;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace XmlExtensions
 {
-    public class XmlModSettings : ModSettings
+    public class XmlModSettings
     {
-        public Dictionary<string, string> dataDict;
-        public float testFloat = 2;
+        public List<string> stringKeys;
+
+        public string label;
+
+        public string modId;
         public XmlModSettings()
         {
-            dataDict = new Dictionary<string, string>();
+            this.stringKeys = new List<string>();
         }
-        public override void ExposeData()
+        public XmlModSettings(string modId)
         {
-            Scribe_Collections.Look(ref dataDict, "dataDict", LookMode.Value, LookMode.Value);
-            Scribe_Values.Look(ref testFloat, "testFloat");
-            base.ExposeData();
+            this.stringKeys = new List<string>();
+            this.modId = modId;
         }
     }
 }
