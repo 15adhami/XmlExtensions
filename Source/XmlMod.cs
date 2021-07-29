@@ -33,8 +33,9 @@ namespace XmlExtensions
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            Rect rect = inRect.RightPart(0.75f);
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
+            listingStandard.Begin(rect);
             List<KeyValuePair<string, string>> kvpList = allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             int num = kvpList.Count();
             List<bool> boolList = new List<bool>();
@@ -47,27 +48,13 @@ namespace XmlExtensions
             foreach(string modId in loadedXmlMods)
             {
                 listingStandard.Label(settingsPerMod[modId].label);
-                foreach (string keyVar in settingsPerMod[modId].stringKeys)
+                foreach (string key in settingsPerMod[modId].keys)
                 {
-                    string currStr = allSettings.dataDict[modId + "." + keyVar];
-                    allSettings.dataDict[modId+"."+keyVar] = listingStandard.TextEntryLabeled(keyVar, currStr);
+                    string currStr = allSettings.dataDict[modId+"."+key];
+                    allSettings.dataDict[modId + "." + key] = listingStandard.TextEntryLabeled(modId + "." + key, currStr);
                 }
             }                       
             listingStandard.End();
-            /*
-            foreach (string modId in loadedXmlMods)
-            {
-                foreach (string keyVar in settingsPerMod[modId].stringKeys)
-                {
-                    bool btemp = false;
-                    string currStr = allSettings.dataDict[modId + "." + keyVar];
-                    allSettings.dataDict[modId + "." + keyVar] = listingStandard.TextEntryLabeled(keyVar, currStr);
-                    listingStandard.CheckboxLabeled(keyVar, ref btemp);
-                    boolList[c] = btemp;
-                    c++;
-                }
-            }*/
-
             base.DoSettingsWindowContents(inRect);
         }
 	
@@ -107,12 +94,12 @@ namespace XmlExtensions
             if (!settingsPerMod.Keys.Contains<string>(modId))
             {
                 XmlModSettings t = new XmlModSettings(modId);
-                t.stringKeys.Add(key);
+                t.keys.Add(key);
                 settingsPerMod.Add(modId, t);
             }
             else
             {
-                settingsPerMod[modId].stringKeys.Add(key);
+                settingsPerMod[modId].keys.Add(key);
             }
         }
 
@@ -140,6 +127,11 @@ namespace XmlExtensions
             {
                 settingsPerMod[modId].label = label;
             }
+        }
+
+        public static void tryAddSettings(SettingContainer container, string modId)
+        {
+            settingsPerMod[modId].settings.Add(container);
         }
     }
 }

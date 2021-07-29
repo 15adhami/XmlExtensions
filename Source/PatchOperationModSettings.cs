@@ -39,12 +39,50 @@ namespace XmlExtensions
     {
         protected string modId;
         protected string label;
+        protected List<SettingContainer> settings;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.label);
+            foreach(SettingContainer setting in settings)
+            {
+                XmlMod.tryAddSettings(setting, modId);
+            }
             return true;
         }
+    }
+
+    public abstract class SettingContainer : XmlContainer
+    {
+        public string key;
+        public string label;
+        public string defaultValue;
+    }
+
+    public class Textbox : SettingContainer
+    {
+     
+    }
+
+    public class Text : SettingContainer
+    {
+
+    }
+
+    public class Checkbox : SettingContainer
+    {
+
+    }
+
+    public class Range : SettingContainer
+    {
+        public int defaultMin;
+        public int defaultMax;
+    }
+    public class Slider : SettingContainer
+    {
+        public int defaultMin;
+        public int defaultMax;
     }
 }

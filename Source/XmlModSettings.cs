@@ -7,18 +7,20 @@ namespace XmlExtensions
 {
     public class XmlModSettings
     {
-        public List<string> stringKeys;
-
+        public List<string> keys;
+        public List<SettingContainer> settings;
         public string label;
-
         public string modId;
+
         public XmlModSettings()
         {
-            this.stringKeys = new List<string>();
+            this.keys = new List<string>();
+            this.settings = new List<SettingContainer>();
         }
         public XmlModSettings(string modId)
         {
-            this.stringKeys = new List<string>();
+            this.keys = new List<string>();
+            this.settings = new List<SettingContainer>();
             this.modId = modId;
         }
     }
