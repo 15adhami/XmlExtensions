@@ -54,7 +54,6 @@
     <Compile Include="Data.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
-    <Compile Include="XmlModMetadata.cs" />
     <Compile Include="XmlModBaseSettings.cs" />
     <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationBoolean.cs" />
