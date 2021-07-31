@@ -6,7 +6,7 @@ using HarmonyLib;
 using System.Linq;
 
 namespace XmlExtensions
-{ 
+{
     public class XmlExtensions : Mod
     {
 
@@ -28,7 +28,7 @@ namespace XmlExtensions
             listingStandard.Begin(inRect);
             List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             int num = kvpList.Count();
-            foreach(KeyValuePair<string, string> pair in kvpList)
+            foreach (KeyValuePair<string, string> pair in kvpList)
             {
                 listingStandard.Label(pair.Key);
                 bool del = false;
