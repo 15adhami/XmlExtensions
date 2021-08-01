@@ -72,8 +72,8 @@ namespace XmlExtensions.Boolean
     {
         protected string value;
         protected string value2 = null;
-        protected string relation = "=";
-        protected string logic = "or";
+        protected string relation;
+        protected string logic = "and";
         protected string fromXml = "false";
         protected string isString = "false";
 
