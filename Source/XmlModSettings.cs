@@ -7,19 +7,42 @@ namespace XmlExtensions
 {
     public class XmlModSettings
     {
-        public List<string> stringKeys;
-
+        public List<string> keys;
+        public List<SettingContainer> settings;
+        public int defaultSpacing;
         public string label;
-
         public string modId;
+        public Dictionary<string, string> defValues;
+
         public XmlModSettings()
         {
-            this.stringKeys = new List<string>();
+            this.keys = new List<string>();
+            this.settings = new List<SettingContainer>();
+            defValues = new Dictionary<string, string>();
         }
         public XmlModSettings(string modId)
         {
-            this.stringKeys = new List<string>();
+            this.keys = new List<string>();
+            this.settings = new List<SettingContainer>();
             this.modId = modId;
+        }
+
+        public int calculateHeight()
+        {
+            int h = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                h += setting.getHeight();
+            }
+            return h;
+        }
+
+        public void resetSettings()
+        {
+            foreach (string key in keys)
+            {
+                XmlMod.allSettings.dataDict[modId + "." + key] = defValues[key];
+            }
         }
     }
 }
