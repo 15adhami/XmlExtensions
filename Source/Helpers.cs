@@ -67,7 +67,18 @@ namespace XmlExtensions
         {
             string result = "";
 
-            if (operation == "+")
+            if (operation == "negate")
+            {
+                if(str1 == "true")
+                {
+                    result = "false";
+                }
+                else
+                {
+                    result = "true";
+                }
+            }
+            else if (operation == "+")
             {
                 float xval1 = float.Parse(str1);
                 float xval2 = float.Parse(str2);

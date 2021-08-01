@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml;
 using Verse;
 
@@ -7,7 +8,7 @@ namespace XmlExtensions
     public class CreateVariable : PatchOperation
     {
         protected XmlContainer apply;
-        protected string storeIn = "var";
+        protected string storeIn;
         protected string brackets = "{}";
         protected string value = "";
         protected string value2 = "";
@@ -21,11 +22,11 @@ namespace XmlExtensions
             string newStr2 = this.value2;
             if (this.fromXml)
             {
-                newStr1 = xml.SelectSingleNode(this.value).InnerXml;
+                newStr1 = xml.SelectSingleNode(this.value).InnerText;
             }
             if (this.fromXml2)
             {
-                newStr2 = xml.SelectSingleNode(this.value2).InnerXml;
+                newStr2 = xml.SelectSingleNode(this.value2).InnerText;
             }
             if (value2 == "")
             {
@@ -45,9 +46,9 @@ namespace XmlExtensions
     public class CumulativeMath : PatchOperationPathed
     {
         protected XmlContainer apply;
-        protected string storeIn = "total";
+        protected string storeIn;
         protected string brackets = "{}";
-        protected string operation = "+";
+        protected string operation;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -58,6 +59,7 @@ namespace XmlExtensions
             string newStr1 = "";
             if (this.operation != "count")
             {
+                float m = float.Parse(XmlList[0].InnerText);
                 foreach (object obj in XmlList)
                 {
                     result = true;
@@ -74,18 +76,22 @@ namespace XmlExtensions
                     {
                         sum *= float.Parse(xmlNode.InnerText);
                     }
-                    else if (this.operation == "%")
-                    {
-                        sum %= float.Parse(xmlNode.InnerText);
-                    }
                     else if (this.operation == "average")
                     {
                         sum += float.Parse(xmlNode.InnerText) / n;
                     }
-                    else if (this.operation == "concat")
+                    else if (this.operation == "min")
                     {
-                        newStr1 += xmlNode.InnerText;
+                        m = Math.Min(m, float.Parse(xmlNode.InnerText));
                     }
+                    else if (this.operation == "max")
+                    {
+                        m = Math.Max(m, float.Parse(xmlNode.InnerText));
+                    }
+                }
+                if (this.operation == "min" || this.operation == "max")
+                {
+                    sum = m;
                 }
             }
             else
@@ -101,40 +107,5 @@ namespace XmlExtensions
             return result;
         }
     }
-
-    public class Negate : PatchOperation
-    {
-        protected XmlContainer apply;
-        protected string storeIn = "x";
-        protected string brackets = "{}";
-        protected string value = "1";
-        protected bool fromXml = true;
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            string newStr = this.value;
-            if (this.fromXml)
-            {
-                newStr = xml.SelectSingleNode(this.value).InnerXml;
-            }
-            float f;
-            if (float.TryParse(this.value, out f))
-            {
-                newStr = (-1 * f).ToString();
-            }
-            if (this.value == "true")
-            {
-                newStr = "false";
-            }
-            else if (this.value == "false")
-            {
-                newStr = "true";
-            }
-            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
-            Helpers.runPatchesInXmlContainer(newContainer, xml);
-            return true;
-        }
-    }
-
     
 }

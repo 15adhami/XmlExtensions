@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.Collections.Generic;
 using Verse;
+using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {

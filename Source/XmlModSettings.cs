@@ -9,7 +9,7 @@ namespace XmlExtensions
     {
         public List<string> keys;
         public List<SettingContainer> settings;
-        public int defaultSpacing;
+        public int defaultSpacing = 2;
         public string label;
         public string modId;
         public Dictionary<string, string> defValues;
