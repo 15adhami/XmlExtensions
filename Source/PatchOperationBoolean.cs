@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using Verse;
 
-namespace XmlExtensions
+namespace XmlExtensions.Boolean
 {
     public abstract class PatchOperationBoolean : PatchOperationPathed
     {
@@ -70,11 +70,12 @@ namespace XmlExtensions
 
     public class Comparision : PatchOperationBoolean
     {
-        protected string value = "0";
-        protected string relation = "=";
-        protected string logic = "or";
+        protected string value;
+        protected string value2 = null;
+        protected string relation;
+        protected string logic = "and";
         protected string fromXml = "false";
-        protected string isFloat = "false";
+        protected string isString = "false";
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -89,7 +90,7 @@ namespace XmlExtensions
                 isOr = false;
             }
             flag = !isOr;
-            if (!bool.Parse(this.isFloat))
+            if (bool.Parse(this.isString))
             {
                 string val2 = "";
                 if (fromXml == "true")
@@ -101,11 +102,154 @@ namespace XmlExtensions
                     val2 = value;
                 }
 
-                foreach (object obj in xml.SelectNodes(this.xpath))
+                if (value2 == null)
                 {
-                    XmlNode xmlNode = obj as XmlNode;
-                    string xval = xmlNode.InnerText;
-                    int compare = xval.CompareTo(val2);
+                    foreach (object obj in xml.SelectNodes(this.xpath))
+                    {
+                        XmlNode xmlNode = obj as XmlNode;
+                        string xval = xmlNode.InnerText;
+                        int compare = xval.CompareTo(val2);
+                        if (relation == "eq")
+                        {
+                            if (isOr)
+                            {
+                                if (compare == 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare == 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "sl")
+                        {
+                            if (isOr)
+                            {
+                                if (compare < 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare < 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "leq")
+                        {
+                            if (isOr)
+                            {
+                                if (compare <= 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare <= 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "sg")
+                        {
+                            if (isOr)
+                            {
+                                if (compare > 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare > 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "geq")
+                        {
+                            if (isOr)
+                            {
+                                if (compare >= 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare >= 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "neq")
+                        {
+                            if (isOr)
+                            {
+                                if (compare != 0)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (compare != 0)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    int compare = value.CompareTo(value2);
                     if (relation == "eq")
                     {
                         if (isOr)
@@ -242,8 +386,10 @@ namespace XmlExtensions
                     {
                         return false;
                     }
+
                 }
             }
+
             else
             {
                 float val2 = 0;
@@ -255,10 +401,155 @@ namespace XmlExtensions
                 {
                     val2 = float.Parse(value);
                 }
-                foreach (object obj in xml.SelectNodes(this.xpath))
+                if (value2 == null)
                 {
-                    XmlNode xmlNode = obj as XmlNode;
-                    float xval = float.Parse(xmlNode.InnerText);
+                    foreach (object obj in xml.SelectNodes(this.xpath))
+                    {
+                        XmlNode xmlNode = obj as XmlNode;
+                        float xval = float.Parse(xmlNode.InnerText);
+                        if (relation == "eq")
+                        {
+                            if (isOr)
+                            {
+                                if (xval == val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval == val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "sl")
+                        {
+                            if (isOr)
+                            {
+                                if (xval < val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval < val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "leq")
+                        {
+                            if (isOr)
+                            {
+                                if (xval <= val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval <= val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "sg")
+                        {
+                            if (isOr)
+                            {
+                                if (xval > val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval > val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "geq")
+                        {
+                            if (isOr)
+                            {
+                                if (xval >= val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval >= val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else if (relation == "neq")
+                        {
+                            if (isOr)
+                            {
+                                if (xval != val2)
+                                {
+                                    flag = true;
+                                    return flag;
+                                }
+                            }
+                            else
+                            {
+                                if (xval != val2)
+                                {
+                                }
+                                else
+                                {
+                                    flag = false;
+                                    return flag;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+                else
+                {
+                    float xval = float.Parse(value);
+                    val2 = float.Parse(value);
                     if (relation == "eq")
                     {
                         if (isOr)
@@ -395,6 +686,8 @@ namespace XmlExtensions
                     {
                         return false;
                     }
+
+
                 }
             }
 

@@ -30,9 +30,8 @@ namespace XmlExtensions
             int num = kvpList.Count();
             foreach (KeyValuePair<string, string> pair in kvpList)
             {
-                listingStandard.Label(pair.Key);
                 bool del = false;
-                listingStandard.CheckboxLabeled(pair.Key, ref del);
+                listingStandard.CheckboxLabeled(XmlMod.settingsPerMod[ pair.Key.Split( '.' )[0] ].label+": "+ pair.Key.Split('.')[1], ref del, "Delete");
                 if (del)
                 {
                     XmlMod.allSettings.dataDict.Remove(pair.Key);
