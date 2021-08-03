@@ -107,5 +107,27 @@ namespace XmlExtensions
             return result;
         }
     }
+
+    public class getAttribute : PatchOperationPathed
+    {
+        public XmlContainer apply;
+        public string attribute;
+        public string storeIn;
+        public string brackets = "{}";        
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            var attribute = xml.SelectSingleNode(xpath).Attributes[this.attribute];
+            string newStr = "";
+            if (attribute != null)
+            {
+                newStr = attribute.Value;
+            }
+            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
+            Helpers.runPatchesInXmlContainer(newContainer, xml);
+
+            return true;
+        }
+    }
     
 }
