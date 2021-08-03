@@ -73,9 +73,9 @@ namespace XmlExtensions
                         xmlNode.RemoveChild(xmlNode[addNode.Name]);
                     }
                 }
-                
-            }            
-            
+
+            }
+
             return result;
         }
 
@@ -83,12 +83,59 @@ namespace XmlExtensions
 
         protected enum Order
         {
-            
+
             Append,
-            
+
             Prepend
         }
     }
 
+    public class PatchOperationSafeAdd : PatchOperationPathed
+    {
+        protected XmlContainer value;
 
+        protected bool forceAddLeafNodes = true;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            XmlNode node = this.value.node;
+            bool result = false;
+            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
+            {
+                foreach (XmlNode addNode in node.ChildNodes)
+                {
+                    result = true;
+                    tryAddNode(xmlNode, addNode);
+                }
+
+            }
+
+            return result;
+        }
+        private void tryAddNode(XmlNode parent, XmlNode child)
+        {
+            if (!Helpers.containsNode(parent, child.Name))
+            {
+                Log.Message(child.Name);
+                parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+            }
+            else
+            {
+                if (child.HasChildNodes && child.FirstChild.HasChildNodes)
+                {
+                    foreach (XmlNode newChild in child.ChildNodes)
+                    {
+                        tryAddNode(parent[child.Name], newChild);
+                    }
+                }
+                else
+                {
+                    if(forceAddLeafNodes)
+                    {
+                        parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+                    }
+                }
+            }
+        }
+    }
 }
