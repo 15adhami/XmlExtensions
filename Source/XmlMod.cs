@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -66,6 +67,14 @@ namespace XmlExtensions
                 }
                 listingStandard.EndScrollView(ref scrollRect);
             }
+            else
+            {
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, 550);
+                Listing_Standard listingStandard = new Listing_Standard();
+                listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
+
+                listingStandard.EndScrollView(ref scrollRect);
+            }
         }
 
 
@@ -75,6 +84,10 @@ namespace XmlExtensions
             Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count*(22+2+30+2),585));
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);
+            bool t1 = false;
+            listingStandard.Label("XML Extensions");
+            t1 = listingStandard.ButtonText("XML Extensions", "test?");
+            if (t1) { selectedMod = null; }
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;

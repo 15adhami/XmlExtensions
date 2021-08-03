@@ -54,12 +54,12 @@
     <Compile Include="Data.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="XmlModBaseSettings.cs" />
     <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationBoolean.cs" />
     <Compile Include="PatchOperations.cs" />
     <Compile Include="Patch_ApplyPatches.cs" />
-    <Compile Include="Patch_SettingsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlExtensions.cs" />
     <Compile Include="XmlMod.cs" />

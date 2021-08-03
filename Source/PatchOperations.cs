@@ -1,5 +1,9 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System;
+using System.Collections;
+using System.Xml;
 using Verse;
+using System.Linq;
 
 namespace XmlExtensions
 {
@@ -36,6 +40,54 @@ namespace XmlExtensions
             return result;
         }
 
+    }
+
+    public class PatchOperationAddOrReplace : PatchOperationPathed
+    {
+        protected XmlContainer value;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            XmlNode node = this.value.node;
+            bool result = false;
+
+            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
+            {
+                foreach (XmlNode addNode in node.ChildNodes)
+                {
+                    result = true;
+                    if (!Helpers.containsNode(xmlNode, addNode.Name))
+                    {
+                        if (this.order == PatchOperationAddOrReplace.Order.Append)
+                        {
+                            xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
+                        }
+                        if (this.order == PatchOperationAddOrReplace.Order.Prepend)
+                        {
+                            xmlNode.PrependChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
+                        }
+                    }
+                    else
+                    {
+                        xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), xmlNode[addNode.Name]);
+                        xmlNode.RemoveChild(xmlNode[addNode.Name]);
+                    }
+                }
+                
+            }            
+            
+            return result;
+        }
+
+        protected PatchOperationAddOrReplace.Order order;
+
+        protected enum Order
+        {
+            
+            Append,
+            
+            Prepend
+        }
     }
 
 

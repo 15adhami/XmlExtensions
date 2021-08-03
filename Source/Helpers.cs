@@ -194,6 +194,15 @@ namespace XmlExtensions
             }
         }
 
+        public static bool containsNode(XmlNode node, string nodeName)
+        {
+            foreach(XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.Name == nodeName) { return true; }
+            }
+            return false;
+        }
+
     }
     
     
