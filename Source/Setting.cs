@@ -131,6 +131,21 @@ namespace XmlExtensions.Setting
         public override int getHeight() { return (22 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
     }
 
+    public class ResetSettings : SettingContainer
+    {
+        protected string label = "Reset settings";
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            bool def = listingStandard.ButtonText(label);
+            if (def)
+            {
+                XmlMod.settingsPerMod[selectedMod].resetSettings();
+            }
+        }
+
+        public override int getHeight() { return (30 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+    }
+
     public class Gap : SettingContainer
     {
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }

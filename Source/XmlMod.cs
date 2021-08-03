@@ -33,7 +33,7 @@ namespace XmlExtensions
 
         public override string SettingsCategory()
         {
-            return "XML Mod Settings";
+            return "More Mod Settings";
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -50,7 +50,7 @@ namespace XmlExtensions
             if (selectedMod != null)
             {
                 //settingsPerMod[selectedMod].calculateHeight() + 24 + 48
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight() + 22 + 32);
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight() + 22);
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
                 listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
@@ -58,12 +58,6 @@ namespace XmlExtensions
                 foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
                 {
                     setting.drawSetting(listingStandard, selectedMod);
-                }
-                bool def = listingStandard.ButtonText("Default settings");
-                if (def)
-                {
-                    settingsPerMod[selectedMod].resetSettings();
-                    def = false;
                 }
                 listingStandard.EndScrollView(ref scrollRect);
             }
