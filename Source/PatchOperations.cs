@@ -58,14 +58,7 @@ namespace XmlExtensions
                     result = true;
                     if (!Helpers.containsNode(xmlNode, addNode.Name))
                     {
-                        if (this.order == PatchOperationAddOrReplace.Order.Append)
-                        {
-                            xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
-                        }
-                        if (this.order == PatchOperationAddOrReplace.Order.Prepend)
-                        {
-                            xmlNode.PrependChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
-                        }
+                        xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));                        
                     }
                     else
                     {
@@ -78,23 +71,13 @@ namespace XmlExtensions
 
             return result;
         }
-
-        protected PatchOperationAddOrReplace.Order order;
-
-        protected enum Order
-        {
-
-            Append,
-
-            Prepend
-        }
     }
 
     public class PatchOperationSafeAdd : PatchOperationPathed
     {
         protected XmlContainer value;
 
-        protected bool forceAddLeafNodes = true;
+        protected bool forceAddLeafNodes = false;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -107,9 +90,7 @@ namespace XmlExtensions
                     result = true;
                     tryAddNode(xmlNode, addNode);
                 }
-
             }
-
             return result;
         }
         private void tryAddNode(XmlNode parent, XmlNode child)
