@@ -10,8 +10,8 @@ namespace XmlExtensions
         protected XmlContainer apply;
         protected string storeIn = "i";
         protected string brackets = "{}";
-        protected int from = 0;
-        protected int to = 1;
+        protected int from;
+        protected int to;
         protected int increment = 1;
 
         protected override bool ApplyWorker(XmlDocument xml)

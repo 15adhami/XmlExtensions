@@ -17,16 +17,4 @@ namespace XmlExtensions
             PatchManager.applyPatches(xmlDoc);
         }
     }
-
-    /*
-    [HarmonyPatch(typeof(Dialog_ModSettings))]
-    [HarmonyPatch("DoWindowContents")]
-    class Patch_DoWindowContents
-    {
-        static void Prefix(Rect inRect)
-        {
-            
-        }
-    }
-    */
 }

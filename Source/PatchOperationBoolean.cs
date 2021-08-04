@@ -70,12 +70,13 @@ namespace XmlExtensions.Boolean
 
     public class Comparision : PatchOperationBoolean
     {
-        protected string value;
-        protected string value2 = null;
+        protected string value1;
+        protected string value2;
         protected string relation;
         protected string logic = "and";
-        protected string fromXml = "false";
-        protected string isString = "false";
+        protected string fromXml1 = "false";
+        protected string fromXml2 = "false";
+        protected string nonNumeric = "false";
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -90,21 +91,21 @@ namespace XmlExtensions.Boolean
                 isOr = false;
             }
             flag = !isOr;
-            if (bool.Parse(this.isString))
+            if (bool.Parse(this.nonNumeric))
             {
                 string val2 = "";
-                if (fromXml == "true")
+                if (fromXml2 == "true")
                 {
-                    val2 = xml.SelectSingleNode(value).InnerText;
+                    val2 = xml.SelectSingleNode(value2).InnerText;
                 }
                 else
                 {
-                    val2 = value;
+                    val2 = value2;
                 }
 
-                if (value2 == null)
+                if (bool.Parse(fromXml1))
                 {
-                    foreach (object obj in xml.SelectNodes(this.xpath))
+                    foreach (object obj in xml.SelectNodes(this.value1))
                     {
                         XmlNode xmlNode = obj as XmlNode;
                         string xval = xmlNode.InnerText;
@@ -249,7 +250,7 @@ namespace XmlExtensions.Boolean
                 }
                 else
                 {
-                    int compare = value.CompareTo(value2);
+                    int compare = value1.CompareTo(val2);
                     if (relation == "eq")
                     {
                         if (isOr)
@@ -393,17 +394,17 @@ namespace XmlExtensions.Boolean
             else
             {
                 float val2 = 0;
-                if (fromXml == "true")
+                if (fromXml2 == "true")
                 {
-                    val2 = float.Parse(xml.SelectSingleNode(value).InnerText);
+                    val2 = float.Parse(xml.SelectSingleNode(value2).InnerText);
                 }
                 else
                 {
-                    val2 = float.Parse(value);
+                    val2 = float.Parse(value2);
                 }
-                if (value2 == null)
+                if (bool.Parse(fromXml1))
                 {
-                    foreach (object obj in xml.SelectNodes(this.xpath))
+                    foreach (object obj in xml.SelectNodes(this.value1))
                     {
                         XmlNode xmlNode = obj as XmlNode;
                         float xval = float.Parse(xmlNode.InnerText);
@@ -548,8 +549,7 @@ namespace XmlExtensions.Boolean
                 }
                 else
                 {
-                    float xval = float.Parse(value);
-                    val2 = float.Parse(value);
+                    float xval = float.Parse(value1);
                     if (relation == "eq")
                     {
                         if (isOr)

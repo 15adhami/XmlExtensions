@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HarmonyLib;
 using System.Linq;
+using System;
 
 namespace XmlExtensions
 {
@@ -31,11 +32,11 @@ namespace XmlExtensions
             foreach (KeyValuePair<string, string> pair in kvpList)
             {
                 bool del = false;
-                listingStandard.CheckboxLabeled(XmlMod.settingsPerMod[ pair.Key.Split( '.' )[0] ].label+": "+ pair.Key.Split('.')[1], ref del, "Delete");
+                listingStandard.CheckboxLabeled(pair.Key, ref del, "Delete");
                 if (del)
                 {
                     XmlMod.allSettings.dataDict.Remove(pair.Key);
-                }
+                }                
             }
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
