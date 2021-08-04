@@ -9,7 +9,6 @@ namespace XmlExtensions
 {
     public class PatchOperationMath : PatchOperationPathed
     {
-        //Make this an optional input (unary operations)
         protected string value;
         protected bool fromXml = false;
         protected string operation;

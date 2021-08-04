@@ -15,12 +15,12 @@ namespace XmlExtensions
         {
         }
 
-        public override string SettingsCategory()
+        /*public override string SettingsCategory()
         {
             return "XML Extensions";
-        }
+        }*/
 
-        public override void DoSettingsWindowContents(Rect inRect)
+       /* public override void DoSettingsWindowContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
@@ -37,7 +37,7 @@ namespace XmlExtensions
             }
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
-        }
+        }*/
     }
 
 

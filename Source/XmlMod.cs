@@ -49,7 +49,6 @@ namespace XmlExtensions
         {
             if (selectedMod != null)
             {
-                //settingsPerMod[selectedMod].calculateHeight() + 24 + 48
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight() + 22);
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
@@ -63,10 +62,43 @@ namespace XmlExtensions
             }
             else
             {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, 550);
+                
+                List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
+                List<string> keyList = new List<string>();
+                foreach (KeyValuePair<string, string> pair in kvpList)
+                {
+                    if (!settingsPerMod[pair.Key.Split('.')[0]].keys.Contains(pair.Key.Split('.')[1]))
+                    {
+                        keyList.Add(pair.Key);
+                    }
+                }
+                keyList.Sort();
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, keyList.Count * 24 + 32 + 22);
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
-
+                listingStandard.Label("Settings currently not being used by loaded mods:");
+                if (keyList.Count == 0)
+                {
+                    listingStandard.Label("No extra settings at the moment.");
+                }
+                foreach (string key in keyList)
+                {
+                    bool del = false;
+                    listingStandard.CheckboxLabeled(key, ref del, "Delete");
+                    if (del)
+                    {
+                        XmlMod.allSettings.dataDict.Remove(key);
+                    }                                  
+                }
+                bool flag = listingStandard.ButtonText("Delete extra data");
+                if (flag)
+                {
+                    foreach (string key in keyList)
+                    {
+                        XmlMod.allSettings.dataDict.Remove(key);
+                    }
+                    
+                }
                 listingStandard.EndScrollView(ref scrollRect);
             }
         }
@@ -77,7 +109,7 @@ namespace XmlExtensions
         {
             Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count*(22+2+30+2),585));
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);            
+            listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;

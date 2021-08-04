@@ -8,8 +8,6 @@ namespace XmlExtensions.Setting
 {
     public abstract class SettingContainer : PatchOperation
     {
-        public int spacing = -1;
-
         public virtual void drawSetting(Listing_Standard listingStandard, string selectedMod) { }
 
         public virtual int getHeight() { return 0; }
@@ -34,7 +32,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = range.ToString();
         }
 
-        public override int getHeight() { return (50 + 2 * (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (50 + 2 * XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Slider : KeyedSettingContainer
@@ -49,7 +47,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
         }
 
-        public override int getHeight() { return (44 + 2 * (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (44 + 2 * XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class IntEntry : KeyedSettingContainer
@@ -63,7 +61,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
         }
 
-        public override int getHeight() { return (24 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class IntAdjuster : KeyedSettingContainer
@@ -78,7 +76,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
         }
 
-        public override int getHeight() { return (24 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Numeric : KeyedSettingContainer
@@ -93,7 +91,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
         }
 
-        public override int getHeight() { return (22 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Textbox : KeyedSettingContainer
@@ -104,7 +102,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = listingStandard.TextEntryLabeled(this.label, currStr);
         }
 
-        public override int getHeight() { return (22 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Text : SettingContainer
@@ -115,7 +113,7 @@ namespace XmlExtensions.Setting
             listingStandard.Label(text);
         }
 
-        public override int getHeight() { return (22 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Checkbox : KeyedSettingContainer
@@ -128,7 +126,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = currBool.ToString();
         }
 
-        public override int getHeight() { return (22 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class ResetSettings : SettingContainer
@@ -143,30 +141,48 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight() { return (30 + (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing)); }
+        public override int getHeight() { return (30 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Gap : SettingContainer
     {
-        public Gap()
-        {
-            if (spacing == -1)
-                spacing = 12;
-        }
+        public int spacing = 12;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }
 
-        public override int getHeight() { return (this.spacing >= 0 ? this.spacing : 12); }
+        // TODO: Add the height of the line itself?
+        public override int getHeight() { return spacing; }
     }
 
     public class GapLine : SettingContainer
     {
-        public GapLine()
-        {
-            if (spacing == -1)
-                spacing = 12;
-        }
-        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.GapLine(this.spacing); }
+        public int spacing = 12;
 
-        public override int getHeight() { return (this.spacing >= 0 ? this.spacing : 12); }
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.GapLine(spacing); }
+
+        public override int getHeight() { return spacing; }
+    }
+
+    public class RadioButtons : KeyedSettingContainer
+    {
+        public List<XmlContainer> buttons;
+        public int spacing = -1;
+
+        public RadioButtons()
+        {
+            spacing = (spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing);
+        }
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            listingStandard.verticalSpacing = spacing;
+            foreach (XmlContainer option in buttons)
+            {
+                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[key] == option.node["value"].InnerText);
+                if (b) { XmlMod.allSettings.dataDict[key] = option.node["value"].InnerText; }
+            }
+            listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
+        }
+
+        public override int getHeight() { return buttons.Count * spacing; }
     }
 }
