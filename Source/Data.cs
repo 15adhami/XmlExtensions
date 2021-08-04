@@ -108,7 +108,7 @@ namespace XmlExtensions
         }
     }
 
-    public class getAttribute : PatchOperationPathed
+    public class GetAttribute : PatchOperationPathed
     {
         public XmlContainer apply;
         public string attribute;
