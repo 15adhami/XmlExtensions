@@ -148,8 +148,25 @@ namespace XmlExtensions.Setting
 
     public class Gap : SettingContainer
     {
+        public Gap()
+        {
+            if (spacing == -1)
+                spacing = 12;
+        }
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }
 
-        public override int getHeight() { return (this.spacing >= 0 ? this.spacing : XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight() { return (this.spacing >= 0 ? this.spacing : 12); }
+    }
+
+    public class GapLine : SettingContainer
+    {
+        public GapLine()
+        {
+            if (spacing == -1)
+                spacing = 12;
+        }
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.GapLine(this.spacing); }
+
+        public override int getHeight() { return (this.spacing >= 0 ? this.spacing : 12); }
     }
 }

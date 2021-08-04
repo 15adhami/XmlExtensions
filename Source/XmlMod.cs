@@ -39,7 +39,7 @@ namespace XmlExtensions
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Rect rectSettings = inRect.RightPart(0.7f);
-            Rect rectMods = inRect.LeftPart(0.28f);
+            Rect rectMods = inRect.LeftPart(0.285f);
             drawXmlModSettings(rectSettings);
             drawXmlModList(rectMods);
             base.DoSettingsWindowContents(inRect);
@@ -77,11 +77,7 @@ namespace XmlExtensions
         {
             Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count*(22+2+30+2),585));
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);
-            bool t1 = false;
-            listingStandard.Label("XML Extensions");
-            t1 = listingStandard.ButtonText("XML Extensions", "test?");
-            if (t1) { selectedMod = null; }
+            listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);            
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;
@@ -89,10 +85,15 @@ namespace XmlExtensions
                 t = listingStandard.ButtonText(settingsPerMod[modId].label, "test?");
                 if (t) { selectedMod = modId; }
             }
-            float f = (float)(tempInt);
+            listingStandard.GapLine(8);
+            bool t1 = false;
+            listingStandard.Label("XML Extensions");
+            t1 = listingStandard.ButtonText("XML Extensions", "test?");
+            if (t1) { selectedMod = null; }
+            /*float f = (float)(tempInt);
             string buf = f.ToString();
             listingStandard.TextFieldNumericLabeled<float>("height", ref f, ref buf, 0, 99999);
-            tempInt = (int)f;
+            tempInt = (int)f;*/
             listingStandard.EndScrollView(ref scrollRect);
         }
 

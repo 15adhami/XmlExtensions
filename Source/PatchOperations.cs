@@ -97,7 +97,6 @@ namespace XmlExtensions
         {
             if (!Helpers.containsNode(parent, child.Name))
             {
-                Log.Message(child.Name);
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
             else

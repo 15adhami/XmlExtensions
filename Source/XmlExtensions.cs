@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Collections.Generic;
 using UnityEngine;
-using HarmonyLib;
 using System.Linq;
 using System;
 
@@ -14,8 +13,6 @@ namespace XmlExtensions
 
         public XmlExtensions(ModContentPack content) : base(content)
         {
-            var harmony = new Harmony("Imranfish.XmlExtensions.patch");
-            harmony.PatchAll();
         }
 
         public override string SettingsCategory()
