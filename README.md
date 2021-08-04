@@ -1,5 +1,5 @@
 <p align="center">
-![Preview](https://user-images.githubusercontent.com/35755361/128132810-1b3b9242-c5b0-4087-841f-19c56589c4e7.png)
+<img src="https://github.com/15adhami/XmlExtensions/blob/master/About/Preview.png" alt="XML Extensions" />
 </p>
 # XmlExtensions
 A modding framework for RimWorld based on XML patch operations.
