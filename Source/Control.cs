@@ -86,27 +86,6 @@ namespace XmlExtensions
         }
 
     }
-
-    public class DelayPatches : PatchOperation
-    {
-        protected XmlContainer patches = null;
-        protected bool applyHere = false;
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            for (int i = 0; i < this.patches.node.ChildNodes.Count; i++)
-            {
-                XmlNode node = patches.node.ChildNodes[i];
-                PatchManager.enqueuePatch(node);
-                if (applyHere)
-                {
-                    PatchOperation patch = Helpers.getPatchFromString(node.OuterXml);
-                    patch.Apply(xml);
-                }
-            }
-            return true;
-        }
-    }
     
 }
 
