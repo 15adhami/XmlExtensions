@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace XmlExtensions.Setting
@@ -27,12 +24,11 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
-            listingStandard.Label(this.label);
             listingStandard.IntRange(ref range, min, max);
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = range.ToString();
         }
 
-        public override int getHeight() { return (50 + 2 * XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight() { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Slider : KeyedSettingContainer
@@ -42,12 +38,14 @@ namespace XmlExtensions.Setting
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
+            listingStandard.verticalSpacing = 0;
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + "." + this.key];
-            listingStandard.Label(this.label + ": " + currFloat.ToString());
+            listingStandard.Label(Helpers.substituteVariable(label, key, currFloat.ToString(), "{}"));
+            listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
         }
 
-        public override int getHeight() { return (44 + 2 * XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight() { return (44 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class IntEntry : KeyedSettingContainer
@@ -108,9 +106,13 @@ namespace XmlExtensions.Setting
     public class Text : SettingContainer
     {
         public string text;
+        public GameFont font = GameFont.Small;
+
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
-        {
+        {//M: 29 S: 22 T:18
+            Verse.Text.Font = font;
             listingStandard.Label(text);
+            Verse.Text.Font = GameFont.Small;
         }
 
         public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }

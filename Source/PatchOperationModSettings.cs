@@ -56,7 +56,7 @@ namespace XmlExtensions
             XmlMod.addXmlMod(this.modId, this.label);
             if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
             {
-                XmlMod.settingsPerMod[modId].defaultSpacing = defaultSpacing;
+                XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
             }            
             foreach (SettingContainer setting in this.settings)
             {

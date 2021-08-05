@@ -48,12 +48,12 @@ namespace XmlExtensions
         private void drawXmlModSettings(Rect rect)
         {
             if (selectedMod != null)
-            {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight() + 22);
+            {//settingsPerMod[selectedMod].calculateHeight() + 22
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f,  tempInt);
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
-                listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
-                listingStandard.Label(settingsPerMod[selectedMod].label);
+                listingStandard.verticalSpacing = 0;
+                //listingStandard.Label(settingsPerMod[selectedMod].label);
                 foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
                 {
                     setting.drawSetting(listingStandard, selectedMod);
@@ -107,7 +107,7 @@ namespace XmlExtensions
         public static int tempInt = 600;
         private void drawXmlModList(Rect rect)
         {
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count*(22+2+30+2),585));
+            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count * (22 + 2 + 30 + 2), 585));
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);
             foreach (string modId in loadedXmlMods)
@@ -122,10 +122,10 @@ namespace XmlExtensions
             listingStandard.Label("XML Extensions");
             t1 = listingStandard.ButtonText("XML Extensions", "test?");
             if (t1) { selectedMod = null; }
-            /*float f = (float)(tempInt);
+            float f = (float)(tempInt);
             string buf = f.ToString();
             listingStandard.TextFieldNumericLabeled<float>("height", ref f, ref buf, 0, 99999);
-            tempInt = (int)f;*/
+            tempInt = (int)f;
             listingStandard.EndScrollView(ref scrollRect);
         }
 
