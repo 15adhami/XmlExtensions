@@ -75,26 +75,26 @@ namespace XmlExtensions
     public class PatchOperationSafeAdd : PatchOperationPathed
     {
         protected XmlContainer value;
-
-        protected bool forceAddLeafNodes = false;
+        protected int safetyDepth = -1;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlNode node = this.value.node;
             bool result = false;
-            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
+            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath))
             {
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
                     result = true;
-                    tryAddNode(xmlNode, addNode);
+                    int d = 0;
+                    tryAddNode(xmlNode, addNode, d);
                 }
             }
             return result;
         }
-        private void tryAddNode(XmlNode parent, XmlNode child)
+        private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!Helpers.containsNode(parent, child.Name))
+            if (!Helpers.containsNode(parent, child.Name) || depth == safetyDepth)
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
@@ -104,17 +104,36 @@ namespace XmlExtensions
                 {
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
-                        tryAddNode(parent[child.Name], newChild);
-                    }
-                }
-                else
-                {
-                    if(forceAddLeafNodes)
-                    {
-                        parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+                        tryAddNode(parent[child.Name], newChild, depth+1);
                     }
                 }
             }
+        }
+    }
+
+    public class PatchOperationCopy : PatchOperationPathed
+    {
+        public string paste;
+        public bool childNodes = false;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            foreach(XmlNode node in xml.SelectNodes(xpath))
+            {
+                XmlNode parent = xml.SelectSingleNode(paste);
+                if (!childNodes)
+                {
+                    parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
+                }                    
+                else
+                {
+                    foreach(XmlNode c in node.ChildNodes)
+                    {
+                        parent.AppendChild(parent.OwnerDocument.ImportNode(c, true));
+                    }
+                }
+            }
+            return true;
         }
     }
 }
