@@ -49,7 +49,7 @@ namespace XmlExtensions
         {
             if (selectedMod != null)
             {//settingsPerMod[selectedMod].calculateHeight() + 22
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f,  tempInt);
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight());
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
                 listingStandard.verticalSpacing = 0;
@@ -61,18 +61,17 @@ namespace XmlExtensions
                 listingStandard.EndScrollView(ref scrollRect);
             }
             else
-            {
-                
+            {                
                 List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
                 List<string> keyList = new List<string>();
                 foreach (KeyValuePair<string, string> pair in kvpList)
                 {
-                    if (!settingsPerMod[pair.Key.Split('.')[0]].keys.Contains(pair.Key.Split('.')[1]))
+                    if (!loadedXmlMods.Contains(pair.Key.Split('.')[0]) || !settingsPerMod[pair.Key.Split('.')[0]].keys.Contains(pair.Key.Split('.')[1]))
                     {
                         keyList.Add(pair.Key);
                     }
                 }
-                keyList.Sort();
+                keyList.Sort();                
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, keyList.Count * 24 + 32 + 22);
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);

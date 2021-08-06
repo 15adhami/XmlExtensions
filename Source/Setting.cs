@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
@@ -107,15 +109,37 @@ namespace XmlExtensions.Setting
     {
         public string text;
         public GameFont font = GameFont.Small;
+        public string tooltip = null;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
-            listingStandard.Label(text);
+            int h = 18;
+            if (font == GameFont.Small)
+            {
+                h = 22;
+            }
+            else if (font == GameFont.Medium)
+            {
+                h = 29;
+            }
+            listingStandard.Label(text, h, tooltip);
             Verse.Text.Font = GameFont.Small;
         }
 
-        public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight()
+        {
+            int h = 18;
+            if (font == GameFont.Small)
+            {
+                h = 22;
+            }
+            else if (font == GameFont.Medium)
+            {
+                h = 29;
+            }
+            return (h + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing);
+        }
     }
 
     public class Checkbox : KeyedSettingContainer
@@ -148,7 +172,7 @@ namespace XmlExtensions.Setting
 
     public class Gap : SettingContainer
     {
-        public int spacing = 12;
+        public int spacing = 24;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }
 
         // TODO: Add the height of the line itself?
@@ -157,9 +181,18 @@ namespace XmlExtensions.Setting
 
     public class GapLine : SettingContainer
     {
-        public int spacing = 12;
+        public int spacing = 24;
+        protected int thickness = 1;
 
-        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.GapLine(spacing); }
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) 
+        {
+            Rect gapRect = listingStandard.GetRect(spacing);
+            float y = gapRect.y + spacing / 2f - thickness / 2;
+            Color color = GUI.color;
+            GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+            GUI.DrawTexture(new Rect(gapRect.x, y, listingStandard.ColumnWidth, thickness), BaseContent.WhiteTex);
+            GUI.color = color;
+        }
 
         public override int getHeight() { return spacing; }
     }
@@ -167,24 +200,25 @@ namespace XmlExtensions.Setting
     public class RadioButtons : KeyedSettingContainer
     {
         public List<XmlContainer> buttons;
-        public int spacing = -1;
+        protected int spacing = -1;
 
-        public RadioButtons()
+        /*public RadioButtons()
         {
             spacing = (spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing);
-        }
+            Log.Message(key);
+        }*/
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            listingStandard.verticalSpacing = spacing;
+            listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
             foreach (XmlContainer option in buttons)
             {
-                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[key] == option.node["value"].InnerText);
-                if (b) { XmlMod.allSettings.dataDict[key] = option.node["value"].InnerText; }
+                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+"."+key] == option.node["value"].InnerText);
+                if (b) { XmlMod.allSettings.dataDict[selectedMod + "." + key] = option.node["value"].InnerText; }
             }
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
         }
 
-        public override int getHeight() { return buttons.Count * spacing; }
+        public override int getHeight() { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
     }
 }

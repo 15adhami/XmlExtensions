@@ -69,7 +69,16 @@ namespace XmlExtensions
                     }
                     if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(((KeyedSettingContainer)(setting)).key))
                     {
-                        XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                        if (((KeyedSettingContainer)(setting)).defaultValue != null)
+                        {
+                            XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                            if (!XmlMod.allSettings.dataDict.ContainsKey(modId+"."+((KeyedSettingContainer)(setting)).key))
+                                XmlMod.allSettings.dataDict.Add(modId + "." + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                        }
+                        else
+                        {
+                            Log.Error("[XML Extensions] "+modId+"."+ ((KeyedSettingContainer)(setting)).key+" has no default value defined.");
+                        }
                     }
                 } 
             }
