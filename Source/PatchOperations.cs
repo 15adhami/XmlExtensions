@@ -211,4 +211,14 @@ namespace XmlExtensions
             return result;
         }
     }
+
+    /*public class PatchOperationDelay : PatchOperation
+    {
+        protected PatchOperation patch;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+
+        }
+    }*/
 }
