@@ -44,6 +44,7 @@ namespace XmlExtensions
     public class PatchOperationAddOrReplace : PatchOperationPathed
     {
         protected XmlContainer value;
+        protected bool log = false;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -57,12 +58,16 @@ namespace XmlExtensions
                     result = true;
                     if (!Helpers.containsNode(xmlNode, addNode.Name))
                     {
-                        xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));                        
+                        xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
+                        if (log)
+                            Log.Message("PatchOperationAddOrReplace added " + addNode.Name + " with value " + addNode.InnerText);
                     }
                     else
                     {
+                        if (log)
+                            Log.Message("PatchOperationAddOrReplace removed " + addNode.Name + " with value " + xmlNode[addNode.Name].InnerText);
                         xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), xmlNode[addNode.Name]);
-                        xmlNode.RemoveChild(xmlNode[addNode.Name]);
+                        xmlNode.RemoveChild(xmlNode[addNode.Name]);                        
                     }
                 }
 
@@ -211,14 +216,16 @@ namespace XmlExtensions
             return result;
         }
     }
-
-    /*public class PatchOperationDelay : PatchOperation
+    /*
+    public class PatchOperationDelay : PatchOperation
     {
         protected PatchOperation patch;
-
+     
         protected override bool ApplyWorker(XmlDocument xml)
         {
-
+            PatchManager.delayedPatches.Enqueue(patch);
+            PatchManager.xmlDoc = xml;
+            return true;
         }
     }*/
 }

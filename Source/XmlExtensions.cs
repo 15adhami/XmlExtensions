@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Reflection;
+//using HarmonyLib;
 
 namespace XmlExtensions
 {
@@ -12,7 +14,9 @@ namespace XmlExtensions
 
 
         public XmlExtensions(ModContentPack content) : base(content)
-        {
+        {/*
+            var harmony = new Harmony("com.github.15adhami.xmlextensions");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());*/
         }
 
         /*public override string SettingsCategory()

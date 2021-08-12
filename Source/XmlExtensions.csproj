@@ -50,8 +50,10 @@
     <Compile Include="Control.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
     <Compile Include="Setting.cs" />
+    <Compile Include="XmlInheritance_Resolve_Patch.cs" />
     <Compile Include="XmlModBaseSettings.cs" />
     <Compile Include="PatchOperationBoolean.cs" />
     <Compile Include="PatchOperations.cs" />

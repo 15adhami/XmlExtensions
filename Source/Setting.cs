@@ -202,12 +202,6 @@ namespace XmlExtensions.Setting
         public List<XmlContainer> buttons;
         protected int spacing = -1;
 
-        /*public RadioButtons()
-        {
-            spacing = (spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing);
-            Log.Message(key);
-        }*/
-        //t
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
