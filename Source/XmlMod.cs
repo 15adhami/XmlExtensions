@@ -23,13 +23,14 @@ namespace XmlExtensions
             allSettings = new XmlModBaseSettings();
             settingsPosition = new Vector2();
             modListPosition = new Vector2();
+            selectedMod = null;
+            loadedXmlMods = new List<string>();
         }
 
         public XmlMod(ModContentPack content) : base(content)
         {
             allSettings = GetSettings<XmlModBaseSettings>();
         }
-
 
         public override string SettingsCategory()
         {
@@ -48,11 +49,11 @@ namespace XmlExtensions
         private void drawXmlModSettings(Rect rect)
         {
             if (selectedMod != null)
-            {//settingsPerMod[selectedMod].calculateHeight() + 22
+            {
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight());
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
-                listingStandard.verticalSpacing = 0;
+                listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
                 //listingStandard.Label(settingsPerMod[selectedMod].label);
                 foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
                 {
@@ -62,7 +63,7 @@ namespace XmlExtensions
                 listingStandard.EndScrollView(ref scrollRect);
             }
             else
-            {                
+            {              
                 List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
                 List<string> keyList = new List<string>();
                 foreach (KeyValuePair<string, string> pair in kvpList)
@@ -90,14 +91,15 @@ namespace XmlExtensions
                         XmlMod.allSettings.dataDict.Remove(key);
                     }                                  
                 }
-                bool flag = listingStandard.ButtonText("Delete all extra data");
-                if (flag)
+                if (listingStandard.ButtonText("Delete all extra settings", null))
                 {
-                    foreach (string key in keyList)
+                    Find.WindowStack.Add(new Dialog_MessageBox("ResetAndRestartConfirmationDialog".Translate(), "Yes".Translate(), delegate ()
                     {
-                        XmlMod.allSettings.dataDict.Remove(key);
-                    }
-                    
+                        foreach (string key in keyList)
+                        {
+                            XmlMod.allSettings.dataDict.Remove(key);
+                        }
+                    }, "No".Translate(), null, null, false, null, null));
                 }
                 listingStandard.EndScrollView(ref scrollRect);
             }
@@ -113,7 +115,6 @@ namespace XmlExtensions
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;
-                //listingStandard.Label(settingsPerMod[modId].label);
                 t = listingStandard.ButtonText(settingsPerMod[modId].label);
                 if (t) { selectedMod = modId; }
             }
@@ -172,7 +173,7 @@ namespace XmlExtensions
             {
                 settingsPerMod = new Dictionary<string, XmlModSettings>();
             }
-            if (!settingsPerMod.Keys.Contains<string>(modId))
+            if (!settingsPerMod.Keys.Contains(modId))
             {
                 XmlModSettings t = new XmlModSettings(modId);
                 t.label = label;
@@ -207,7 +208,7 @@ namespace XmlExtensions
             string fullKey = modId + "." + key;
             if (allSettings.dataDict.ContainsKey(fullKey))
             {
-
+                allSettings.dataDict[fullKey] = value;
             }
             else
             {

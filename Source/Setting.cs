@@ -161,12 +161,29 @@ namespace XmlExtensions.Setting
     public class ResetSettings : SettingContainer
     {
         protected string label = "Reset settings";
+        protected List<string> keys = null;
+        protected bool confirm = true;
+
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            bool def = listingStandard.ButtonText(label);
-            if (def)
+            if (!confirm)
             {
-                XmlMod.settingsPerMod[selectedMod].resetSettings();
+                if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
+                if (listingStandard.ButtonText(label, null))
+                    foreach (string key in keys)
+                        XmlMod.allSettings.dataDict[selectedMod + "." + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+            }
+            else
+            {
+                if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
+                if (listingStandard.ButtonText(label, null))
+                {
+                    Find.WindowStack.Add(new Dialog_MessageBox("ResetAndRestartConfirmationDialog".Translate(), "Yes".Translate(), delegate ()
+                    {
+                        foreach(string key in keys)
+                            XmlMod.allSettings.dataDict[selectedMod + "." + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                    }, "No".Translate(), null, null, false, null, null));
+                }
             }
         }
 
@@ -221,7 +238,6 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        // TODO: Add the height of the line itself?
         public override int getHeight() { return Math.Max(columnHeight(leftCol), columnHeight(rightCol)); }
     }
 
