@@ -67,6 +67,7 @@ namespace XmlExtensions.Setting
         public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
+    /*
     public class IntAdjuster : KeyedSettingContainer
     {
         public int countChange;
@@ -81,6 +82,7 @@ namespace XmlExtensions.Setting
 
         public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
+    */
 
     public class Numeric : KeyedSettingContainer
     {
