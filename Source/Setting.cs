@@ -27,7 +27,9 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
+            Color currColor = GUI.color;
             listingStandard.IntRange(ref range, min, max);
+            GUI.color = currColor;
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = range.ToString();
         }
 
@@ -189,7 +191,6 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol), columnHeight(rightCol)));
-            //Rect baseRect = listingStandard.GetRect(100);
             Rect leftRect = baseRect.LeftPart(split - 0.005f);
             Rect rightRect = baseRect.RightPart(1 - split - 0.005f);
             Listing_Standard lListing = new Listing_Standard();

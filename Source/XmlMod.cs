@@ -90,7 +90,7 @@ namespace XmlExtensions
                         XmlMod.allSettings.dataDict.Remove(key);
                     }                                  
                 }
-                bool flag = listingStandard.ButtonText("Delete extra data");
+                bool flag = listingStandard.ButtonText("Delete all extra data");
                 if (flag)
                 {
                     foreach (string key in keyList)
