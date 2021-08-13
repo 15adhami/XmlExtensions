@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 using Verse;
@@ -177,6 +178,50 @@ namespace XmlExtensions.Setting
 
         // TODO: Add the height of the line itself?
         public override int getHeight() { return spacing; }
+    }
+
+    public class SplitColumn : SettingContainer
+    {
+        public float split = 0.50f;
+        public List<SettingContainer> leftCol;
+        public List<SettingContainer> rightCol;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol), columnHeight(rightCol)));
+            //Rect baseRect = listingStandard.GetRect(100);
+            Rect leftRect = baseRect.LeftPart(split - 0.005f);
+            Rect rightRect = baseRect.RightPart(1 - split - 0.005f);
+            Listing_Standard lListing = new Listing_Standard();
+            lListing.Begin(leftRect);
+            lListing.verticalSpacing = listingStandard.verticalSpacing;
+            foreach (SettingContainer setting in leftCol)
+            {
+                setting.drawSetting(lListing, selectedMod);
+            }
+            lListing.End();
+            Listing_Standard rListing = new Listing_Standard();
+            rListing.Begin(rightRect);
+            rListing.verticalSpacing = listingStandard.verticalSpacing;
+            foreach (SettingContainer setting in rightCol)
+            {
+                setting.drawSetting(rListing, selectedMod);
+            }
+            rListing.End();
+        }
+
+        private int columnHeight(List<SettingContainer> settings)
+        {
+            int h = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                h += setting.getHeight();
+            }
+            return h;
+        }
+
+        // TODO: Add the height of the line itself?
+        public override int getHeight() { return Math.Max(columnHeight(leftCol), columnHeight(rightCol)); }
     }
 
     public class GapLine : SettingContainer

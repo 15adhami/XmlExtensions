@@ -61,29 +61,46 @@ namespace XmlExtensions
             foreach (SettingContainer setting in this.settings)
             {
                 XmlMod.tryAddSettings(setting, this.modId);
-                if (setting.GetType().IsSubclassOf(typeof(KeyedSettingContainer)))
-                {
-                    if (!XmlMod.settingsPerMod[modId].keys.Contains(((KeyedSettingContainer)(setting)).key))
-                    {
-                        XmlMod.settingsPerMod[modId].keys.Add(((KeyedSettingContainer)(setting)).key);
-                    }
-                    if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(((KeyedSettingContainer)(setting)).key))
-                    {
-                        if (((KeyedSettingContainer)(setting)).defaultValue != null)
-                        {
-                            XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
-                            if (!XmlMod.allSettings.dataDict.ContainsKey(modId+"."+((KeyedSettingContainer)(setting)).key))
-                                XmlMod.allSettings.dataDict.Add(modId + "." + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
-                        }
-                        else
-                        {
-                            Log.Error("[XML Extensions] "+modId+"."+ ((KeyedSettingContainer)(setting)).key+" has no default value defined.");
-                        }
-                    }
-                } 
+                trySetDefaultValue(setting);
             }
             
             return true;
+        }
+
+        private void trySetDefaultValue(SettingContainer setting)
+        {
+            if (setting.GetType().IsSubclassOf(typeof(KeyedSettingContainer)))
+            {
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(((KeyedSettingContainer)(setting)).key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(((KeyedSettingContainer)(setting)).key);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(((KeyedSettingContainer)(setting)).key))
+                {
+                    if (((KeyedSettingContainer)(setting)).defaultValue != null)
+                    {
+                        XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + "." + ((KeyedSettingContainer)(setting)).key))
+                            XmlMod.allSettings.dataDict.Add(modId + "." + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                    }
+                    else
+                    {
+                        Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                    }
+                }
+            }
+            else if (setting.GetType().Equals(typeof(SplitColumn)))
+            {
+                Log.Message("split");
+                foreach (SettingContainer colSetting in ((SplitColumn)(setting)).leftCol)
+                {
+                    trySetDefaultValue(colSetting);
+                }
+                foreach (SettingContainer colSetting in ((SplitColumn)(setting)).rightCol)
+                {
+                    trySetDefaultValue(colSetting);
+                }
+            }
         }
     }    
 
