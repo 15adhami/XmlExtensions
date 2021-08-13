@@ -210,7 +210,7 @@ namespace XmlExtensions
                     }
                 }
             }
-            catch(Exception e)
+            catch
             {
             }
             return result;

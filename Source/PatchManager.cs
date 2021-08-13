@@ -16,6 +16,7 @@ namespace XmlExtensions
         static PatchManager()
         {
             delayedPatches = new Queue<PatchOperation>();
+            xmlDoc = new XmlDocument();
         }
 
         public static void runPatches()

@@ -197,6 +197,18 @@ namespace XmlExtensions.Setting
         public override int getHeight() { return spacing; }
     }
 
+    public class SetColor : SettingContainer
+    {
+        protected Color color = Color.white;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            GUI.color = color;
+        }
+
+        public override int getHeight() { return 0; }
+    }
+
     public class RadioButtons : KeyedSettingContainer
     {
         public List<XmlContainer> buttons;
