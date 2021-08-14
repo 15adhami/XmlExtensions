@@ -1,7 +1,7 @@
 <ModMetaData>
-	<name>XML Extensions</name>
+	<name>XML Extensions Dev</name>
 	<author>Imranfish</author>
-    <packageId>Imranfish.XMLExtensions</packageId>
+    <packageId>Imranfish.XMLExtensionsDev</packageId>
 	<supportedVersions>
 		<li>1.2</li>
 	</supportedVersions>
