@@ -102,6 +102,48 @@ namespace XmlExtensions
                 }
             }
         }
-    }    
+    }
+
+    public class OptionalPatch : PatchOperation
+    {
+        protected string key;
+        protected string modId;
+        protected string defaultValue;
+        protected PatchOperation caseTrue;
+        protected PatchOperation caseFalse;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            XmlMod.loadedMod = this.modId;
+            XmlMod.addXmlMod(this.modId, this.key);
+            string value = defaultValue;
+            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + "." + this.key, out value);
+            if (!didContain)
+            {
+                value = defaultValue;
+                XmlMod.addSetting(this.modId, this.key, defaultValue);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+            }
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+
+            if (bool.Parse(value))
+            {
+                if (caseTrue != null)
+                    caseTrue.Apply(xml);
+            }
+            else
+            {
+                if (caseFalse != null)
+                    caseFalse.Apply(xml);
+            }
+            return true;
+        }
+    }
 
 }
