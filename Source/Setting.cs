@@ -284,7 +284,7 @@ namespace XmlExtensions.Setting
             listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
             foreach (XmlContainer option in buttons)
             {
-                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+"."+key] == option.node["value"].InnerText);
+                bool b = listingStandard.RadioButton(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+"."+key] == option.node["value"].InnerText);
                 if (b) { XmlMod.allSettings.dataDict[selectedMod + "." + key] = option.node["value"].InnerText; }
             }
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;

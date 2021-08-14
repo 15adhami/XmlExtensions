@@ -50,9 +50,11 @@ namespace XmlExtensions
         {
             if (selectedMod != null)
             {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight());
+                Rect scrollRect = new Rect(0, 0, rect.width - 16f, settingsPerMod[selectedMod].calculateHeight());
+                Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Listing_Standard listingStandard = new Listing_Standard();
-                listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
+                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+                listingStandard.Begin(rect2);
                 listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
                 //listingStandard.Label(settingsPerMod[selectedMod].label);
                 foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
@@ -60,7 +62,8 @@ namespace XmlExtensions
                     setting.drawSetting(listingStandard, selectedMod);
                 }
                 GUI.color = Color.white;
-                listingStandard.EndScrollView(ref scrollRect);
+                listingStandard.End();
+                Widgets.EndScrollView();
             }
             else
             {              
@@ -74,9 +77,11 @@ namespace XmlExtensions
                     }
                 }
                 keyList.Sort();                
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, keyList.Count * 24 + 32 + 22);
+                Rect scrollRect = new Rect(0, 0, rect.width - 16f, keyList.Count * 24 + 32 + 22);
                 Listing_Standard listingStandard = new Listing_Standard();
-                listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
+                Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
+                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+                listingStandard.Begin(rect2);
                 listingStandard.Label("Settings currently not being used by loaded mods:");
                 if (keyList.Count == 0)
                 {
@@ -101,7 +106,8 @@ namespace XmlExtensions
                         }
                     }, "No".Translate(), null, null, false, null, null));
                 }
-                listingStandard.EndScrollView(ref scrollRect);
+                listingStandard.End();
+                Widgets.EndScrollView();
             }
         }
 
@@ -109,9 +115,11 @@ namespace XmlExtensions
         public static int tempInt = 600;
         private void drawXmlModList(Rect rect)
         {
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count * (30 + 2) + 38, 585));
+            Rect scrollRect = new Rect(0, 0, rect.width - 16f, Math.Max(loadedXmlMods.Count * (30 + 2) + 38, 585));
+            Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.BeginScrollView(rect, ref modListPosition, ref scrollRect);
+            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+            listingStandard.Begin(rect2);
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;
@@ -129,7 +137,8 @@ namespace XmlExtensions
             listingStandard.TextFieldNumericLabeled<float>("height", ref f, ref buf, 0, 99999);
             tempInt = (int)f;
             */
-            listingStandard.EndScrollView(ref scrollRect);
+            listingStandard.End();
+            Widgets.EndScrollView();
         }
 
 
