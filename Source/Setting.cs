@@ -128,6 +128,7 @@ namespace XmlExtensions.Setting
             {
                 h = 29;
             }
+            h += 1;
             listingStandard.Label(text, h, tooltip);
             Verse.Text.Font = GameFont.Small;
         }
@@ -180,7 +181,7 @@ namespace XmlExtensions.Setting
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(label, null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox("ResetAndRestartConfirmationDialog".Translate(), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
                     {
                         foreach(string key in keys)
                             XmlMod.allSettings.dataDict[selectedMod + "." + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];

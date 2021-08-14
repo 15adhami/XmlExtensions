@@ -84,8 +84,8 @@ namespace XmlExtensions
                             XmlMod.allSettings.dataDict.Add(modId + "." + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
                     }
                     else
-                    {
-                        Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                    {// TODO: Make a check after game boots up
+                        //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
                     }
                 }
             }

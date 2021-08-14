@@ -93,7 +93,7 @@ namespace XmlExtensions
                 }
                 if (listingStandard.ButtonText("Delete all extra settings", null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox("ResetAndRestartConfirmationDialog".Translate(), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
                     {
                         foreach (string key in keyList)
                         {
