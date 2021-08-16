@@ -158,22 +158,25 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            foreach(XmlNode node in xml.SelectNodes(xpath))
+            bool result = false;
+            foreach (XmlNode node in xml.SelectNodes(xpath))
             {
                 XmlNode parent = xml.SelectSingleNode(paste);
                 if (!childNodes)
                 {
+                    result = true;
                     parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
                 }                    
                 else
                 {
                     foreach(XmlNode c in node.ChildNodes)
                     {
+                        result = true;
                         parent.AppendChild(parent.OwnerDocument.ImportNode(c, true));
                     }
                 }
             }
-            return true;
+            return result;
         }
     }
 
@@ -194,9 +197,9 @@ namespace XmlExtensions
             List<string> pathList = path.Split('/').ToList();*/
             try
             {
+                result = true;
                 foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
                 {
-                    result = true;
                     xmlNode.ParentNode.RemoveChild(xmlNode);
                 }
             }
