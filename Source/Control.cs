@@ -22,7 +22,8 @@ namespace XmlExtensions
                 for (int i = this.from; i < this.to; i += increment)
                 {
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    Helpers.runPatchesInXmlContainer(newContainer, xml);
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                        return false;
                 }
             }
             else if (this.increment < 0)
@@ -30,7 +31,8 @@ namespace XmlExtensions
                 for (int i = this.from - 1; i >= this.to; i -= increment)
                 {
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    Helpers.runPatchesInXmlContainer(newContainer, xml);
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                        return false;
                 }
             }       
             return true;
@@ -52,7 +54,8 @@ namespace XmlExtensions
                 string path = xmlNode.GetXPath();
                 string prefix = Helpers.getPrefix(path, prefixLength);
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
-                Helpers.runPatchesInXmlContainer(newContainer, xml);
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                    return false;
             }
             return true;
         }
@@ -71,18 +74,17 @@ namespace XmlExtensions
             {
                 if (this.caseTrue != null)
                 {
-                    Helpers.runPatchesInXmlContainer(this.caseTrue, xml);
-                    return true;
+                    return Helpers.runPatchesInXmlContainer(this.caseTrue, xml);
                 }
             }
             else
             {
                 if (this.caseFalse != null)
                 {
-                    Helpers.runPatchesInXmlContainer(this.caseFalse, xml);
+                    return Helpers.runPatchesInXmlContainer(this.caseFalse, xml);
                 }
             }
-                return false;
+                return true;
         }
 
     }
