@@ -26,11 +26,11 @@ namespace XmlExtensions.Setting
         public int max;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
+            IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
             Color currColor = GUI.color;
             listingStandard.IntRange(ref range, min, max);
             GUI.color = currColor;
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = range.ToString();
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.ToString();
         }
 
         public override int getHeight() { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -44,10 +44,10 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             listingStandard.verticalSpacing = 0;
-            string currFloat = XmlMod.allSettings.dataDict[selectedMod + "." + this.key];
+            string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
             listingStandard.Label(Helpers.substituteVariable(label, key, currFloat.ToString(), "{}"));
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
         }
 
         public override int getHeight() { return (44 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -58,10 +58,10 @@ namespace XmlExtensions.Setting
         public int multiplier = 1;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            int f = int.Parse(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
+            int f = int.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
             string b = f.ToString();
             listingStandard.IntEntry(ref f, ref b, multiplier);
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = f.ToString();
         }
 
         public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -90,10 +90,10 @@ namespace XmlExtensions.Setting
         public float max;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            float f = float.Parse(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
+            float f = float.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
             string buf = f.ToString();
             listingStandard.TextFieldNumericLabeled<float>(this.label, ref f, ref buf, min, max);
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = f.ToString();
         }
 
         public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -103,8 +103,8 @@ namespace XmlExtensions.Setting
     {
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            string currStr = XmlMod.allSettings.dataDict[selectedMod + "." + this.key];
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = listingStandard.TextEntryLabeled(this.label, currStr);
+            string currStr = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.TextEntryLabeled(this.label, currStr);
         }
 
         public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -153,9 +153,9 @@ namespace XmlExtensions.Setting
         public string tooltip;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            bool currBool = bool.Parse(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
+            bool currBool = bool.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
             listingStandard.CheckboxLabeled(this.label, ref currBool, tooltip);
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = currBool.ToString();
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
         public override int getHeight() { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -174,7 +174,7 @@ namespace XmlExtensions.Setting
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(label, null))
                     foreach (string key in keys)
-                        XmlMod.allSettings.dataDict[selectedMod + "." + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                        XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
             }
             else
             {
@@ -184,7 +184,7 @@ namespace XmlExtensions.Setting
                     Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
                     {
                         foreach(string key in keys)
-                            XmlMod.allSettings.dataDict[selectedMod + "." + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                            XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
                     }, "No".Translate(), null, null, false, null, null));
                 }
             }
@@ -284,8 +284,8 @@ namespace XmlExtensions.Setting
             listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
             foreach (XmlContainer option in buttons)
             {
-                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+"."+key] == option.node["value"].InnerText);
-                if (b) { XmlMod.allSettings.dataDict[selectedMod + "." + key] = option.node["value"].InnerText; }
+                bool b = listingStandard.RadioButton_NewTemp(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText);
+                if (b) { XmlMod.allSettings.dataDict[selectedMod + ";" + key] = option.node["value"].InnerText; }
             }
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
         }
@@ -302,7 +302,7 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             List<SettingContainer> settings;
-            if (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod+"."+key]))
+            if (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod+";" +key]))
             {
                 settings = caseTrue;
             }
@@ -337,7 +337,7 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        public override int getHeight() { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + "." + key]) ? calcHeight(caseTrue) : calcHeight(caseFalse)); }
+        public override int getHeight() { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue) : calcHeight(caseFalse)); }
     }
 
     public class ScrollView : SettingContainer

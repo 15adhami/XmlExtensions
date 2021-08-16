@@ -42,7 +42,7 @@ namespace XmlExtensions
         {
             foreach (string key in keys)
             {
-                XmlMod.allSettings.dataDict[modId + "." + key] = defValues[key];
+                XmlMod.allSettings.dataDict[modId + ";" + key] = defValues[key];
             }
         }
     }

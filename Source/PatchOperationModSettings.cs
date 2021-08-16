@@ -22,7 +22,7 @@ namespace XmlExtensions
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.key);
             string value;
-            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + "." + this.key, out value);
+            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
             XmlContainer newContainer;
             if (!didContain)
             {
@@ -80,8 +80,8 @@ namespace XmlExtensions
                     if (((KeyedSettingContainer)(setting)).defaultValue != null)
                     {
                         XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
-                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + "." + ((KeyedSettingContainer)(setting)).key))
-                            XmlMod.allSettings.dataDict.Add(modId + "." + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
+                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + ((KeyedSettingContainer)(setting)).key))
+                            XmlMod.allSettings.dataDict.Add(modId + ";" + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
                     }
                     else
                     {// TODO: Make a check after game boots up
@@ -117,7 +117,7 @@ namespace XmlExtensions
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.key);
             string value = defaultValue;
-            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + "." + this.key, out value);
+            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
             if (!didContain)
             {
                 value = defaultValue;
