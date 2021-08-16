@@ -293,7 +293,7 @@ namespace XmlExtensions.Setting
         public override int getHeight() { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
     }
 
-    public class OptionalSettings : SettingContainer
+    public class ToggleableSettings : SettingContainer
     {
         public string key;
         public string modId;
