@@ -114,6 +114,7 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            bool result = true;
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.key);
             string value = defaultValue;
@@ -135,14 +136,14 @@ namespace XmlExtensions
             if (bool.Parse(value))
             {
                 if (caseTrue != null)
-                    caseTrue.Apply(xml);
+                    result = caseTrue.Apply(xml);
             }
             else
             {
                 if (caseFalse != null)
-                    caseFalse.Apply(xml);
+                    result = caseFalse.Apply(xml);
             }
-            return true;
+            return result;
         }
     }
 
