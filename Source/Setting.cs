@@ -296,14 +296,13 @@ namespace XmlExtensions.Setting
     public class ToggleableSettings : SettingContainer
     {
         public string key;
-        public string modId;
         public List<SettingContainer> caseTrue;
         public List<SettingContainer> caseFalse;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             List<SettingContainer> settings;
-            if (bool.Parse(XmlMod.allSettings.dataDict[modId+"."+key]))
+            if (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod+"."+key]))
             {
                 settings = caseTrue;
             }
@@ -338,7 +337,7 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        public override int getHeight() { return (bool.Parse(XmlMod.allSettings.dataDict[modId + "." + key]) ? calcHeight(caseTrue) : calcHeight(caseFalse)); }
+        public override int getHeight() { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + "." + key]) ? calcHeight(caseTrue) : calcHeight(caseFalse)); }
     }
 
     public class ScrollView : SettingContainer
