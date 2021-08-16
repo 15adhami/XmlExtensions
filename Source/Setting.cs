@@ -292,4 +292,52 @@ namespace XmlExtensions.Setting
 
         public override int getHeight() { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
     }
+
+    public class OptionalSettings : SettingContainer
+    {
+        public string key;
+        public string modId;
+        public List<SettingContainer> caseTrue;
+        public List<SettingContainer> caseFalse;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            List<SettingContainer> settings;
+            if (bool.Parse(XmlMod.allSettings.dataDict[modId+"."+key]))
+            {
+                settings = caseTrue;
+            }
+            else
+            {
+                settings = caseFalse;
+            }
+            if (settings!=null)
+            {
+                Rect baseRect = listingStandard.GetRect(calcHeight(settings));
+                Listing_Standard listing = new Listing_Standard();
+                listing.Begin(baseRect);
+                listing.verticalSpacing = listingStandard.verticalSpacing;
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.drawSetting(listing, selectedMod);
+                }
+                listing.End();
+            }            
+        }
+
+        private int calcHeight(List<SettingContainer> settings)
+        {
+            int h = 0;
+            if (settings!=null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    h += setting.getHeight();
+                }
+            }            
+            return h;
+        }
+
+        public override int getHeight() { return (bool.Parse(XmlMod.allSettings.dataDict[modId + "." + key]) ? calcHeight(caseTrue) : calcHeight(caseFalse)); }
+    }
 }
