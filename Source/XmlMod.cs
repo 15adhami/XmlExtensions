@@ -71,7 +71,7 @@ namespace XmlExtensions
                 List<string> keyList = new List<string>();
                 foreach (KeyValuePair<string, string> pair in kvpList)
                 {
-                    if (!loadedXmlMods.Contains(pair.Key.Split('.')[0]) || !settingsPerMod[pair.Key.Split('.')[0]].keys.Contains(pair.Key.Split('.')[1]))
+                    if (!loadedXmlMods.Contains(pair.Key.Split(';')[0]) || !settingsPerMod[pair.Key.Split(';')[0]].keys.Contains(pair.Key.Split(';')[1]))
                     {
                         keyList.Add(pair.Key);
                     }
@@ -90,7 +90,7 @@ namespace XmlExtensions
                 foreach (string key in keyList)
                 {
                     bool del = false;
-                    listingStandard.CheckboxLabeled(key, ref del, "Delete");
+                    listingStandard.CheckboxLabeled(key.Split(';')[0]+"."+ key.Split(';')[1], ref del, "Delete");
                     if (del)
                     {
                         XmlMod.allSettings.dataDict.Remove(key);
@@ -148,7 +148,7 @@ namespace XmlExtensions
             {
                 allSettings = new XmlModBaseSettings();
             }
-            allSettings.dataDict.Add(modId + "." + key, value);
+            allSettings.dataDict.Add(modId + ";" + key, value);
             if(settingsPerMod[modId].defValues == null)
             {
                 settingsPerMod[modId].defValues = new Dictionary<string, string>();
@@ -163,7 +163,7 @@ namespace XmlExtensions
         {
             string temp = "";
             bool b;
-            b = allSettings.dataDict.TryGetValue(modId + "." + key, out temp);
+            b = allSettings.dataDict.TryGetValue(modId + ";" + key, out temp);
             value = temp;
             return b;
         }
@@ -209,12 +209,12 @@ namespace XmlExtensions
 
         public static string getSetting(string modId, string key)
         {
-            return allSettings.dataDict.TryGetValue<string, string>(modId + "." + key);
+            return allSettings.dataDict.TryGetValue<string, string>(modId + ";" + key);
         }
 
         public static void setSetting(string modId, string key, string value)
         {
-            string fullKey = modId + "." + key;
+            string fullKey = modId + ";" + key;
             if (allSettings.dataDict.ContainsKey(fullKey))
             {
                 allSettings.dataDict[fullKey] = value;
