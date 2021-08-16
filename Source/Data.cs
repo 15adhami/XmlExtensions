@@ -104,7 +104,7 @@ namespace XmlExtensions
                 newStr1 = sum.ToString();
             }
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
-            Helpers.runPatchesInXmlContainer(newContainer, xml);
+            result = Helpers.runPatchesInXmlContainer(newContainer, xml);
             return result;
         }
     }
@@ -125,9 +125,7 @@ namespace XmlExtensions
                 newStr = attribute.Value;
             }
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
-            Helpers.runPatchesInXmlContainer(newContainer, xml);
-
-            return true;
+            return Helpers.runPatchesInXmlContainer(newContainer, xml);
         }
     }
     
