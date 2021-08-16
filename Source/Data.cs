@@ -18,6 +18,7 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            bool result = false;
             string newStr1 = this.value;
             string newStr2 = this.value2;
             if (this.fromXml)
@@ -31,15 +32,15 @@ namespace XmlExtensions
             if (value2 == "")
             {
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
-                Helpers.runPatchesInXmlContainer(newContainer, xml);
+                result = Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
             else
             {
-                string result = Helpers.operationOnString(newStr1, newStr2, this.operation);
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, result, this.brackets);
-                Helpers.runPatchesInXmlContainer(newContainer, xml);
+                string results = Helpers.operationOnString(newStr1, newStr2, this.operation);
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
+                result = Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
-            return true;
+            return result;
         }
     }
 

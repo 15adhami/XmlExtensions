@@ -158,8 +158,10 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            bool result = false;
             foreach(XmlNode node in xml.SelectNodes(xpath))
             {
+                result = true;
                 XmlNode parent = xml.SelectSingleNode(paste);
                 if (!childNodes)
                 {
@@ -173,7 +175,7 @@ namespace XmlExtensions
                     }
                 }
             }
-            return true;
+            return result;
         }
     }
 

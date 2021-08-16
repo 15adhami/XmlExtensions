@@ -185,13 +185,15 @@ namespace XmlExtensions
             return ans;
         }
 
-        public static void runPatchesInXmlContainer(XmlContainer container, XmlDocument xml)
+        public static bool runPatchesInXmlContainer(XmlContainer container, XmlDocument xml)
         {
             for (int j = 0; j < container.node.ChildNodes.Count; j++)
             {
                 PatchOperation patch = Helpers.getPatchFromString(container.node.ChildNodes[j].OuterXml);
-                patch.Apply(xml);
+                if (!patch.Apply(xml))
+                    return false;
             }
+            return true;
         }
 
         public static bool containsNode(XmlNode node, string nodeName)
