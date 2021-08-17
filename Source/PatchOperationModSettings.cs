@@ -20,7 +20,7 @@ namespace XmlExtensions
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId, this.key);
+            XmlMod.addXmlMod(this.modId);
             string value;
             bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
             XmlContainer newContainer;
@@ -91,7 +91,6 @@ namespace XmlExtensions
             }
             else if (setting.GetType().Equals(typeof(SplitColumn)))
             {
-                Log.Message("split");
                 foreach (SettingContainer colSetting in ((SplitColumn)(setting)).leftCol)
                 {
                     trySetDefaultValue(colSetting);
@@ -116,7 +115,7 @@ namespace XmlExtensions
         {
             bool result = true;
             XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId, this.key);
+            XmlMod.addXmlMod(this.modId);
             string value = defaultValue;
             bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
             if (!didContain)

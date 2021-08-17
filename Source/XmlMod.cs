@@ -206,6 +206,31 @@ namespace XmlExtensions
             }
         }
 
+        public static void addXmlMod(string modId)
+        {
+            if (loadedXmlMods == null)
+            {
+                loadedXmlMods = new List<string>();
+            }
+            if (!loadedXmlMods.Contains(modId))
+            {
+                loadedXmlMods.Add(modId);
+            }
+            if (settingsPerMod == null)
+            {
+                settingsPerMod = new Dictionary<string, XmlModSettings>();
+            }
+            if (!settingsPerMod.Keys.Contains(modId))
+            {
+                XmlModSettings t = new XmlModSettings(modId);
+                settingsPerMod.Add(modId, t);
+            }
+            if (settingsPerMod[modId].defValues == null)
+            {
+                settingsPerMod[modId].defValues = new Dictionary<string, string>();
+            }
+        }
+
         public static void tryAddSettings(SettingContainer container, string modId)
         {
             if (settingsPerMod[modId].settings == null)

@@ -31,7 +31,8 @@ namespace XmlExtensions.Boolean
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            return true;
+            Log.Error(this.GetType().ToString()+" was applied like a regular patch operation");
+            return false;
         }
         protected override bool evaluation(XmlDocument xml)
         {
@@ -44,13 +45,20 @@ namespace XmlExtensions.Boolean
         protected PatchOperationBoolean condition1 = null;
         protected PatchOperationBoolean condition2 = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
         protected override bool evaluation(XmlDocument xml)
         {
             return this.condition1.evaluate(xml) || this.condition2.evaluate(xml);
+        }
+    }
+
+    public class Xor : PatchOperationBoolean
+    {
+        protected PatchOperationBoolean condition1 = null;
+        protected PatchOperationBoolean condition2 = null;
+
+        protected override bool evaluation(XmlDocument xml)
+        {
+            return ((this.condition1.evaluate(xml) && !this.condition2.evaluate(xml)) || (!this.condition1.evaluate(xml) && this.condition2.evaluate(xml)));
         }
     }
 
@@ -58,10 +66,6 @@ namespace XmlExtensions.Boolean
     {
         protected PatchOperationBoolean condition = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
         protected override bool evaluation(XmlDocument xml)
         {
             return !this.condition.evaluate(xml);
@@ -72,16 +76,11 @@ namespace XmlExtensions.Boolean
     {
         protected string value1;
         protected string value2;
-        protected string relation;
+        protected string relation = "eq";
         protected string logic = "and";
         protected string fromXml1 = "false";
         protected string fromXml2 = "false";
-        protected string nonNumeric = "false";
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
+        protected string nonNumeric = "false";      
 
         protected override bool evaluation(XmlDocument xml)
         {
