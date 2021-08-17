@@ -109,12 +109,11 @@ namespace XmlExtensions
         protected string key;
         protected string modId;
         protected string defaultValue;
-        protected PatchOperation caseTrue;
-        protected PatchOperation caseFalse;
+        protected XmlContainer caseTrue;
+        protected XmlContainer caseFalse;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.key);
             string value = defaultValue;
@@ -135,15 +134,22 @@ namespace XmlExtensions
 
             if (bool.Parse(value))
             {
-                if (caseTrue != null)
-                    result = caseTrue.Apply(xml);
+                if (this.caseTrue != null)
+                {
+                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml))
+                        return false;
+                }
+                return true;
             }
             else
             {
-                if (caseFalse != null)
-                    result = caseFalse.Apply(xml);
+                if(this.caseFalse != null)
+                {
+                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml))
+                        return false;
+                }
+                return true;
             }
-            return result;
         }
     }
 
