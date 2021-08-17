@@ -114,13 +114,22 @@ namespace XmlExtensions.Setting
     {
         public string text;
         public GameFont font = GameFont.Small;
-        public TextAnchor anchor = TextAnchor.UpperLeft;
+        public string anchor = "Left";
         public string tooltip = null;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
-            Verse.Text.Anchor = anchor;
+            TextAnchor t = TextAnchor.UpperLeft;
+            if(anchor == "Middle")
+            {
+                t = TextAnchor.MiddleCenter;
+            }
+            else if (anchor == "Right")
+            {
+                t = TextAnchor.UpperRight;
+            }
+            Verse.Text.Anchor = t;
             int h = 18;
             if (font == GameFont.Small)
             {
