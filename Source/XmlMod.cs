@@ -71,10 +71,18 @@ namespace XmlExtensions
                 List<string> keyList = new List<string>();
                 foreach (KeyValuePair<string, string> pair in kvpList)
                 {
-                    if (!loadedXmlMods.Contains(pair.Key.Split(';')[0]) || !settingsPerMod[pair.Key.Split(';')[0]].keys.Contains(pair.Key.Split(';')[1]))
+                    if(pair.Key.Contains(";"))
                     {
-                        keyList.Add(pair.Key);
+                        if (!loadedXmlMods.Contains(pair.Key.Split(';')[0]) || !settingsPerMod[pair.Key.Split(';')[0]].keys.Contains(pair.Key.Split(';')[1]))
+                        {
+                            keyList.Add(pair.Key);
+                        }
                     }
+                    else
+                    {
+                        XmlMod.allSettings.dataDict.Remove(pair.Key);
+                    }
+                    
                 }
                 keyList.Sort();                
                 Rect scrollRect = new Rect(0, 0, rect.width - 16f, keyList.Count * 24 + 32 + 22);
