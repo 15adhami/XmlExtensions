@@ -185,16 +185,6 @@ namespace XmlExtensions
         protected override bool ApplyWorker(XmlDocument xml)
         {
             bool result = false;
-            /*string path = xpath;
-            if (path[0] == '/')
-            {
-                path = path.Substring(1);
-            }
-            if (path[path.Length-1] == '/')
-            {
-                path = path.Substring(0, path.Length - 1);
-            }
-            List<string> pathList = path.Split('/').ToList();*/
             try
             {
                 result = true;

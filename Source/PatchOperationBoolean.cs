@@ -10,6 +10,12 @@ namespace XmlExtensions.Boolean
             return string.Format("{0}({1})", base.ToString(), this.xpath);
         }
 
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            Log.Error(this.GetType().ToString() +  " was called like a regular patch operation");
+            return false;
+        }
+
         public bool evaluate(XmlDocument xml)
         {
             if (!this.valid)
@@ -29,10 +35,7 @@ namespace XmlExtensions.Boolean
         protected PatchOperationBoolean condition1 = null;
         protected PatchOperationBoolean condition2 = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
+        
         protected override bool evaluation(XmlDocument xml)
         {
             return this.condition1.evaluate(xml) && this.condition2.evaluate(xml);
@@ -44,13 +47,20 @@ namespace XmlExtensions.Boolean
         protected PatchOperationBoolean condition1 = null;
         protected PatchOperationBoolean condition2 = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
         protected override bool evaluation(XmlDocument xml)
         {
             return this.condition1.evaluate(xml) || this.condition2.evaluate(xml);
+        }
+    }
+
+    public class Xor : PatchOperationBoolean
+    {
+        protected PatchOperationBoolean condition1 = null;
+        protected PatchOperationBoolean condition2 = null;
+
+        protected override bool evaluation(XmlDocument xml)
+        {
+            return (this.condition1.evaluate(xml) && !this.condition2.evaluate(xml)) || (!this.condition1.evaluate(xml) && this.condition2.evaluate(xml));
         }
     }
 
@@ -58,10 +68,6 @@ namespace XmlExtensions.Boolean
     {
         protected PatchOperationBoolean condition = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
         protected override bool evaluation(XmlDocument xml)
         {
             return !this.condition.evaluate(xml);
@@ -70,18 +76,14 @@ namespace XmlExtensions.Boolean
 
     public class Comparision : PatchOperationBoolean
     {
+        // This code has more spaghetti in it than an Italian restaraunt
         protected string value1;
         protected string value2;
-        protected string relation;
+        protected string relation = "eq";
         protected string logic = "and";
         protected string fromXml1 = "false";
         protected string fromXml2 = "false";
         protected string nonNumeric = "false";
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            return true;
-        }
 
         protected override bool evaluation(XmlDocument xml)
         {

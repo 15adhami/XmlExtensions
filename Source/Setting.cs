@@ -114,11 +114,13 @@ namespace XmlExtensions.Setting
     {
         public string text;
         public GameFont font = GameFont.Small;
+        public TextAnchor anchor = TextAnchor.UpperLeft;
         public string tooltip = null;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
+            Verse.Text.Anchor = anchor;
             int h = 18;
             if (font == GameFont.Small)
             {
@@ -131,6 +133,7 @@ namespace XmlExtensions.Setting
             h += 1;
             listingStandard.Label(text, h, tooltip);
             Verse.Text.Font = GameFont.Small;
+            Verse.Text.Anchor = TextAnchor.UpperLeft;
         }
 
         public override int getHeight()
