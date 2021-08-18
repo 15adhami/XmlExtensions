@@ -301,7 +301,17 @@ namespace XmlExtensions.Setting
             listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
             foreach (XmlContainer option in buttons)
             {
-                bool b = listingStandard.RadioButton(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText);
+                bool b = false;
+                string str;
+                try
+                {
+                    str = option.node["tooltip"].InnerText;
+                }
+                catch
+                {
+                    str = null;
+                }
+                b = listingStandard.RadioButton(option.node["label"].InnerText, XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText, 0, str);
                 if (b) { XmlMod.allSettings.dataDict[selectedMod + ";" + key] = option.node["value"].InnerText; }
             }
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
