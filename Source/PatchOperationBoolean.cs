@@ -12,7 +12,7 @@ namespace XmlExtensions.Boolean
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            Log.Error(this.GetType().ToString() +  " was called like a regular patch operation");
+            Verse.Log.Error(this.GetType().ToString() +  " was called like a regular patch operation");
             return false;
         }
 

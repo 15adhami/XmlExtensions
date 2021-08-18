@@ -50,7 +50,7 @@ namespace XmlExtensions
         {
             if (selectedMod != null)
             {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight());
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight(rect.width - 20f));
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.BeginScrollView(rect, ref settingsPosition, ref scrollRect);
                 listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;

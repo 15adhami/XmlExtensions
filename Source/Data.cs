@@ -131,5 +131,31 @@ namespace XmlExtensions
             return result;
         }
     }
-    
+
+    public class Log : PatchOperationPathed
+    {
+        protected string text = null;
+        protected string error = null;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            if (text == null && xpath == null && error == null)
+            {
+                Verse.Log.Message("XmlExtensions.Log");
+            }
+            if (text != null)
+                Verse.Log.Message(text);
+            if (error != null)
+                Verse.Log.Error(error);
+            if (xpath != null)
+            {
+                foreach (XmlNode node in xml.SelectNodes(xpath))
+                {
+                    Verse.Log.Message(node.OuterXml);
+                }
+            }
+            return true;
+        }
+    }
+
 }
