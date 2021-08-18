@@ -1,11 +1,6 @@
 ﻿using Verse;
-using System.Xml;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using System;
-using System.Reflection;
-//using HarmonyLib;
+
+// This code is so bad
 
 namespace XmlExtensions
 {

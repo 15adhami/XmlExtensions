@@ -28,12 +28,12 @@ namespace XmlExtensions
             this.modId = modId;
         }
 
-        public int calculateHeight()
+        public int calculateHeight(float width)
         {
             int h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.getHeight();
+                h += setting.getHeight(width);
             }
             return h;
         }

@@ -113,7 +113,6 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = true;
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId);
             string value = defaultValue;
