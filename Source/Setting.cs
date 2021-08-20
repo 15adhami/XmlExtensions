@@ -41,12 +41,14 @@ namespace XmlExtensions.Setting
         public float min;
         public float max;
         public string tKey;
+        public string tooltip = null;
+        public string tKeyTip = null;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             listingStandard.verticalSpacing = 0;
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
-            listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"));
+            listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
         }
@@ -122,6 +124,7 @@ namespace XmlExtensions.Setting
         public string anchor = "Left";
         public string tooltip = null;
         public string tKey = null;
+        public string tKeyTip = null;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
@@ -147,7 +150,7 @@ namespace XmlExtensions.Setting
             }
             h += 1;
             string str = Helpers.tryTranslate(text, tKey);
-            listingStandard.Label(str, -1, tooltip);                       
+            listingStandard.Label(str, -1, Helpers.tryTranslate(tooltip, tKeyTip));                       
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
         }
@@ -178,11 +181,12 @@ namespace XmlExtensions.Setting
     {
         public string tooltip;
         public string tKey;
+        public string tKeyTip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             bool currBool = bool.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
-            listingStandard.CheckboxLabeled(Helpers.tryTranslate(label, tKey), ref currBool, tooltip);
+            listingStandard.CheckboxLabeled(Helpers.tryTranslate(label, tKey), ref currBool, Helpers.tryTranslate(tooltip, tKeyTip));
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
@@ -195,13 +199,15 @@ namespace XmlExtensions.Setting
         protected List<string> keys = null;
         protected bool confirm = true;
         public string tKey;
+        public string tKeyTip;
+        public string tooltip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             if (!confirm)
             {
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
-                if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), null))
+                if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), Helpers.tryTranslate(tooltip, tKeyTip)))
                     foreach (string key in keys)
                         XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
             }
@@ -332,7 +338,16 @@ namespace XmlExtensions.Setting
                 {
                     tKey = null;
                 }
-                b = listingStandard.RadioButton(Helpers.tryTranslate(option.node["label"].InnerText, tKey), XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText, 0, str);
+                string tKeyTip;
+                try
+                {
+                    tKeyTip = option.node["tKeyTip"].InnerText;
+                }
+                catch
+                {
+                    tKeyTip = null;
+                }
+                b = listingStandard.RadioButton(Helpers.tryTranslate(option.node["label"].InnerText, tKey), XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText, 0, Helpers.tryTranslate(str, tKeyTip));
                 if (b) { XmlMod.allSettings.dataDict[selectedMod + ";" + key] = option.node["value"].InnerText; }
             }
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
