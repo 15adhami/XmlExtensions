@@ -43,6 +43,7 @@ namespace XmlExtensions.Setting
         public string tKey;
         public string tooltip = null;
         public string tKeyTip = null;
+        public bool integer = false;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
@@ -50,7 +51,10 @@ namespace XmlExtensions.Setting
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
             listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
-            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
+            if (integer)
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = ((int)Math.Round(listingStandard.Slider(float.Parse(currFloat), min, max))).ToString();
+            else
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = (listingStandard.Slider(float.Parse(currFloat), min, max)).ToString();
         }
 
         public override int getHeight(float width) { return (44 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
