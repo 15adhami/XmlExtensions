@@ -63,7 +63,7 @@ namespace XmlExtensions
                 XmlMod.tryAddSettings(setting, this.modId);
                 trySetDefaultValue(setting);
             }
-            
+            XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
             return true;
         }
 
