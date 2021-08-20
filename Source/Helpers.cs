@@ -205,6 +205,22 @@ namespace XmlExtensions
             return false;
         }
 
+        public static string tryTranslate(string str, string tKey)
+        {
+            if (tKey != null)
+            {
+                TaggedString temp = new TaggedString();
+                if (tKey.TryTranslate(out temp))
+                    return temp.RawText;
+                else
+                    return str;
+            }
+            else
+            {
+                return str;
+            }
+        }
+
     }
     
     
