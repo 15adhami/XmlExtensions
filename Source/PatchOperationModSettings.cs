@@ -127,6 +127,16 @@ namespace XmlExtensions
                     }
                 }
             }
+            else if (setting.GetType().Equals(typeof(ScrollView)))
+            {
+                if (((ScrollView)(setting)).settings != null)
+                {
+                    foreach (SettingContainer colSetting in ((ScrollView)(setting)).settings)
+                    {
+                        trySetDefaultValue(colSetting);
+                    }
+                }
+            }
         }
     }
 
