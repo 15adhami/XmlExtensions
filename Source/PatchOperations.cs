@@ -220,4 +220,55 @@ namespace XmlExtensions
             return true;
         }
     }*/
+
+    public class PatchOperationSafeAddOrReplace : PatchOperationPathed
+    {
+        protected XmlContainer value;
+        protected int safetyDepth = -1;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            XmlNode node = this.value.node;
+            bool result = false;
+            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath))
+            {
+                foreach (XmlNode addNode in node.ChildNodes)
+                {
+                    result = true;
+                    int d = 0;
+                    tryAddOrReplaceNode(xmlNode, addNode, d);
+                }
+            }
+            return result;
+        }
+        private void tryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
+        {
+            if (!Helpers.containsNode(parent, child.Name))
+            {
+                parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+            }
+            else if (depth == safetyDepth)
+            {
+                if (!Helpers.containsNode(parent, child.Name))
+                {
+                    parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+                }
+                else
+                {
+                    parent.InsertAfter(parent.OwnerDocument.ImportNode(child, true), parent[child.Name]);
+                    parent.RemoveChild(parent[child.Name]);
+                }
+            }
+            else
+            {
+                if (child.HasChildNodes && child.FirstChild.HasChildNodes)
+                {
+                    foreach (XmlNode newChild in child.ChildNodes)
+                    {
+                        tryAddOrReplaceNode(parent[child.Name], newChild, depth + 1);
+                    }
+                }
+            }
+        }
+    }
 }
