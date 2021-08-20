@@ -93,13 +93,38 @@ namespace XmlExtensions
             }
             else if (setting.GetType().Equals(typeof(SplitColumn)))
             {
-                foreach (SettingContainer colSetting in ((SplitColumn)(setting)).leftCol)
+                if (((SplitColumn)(setting)).leftCol!=null)
                 {
-                    trySetDefaultValue(colSetting);
+                    foreach (SettingContainer colSetting in ((SplitColumn)(setting)).leftCol)
+                    {
+                        trySetDefaultValue(colSetting);
+                    }
                 }
-                foreach (SettingContainer colSetting in ((SplitColumn)(setting)).rightCol)
+
+                if (((SplitColumn)(setting)).rightCol != null)
                 {
-                    trySetDefaultValue(colSetting);
+                    foreach (SettingContainer colSetting in ((SplitColumn)(setting)).rightCol)
+                    {
+                        trySetDefaultValue(colSetting);
+                    }
+                }
+            }
+            else if (setting.GetType().Equals(typeof(ToggleableSettings)))
+            {
+                if (((ToggleableSettings)(setting)).caseTrue!=null)
+                {
+                    foreach (SettingContainer colSetting in ((ToggleableSettings)(setting)).caseTrue)
+                    {
+                        trySetDefaultValue(colSetting);
+                    }
+                }
+
+                if (((ToggleableSettings)(setting)).caseFalse != null)
+                {
+                    foreach (SettingContainer colSetting in ((ToggleableSettings)(setting)).caseFalse)
+                    {
+                        trySetDefaultValue(colSetting);
+                    }
                 }
             }
         }
