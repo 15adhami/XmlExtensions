@@ -41,12 +41,14 @@ namespace XmlExtensions.Setting
         public float min;
         public float max;
         public string tKey;
+        public string tKeyTip;
+        public string tooltip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             listingStandard.verticalSpacing = 0;
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
-            listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"));
+            listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), -1, Helpers.tryTranslate(tooltip, tKeyTip));
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.Slider(float.Parse(currFloat), min, max).ToString();
         }
@@ -122,6 +124,7 @@ namespace XmlExtensions.Setting
         public string anchor = "Left";
         public string tooltip = null;
         public string tKey;
+        public string tKeyTip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
@@ -146,7 +149,7 @@ namespace XmlExtensions.Setting
                 h = 29;
             }
             h += 1;
-            listingStandard.Label(Helpers.tryTranslate(text, tKey), -1, tooltip);
+            listingStandard.Label(Helpers.tryTranslate(text, tKey), -1, Helpers.tryTranslate(tooltip, tKeyTip));
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
         }
@@ -175,11 +178,12 @@ namespace XmlExtensions.Setting
     {
         public string tooltip;
         public string tKey;
+        public string tKeyTip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             bool currBool = bool.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
-            listingStandard.CheckboxLabeled(Helpers.tryTranslate(label, tKey), ref currBool, tooltip);
+            listingStandard.CheckboxLabeled(Helpers.tryTranslate(label, tKey), ref currBool, Helpers.tryTranslate(tooltip, tKeyTip));
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
@@ -304,7 +308,6 @@ namespace XmlExtensions.Setting
     {
         public List<XmlContainer> buttons;
         protected int spacing = -1;
-        public string tKeyTip;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
