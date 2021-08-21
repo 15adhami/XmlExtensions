@@ -53,6 +53,7 @@
     <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
     <Compile Include="Setting.cs" />
+    <Compile Include="SettingsManager.cs" />
     <Compile Include="XmlInheritance_Resolve_Patch.cs" />
     <Compile Include="XmlModBaseSettings.cs" />
     <Compile Include="PatchOperationBoolean.cs" />
