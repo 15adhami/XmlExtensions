@@ -61,7 +61,7 @@ namespace XmlExtensions
             foreach (SettingContainer setting in this.settings)
             {
                 XmlMod.tryAddSettings(setting, this.modId);
-                trySetDefaultValue(setting);
+                setting.setDefaultValue(modId);
             }
             XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
             return true;

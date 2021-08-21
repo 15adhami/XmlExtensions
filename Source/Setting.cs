@@ -10,6 +10,8 @@ namespace XmlExtensions.Setting
     {
         public virtual void drawSetting(Listing_Standard listingStandard, string selectedMod) { }
 
+        public virtual void setDefaultValue(string modId) { }
+
         public virtual int getHeight(float width) { return 0; }
     }
 
@@ -18,19 +20,116 @@ namespace XmlExtensions.Setting
         public string key = "";
         public string label = "";
         public string defaultValue = null;
+
+        public override void setDefaultValue(string modId)
+        {
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                if (defaultValue != null)
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                    if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+                        XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
+                }
+                else
+                {// TODO: Make a check after game boots up
+                    //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                }
+            }
+        }
     }
 
     public class Range : KeyedSettingContainer
     {
         public int min;
         public int max;
+        public string key2;
+
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
-            Color currColor = GUI.color;
-            listingStandard.IntRange(ref range, min, max);
-            GUI.color = currColor;
-            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.ToString();
+            if (key2 == null)
+            {
+                IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
+                Color currColor = GUI.color;
+                listingStandard.IntRange(ref range, min, max);
+                GUI.color = currColor;
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.ToString();
+            }
+            else
+            {
+                IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + key]+"~"+ XmlMod.allSettings.dataDict[selectedMod + ";" + key2]);
+                Color currColor = GUI.color;
+                listingStandard.IntRange(ref range, min, max);
+                GUI.color = currColor;
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.min.ToString();
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key2] = range.max.ToString();
+            }
+            
+        }
+
+        public override void setDefaultValue(string modId)
+        {
+            if (key2 == null)
+            {
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    if (defaultValue != null)
+                    {
+                        XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+                            XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
+                    }
+                    else
+                    {// TODO: Make a check after game boots up
+                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                    }
+                }
+            }
+            else
+            {
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key);
+                }
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key2))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key2);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    if (defaultValue != null)
+                    {
+                        XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue.Split('~')[0]);
+                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+                            XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue.Split('~')[0]);
+                    }
+                    else
+                    {// TODO: Make a check after game boots up
+                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                    }
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key2))
+                {
+                    if (defaultValue != null)
+                    {
+                        XmlMod.settingsPerMod[modId].defValues.Add(key2, defaultValue.Split('~')[1]);
+                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key2))
+                            XmlMod.allSettings.dataDict.Add(modId + ";" + key2, defaultValue.Split('~')[1]);
+                    }
+                    else
+                    {// TODO: Make a check after game boots up
+                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
+                    }
+                }
+            }
         }
 
         public override int getHeight(float width) { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -126,6 +225,7 @@ namespace XmlExtensions.Setting
         public string tooltip = null;
         public string tKey = null;
         public string tKeyTip = null;
+        public List<string> keys;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {//M: 29 S: 22 T:18
@@ -151,6 +251,13 @@ namespace XmlExtensions.Setting
             }
             h += 1;
             string str = Helpers.tryTranslate(text, tKey);
+            if (keys != null)
+            {
+                foreach (string key in keys)
+                {
+                    str = Helpers.substituteVariable(str, key, XmlMod.allSettings.dataDict[selectedMod + ";" + key], "{}");
+                }
+            }            
             listingStandard.Label(str, -1, Helpers.tryTranslate(tooltip, tKeyTip));                       
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
@@ -277,6 +384,24 @@ namespace XmlExtensions.Setting
             return h;
         }
 
+        public override void setDefaultValue(string modId)
+        {
+            if(leftCol != null)
+            {
+                foreach(SettingContainer setting in leftCol)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
+            if (rightCol != null)
+            {
+                foreach (SettingContainer setting in rightCol)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
+        }
+
         public override int getHeight(float width) { return Math.Max(columnHeight(leftCol, width * split), columnHeight(rightCol, width * (1 - split))); }
     }
 
@@ -401,6 +526,24 @@ namespace XmlExtensions.Setting
             return h;
         }
 
+        public override void setDefaultValue(string modId)
+        {
+            if (caseTrue != null)
+            {
+                foreach (SettingContainer setting in caseTrue)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
+            if (caseFalse != null)
+            {
+                foreach (SettingContainer setting in caseFalse)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
+        }
+
         public override int getHeight(float width) { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width) : calcHeight(caseFalse, width)); }
     }
 
@@ -439,6 +582,17 @@ namespace XmlExtensions.Setting
                 }
             }
             return h;
+        }
+
+        public override void setDefaultValue(string modId)
+        {
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
         }
 
         public override int getHeight(float width) { return ((int)height); }
