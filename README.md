@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/15adhami/XmlExtensions/blob/master/About/Preview.png" alt="XML Extensions" />
+<img src="https://github.com/15adhami/XmlExtensions/blob/1.2/About/Preview.png" alt="XML Extensions" />
 </p>
 
 # XmlExtensions
