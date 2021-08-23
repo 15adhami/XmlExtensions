@@ -113,10 +113,10 @@ namespace XmlExtensions
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
                 listingStandard.Begin(rect2);
-                listingStandard.Label("Settings currently not being used by loaded mods:");
+                listingStandard.Label(Helpers.tryTranslate("Settings currently not being used by loaded mods:", "XmlExtensions_UnloadedSettings"));
                 if (keyList.Count == 0)
                 {
-                    listingStandard.Label("No extra settings at the moment.");
+                    listingStandard.Label(Helpers.tryTranslate("No extra settings at the moment.", "XmlExtensions_NoExtraSettings"));
                 }
                 string temp = "";
                 foreach (string key in keyList)
@@ -134,9 +134,9 @@ namespace XmlExtensions
                 }
                 listingStandard.GapLine(4);
                 listingStandard.Gap(2);
-                if (listingStandard.ButtonText("Delete all extra settings", null))
+                if (listingStandard.ButtonText(Helpers.tryTranslate("Delete all extra settings", "XmlExtensions_DeleteAllExtraSettings"), null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of every unloaded mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
                     {
                         foreach (string key in keyList)
                         {
@@ -153,7 +153,7 @@ namespace XmlExtensions
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
                 listingStandard.Begin(rect2);
-                listingStandard.Label("Currently selected mod's unused settings:");
+                listingStandard.Label(Helpers.tryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedSettings"));
                 listingStandard.GapLine(4);
                 listingStandard.Gap(2);
                 foreach (string key in keyList)
@@ -172,9 +172,9 @@ namespace XmlExtensions
                 }
                 listingStandard.GapLine(4);
                 listingStandard.Gap(2);
-                if (listingStandard.ButtonText("Delete all extra settings", null))
+                if (listingStandard.ButtonText(Helpers.tryTranslate("Delete extra settings", "XmlExtensions_DeleteExtraSettings"), null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                     {
                         foreach (string key in keyList)
                         {
@@ -210,7 +210,7 @@ namespace XmlExtensions
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
             bool t1 = false;
-            t1 = listingStandard.ButtonText(Helpers.tryTranslate("XML Extensions", "XmlExtensions_label"));
+            t1 = listingStandard.ButtonText(Helpers.tryTranslate("XML Extensions", "XmlExtensions_Label"));
             if (t1) { selectedMod = null; }
             /*
             float f = (float)(tempInt);
