@@ -6,6 +6,7 @@ using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
+    // "Virtual" mod settings. Settings each mod has.
     public class XmlModSettings
     {
         public List<string> keys;

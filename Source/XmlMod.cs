@@ -109,11 +109,13 @@ namespace XmlExtensions
             Listing_Standard listingStandard = new Listing_Standard();
             if (selectedExtraMod == null)
             {                
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, unique * 32 + 32 + 6 + 24);                
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, unique * 32 + 32 + 12 + 24);                
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
                 listingStandard.Begin(rect2);
                 listingStandard.Label(Helpers.tryTranslate("Settings currently not being used by loaded mods:", "XmlExtensions_UnloadedSettings"));
+                listingStandard.GapLine(4);
+                listingStandard.Gap(2);
                 if (keyList.Count == 0)
                 {
                     listingStandard.Label(Helpers.tryTranslate("No extra settings at the moment.", "XmlExtensions_NoExtraSettings"));
@@ -142,6 +144,7 @@ namespace XmlExtensions
                         {
                             XmlMod.allSettings.dataDict.Remove(key);
                         }
+                        selectedExtraMod = null;
                     }, "No".Translate(), null, null, false, null, null));
                 }
                 listingStandard.End();
@@ -175,12 +178,13 @@ namespace XmlExtensions
                 if (listingStandard.ButtonText(Helpers.tryTranslate("Delete extra settings", "XmlExtensions_DeleteExtraSettings"), null))
                 {
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
-                    {
+                    {                        
                         foreach (string key in keyList)
                         {
                             if(selectedExtraMod == key.Split(';')[0])
                                 XmlMod.allSettings.dataDict.Remove(key);
                         }
+                        selectedExtraMod = null;
                     }, "No".Translate(), null, null, false, null, null));
                 }
                 if (listingStandard.ButtonText("Back"))
@@ -205,13 +209,21 @@ namespace XmlExtensions
                 bool t = false;
                 // TODO: Translate label
                 t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
-                if (t) { selectedMod = modId; }
+                if (t)
+                {
+                    selectedMod = modId;
+                    selectedExtraMod = null;
+                }
             }
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
             bool t1 = false;
             t1 = listingStandard.ButtonText(Helpers.tryTranslate("XML Extensions", "XmlExtensions_Label"));
-            if (t1) { selectedMod = null; }
+            if (t1)
+            {
+                selectedMod = null;
+                selectedExtraMod = null;
+            }
             /*
             float f = (float)(tempInt);
             string buf = f.ToString();

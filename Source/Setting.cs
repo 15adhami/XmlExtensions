@@ -316,15 +316,18 @@ namespace XmlExtensions.Setting
             {
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), Helpers.tryTranslate(tooltip, tKeyTip)))
+                {
                     foreach (string key in keys)
                         XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                }
+                    
             }
             else
             {
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox("XmlExtensions_Confirmation".Translate(), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                     {
                         foreach(string key in keys)
                             XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
