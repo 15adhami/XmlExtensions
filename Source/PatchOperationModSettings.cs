@@ -49,11 +49,13 @@ namespace XmlExtensions
         protected string label;
         protected int defaultSpacing = 2;
         protected List<SettingContainer> settings;
+        protected string tKey;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId, this.label);
+            XmlMod.settingsPerMod[modId].tKey = tKey;
             if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
             {
                 XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;

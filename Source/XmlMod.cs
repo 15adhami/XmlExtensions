@@ -122,7 +122,7 @@ namespace XmlExtensions
             foreach (string modId in loadedXmlMods)
             {
                 bool t = false;
-                t = listingStandard.ButtonText(settingsPerMod[modId].label);
+                t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
                 if (t) { selectedMod = modId; }
             }
             listingStandard.GapLine(4);

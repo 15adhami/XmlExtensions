@@ -14,6 +14,7 @@ namespace XmlExtensions
         public string label;
         public string modId;
         public Dictionary<string, string> defValues;
+        public string tKey;
 
         public XmlModSettings()
         {
