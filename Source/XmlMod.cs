@@ -204,13 +204,13 @@ namespace XmlExtensions
             {
                 bool t = false;
                 // TODO: Translate label
-                t = listingStandard.ButtonText(settingsPerMod[modId].label);
+                t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
                 if (t) { selectedMod = modId; }
             }
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
             bool t1 = false;
-            t1 = listingStandard.ButtonText("XML Extensions");
+            t1 = listingStandard.ButtonText(Helpers.tryTranslate("XML Extensions", "XmlExtensions_label"));
             if (t1) { selectedMod = null; }
             /*
             float f = (float)(tempInt);
