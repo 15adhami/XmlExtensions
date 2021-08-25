@@ -18,7 +18,7 @@ namespace XmlExtensions.Setting
     public abstract class KeyedSettingContainer : SettingContainer
     {
         public string key = "";
-        public string label = "";
+        public string label = null;
         public string defaultValue = null;
 
         public override void setDefaultValue(string modId)
@@ -207,14 +207,23 @@ namespace XmlExtensions.Setting
     public class Textbox : KeyedSettingContainer
     {
         public string tKey;
+        public int lines = 1;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             string currStr = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
-            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.TextEntryLabeled(Helpers.tryTranslate(label, tKey), currStr);
+            if (label != null)
+            {
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.TextEntryLabeled(Helpers.tryTranslate(label, tKey), currStr, lines);
+            }
+            else
+            {
+                XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = listingStandard.TextEntry(currStr, lines);
+            }
+            
         }
 
-        public override int getHeight(float width) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width) { return (lines*22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Text : SettingContainer
@@ -351,8 +360,8 @@ namespace XmlExtensions.Setting
     public class SplitColumn : SettingContainer
     {
         public float split = 0.50f;
-        public List<SettingContainer> leftCol;
-        public List<SettingContainer> rightCol;
+        public List<SettingContainer> leftCol = new List<SettingContainer>();
+        public List<SettingContainer> rightCol = new List<SettingContainer>();
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {

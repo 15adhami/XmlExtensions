@@ -29,14 +29,14 @@ namespace XmlExtensions
             {
                 newStr2 = xml.SelectSingleNode(this.value2).InnerText;
             }
-            if (value2 == "")
+            if (operation == "")
             {
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
                 result = Helpers.runPatchesInXmlContainer(newContainer, xml);
             }
             else
             {
-                string results = Helpers.operationOnString(newStr1, newStr2, this.operation);
+                string results = Helpers.operationOnString(newStr1, newStr2, operation);
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
                 result = Helpers.runPatchesInXmlContainer(newContainer, xml);
             }

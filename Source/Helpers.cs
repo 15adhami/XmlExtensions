@@ -66,12 +66,11 @@ namespace XmlExtensions
         public static string operationOnString(string str1, string str2, string operation)
         {
             string result = "";
-
             if (operation == "negate")
             {
-                if(str1 == "true")
+                if (str1 == "true")
                 {
-                    result = "false";
+                    result = "false";                    
                 }
                 else
                 {
