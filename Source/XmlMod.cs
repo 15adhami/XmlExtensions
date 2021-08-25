@@ -53,7 +53,7 @@ namespace XmlExtensions
         {
             if (selectedMod != null)
             {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight(rect.width - 20f));
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight(rect.width - 20f, selectedMod));
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Listing_Standard listingStandard = new Listing_Standard();
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);

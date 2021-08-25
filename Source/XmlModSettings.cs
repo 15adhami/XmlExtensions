@@ -30,12 +30,12 @@ namespace XmlExtensions
             this.modId = modId;
         }
 
-        public int calculateHeight(float width)
+        public int calculateHeight(float width, string selectedMod)
         {
             int h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.getHeight(width);
+                h += setting.getHeight(width, selectedMod);
             }
             return h;
         }

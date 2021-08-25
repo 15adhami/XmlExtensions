@@ -12,7 +12,9 @@ namespace XmlExtensions.Setting
 
         public virtual void setDefaultValue(string modId) { }
 
-        public virtual int getHeight(float width) { return 0; }
+        public virtual int getHeight(float width, string selectedMod) { return 0; }
+
+        public virtual void init() { }
     }
 
     public abstract class KeyedSettingContainer : SettingContainer
@@ -132,7 +134,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width) { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Slider : KeyedSettingContainer
@@ -143,17 +145,19 @@ namespace XmlExtensions.Setting
         public string tooltip = null;
         public string tKeyTip = null;
         public int decimals = 6;
+        public bool hideLabel = false;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             listingStandard.verticalSpacing = 0;
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
-            listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
+            if (!hideLabel)
+                listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = (Math.Round(listingStandard.Slider(float.Parse(currFloat), min, max), decimals)).ToString();
         }
 
-        public override int getHeight(float width) { return (44 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing + (hideLabel? 0:22)); }
     }
 
     public class IntEntry : KeyedSettingContainer
@@ -167,7 +171,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = f.ToString();
         }
 
-        public override int getHeight(float width) { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     /*
@@ -201,7 +205,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = f.ToString();
         }
 
-        public override int getHeight(float width) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Textbox : KeyedSettingContainer
@@ -223,7 +227,7 @@ namespace XmlExtensions.Setting
             
         }
 
-        public override int getHeight(float width) { return (lines*22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (lines*22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Text : SettingContainer
@@ -272,7 +276,7 @@ namespace XmlExtensions.Setting
             Verse.Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        public override int getHeight(float width)
+        public override int getHeight(float width, string selectedMod)
         {
             Verse.Text.Font = font;
             TextAnchor t = TextAnchor.UpperLeft;
@@ -307,7 +311,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
-        public override int getHeight(float width) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class ResetSettings : SettingContainer
@@ -345,7 +349,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width) { return (30 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (30 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
     }
 
     public class Gap : SettingContainer
@@ -354,7 +358,7 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }
 
         // TODO: Add the height of the line itself?
-        public override int getHeight(float width) { return spacing; }
+        public override int getHeight(float width, string selectedMod) { return spacing; }
     }
 
     public class SplitColumn : SettingContainer
@@ -365,7 +369,7 @@ namespace XmlExtensions.Setting
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, listingStandard.ColumnWidth*split), columnHeight(rightCol, listingStandard.ColumnWidth*(1-split))));
+            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, listingStandard.ColumnWidth*split, selectedMod), columnHeight(rightCol, listingStandard.ColumnWidth*(1-split), selectedMod)));
             Rect leftRect = baseRect.LeftPart(split - 0.005f);
             Rect rightRect = baseRect.RightPart(1 - split - 0.005f);
             Listing_Standard lListing = new Listing_Standard();
@@ -386,12 +390,12 @@ namespace XmlExtensions.Setting
             rListing.End();
         }
 
-        private int columnHeight(List<SettingContainer> settings, float width)
+        private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
         {
             int h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.getHeight(width);
+                h += setting.getHeight(width, selectedMod);
             }
             return h;
         }
@@ -414,7 +418,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width) { return Math.Max(columnHeight(leftCol, width * split), columnHeight(rightCol, width * (1 - split))); }
+        public override int getHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split, selectedMod), columnHeight(rightCol, width * (1 - split), selectedMod)); }
     }
 
     public class GapLine : SettingContainer
@@ -432,7 +436,7 @@ namespace XmlExtensions.Setting
             GUI.color = color;
         }
 
-        public override int getHeight(float width) { return spacing; }
+        public override int getHeight(float width, string selectedMod) { return spacing; }
     }
 
     public class SetColor : SettingContainer
@@ -444,7 +448,7 @@ namespace XmlExtensions.Setting
             GUI.color = color;
         }
 
-        public override int getHeight(float width) { return 0; }
+        public override int getHeight(float width, string selectedMod) { return 0; }
     }
 
     public class RadioButtons : KeyedSettingContainer
@@ -491,7 +495,7 @@ namespace XmlExtensions.Setting
             listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
         }
 
-        public override int getHeight(float width) { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
+        public override int getHeight(float width, string selectedMod) { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
     }
 
     public class ToggleableSettings : SettingContainer
@@ -513,7 +517,7 @@ namespace XmlExtensions.Setting
             }
             if (settings != null)
             {
-                Rect baseRect = listingStandard.GetRect(calcHeight(settings, listingStandard.ColumnWidth));
+                Rect baseRect = listingStandard.GetRect(calcHeight(settings, listingStandard.ColumnWidth, selectedMod));
                 Listing_Standard listing = new Listing_Standard();
                 listing.Begin(baseRect);
                 listing.verticalSpacing = listingStandard.verticalSpacing;
@@ -525,14 +529,14 @@ namespace XmlExtensions.Setting
             }
         }
 
-        private int calcHeight(List<SettingContainer> settings, float width)
+        private int calcHeight(List<SettingContainer> settings, float width, string selectedMod)
         {
             int h = 0;
             if (settings != null)
             {
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.getHeight(width);
+                    h += setting.getHeight(width, selectedMod);
                 }
             }
             return h;
@@ -556,7 +560,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width) { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width) : calcHeight(caseFalse, width)); }
+        public override int getHeight(float width, string selectedMod) { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width, selectedMod) : calcHeight(caseFalse, width, selectedMod)); }
     }
 
     public class ScrollView : SettingContainer
@@ -569,7 +573,7 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
             Rect baseRect = listingStandard.GetRect(height);            
-            Rect scrollRect = new Rect(0, 0, baseRect.width - 20f, calcHeight(settings, baseRect.width));
+            Rect scrollRect = new Rect(0, 0, baseRect.width - 20f, calcHeight(settings, baseRect.width, selectedMod));
             Widgets.BeginScrollView(baseRect, ref scrollPos, scrollRect);
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
             Listing_Standard listing = new Listing_Standard();
@@ -583,14 +587,14 @@ namespace XmlExtensions.Setting
             Widgets.EndScrollView();
         }
 
-        private int calcHeight(List<SettingContainer> settings, float width)
+        private int calcHeight(List<SettingContainer> settings, float width, string selectedMod)
         {
             int h = 0;
             if (settings != null)
             {
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.getHeight(width);
+                    h += setting.getHeight(width, selectedMod);
                 }
             }
             return h;
@@ -607,6 +611,188 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width) { return ((int)height); }
+        public override int getHeight(float width, string selectedMod) { return ((int)height); }
+    }
+
+    public class DrawImage : SettingContainer
+    {
+        public string texPath;
+        public string anchor = "Middle";
+        public Vector2 dimensions = new Vector2(-1,-1);
+        public float scale = -1;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Texture2D img = ContentFinder<Texture2D>.Get(texPath);
+            int height = img.height;
+            int width = img.width;
+            Rect drawRect = new Rect();
+            if((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
+            {
+                if (width > listingStandard.ColumnWidth)
+                {
+                    height = (int)(height/(width/ listingStandard.ColumnWidth));
+                    width = (int)listingStandard.ColumnWidth;
+                }
+                Rect tempRect = listingStandard.GetRect(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
+                    drawRect = drawRect.RightPartPixels(width);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width);
+                else
+                    drawRect = tempRect.LeftPartPixels(width);
+            }
+            else if(scale < 0)
+            {
+                if (dimensions.x > listingStandard.ColumnWidth)
+                {
+                    width = (int)listingStandard.ColumnWidth;
+                }
+                else
+                {
+                    width = (int)dimensions.x;
+                }
+                height = (int)dimensions.y;
+                Rect tempRect = listingStandard.GetRect(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
+                    drawRect = drawRect.RightPartPixels(width);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width);
+                else
+                    drawRect = tempRect.LeftPartPixels(width);
+            }
+            else
+            {
+                width = (int)(width * scale);
+                height = (int)(height * scale);
+                if (width > listingStandard.ColumnWidth)
+                {
+                    height = (int)(height / (width / listingStandard.ColumnWidth));
+                    width = (int)listingStandard.ColumnWidth;
+                }
+                Rect tempRect = listingStandard.GetRect(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
+                    drawRect = drawRect.RightPartPixels(width);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width);
+                else
+                    drawRect = tempRect.LeftPartPixels(width);
+            }
+            
+            GUI.DrawTexture(drawRect, img);
+        }
+
+        public override int getHeight(float width2, string selectedMod)
+        {
+            Texture2D img = ContentFinder<Texture2D>.Get(texPath);
+            int height = img.height;
+            int width = img.width;
+            if ((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
+            {
+                if (width > width2)
+                {
+                    height = (int)(height / (width / width2));
+                }
+            }
+            else if (scale < 0)
+            {
+                height = (int)dimensions.y;
+            }
+            else
+            {
+                width = (int)(width * scale);
+                height = (int)(height * scale);
+                if (width > width2)
+                {
+                    height = (int)(height / (width / width2));
+                }
+            }
+            return height;
+        }
+    }
+
+    public class SwitchSetting : SettingContainer
+    {
+        public string value;
+        public List<SettingContainer> settings;
+    }
+
+    public class SwitchSettings : SettingContainer
+    {
+        public string key;
+        public List<SwitchSetting> cases = null;
+        private Dictionary<string, List<SettingContainer>> valSettingDict;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            try
+            {
+                List<SettingContainer> settings = valSettingDict[XmlMod.allSettings.dataDict[selectedMod + ";" + key]];
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.drawSetting(listingStandard, selectedMod);
+                }
+            }
+            catch
+            {
+
+            }
+            
+        }
+
+        public override int getHeight(float width, string selectedMod)
+        {
+            base.getHeight(width, selectedMod);
+            int h = 0;
+            try
+            {
+                List<SettingContainer> settings = valSettingDict[XmlMod.allSettings.dataDict[selectedMod + ";" + key]];
+                foreach (SettingContainer setting in settings)
+                {
+                    h += setting.getHeight(width, selectedMod);
+                }
+            }
+            catch
+            {
+
+            }
+            return h;
+        }
+
+        public override void init()
+        {
+            base.init();
+            if (cases != null)
+            {
+                valSettingDict = new Dictionary<string, List<SettingContainer>>();
+                foreach (SwitchSetting setting in cases)
+                {
+                    valSettingDict.Add(setting.value, setting.settings);
+                }
+            }            
+        }
+
+        public override void setDefaultValue(string modId)
+        {
+            if (cases != null)
+            {
+                foreach (SwitchSetting switchSetting in cases)
+                {
+                    foreach (SettingContainer setting in switchSetting.settings)
+                    {
+                        setting.setDefaultValue(modId);
+                    }
+                }
+            }            
+        }
     }
 }
