@@ -795,4 +795,81 @@ namespace XmlExtensions.Setting
             }            
         }
     }
+
+    public class Tab : SettingContainer
+    {
+        public string label;
+        public string tKey;
+        public List<SettingContainer> settings;
+
+        public override int getHeight(float width, string selectedMod)
+        {
+            int h = 0;
+            foreach(SettingContainer setting in settings)
+            {
+                h += setting.getHeight(width, selectedMod);
+            }
+            return h;
+        }
+    }
+
+    public class TabView : SettingContainer
+    {
+        protected List<Tab> tabs;
+        private List<TabRecord> tabRecords;
+        private int selectedTab = 0;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Rect rectTab = listingStandard.GetRect(tabs[selectedTab].getHeight(listingStandard.ColumnWidth, selectedMod) + 45);
+            rectTab.yMin += 45f;
+            TabDrawer.DrawTabs<TabRecord>(rectTab, tabRecords, 200f);
+            Listing_Standard tempListing = new Listing_Standard();
+            tempListing.Begin(rectTab);
+            
+            for (int i = 0; i < tabs.Count; i++)
+            {
+                if (selectedTab == i)
+                {
+                    foreach(SettingContainer setting in tabs[i].settings)
+                    {
+                        setting.drawSetting(tempListing, selectedMod);
+                    }
+                }
+            }
+            tempListing.End();
+        }
+
+        public override int getHeight(float width, string selectedMod)
+        {
+            return tabs[selectedTab].getHeight(width, selectedMod) + 45;
+        }
+
+        public override void init()
+        {
+            base.init();
+            tabRecords = new List<TabRecord>();
+            for (int i = 0; i < tabs.Count; i++)
+            {
+                int t = i;
+                TabRecord temp = new TabRecord(tabs[t].label, delegate()
+                {
+                    this.selectedTab = t;
+                }, () => this.selectedTab == t);
+                tabRecords.Add(temp);
+            }
+        }
+
+        public override void setDefaultValue(string modId)
+        {
+            foreach(Tab tab in tabs)
+            {
+                foreach(SettingContainer setting in tab.settings)
+                {
+                    setting.setDefaultValue(modId);
+                }
+            }
+        }
+
+    }
 }
