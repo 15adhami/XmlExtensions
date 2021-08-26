@@ -19,6 +19,21 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            if(defaultValue == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <defaultValue>: No value given");
+                return false;
+            }
+            if (key == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <key>: No key given");
+                return false;
+            }
+            if (modId == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <modId>: No value given");
+                return false;
+            }
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId);
             string value;
@@ -38,7 +53,12 @@ namespace XmlExtensions
                 XmlMod.settingsPerMod[modId].keys.Add(key);
             }
             newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
-            Helpers.runPatchesInXmlContainer(newContainer, xml);
+            int errNum = 0;
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting at operation index: " + errNum.ToString());
+                return false;
+            }
             return true;
         }
     }
@@ -53,93 +73,39 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId, label);
-            XmlMod.settingsPerMod[modId].tKey = tKey;
-            if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
+            if (modId == null)
             {
-                XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
-            }            
-            foreach (SettingContainer setting in this.settings)
-            {
-                XmlMod.tryAddSettings(setting, this.modId);
-                setting.setDefaultValue(modId);
-                setting.init();
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <modId>: No value given");
+                return false;
             }
-            XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
+            if (label == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <label>: No value given");
+                return false;
+            }
+            try
+            {
+                XmlMod.loadedMod = this.modId;
+                XmlMod.addXmlMod(this.modId, label);
+                XmlMod.settingsPerMod[modId].tKey = tKey;
+                if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
+                {
+                    XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
+                }
+                foreach (SettingContainer setting in this.settings)
+                {
+                    XmlMod.tryAddSettings(setting, this.modId);
+                    setting.setDefaultValue(modId);
+                    setting.init();
+                }
+                XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
+            }
+            catch
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings in creating a setting");
+                return false;
+            }
             return true;
-        }
-
-        
-
-        private void trySetDefaultValue(SettingContainer setting)
-        {
-            if (setting.GetType().IsSubclassOf(typeof(KeyedSettingContainer)))
-            {
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(((KeyedSettingContainer)(setting)).key))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(((KeyedSettingContainer)(setting)).key);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(((KeyedSettingContainer)(setting)).key))
-                {
-                    if (((KeyedSettingContainer)(setting)).defaultValue != null)
-                    {
-                        XmlMod.settingsPerMod[modId].defValues.Add(((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
-                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + ((KeyedSettingContainer)(setting)).key))
-                            XmlMod.allSettings.dataDict.Add(modId + ";" + ((KeyedSettingContainer)(setting)).key, ((KeyedSettingContainer)(setting)).defaultValue);
-                    }
-                    else
-                    {// TODO: Make a check after game boots up
-                        //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
-                    }
-                }
-            }
-            else if (setting.GetType().Equals(typeof(SplitColumn)))
-            {
-                if (((SplitColumn)(setting)).leftCol!=null)
-                {
-                    foreach (SettingContainer colSetting in ((SplitColumn)(setting)).leftCol)
-                    {
-                        trySetDefaultValue(colSetting);
-                    }
-                }
-
-                if (((SplitColumn)(setting)).rightCol != null)
-                {
-                    foreach (SettingContainer colSetting in ((SplitColumn)(setting)).rightCol)
-                    {
-                        trySetDefaultValue(colSetting);
-                    }
-                }
-            }
-            else if (setting.GetType().Equals(typeof(ToggleableSettings)))
-            {
-                if (((ToggleableSettings)(setting)).caseTrue!=null)
-                {
-                    foreach (SettingContainer colSetting in ((ToggleableSettings)(setting)).caseTrue)
-                    {
-                        trySetDefaultValue(colSetting);
-                    }
-                }
-
-                if (((ToggleableSettings)(setting)).caseFalse != null)
-                {
-                    foreach (SettingContainer colSetting in ((ToggleableSettings)(setting)).caseFalse)
-                    {
-                        trySetDefaultValue(colSetting);
-                    }
-                }
-            }
-            else if (setting.GetType().Equals(typeof(ScrollView)))
-            {
-                if (((ScrollView)(setting)).settings != null)
-                {
-                    foreach (SettingContainer colSetting in ((ScrollView)(setting)).settings)
-                    {
-                        trySetDefaultValue(colSetting);
-                    }
-                }
-            }
         }
     }
 
@@ -175,8 +141,12 @@ namespace XmlExtensions
             {
                 if (this.caseTrue != null)
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml))
+                    int errNum = 0;
+                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.OptionalPatch in caseTrue, operation index: " + errNum.ToString());
                         return false;
+                    }
                 }
                 return true;
             }
@@ -184,8 +154,12 @@ namespace XmlExtensions
             {
                 if (this.caseFalse != null)
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml))
+                    int errNum = 0;
+                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.OptionalPatch in caseFalse, operation index: " + errNum.ToString());
                         return false;
+                    }
                 }
                 return true;
             }

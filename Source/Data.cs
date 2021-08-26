@@ -18,29 +18,49 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
             string newStr1 = this.value;
             string newStr2 = this.value2;
+            int errNum = 0;
             if (this.fromXml)
             {
-                newStr1 = xml.SelectSingleNode(this.value).InnerText;
+                XmlNode node = xml.SelectSingleNode(this.value);
+                if (node == null)
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable in finding a node for <value> with xpath: " + value);
+                    return false;
+                }
+                newStr1 = node.InnerText;
             }
             if (this.fromXml2)
             {
-                newStr2 = xml.SelectSingleNode(this.value2).InnerText;
+                XmlNode node = xml.SelectSingleNode(this.value2);
+                if (node == null)
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable in finding a node for <value2> with xpath: " + value2);
+                    return false;
+                }
+                newStr2 = node.InnerText;
             }
             if (operation == "")
             {
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
-                result = Helpers.runPatchesInXmlContainer(newContainer, xml);
+                if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable at operation index: " + errNum.ToString() + ", with value: " + newStr1);
+                    return false;
+                }
             }
             else
             {
                 string results = Helpers.operationOnString(newStr1, newStr2, operation);
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
-                result = Helpers.runPatchesInXmlContainer(newContainer, xml);
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable at operation index: " + errNum.ToString() + ", with value: " + results);
+                    return false;
+                }
             }
-            return result;
+            return true;
         }
     }
 
@@ -53,41 +73,63 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
             float sum = 0;
-            XmlNodeList XmlList = xml.SelectNodes(this.xpath);
+            XmlNodeList XmlList = xml.SelectNodes(xpath);
+            if (XmlList == null || XmlList.Count == 0)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in finding a node with the xpath: " + xpath);
+                return false;
+            }
             int n = XmlList.Count;
             string newStr1 = "";
             if (this.operation != "count")
             {
-                float m = float.Parse(XmlList[0].InnerText);
+                float m;
+                try
+                {
+                    m = float.Parse(XmlList[0].InnerText);
+                }
+                catch
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in getting a value from the node:" + XmlList[0].OuterXml);
+                    return false;
+                }
                 foreach (object obj in XmlList)
                 {
-                    result = true;
                     XmlNode xmlNode = obj as XmlNode;
+                    float val;
+                    try
+                    {
+                        val = float.Parse(xmlNode.InnerText);
+                    }
+                    catch
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in getting a value from the node:" + xmlNode.OuterXml);
+                        return false;
+                    }
                     if (this.operation == "+")
                     {
-                        sum += float.Parse(xmlNode.InnerText);
+                        sum += val;
                     }
                     else if (this.operation == "-")
                     {
-                        sum -= float.Parse(xmlNode.InnerText);
+                        sum -= val;
                     }
                     else if (this.operation == "*")
                     {
-                        sum *= float.Parse(xmlNode.InnerText);
+                        sum *= val;
                     }
                     else if (this.operation == "average")
                     {
-                        sum += float.Parse(xmlNode.InnerText) / n;
+                        sum += val / n;
                     }
                     else if (this.operation == "min")
                     {
-                        m = Math.Min(m, float.Parse(xmlNode.InnerText));
+                        m = Math.Min(m, val);
                     }
                     else if (this.operation == "max")
                     {
-                        m = Math.Max(m, float.Parse(xmlNode.InnerText));
+                        m = Math.Max(m, val);
                     }
                 }
                 if (this.operation == "min" || this.operation == "max")
@@ -103,9 +145,14 @@ namespace XmlExtensions
             {
                 newStr1 = sum.ToString();
             }
-            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
-            result = Helpers.runPatchesInXmlContainer(newContainer, xml);
-            return result;
+            int errNum = 0;
+            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr1, this.brackets);
+            if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath at operation index: " + errNum.ToString());
+                return false;
+            }
+            return true;
         }
     }
 
@@ -118,14 +165,28 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            var attribute = xml.SelectSingleNode(xpath).Attributes[this.attribute];
-            string newStr = "";
-            if (attribute != null)
+            int errNum = 0;
+            XmlAttribute xattribute;
+            XmlNode node = xml.SelectSingleNode(xpath);
+            if(node == null)
             {
-                newStr = attribute.Value;
+                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute in finding a node with the xpath: " + xpath);
+                return false;
             }
+            xattribute = node.Attributes[this.attribute];
+            if(xattribute == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute in finding the attribute: " + attribute);
+                return false;
+            }            
+            string newStr = xattribute.Value;
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
-            return Helpers.runPatchesInXmlContainer(newContainer, xml);
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute at operation index: " + errNum.ToString());
+                return false;
+            }
+            return true;
         }
     }
 
@@ -146,10 +207,16 @@ namespace XmlExtensions
                 Verse.Log.Error(error);
             if (xpath != null)
             {
-                foreach(XmlNode node in xml.SelectNodes(xpath))
+                XmlNodeList nodeList = xml.SelectNodes(xpath);
+                if(nodeList == null || nodeList.Count == 0)
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.Log in finding a node with the xpath: " + xpath);
+                    return false;
+                }
+                foreach (XmlNode node in nodeList)
                 {
                     Verse.Log.Message(node.OuterXml);
-                }
+                }          
             }
             return true;
         }
