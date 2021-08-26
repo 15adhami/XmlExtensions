@@ -21,6 +21,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Users\15adh\Desktop\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -51,7 +55,9 @@
     <Compile Include="Data.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PatchManager.cs" />
+    <Compile Include="PatchOperationApply_Patch.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
+    <Compile Include="PatchOperationPatches.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="XmlInheritance_Resolve_Patch.cs" />

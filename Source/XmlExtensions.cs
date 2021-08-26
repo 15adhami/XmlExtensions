@@ -1,4 +1,6 @@
 ﻿using Verse;
+using HarmonyLib;
+using System.Reflection;
 
 // This code is so bad
 
@@ -9,9 +11,9 @@ namespace XmlExtensions
 
 
         public XmlExtensions(ModContentPack content) : base(content)
-        {/*
+        {
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());*/
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
         /*public override string SettingsCategory()

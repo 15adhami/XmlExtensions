@@ -16,16 +16,27 @@ namespace XmlExtensions
         protected override bool ApplyWorker(XmlDocument xml)
         {
             bool result = false;
-            foreach (object obj in xml.SelectNodes(this.xpath))
+            XmlNodeList nodeList = xml.SelectNodes(this.xpath);
+            if(nodeList == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationMath in finding a node with xpath: " + xpath);
+                return false;
+            }
+            foreach (XmlNode xmlNode in nodeList)
             {
                 result = true;
-                XmlNode xmlNode = obj as XmlNode;
                 XmlNode parentNode = xmlNode.ParentNode;
                 XmlNode node2 = null;
                 string valueStored = "";
                 if (fromXml)
                 {
-                    valueStored = xml.SelectSingleNode(value).InnerText;
+                    XmlNode node = xml.SelectSingleNode(value);
+                    if(node == null)
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.PatchOperationMath in finding a node for <value> with xpath: " + value);
+                        return false;
+                    }
+                    valueStored = node.InnerText;
                 }
                 else
                 {
@@ -49,8 +60,13 @@ namespace XmlExtensions
         {
             XmlNode node = this.value.node;
             bool result = false;
-
-            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
+            XmlNodeList nodeList = xml.SelectNodes(xpath);
+            if (nodeList == null || nodeList.Count == 0)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationAddOrReplace in finding a node with xpath: " + xpath);
+                return false;
+            }
+            foreach (XmlNode xmlNode in nodeList)
             {
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
@@ -158,11 +174,20 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
-            foreach(XmlNode node in xml.SelectNodes(xpath))
+            XmlNodeList nodeList = xml.SelectNodes(xpath);
+            if(nodeList == null || nodeList.Count == 0)
             {
-                result = true;
-                XmlNode parent = xml.SelectSingleNode(paste);
+                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationCopy in finding a node with xpath: " + xpath);
+                return false;
+            }
+            XmlNode parent = xml.SelectSingleNode(paste);
+            if (parent == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationCopy in finding a node for <paste> with xpath: " + paste);
+                return false;
+            }
+            foreach (XmlNode node in nodeList)
+            {                
                 if (!childNodes)
                 {
                     parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
@@ -175,7 +200,7 @@ namespace XmlExtensions
                     }
                 }
             }
-            return result;
+            return true;
         }
     }
 

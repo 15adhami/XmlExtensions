@@ -184,13 +184,26 @@ namespace XmlExtensions
             return ans;
         }
 
-        public static bool runPatchesInXmlContainer(XmlContainer container, XmlDocument xml)
+        public static bool runPatchesInXmlContainer(XmlContainer container, XmlDocument xml, ref int errNum)
         {
             for (int j = 0; j < container.node.ChildNodes.Count; j++)
             {
-                PatchOperation patch = Helpers.getPatchFromString(container.node.ChildNodes[j].OuterXml);
-                if (!patch.Apply(xml))
+                PatchOperation patch = new PatchOperation();
+                try
+                {
+                    patch = getPatchFromString(container.node.ChildNodes[j].OuterXml);
+                }
+                catch
+                {
+                    PatchManager.errors.Add("Could not create patch from:\n"+ container.node.ChildNodes[j].OuterXml);
+                    errNum = j + 1;
                     return false;
+                }
+                if (!patch.Apply(xml))
+                {
+                    errNum = j + 1;
+                    return false;
+                }
             }
             return true;
         }

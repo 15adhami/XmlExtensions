@@ -31,7 +31,7 @@ namespace XmlExtensions.Boolean
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            Verse.Log.Error(this.GetType().ToString()+" was applied like a regular patch operation");
+            PatchManager.errors.Add(this.GetType().ToString()+" was applied like a regular patch operation");
             return false;
         }
         protected override bool evaluation(XmlDocument xml)

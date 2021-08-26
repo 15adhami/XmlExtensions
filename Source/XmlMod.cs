@@ -206,6 +206,7 @@ namespace XmlExtensions
             listingStandard.Begin(rect2);
             foreach (string modId in loadedXmlMods)
             {
+                Verse.Log.Message(modId);
                 bool t = false;
                 // TODO: Translate label
                 t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));

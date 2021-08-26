@@ -16,14 +16,18 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            int errNum = 0;
             string oldXml = this.apply.node.OuterXml;
             if (this.increment > 0)
             {
                 for (int i = this.from; i < this.to; i += increment)
                 {
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.ForLoop at iteration: " + i.ToString() + ", operation index: " + errNum.ToString());
                         return false;
+                    }                        
                 }
             }
             else if (this.increment < 0)
@@ -31,8 +35,11 @@ namespace XmlExtensions
                 for (int i = this.from - 1; i >= this.to; i -= increment)
                 {
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.ForLoop at iteration: " + i.ToString() + ", operation index: " + errNum.ToString());
                         return false;
+                    }
                 }
             }       
             return true;
@@ -47,15 +54,23 @@ namespace XmlExtensions
         protected int prefixLength = 2;
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            foreach (object obj in xml.SelectNodes(this.xpath))
+            int errNum = 0;
+            XmlNodeList nodeList = xml.SelectNodes(this.xpath);
+            if(nodeList == null || nodeList.Count == 0)
             {
-                //Calculate prefix for variable
-                XmlNode xmlNode = obj as XmlNode;
+                PatchManager.errors.Add("Error in XmlExtensions.ForEach in finding a node with xpath: " + xpath);
+                return false;
+            }
+            foreach (XmlNode xmlNode in nodeList)
+            {
                 string path = xmlNode.GetXPath();
                 string prefix = Helpers.getPrefix(path, prefixLength);
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml))
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("Error in XmlExtensions.ForEach in iteration: " + errNum.ToString() + ", at xpath: " + prefix);
                     return false;
+                }
             }
             return true;
         }
@@ -70,18 +85,28 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            int errNum = 0;
+            // TODO: Add better error reporting to Boolean.evaluate()
             if (this.condition.evaluate(xml))
             {
                 if (this.caseTrue != null)
                 {
-                    return Helpers.runPatchesInXmlContainer(this.caseTrue, xml);
+                    if(Helpers.runPatchesInXmlContainer(this.caseTrue, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseTrue, operation: " + errNum.ToString());
+                        return false;
+                    }
                 }
             }
             else
             {
                 if (this.caseFalse != null)
                 {
-                    return Helpers.runPatchesInXmlContainer(this.caseFalse, xml);
+                    if (Helpers.runPatchesInXmlContainer(this.caseFalse, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseFalse, operation: " + errNum.ToString());
+                        return false;
+                    }
                 }
             }
                 return true;
