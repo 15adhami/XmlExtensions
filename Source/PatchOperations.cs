@@ -235,7 +235,7 @@ namespace XmlExtensions
             catch
             {
             }
-            return result;
+            return true;
         }
     }
     /*

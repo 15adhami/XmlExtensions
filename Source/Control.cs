@@ -101,7 +101,7 @@ namespace XmlExtensions
             {
                 if (this.caseTrue != null)
                 {
-                    if(Helpers.runPatchesInXmlContainer(this.caseTrue, xml, ref errNum))
+                    if(!Helpers.runPatchesInXmlContainer(this.caseTrue, xml, ref errNum))
                     {
                         PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseTrue, operation: " + errNum.ToString());
                         return false;
@@ -112,7 +112,7 @@ namespace XmlExtensions
             {
                 if (this.caseFalse != null)
                 {
-                    if (Helpers.runPatchesInXmlContainer(this.caseFalse, xml, ref errNum))
+                    if (!Helpers.runPatchesInXmlContainer(this.caseFalse, xml, ref errNum))
                     {
                         PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseFalse, operation: " + errNum.ToString());
                         return false;
@@ -123,6 +123,55 @@ namespace XmlExtensions
         }
 
     }
-    
+
+    public class Case : PatchOperation
+    {
+        public string value;
+        public XmlContainer apply;
+    }
+
+    public class PatchByCase : PatchOperationPathed
+    {
+        public string value;
+        public List<Case> cases;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            int errNum = 0;
+            if(cases == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.PatchByCase: <cases> is null");
+                return false;
+            }
+            int c = 0;
+            foreach(Case casePatch in cases)
+            {
+                c++;
+                if (value == casePatch.value)
+                {
+                    if (!Helpers.runPatchesInXmlContainer(casePatch.apply, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.PatchByCase in case with value: "+value+", in operation: " + errNum.ToString());
+                        return false;
+                    }
+                    return true;
+                }
+
+                // run first case as default case
+                if(c == cases.Count)
+                {
+                    if (!Helpers.runPatchesInXmlContainer(cases[0].apply, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.PatchByCase in running the first case as default case, in operation: " + errNum.ToString());
+                        return false;
+                    }
+                    return true;
+                }
+            }            
+            return true;
+        }
+
+    }
+
 }
 
