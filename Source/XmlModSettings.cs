@@ -35,7 +35,7 @@ namespace XmlExtensions
             int h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.getHeight(width, selectedMod);
+                h += setting.GetHeight(width, selectedMod);
             }
             return h;
         }

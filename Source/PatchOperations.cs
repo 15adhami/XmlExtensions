@@ -263,7 +263,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(xpath);
             if (nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationCopy in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationSafeAddOrReplace in finding a node with xpath: " + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)

@@ -8,9 +8,27 @@ namespace XmlExtensions.Setting
 {
     public abstract class SettingContainer : PatchOperation
     {
+        public int errHeight = -1;
+
+        public virtual void DrawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            try
+            {
+                this.drawSetting(listingStandard, selectedMod);
+            }
+            catch
+            {
+                listingStandard.Label("Error drawing setting");
+                errHeight = 22;
+            }
+            
+        }
+
         public virtual void drawSetting(Listing_Standard listingStandard, string selectedMod) { }
 
         public virtual void setDefaultValue(string modId) { }
+
+        public int GetHeight(float width, string selectedMod) { return (errHeight < 0 ? this.getHeight(width, selectedMod) : errHeight); }
 
         public virtual int getHeight(float width, string selectedMod) { return 0; }
 
@@ -41,6 +59,19 @@ namespace XmlExtensions.Setting
                 {// TODO: Make a check after game boots up
                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
                 }
+            }
+        }
+
+        public override void DrawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            try
+            {
+                this.drawSetting(listingStandard, selectedMod);
+            }
+            catch
+            {
+                listingStandard.Label("Error drawing setting (maybe missing a defaultValue?)");
+                errHeight = 22;
             }
         }
     }
@@ -395,7 +426,7 @@ namespace XmlExtensions.Setting
             int h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.getHeight(width, selectedMod);
+                h += setting.GetHeight(width, selectedMod);
             }
             return h;
         }
@@ -536,7 +567,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.getHeight(width, selectedMod);
+                    h += setting.GetHeight(width, selectedMod);
                 }
             }
             return h;
@@ -594,7 +625,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.getHeight(width, selectedMod);
+                    h += setting.GetHeight(width, selectedMod);
                 }
             }
             return h;
@@ -758,7 +789,7 @@ namespace XmlExtensions.Setting
                 List<SettingContainer> settings = valSettingDict[XmlMod.allSettings.dataDict[selectedMod + ";" + key]];
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.getHeight(width, selectedMod);
+                    h += setting.GetHeight(width, selectedMod);
                 }
             }
             catch
@@ -807,7 +838,7 @@ namespace XmlExtensions.Setting
             int h = 0;
             foreach(SettingContainer setting in settings)
             {
-                h += setting.getHeight(width, selectedMod);
+                h += setting.GetHeight(width, selectedMod);
             }
             return h;
         }

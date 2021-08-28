@@ -62,7 +62,7 @@ namespace XmlExtensions
                 //listingStandard.Label(settingsPerMod[selectedMod].label);
                 foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
                 {
-                    setting.drawSetting(listingStandard, selectedMod);
+                    setting.DrawSetting(listingStandard, selectedMod);
                 }
                 GUI.color = Color.white;
                 listingStandard.End();

@@ -197,7 +197,7 @@ namespace XmlExtensions
                     }                    
                 }
                 if (___operations != null && ___operations.Count > 0 && num != 0)
-                    PatchManager.errors.Add("Error in PatchOperationSequence in the operation with index: " + num.ToString());
+                    PatchManager.errors.Add("Error in PatchOperationSequence in the operation at position: " + num.ToString());
             }
             else
             {
