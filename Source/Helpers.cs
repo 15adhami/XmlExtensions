@@ -186,26 +186,33 @@ namespace XmlExtensions
 
         public static bool runPatchesInXmlContainer(XmlContainer container, XmlDocument xml, ref int errNum)
         {
-            for (int j = 0; j < container.node.ChildNodes.Count; j++)
+            try
             {
-                PatchOperation patch = new PatchOperation();
-                try
+                for (int j = 0; j < container.node.ChildNodes.Count; j++)
                 {
-                    patch = getPatchFromString(container.node.ChildNodes[j].OuterXml);
+                    PatchOperation patch = new PatchOperation();
+                    try
+                    {
+                        patch = getPatchFromString(container.node.ChildNodes[j].OuterXml);
+                    }
+                    catch
+                    {
+                        PatchManager.errors.Add("Could not create patch from:\n" + container.node.ChildNodes[j].OuterXml);
+                        errNum = j + 1;
+                        return false;
+                    }
+                    if (!patch.Apply(xml))
+                    {
+                        errNum = j + 1;
+                        return false;
+                    }
                 }
-                catch
-                {
-                    PatchManager.errors.Add("Could not create patch from:\n"+ container.node.ChildNodes[j].OuterXml);
-                    errNum = j + 1;
-                    return false;
-                }
-                if (!patch.Apply(xml))
-                {
-                    errNum = j + 1;
-                    return false;
-                }
+                return true;
             }
-            return true;
+            catch
+            {
+                return false;
+            }
         }
 
         public static bool containsNode(XmlNode node, string nodeName)
