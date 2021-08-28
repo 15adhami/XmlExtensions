@@ -108,6 +108,7 @@ namespace XmlExtensions
     {
         static void Postfix(List<string> ___mods, ref bool __result, XmlDocument xml)
         {
+            int c = 0;
             if (!__result)
             {
                 string str = "nomatch";
@@ -115,11 +116,12 @@ namespace XmlExtensions
                 {
                     if (ModLister.HasActiveModWithName(___mods[i]))
                     {
+                        c = i;
                         str = "match";
                         break;
                     }
                 }
-                PatchManager.errors.Add("PatchOperationFindMod: Error in <" + str + ">");
+                PatchManager.errors.Add("PatchOperationFindMod("+___mods[c]+"): Error in <" + str + ">");
             }
         }
     }

@@ -21,17 +21,17 @@ namespace XmlExtensions
         {
             if(defaultValue == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <defaultValue>: No value given");
+                PatchManager.errors.Add("XmlExtensions.UseSetting: <defaultValue>=null");
                 return false;
             }
             if (key == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <key>: No key given");
+                PatchManager.errors.Add("XmlExtensions.UseSetting: <key>=null");
                 return false;
             }
             if (modId == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <modId>: No value given");
+                PatchManager.errors.Add("XmlExtensions.UseSetting: <modId>=null");
                 return false;
             }
             XmlMod.loadedMod = this.modId;

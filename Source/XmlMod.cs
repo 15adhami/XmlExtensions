@@ -19,6 +19,7 @@ namespace XmlExtensions
         public static Dictionary<string, XmlModSettings> settingsPerMod;
         public static string selectedMod;
         public static string selectedExtraMod;
+        public static bool viewingSettings = false;
 
         static XmlMod()
         {
@@ -35,21 +36,17 @@ namespace XmlExtensions
             allSettings = GetSettings<XmlModBaseSettings>();
         }
 
-        public override string SettingsCategory()
-        {
-            return "More Mod Settings";
-        }
 
-        public override void DoSettingsWindowContents(Rect inRect)
+        public static void DrawSettingsWindow(Rect inRect)
         {
             Rect rectSettings = inRect.RightPart(0.7f);
             Rect rectMods = inRect.LeftPart(0.285f);
             drawXmlModSettings(rectSettings);
             drawXmlModList(rectMods);
-            base.DoSettingsWindowContents(inRect);
         }
 
-        private void drawXmlModSettings(Rect rect)
+
+        private static void drawXmlModSettings(Rect rect)
         {
             if (selectedMod != null)
             {
@@ -73,9 +70,25 @@ namespace XmlExtensions
                 drawXmlExtensionsSettings(rect);
             }
         }
+        
+        private static void drawXmlExtensionsSettings(Rect rect)
+        {
+            if (viewingSettings)
+            {
+                drawXmlSettingsList(rect);
+            }
+            else
+            {
+                Listing_Standard listingStandard = new Listing_Standard();
+                listingStandard.Begin(rect);
+                listingStandard.CheckboxLabeled(Helpers.tryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref allSettings.trace);
+                if (listingStandard.ButtonText(Helpers.tryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
+                    viewingSettings = true;
+                listingStandard.End();
+            }
+        }
 
-        // TODO: Optimize
-        private void drawXmlExtensionsSettings(Rect rect)
+        private static void drawXmlSettingsList(Rect rect)
         {
             int keyCount = 0;
             int unique = 0;
@@ -108,8 +121,8 @@ namespace XmlExtensions
             keyList.Sort();
             Listing_Standard listingStandard = new Listing_Standard();
             if (selectedExtraMod == null)
-            {                
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, unique * 32 + 32 + 12 + 24);                
+            {
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, unique * 32 + 32 + 12 + 24 + 32);
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
                 listingStandard.Begin(rect2);
@@ -147,6 +160,8 @@ namespace XmlExtensions
                         selectedExtraMod = null;
                     }, "No".Translate(), null, null, false, null, null));
                 }
+                if (listingStandard.ButtonText(Helpers.tryTranslate("Back", "XmlExtensions_Back")))
+                    viewingSettings = false;
                 listingStandard.End();
                 Widgets.EndScrollView();
             }
@@ -165,7 +180,7 @@ namespace XmlExtensions
                     if (selectedExtraMod == tempId)
                     {
                         bool del = false;
-                        listingStandard.CheckboxLabeled(key.Split(';')[1]+": "+ XmlMod.allSettings.dataDict[key], ref del, "Delete");
+                        listingStandard.CheckboxLabeled(key.Split(';')[1] + ": " + XmlMod.allSettings.dataDict[key], ref del, "Delete");
                         if (del)
                         {
                             XmlMod.allSettings.dataDict.Remove(key);
@@ -178,10 +193,10 @@ namespace XmlExtensions
                 if (listingStandard.ButtonText(Helpers.tryTranslate("Delete extra settings", "XmlExtensions_DeleteExtraSettings"), null))
                 {
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
-                    {                        
+                    {
                         foreach (string key in keyList)
                         {
-                            if(selectedExtraMod == key.Split(';')[0])
+                            if (selectedExtraMod == key.Split(';')[0])
                                 XmlMod.allSettings.dataDict.Remove(key);
                         }
                         selectedExtraMod = null;
@@ -192,21 +207,22 @@ namespace XmlExtensions
                 listingStandard.End();
                 Widgets.EndScrollView();
             }
-            
         }
 
 
         public static int tempInt = 600;
-        private void drawXmlModList(Rect rect)
+    
+
+
+        private static void drawXmlModList(Rect rect)
         {
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count * (30 + 2) + 38, 585));
+            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count * (30 + 2) + 38, rect.height+1));
             Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
             Listing_Standard listingStandard = new Listing_Standard();
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
             listingStandard.Begin(rect2);
             foreach (string modId in loadedXmlMods)
             {
-                Verse.Log.Message(modId);
                 bool t = false;
                 // TODO: Translate label
                 t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
@@ -214,6 +230,7 @@ namespace XmlExtensions
                 {
                     selectedMod = modId;
                     selectedExtraMod = null;
+                    viewingSettings = false;
                 }
             }
             listingStandard.GapLine(4);
@@ -224,6 +241,7 @@ namespace XmlExtensions
             {
                 selectedMod = null;
                 selectedExtraMod = null;
+                viewingSettings = false;
             }
             /*
             float f = (float)(tempInt);

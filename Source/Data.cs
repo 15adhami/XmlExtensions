@@ -26,7 +26,7 @@ namespace XmlExtensions
                 XmlNode node = xml.SelectSingleNode(this.value);
                 if (node == null)
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable in finding a node for <value> with xpath: " + value);
+                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in finding a node for <value> with xpath=" + value);
                     return false;
                 }
                 newStr1 = node.InnerText;
@@ -36,7 +36,7 @@ namespace XmlExtensions
                 XmlNode node = xml.SelectSingleNode(this.value2);
                 if (node == null)
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable in finding a node for <value2> with xpath: " + value2);
+                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in finding a node for <value2> with xpath=" + value2);
                     return false;
                 }
                 newStr2 = node.InnerText;
@@ -46,7 +46,7 @@ namespace XmlExtensions
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
                 if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable at operation index: " + errNum.ToString() + ", with value: " + newStr1);
+                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error at operation index: " + errNum.ToString() + " (<value>=" + newStr1+")");
                     return false;
                 }
             }
@@ -56,7 +56,7 @@ namespace XmlExtensions
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.CreateVariable at operation index: " + errNum.ToString() + ", with value: " + results);
+                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in the operation at position=" + errNum.ToString()+" (calculated value="+results+")");
                     return false;
                 }
             }
@@ -77,7 +77,7 @@ namespace XmlExtensions
             XmlNodeList XmlList = xml.SelectNodes(xpath);
             if (XmlList == null || XmlList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in finding a node with the xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             int n = XmlList.Count;
@@ -91,7 +91,7 @@ namespace XmlExtensions
                 }
                 catch
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in getting a value from the node:" + XmlList[0].OuterXml);
+                    PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in getting a value from the node:" + XmlList[0].OuterXml);
                     return false;
                 }
                 foreach (object obj in XmlList)
@@ -104,7 +104,7 @@ namespace XmlExtensions
                     }
                     catch
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath in getting a value from the node:" + xmlNode.OuterXml);
+                        PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in getting a value from the node:" + xmlNode.OuterXml);
                         return false;
                     }
                     if (this.operation == "+")
@@ -149,7 +149,7 @@ namespace XmlExtensions
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr1, this.brackets);
             if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CumulativeMath at operation index: " + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in the operation at position=" + errNum.ToString());
                 return false;
             }
             return true;

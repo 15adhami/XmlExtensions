@@ -138,9 +138,14 @@ namespace XmlExtensions
         protected override bool ApplyWorker(XmlDocument xml)
         {
             int errNum = 0;
-            if(cases == null)
+            if (value == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchByCase: <cases> is null");
+                PatchManager.errors.Add("XmlExtensions.PatchByCase: <value> is null");
+                return false;
+            }
+            if (cases == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.PatchByCase: <cases> is null");
                 return false;
             }
             int c = 0;
@@ -151,7 +156,7 @@ namespace XmlExtensions
                 {
                     if (!Helpers.runPatchesInXmlContainer(casePatch.apply, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.PatchByCase in case with value: "+value+", in operation: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.PatchByCase: Error while running case with <value>="+value+", in the operation at position=" + errNum.ToString());
                         return false;
                     }
                     return true;
@@ -162,7 +167,7 @@ namespace XmlExtensions
                 {
                     if (!Helpers.runPatchesInXmlContainer(cases[0].apply, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.PatchByCase in running the first case as default case, in operation: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.PatchByCase: Error while running the first case as default case, in the operation at position=" + errNum.ToString());
                         return false;
                     }
                     return true;
