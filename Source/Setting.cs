@@ -18,15 +18,17 @@ namespace XmlExtensions.Setting
             }
             catch
             {
+                GUI.color = Color.red;
                 listingStandard.Label("Error drawing setting");
                 errHeight = 22;
+                GUI.color = Color.white;
             }
             
         }
 
         public virtual void drawSetting(Listing_Standard listingStandard, string selectedMod) { }
 
-        public virtual void setDefaultValue(string modId) { }
+        public virtual bool setDefaultValue(string modId) { return true; }
 
         public int GetHeight(float width, string selectedMod) { return (errHeight < 0 ? this.getHeight(width, selectedMod) : errHeight); }
 
@@ -37,12 +39,17 @@ namespace XmlExtensions.Setting
 
     public abstract class KeyedSettingContainer : SettingContainer
     {
-        public string key = "";
+        public string key = null;
         public string label = null;
         public string defaultValue = null;
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
+            if (key == null)
+            {
+                PatchManager.errors.Add("Error in " + this.GetType().ToString() + ": <key> is null");
+                return false;
+            }
             if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
             {
                 XmlMod.settingsPerMod[modId].keys.Add(key);
@@ -60,6 +67,7 @@ namespace XmlExtensions.Setting
                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
                 }
             }
+            return true;
         }
 
         public override void DrawSetting(Listing_Standard listingStandard, string selectedMod)
@@ -70,8 +78,10 @@ namespace XmlExtensions.Setting
             }
             catch
             {
-                listingStandard.Label("Error drawing setting (maybe missing a defaultValue?)");
+                GUI.color = Color.red;
+                listingStandard.Label("Error drawing setting (maybe <defaultValue> needs to be defined?)");
                 errHeight = 22;
+                GUI.color = Color.white;
             }
         }
     }
@@ -104,8 +114,13 @@ namespace XmlExtensions.Setting
             
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
+            if (key == null)
+            {
+                PatchManager.errors.Add("Error in XmlExtensions.Setting.Range: <key> is null");
+                return false;
+            }
             if (key2 == null)
             {
                 if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
@@ -163,6 +178,7 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
+            return true;
         }
 
         public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
@@ -431,22 +447,36 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
+            int c = 0;
             if(leftCol != null)
             {
+                c = 0;
                 foreach(SettingContainer setting in leftCol)
                 {
-                    setting.setDefaultValue(modId);
+                    if(!setting.setDefaultValue(modId))
+                    {
+                        c++;
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.SplitColumn: failed to initialize a setting in <leftCol> at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
             if (rightCol != null)
             {
+                c = 0;
                 foreach (SettingContainer setting in rightCol)
                 {
-                    setting.setDefaultValue(modId);
+                    if (!setting.setDefaultValue(modId))
+                    {
+                        c++;
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.SplitColumn: failed to initialize a setting in <rightCol> at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         public override int getHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split, selectedMod), columnHeight(rightCol, width * (1 - split), selectedMod)); }
@@ -573,22 +603,35 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
             if (caseTrue != null)
             {
+                int c = 0;
                 foreach (SettingContainer setting in caseTrue)
                 {
-                    setting.setDefaultValue(modId);
+                    c++;
+                    if(!setting.setDefaultValue(modId))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.ToggleableSettings: failed to initialize a setting in <caseTrue> at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
             if (caseFalse != null)
             {
+                int c = 0;
                 foreach (SettingContainer setting in caseFalse)
                 {
-                    setting.setDefaultValue(modId);
+                    c++;
+                    if (!setting.setDefaultValue(modId))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.ToggleableSettings: failed to initialize a setting in <caseFalse> at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         public override int getHeight(float width, string selectedMod) { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width, selectedMod) : calcHeight(caseFalse, width, selectedMod)); }
@@ -631,15 +674,22 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
             if (settings != null)
             {
+                int c = 0;
                 foreach (SettingContainer setting in settings)
                 {
-                    setting.setDefaultValue(modId);
+                    c++;
+                    if (!setting.setDefaultValue(modId))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.ScrollView: failed to initialize a setting at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         public override int getHeight(float width, string selectedMod) { return ((int)height); }
@@ -812,18 +862,27 @@ namespace XmlExtensions.Setting
             }            
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
             if (cases != null)
             {
+                int i = 0;
                 foreach (SwitchSetting switchSetting in cases)
                 {
+                    i++;
+                    int c = 0;
                     foreach (SettingContainer setting in switchSetting.settings)
                     {
-                        setting.setDefaultValue(modId);
+                        c++;
+                        if (!setting.setDefaultValue(modId))
+                        {
+                            PatchManager.errors.Add("Error in XmlExtensions.Setting.SwitchSettings: failed to initialize a setting in case: " + i.ToString() + ", at position: " + c.ToString());
+                            return false;
+                        }
                     }
                 }
-            }            
+            }
+            return true;
         }
     }
 
@@ -891,15 +950,24 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override void setDefaultValue(string modId)
+        public override bool setDefaultValue(string modId)
         {
+            int t = 0;
             foreach(Tab tab in tabs)
             {
+                t++;
+                int c = 0;
                 foreach(SettingContainer setting in tab.settings)
                 {
-                    setting.setDefaultValue(modId);
+                    c++;
+                    if (!setting.setDefaultValue(modId))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.Setting.TabView: failed to initialize a setting in tab: " + t.ToString() + ", at position: " + c.ToString());
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
     }

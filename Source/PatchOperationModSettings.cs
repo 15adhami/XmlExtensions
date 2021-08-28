@@ -75,12 +75,12 @@ namespace XmlExtensions
         {
             if (modId == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <modId>: No value given");
+                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: <modId> is null");
                 return false;
             }
             if (label == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting in <label>: No value given");
+                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: <label> is null");
                 return false;
             }
             try
@@ -92,17 +92,23 @@ namespace XmlExtensions
                 {
                     XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
                 }
+                int c = 0;
                 foreach (SettingContainer setting in this.settings)
                 {
+                    c++;
                     XmlMod.tryAddSettings(setting, this.modId);
-                    setting.setDefaultValue(modId);
+                    if(!setting.setDefaultValue(modId))
+                    {
+                        PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: failed to initialize a setting at position: " + c.ToString());
+                        return false;
+                    }
                     setting.init();
                 }
                 XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
             }
             catch
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings in creating a setting");
+                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings");
                 return false;
             }
             return true;
