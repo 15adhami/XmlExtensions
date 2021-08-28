@@ -19,7 +19,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(this.xpath);
             if(nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationMath in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -33,7 +33,7 @@ namespace XmlExtensions
                     XmlNode node = xml.SelectSingleNode(value);
                     if(node == null)
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.PatchOperationMath in finding a node for <value> with xpath: " + value);
+                        PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node for <value>=" + value);
                         return false;
                     }
                     valueStored = node.InnerText;
@@ -63,7 +63,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(xpath);
             if (nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationAddOrReplace in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -85,7 +85,7 @@ namespace XmlExtensions
             }
             if (!result)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationAddOrReplace in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace: Error in finding a node in <value>");
                 return false;
             }
             return true;
@@ -104,7 +104,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(xpath);
             if (nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationSafeAdd in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -118,7 +118,7 @@ namespace XmlExtensions
             }
             if (!result)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationSafeAdd in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node in <value>");
                 return false;
             }
             return result;
@@ -192,13 +192,13 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(xpath);
             if(nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationCopy in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             XmlNode parent = xml.SelectSingleNode(paste);
             if (parent == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationCopy in finding a node for <paste> with xpath: " + paste);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy: Error in finding a node for <paste>=" + paste);
                 return false;
             }
             foreach (XmlNode node in nodeList)
@@ -263,7 +263,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(xpath);
             if (nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationSafeAddOrReplace in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -277,7 +277,7 @@ namespace XmlExtensions
             }
             if (!result)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.PatchOperationSafeAddOrReplace in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace: Error in finding a node in <value>");
                 return false;
             }
             return result;

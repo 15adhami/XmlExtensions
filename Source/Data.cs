@@ -170,20 +170,20 @@ namespace XmlExtensions
             XmlNode node = xml.SelectSingleNode(xpath);
             if(node == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute in finding a node with the xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.GetAttribute: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             xattribute = node.Attributes[this.attribute];
             if(xattribute == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute in finding the attribute: " + attribute);
+                PatchManager.errors.Add("XmlExtensions.GetAttribute: Could not find the attribute \"" + attribute+"\"");
                 return false;
             }            
             string newStr = xattribute.Value;
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
             if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
-                PatchManager.errors.Add("Error in XmlExtensions.GetAttribute at operation index: " + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.GetAttribute: Error in operation at position=" + errNum.ToString());
                 return false;
             }
             return true;
@@ -210,7 +210,7 @@ namespace XmlExtensions
                 XmlNodeList nodeList = xml.SelectNodes(xpath);
                 if(nodeList == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.Log in finding a node with the xpath: " + xpath);
+                    PatchManager.errors.Add("XmlExtensions.Log: Error in finding a node with <xpath>=" + xpath);
                     return false;
                 }
                 foreach (XmlNode node in nodeList)

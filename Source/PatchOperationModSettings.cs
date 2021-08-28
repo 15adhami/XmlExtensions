@@ -56,7 +56,7 @@ namespace XmlExtensions
             int errNum = 0;
             if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
-                PatchManager.errors.Add("Error in XmlExtensions.UseSetting at operation index: " + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.UseSetting: Error in the operation at position=" + errNum.ToString());
                 return false;
             }
             return true;
@@ -75,12 +75,12 @@ namespace XmlExtensions
         {
             if (modId == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: <modId> is null");
+                PatchManager.errors.Add("XmlExtensions.CreateSettings: <modId>=null");
                 return false;
             }
             if (label == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: <label> is null");
+                PatchManager.errors.Add("XmlExtensions.CreateSettings: <label>=null");
                 return false;
             }
             try
@@ -99,7 +99,7 @@ namespace XmlExtensions
                     XmlMod.tryAddSettings(setting, this.modId);
                     if(!setting.setDefaultValue(modId))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.CreateSettings: failed to initialize a setting at position: " + c.ToString());
+                        PatchManager.errors.Add("XmlExtensions.CreateSettings: Error in initializing a setting at position=" + c.ToString());
                         return false;
                     }
                     setting.init();
@@ -108,7 +108,7 @@ namespace XmlExtensions
             }
             catch
             {
-                PatchManager.errors.Add("Error in XmlExtensions.CreateSettings");
+                PatchManager.errors.Add("XmlExtensions.CreateSettings: Error (<modId>="+modId+")");
                 return false;
             }
             return true;
@@ -125,6 +125,21 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            if (modId == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <modId>=null");
+                return false;
+            }
+            if (modId == key)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <key>=null");
+                return false;
+            }
+            if (defaultValue == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <defaultValue>=null");
+                return false;
+            }
             XmlMod.loadedMod = this.modId;
             XmlMod.addXmlMod(this.modId);
             string value = defaultValue;
@@ -150,7 +165,7 @@ namespace XmlExtensions
                     int errNum = 0;
                     if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.OptionalPatch in caseTrue, operation index: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.OptionalPatch: Error in <caseTrue> in the operation at position=" + errNum.ToString());
                         return false;
                     }
                 }
@@ -163,7 +178,7 @@ namespace XmlExtensions
                     int errNum = 0;
                     if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.OptionalPatch in caseFalse, operation index: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.OptionalPatch: Error in <caseFalse> in the operation at position=" + errNum.ToString());
                         return false;
                     }
                 }

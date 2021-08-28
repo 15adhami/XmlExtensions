@@ -58,7 +58,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(this.xpath);
             if(nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.ForEach in finding a node with xpath: " + xpath);
+                PatchManager.errors.Add("[XmlExtensions.ForEach]: Could not find a node that matches the xpath: " + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -68,7 +68,7 @@ namespace XmlExtensions
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("Error in XmlExtensions.ForEach in iteration: " + errNum.ToString() + ", at xpath: " + prefix);
+                    PatchManager.errors.Add("[XmlExtensions.ForEach]: Error in operation at location: " + errNum.ToString() + ", current prefix: " + prefix);
                     return false;
                 }
             }

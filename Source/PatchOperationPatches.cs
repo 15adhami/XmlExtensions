@@ -8,6 +8,7 @@ using Verse;
 
 namespace XmlExtensions
 {
+
     [HarmonyPatch(typeof(PatchOperationAdd))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAdd_Patch
@@ -16,11 +17,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationAdd with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationAdd: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationAdd: Error (<xpath>=" + ___xpath + ")");
             }
         }
     }
@@ -33,11 +33,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationAddModExtension with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationAddModExtension: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationAddModExtension: Error (<xpath>=" + ___xpath+")");
             }
         }
     }
@@ -50,11 +49,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationAttributeAdd with the attribute: " + ___attribute + ", the value: " + ___value + ", and the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationAttributeAdd: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationAttributeAdd: Error (<attribute>=" + ___attribute + ", <value>=" + ___value + ", <xpath>=" + ___xpath+")");
             }
         }
     }
@@ -67,11 +65,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationAttributeRemove with the attribute: " + ___attribute + ", and the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationAttributeRemove: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationAttributeRemove: Error (<attribute>=" + ___attribute + ", <xpath>=" + ___xpath+")");
             }
         }
     }
@@ -84,11 +81,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationAttributeSet with the attribute: " + ___attribute + ", the value: " + ___value + ", and the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationAttributeSet: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationAttributeSet: Error (<attribute=" + ___attribute + ", <value>=" + ___value + ", <xpath>=" + ___xpath+")");
             }
         }
     }
@@ -101,11 +97,7 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationConditional with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                PatchManager.errors.Add("PatchOperationConditional: Error (<xpath>=" + ___xpath+")");
             }
         }
     }
@@ -114,15 +106,20 @@ namespace XmlExtensions
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationFindMod_Patch
     {
-        static void Postfix(ref bool __result, XmlDocument xml)
+        static void Postfix(List<string> ___mods, ref bool __result, XmlDocument xml)
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationFindMod");
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                string str = "nomatch";
+                for (int i = 0; i < ___mods.Count; i++)
+                {
+                    if (ModLister.HasActiveModWithName(___mods[i]))
+                    {
+                        str = "match";
+                        break;
+                    }
+                }
+                PatchManager.errors.Add("PatchOperationFindMod: Error in <" + str + ">");
             }
         }
     }
@@ -135,11 +132,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationInsert with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationInsert: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationInsert: Error (<xpath>=" + ___xpath+")");
             }
         }
     }
@@ -152,11 +148,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationRemove with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationRemove: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationRemove: Error (<xpath>=" + ___xpath+")");
             }
         }
     }
@@ -169,11 +164,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationReplace with the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationReplace: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationReplace: Error (<xpath>=" + ___xpath+")");
             }
         }
     }
@@ -197,11 +191,7 @@ namespace XmlExtensions
                     }                    
                 }
                 if (___operations != null && ___operations.Count > 0 && num != 0)
-                    PatchManager.errors.Add("Error in PatchOperationSequence in the operation at position: " + num.ToString());
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                    PatchManager.errors.Add("PatchOperationSequence: Error in the operation at position=" + num.ToString());
             }
         }
     }
@@ -214,11 +204,10 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                PatchManager.errors.Add("Error in PatchOperationSetName with the name: " + ___name + ", and the xpath: " + ___xpath);
-            }
-            else
-            {
-                PatchManager.errors.Clear();
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationSetName: Error in finding a node with <xpath>=" + ___xpath);
+                else
+                    PatchManager.errors.Add("PatchOperationSetName: Error (<name>=" + ___name + ", <xpath>=" + ___xpath+")");
             }
         }
     }
