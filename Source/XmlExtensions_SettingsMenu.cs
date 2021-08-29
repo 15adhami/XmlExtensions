@@ -22,6 +22,7 @@ namespace XmlExtensions
             this.doCloseButton = true;
             this.forcePause = true;
             this.absorbInputAroundWindow = true;
+            this.doCloseX = true;
         }
         public override void DoWindowContents(Rect inRect)
         {

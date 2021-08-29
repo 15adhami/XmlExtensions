@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplyPatches_Patch.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Dialog_Options_patch.cs" />

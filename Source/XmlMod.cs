@@ -12,6 +12,7 @@ namespace XmlExtensions
     public class XmlMod : Mod
     {
         public static XmlModBaseSettings allSettings;
+        public static List<string> keyList = new List<string>();
         public static Vector2 settingsPosition;
         public static Vector2 modListPosition;
         public static string loadedMod;
@@ -53,7 +54,7 @@ namespace XmlExtensions
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight(rect.width - 20f, selectedMod));
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Listing_Standard listingStandard = new Listing_Standard();
-                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
                 listingStandard.Begin(rect2);
                 listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
                 //listingStandard.Label(settingsPerMod[selectedMod].label);
@@ -91,38 +92,22 @@ namespace XmlExtensions
 
         private static void drawXmlSettingsList(Rect rect)
         {
-            int keyCount = 0;
-            int unique = 0;
-            string tId = "";
-            List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
-            List<string> keyList = new List<string>();
-            kvpList.Sort(delegate (KeyValuePair<string, string> pair1, KeyValuePair<string, string> pair2) { return pair1.Key.CompareTo(pair2.Key); });
-            foreach (KeyValuePair<string, string> pair in kvpList)
-            {
-                if (pair.Key.Contains(";"))
-                {
-                    if (!loadedXmlMods.Contains(pair.Key.Split(';')[0]) || !settingsPerMod[pair.Key.Split(';')[0]].keys.Contains(pair.Key.Split(';')[1]))
-                    {
-                        if (selectedExtraMod == pair.Key.Split(';')[0])
-                            keyCount++;
-                        if (tId != pair.Key.Split(';')[0])
-                        {
-                            tId = pair.Key.Split(';')[0];
-                            unique++;
-                        }
-                        keyList.Add(pair.Key);
-                    }
-                }
-                else
-                {
-                    XmlMod.allSettings.dataDict.Remove(pair.Key);
-                }
-
-            }
-            keyList.Sort();
+            
             Listing_Standard listingStandard = new Listing_Standard();
             if (selectedExtraMod == null)
             {
+                int unique = 0;
+                string temp = "";
+                foreach (string key in keyList)
+                {
+                    string tempId = key.Split(';')[0];
+                    if (temp != tempId)
+                    {
+                        temp = tempId;
+                        unique++;
+                    }
+
+                }
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, unique * 32 + 32 + 12 + 24 + 32);
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
@@ -134,7 +119,7 @@ namespace XmlExtensions
                 {
                     listingStandard.Label(Helpers.tryTranslate("No extra settings at the moment.", "XmlExtensions_NoExtraSettings"));
                 }
-                string temp = "";
+                temp = "";
                 foreach (string key in keyList)
                 {
                     string tempId = key.Split(';')[0];
@@ -158,6 +143,7 @@ namespace XmlExtensions
                         {
                             XmlMod.allSettings.dataDict.Remove(key);
                         }
+                        XmlMod.keyList.Clear();
                         selectedExtraMod = null;
                     }, "No".Translate(), null, null, false, null, null));
                 }
@@ -168,6 +154,16 @@ namespace XmlExtensions
             }
             else
             {
+                int keyCount = 0;
+                foreach (string key in keyList)
+                {
+                    string tempId = key.Split(';')[0];
+                    if (selectedExtraMod == tempId)
+                    {
+                        keyCount++;
+                    }
+
+                }
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, keyCount * 24 + 12 + 32 + 32 + 24);
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
@@ -175,35 +171,47 @@ namespace XmlExtensions
                 listingStandard.Label(Helpers.tryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedSettings"));
                 listingStandard.GapLine(4);
                 listingStandard.Gap(2);
+                string tempStr = null;
                 foreach (string key in keyList)
                 {
                     string tempId = key.Split(';')[0];
                     if (selectedExtraMod == tempId)
                     {
                         bool del = false;
-                        listingStandard.CheckboxLabeled(key.Split(';')[1] + ": " + XmlMod.allSettings.dataDict[key], ref del, "Delete");
+                        listingStandard.CheckboxLabeled(key.Split(';')[1] + ": " + XmlMod.allSettings.dataDict[key], ref del, Helpers.tryTranslate("Delete", "XmlExtensions_Delete"));
                         if (del)
                         {
                             XmlMod.allSettings.dataDict.Remove(key);
+                            tempStr = key;
                         }
                     }
 
                 }
+                if(tempStr != null)
+                    keyList.Remove(tempStr);
                 listingStandard.GapLine(4);
                 listingStandard.Gap(2);
                 if (listingStandard.ButtonText(Helpers.tryTranslate("Delete extra settings", "XmlExtensions_DeleteExtraSettings"), null))
                 {
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                     {
+                        List<string> t = new List<string>();
                         foreach (string key in keyList)
                         {
                             if (selectedExtraMod == key.Split(';')[0])
+                            {
+                                t.Add(key);
                                 XmlMod.allSettings.dataDict.Remove(key);
+                            }                                
+                        }
+                        foreach(string key in t)
+                        {
+                            XmlMod.keyList.Remove(key);
                         }
                         selectedExtraMod = null;
                     }, "No".Translate(), null, null, false, null, null));
                 }
-                if (listingStandard.ButtonText("Back"))
+                if (listingStandard.ButtonText(Helpers.tryTranslate("Back", "XmlExtensions_Back")))
                     selectedExtraMod = null;
                 listingStandard.End();
                 Widgets.EndScrollView();
