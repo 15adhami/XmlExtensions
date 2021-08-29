@@ -90,6 +90,23 @@ namespace XmlExtensions
 
         private static void drawXmlSettingsList(Rect rect)
         {
+            if(viewingSettings)
+            {
+                drawXmlSettingsList(rect);
+            }
+            else
+            {
+                Listing_Standard listingStandard = new Listing_Standard();
+                listingStandard.Begin(rect);
+                listingStandard.CheckboxLabeled(Helpers.tryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref allSettings.trace);
+                if (listingStandard.ButtonText(Helpers.tryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
+                    viewingSettings = true;
+                listingStandard.End();
+            }
+        }
+
+        private void drawXmlSettingsList(Rect rect)
+        {
             int keyCount = 0;
             int unique = 0;
             string tId = "";
@@ -208,7 +225,6 @@ namespace XmlExtensions
                 Widgets.EndScrollView();
             }
         }
-
 
         public static int tempInt = 600;
     
