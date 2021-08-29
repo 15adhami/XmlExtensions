@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using Verse;
+using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {
@@ -222,5 +223,39 @@ namespace XmlExtensions
         }
     }
 
+    public class EvaluateBoolean : PatchOperation
+    {
+        public PatchOperationBoolean condition;
+        public string storeIn;
+        public string brackets = "{}";
+        public XmlContainer apply;
 
+        protected override bool ApplyWorker(XmlDocument xml)
+        {            
+            if (condition == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <condition>=null");
+                return false;
+            }
+            if (apply == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <apply>=null");
+                return false;
+            }
+            if (storeIn == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <storeIn>=null");
+                return false;
+            }
+            int errNum = 0;
+            string newStr = condition.evaluate(xml).ToString();
+            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr, brackets);
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: Error in operation at position=" + errNum.ToString());
+                return false;
+            }
+            return true;
+        }
+    }
 }
