@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
@@ -32,11 +33,33 @@ namespace XmlExtensions
             return str.Replace(variable, val);
         }
 
+        public static string substituteVariables(string str, List<string> vars, List<string> vals, string brackets)
+        {            
+            string strFinal = str;
+            int i = 0;
+            foreach(string var in vars)
+            {
+                string variable = brackets[0] + var + brackets[1];
+                strFinal = strFinal.Replace(variable, vals[i]);
+                i++;
+            }
+            
+            return strFinal;
+        }
+
         public static XmlContainer substituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
         {
             string oldXml = container.node.OuterXml;
             string newXml;
             newXml = Helpers.substituteVariable(oldXml, var, val, brackets);
+            return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
+        }
+
+        public static XmlContainer substituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
+        {
+            string oldXml = container.node.OuterXml;
+            string newXml;
+            newXml = Helpers.substituteVariables(oldXml, var, val, brackets);
             return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
         }
 
