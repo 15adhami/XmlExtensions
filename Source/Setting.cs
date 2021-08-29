@@ -390,7 +390,11 @@ namespace XmlExtensions.Setting
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                     {
                         foreach(string key in keys)
-                            XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                        {
+                            if (XmlMod.allSettings.dataDict.ContainsKey(selectedMod + ";" + key))
+                                XmlMod.allSettings.dataDict[selectedMod + ";" + key] = XmlMod.settingsPerMod[selectedMod].defValues[key];
+                        }
+                            
                     }, "No".Translate(), null, null, false, null, null));
                 }
             }
