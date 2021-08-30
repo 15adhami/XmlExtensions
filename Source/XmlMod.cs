@@ -224,22 +224,31 @@ namespace XmlExtensions
 
         private static void drawXmlModList(Rect rect)
         {
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(loadedXmlMods.Count * (30 + 2) + 38, rect.height+1));
+            int count = 0;
+            foreach(string modId in loadedXmlMods)
+            {
+                if (settingsPerMod[modId].label != null)
+                    count++;
+            }
+            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max((loadedXmlMods.Count-count) * (30 + 2) + 38, rect.height+1));
             Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
             Listing_Standard listingStandard = new Listing_Standard();
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
             listingStandard.Begin(rect2);
             foreach (string modId in loadedXmlMods)
             {
-                bool t = false;
-                // TODO: Translate label
-                t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
-                if (t)
+                if (settingsPerMod[modId].label != null)
                 {
-                    selectedMod = modId;
-                    selectedExtraMod = null;
-                    viewingSettings = false;
-                }
+                    bool t = false;
+                    // TODO: Translate label
+                    t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
+                    if (t)
+                    {
+                        selectedMod = modId;
+                        selectedExtraMod = null;
+                        viewingSettings = false;
+                    }
+                }                 
             }
             listingStandard.GapLine(4);
             listingStandard.Gap(2);

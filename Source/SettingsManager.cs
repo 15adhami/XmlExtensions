@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Verse;
 
 namespace XmlExtensions
 {
@@ -19,6 +16,16 @@ namespace XmlExtensions
             b = XmlMod.allSettings.dataDict.TryGetValue(modId + ";" + key, out temp);
             value = temp;
             return b;
+        }
+
+        public static void SetSetting(string modId, string key, string value)
+        {
+            XmlMod.setSetting(modId, key, value);
+        }
+
+        public static void ScribeLook()
+        {
+            LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
         }
     }
 }

@@ -148,7 +148,7 @@ namespace XmlExtensions
             }
             if (label == null)
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings: <label>=null");
+                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
                 return false;
             }
             try
@@ -163,20 +163,33 @@ namespace XmlExtensions
                 int c = 0;
                 foreach (SettingContainer setting in this.settings)
                 {
-                    c++;
-                    XmlMod.tryAddSettings(setting, this.modId);
-                    if(!setting.setDefaultValue(modId))
+                    try
                     {
-                        PatchManager.errors.Add("XmlExtensions.CreateSettings: Error in initializing a setting at position=" + c.ToString());
+                        c++;
+                        XmlMod.tryAddSettings(setting, this.modId);
+                        if (!setting.setDefaultValue(modId))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
+                            return false;
+                        }
+                        setting.init();
+                    }
+                    catch
+                    {
+                        PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
                         return false;
                     }
-                    setting.init();
                 }
-                XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) { return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label); });
+                XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) {
+                    if (XmlMod.settingsPerMod[id1].label != null && XmlMod.settingsPerMod[id2].label != null)
+                        return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label);
+                    else
+                        return 0;
+                });
             }
             catch
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings: Error (<modId>="+modId+")");
+                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error");
                 return false;
             }
             return true;

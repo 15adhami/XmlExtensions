@@ -38,6 +38,7 @@ namespace XmlExtensions
                 }
 
             }
+            Verse.Log.Message("[XML Extensions] Found " + XmlMod.keyList.Count.ToString() + " extra keys from " + unique.ToString() + " unloaded mods");
             XmlMod.keyList.Sort();
         }
     }
