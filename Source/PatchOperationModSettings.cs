@@ -6,6 +6,8 @@ using System.Text;
 using System.Xml;
 using Verse;
 using XmlExtensions.Setting;
+using HarmonyLib;
+using System.Reflection;
 
 namespace XmlExtensions
 {
@@ -19,6 +21,7 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+
             if(defaultValue == null)
             {
                 PatchManager.errors.Add("XmlExtensions.UseSetting: <defaultValue>=null");
@@ -57,6 +60,186 @@ namespace XmlExtensions
             if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
                 PatchManager.errors.Add("XmlExtensions.UseSetting: Error in the operation at position=" + errNum.ToString());
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public class UseSettingExternal : PatchOperation
+    {
+        protected string ModSettingsClass;
+        protected string field;
+        protected string brackets = "{}";
+        protected XmlContainer apply;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            
+            if (ModSettingsClass == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <ModSettingsClass>=null");
+                return false;
+            }
+            if (field == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <field>=null");
+                return false;
+            }
+            if (apply == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <apply>=null");
+                return false;
+            }
+            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+            FieldInfo fieldInfo;
+            try
+            {
+                
+                fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+            }
+            catch
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Failed to get field");
+                return false;
+            }
+            if(fieldInfo == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Failed to get field");
+                return false;
+            }
+            object value = fieldInfo.GetValue(null);
+            XmlContainer newContainer;
+            newContainer = Helpers.substituteVariableXmlContainer(apply, field, value.ToString(), brackets);
+            int errNum = 0;
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Error in the operation at position=" + errNum.ToString());
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public class OptionalPatchExternal : PatchOperation
+    {
+        protected string field;
+        protected string ModSettingsClass;
+        protected XmlContainer caseTrue;
+        protected XmlContainer caseFalse;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            if (ModSettingsClass == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: <ModSettingsClass>=null");
+                return false;
+            }
+            if (field == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: <field>=null");
+                return false;
+            }
+            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+            FieldInfo fieldInfo;
+            try
+            {
+
+                fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+            }
+            catch
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Failed to get field");
+                return false;
+            }
+            if (fieldInfo == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Failed to get field");
+                return false;
+            }
+            object value = fieldInfo.GetValue(null);
+
+            if ((bool)value)
+            {
+                if (this.caseTrue != null)
+                {
+                    int errNum = 0;
+                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                if (this.caseFalse != null)
+                {
+                    int errNum = 0;
+                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+
+    public class UseSettingsExternal : PatchOperation
+    {
+        protected string ModSettingsClass;
+        protected List<string> fields;
+        protected string brackets = "{}";
+        protected XmlContainer apply;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            if (ModSettingsClass == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <ModSettingsClass>=null");
+                return false;
+            }
+            if (fields == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <fields>=null");
+                return false;
+            }
+            if (apply == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <apply>=null");
+                return false;
+            }
+            List<string> values = new List<string>();
+            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+            FieldInfo fieldInfo;
+            for (int i = 0; i < fields.Count; i++)
+            {
+                try
+                {
+
+                    fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(fields[i], bindings);
+                }
+                catch
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Failed to get field");
+                    return false;
+                }
+                if (fieldInfo == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Failed to get field");
+                    return false;
+                }
+                object value = fieldInfo.GetValue(null);
+                values.Add((string)value);
+            }
+            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, fields, values, brackets);
+            int errNum = 0;
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Error in the operation at position=" + errNum.ToString());
                 return false;
             }
             return true;
