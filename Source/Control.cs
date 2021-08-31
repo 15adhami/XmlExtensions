@@ -25,7 +25,7 @@ namespace XmlExtensions
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
                     if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.ForLoop at iteration: " + i.ToString() + ", operation index: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.ForLoop: Error at iteration " + i.ToString() + ", in the operation as position=" + errNum.ToString());
                         return false;
                     }                        
                 }
@@ -37,7 +37,7 @@ namespace XmlExtensions
                     XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
                     if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.ForLoop at iteration: " + i.ToString() + ", operation index: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.ForLoop: Error at iteration " + i.ToString() + ", in the operation as position=" + errNum.ToString());
                         return false;
                     }
                 }
@@ -58,7 +58,7 @@ namespace XmlExtensions
             XmlNodeList nodeList = xml.SelectNodes(this.xpath);
             if(nodeList == null || nodeList.Count == 0)
             {
-                PatchManager.errors.Add("[XmlExtensions.ForEach]: Could not find a node that matches the xpath: " + xpath);
+                PatchManager.errors.Add("XmlExtensions.ForEach: Error in finding a node with <xpath>=" + xpath);
                 return false;
             }
             foreach (XmlNode xmlNode in nodeList)
@@ -68,7 +68,7 @@ namespace XmlExtensions
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("[XmlExtensions.ForEach]: Error in operation at location: " + errNum.ToString() + ", current prefix: " + prefix);
+                    PatchManager.errors.Add("XmlExtensions.ForEach: Error in finding a node with <xpath>=" + errNum.ToString() + ", current prefix=" + prefix);
                     return false;
                 }
             }
@@ -94,7 +94,7 @@ namespace XmlExtensions
             }
             catch
             {
-                PatchManager.errors.Add("Error in XmlExtensions.IfStatement in evaluating the condition");
+                PatchManager.errors.Add("XmlExtensions.IfStatement: Error in evaluating the condition");
                 return false;
             }
             if (flag)
@@ -103,7 +103,7 @@ namespace XmlExtensions
                 {
                     if(!Helpers.runPatchesInXmlContainer(this.caseTrue, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseTrue, operation: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.IfStatement: Error in <caseTrue> in the operation at position=" + errNum.ToString());
                         return false;
                     }
                 }
@@ -114,7 +114,7 @@ namespace XmlExtensions
                 {
                     if (!Helpers.runPatchesInXmlContainer(this.caseFalse, xml, ref errNum))
                     {
-                        PatchManager.errors.Add("Error in XmlExtensions.IfStatement in caseFalse, operation: " + errNum.ToString());
+                        PatchManager.errors.Add("XmlExtensions.IfStatement: Error in <caseFalse> in the operation at position=" + errNum.ToString());
                         return false;
                     }
                 }

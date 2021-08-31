@@ -33,7 +33,7 @@ namespace XmlExtensions
                     XmlNode node = xml.SelectSingleNode(value);
                     if(node == null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node for <value>=" + value);
+                        PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node when using the xpath <value>=" + value);
                         return false;
                     }
                     valueStored = node.InnerText;
