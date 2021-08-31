@@ -248,7 +248,16 @@ namespace XmlExtensions
                 return false;
             }
             int errNum = 0;
-            string newStr = condition.evaluate(xml).ToString();
+            string newStr;
+            try
+            {
+                newStr = condition.evaluate(xml).ToString();
+            }
+            catch
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: Error in evaluating condition");
+                return false;
+            }
             XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr, brackets);
             if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
