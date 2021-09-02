@@ -212,7 +212,6 @@ namespace XmlExtensions
     public class PatchOperationCopy : PatchOperationPathed
     {
         public string paste;
-        public bool childNodes = false;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -225,25 +224,18 @@ namespace XmlExtensions
                     PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
                     return false;
                 }
-                XmlNode parent = xml.SelectSingleNode(paste);
-                if (parent == null)
+                XmlNodeList parents = xml.SelectNodes(paste);
+                if (parents == null || nodeList.Count == 0)
                 {
                     PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(paste=" + paste + "): Failed to find a node with the given xpath");
                     return false;
                 }
                 foreach (XmlNode node in nodeList)
                 {
-                    if (!childNodes)
+                    foreach(XmlNode parent in parents)
                     {
                         parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
-                    }
-                    else
-                    {
-                        foreach (XmlNode c in node.ChildNodes)
-                        {
-                            parent.AppendChild(parent.OwnerDocument.ImportNode(c, true));
-                        }
-                    }
+                    }                    
                 }
                 return true;
             }            
@@ -348,6 +340,63 @@ namespace XmlExtensions
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
                         tryAddOrReplaceNode(parent[child.Name], newChild, depth + 1);
+                    }
+                }
+            }
+        }
+    }
+
+    public class PatchOperationSafeCopy : PatchOperationPathed
+    {
+        public string paste;
+        protected int safetyDepth = -1;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(this.xpath);
+                if (nodeList == null || nodeList.Count == 0)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                XmlNodeList parents = xml.SelectNodes(paste);
+                if (parents == null || nodeList.Count == 0)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(paste=" + paste + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                foreach (XmlNode node in nodeList)
+                {
+                    foreach (XmlNode parent in parents)
+                    {
+                        int d = 0;
+                        tryAddNode(parent, node, d);
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): " + e.Message);
+                return false;
+            }
+        }
+        private void tryAddNode(XmlNode parent, XmlNode child, int depth)
+        {
+            if (!Helpers.containsNode(parent, child.Name) || depth == safetyDepth)
+            {
+                parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+            }
+            else
+            {
+                if (child.HasChildNodes && child.FirstChild.HasChildNodes)
+                {
+                    foreach (XmlNode newChild in child.ChildNodes)
+                    {
+                        tryAddNode(parent[child.Name], newChild, depth + 1);
                     }
                 }
             }
