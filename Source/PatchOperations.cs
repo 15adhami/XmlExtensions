@@ -359,13 +359,13 @@ namespace XmlExtensions
                 nodeList = xml.SelectNodes(this.xpath);
                 if (nodeList == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
                     return false;
                 }
                 XmlNodeList parents = xml.SelectNodes(paste);
                 if (parents == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(paste=" + paste + "): Failed to find a node with the given xpath");
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(paste=" + paste + "): Failed to find a node with the given xpath");
                     return false;
                 }
                 foreach (XmlNode node in nodeList)
@@ -380,7 +380,7 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): " + e.Message);
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(xpath=" + xpath + ", paste=" + paste + "): " + e.Message);
                 return false;
             }
         }
