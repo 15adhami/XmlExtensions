@@ -21,48 +21,55 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-
-            if(defaultValue == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.UseSetting: <defaultValue>=null");
+                if (key == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(modId=" + modId + "): <key>=null");
+                    return false;
+                }
+                if (defaultValue == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <defaultValue>=null");
+                    return false;
+                }                
+                if (modId == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <modId>=null");
+                    return false;
+                }
+                XmlMod.loadedMod = this.modId;
+                XmlMod.addXmlMod(this.modId);
+                string value;
+                bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
+                XmlContainer newContainer;
+                if (!didContain)
+                {
+                    value = defaultValue;
+                    XmlMod.addSetting(this.modId, this.key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key);
+                }
+                newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
+                int errNum = 0;
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(key = " + key + "): Error in the operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): " + e.Message);
                 return false;
             }
-            if (key == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSetting: <key>=null");
-                return false;
-            }
-            if (modId == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSetting: <modId>=null");
-                return false;
-            }
-            XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId);
-            string value;
-            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
-            XmlContainer newContainer;
-            if (!didContain)
-            {
-                value = defaultValue;
-                XmlMod.addSetting(this.modId, this.key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-            {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
-            }
-            newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
-            int errNum = 0;
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSetting: Error in the operation at position=" + errNum.ToString());
-                return false;
-            }
-            return true;
         }
     }
 
@@ -75,49 +82,46 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            
-            if (ModSettingsClass == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <ModSettingsClass>=null");
-                return false;
-            }
-            if (field == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <field>=null");
-                return false;
-            }
-            if (apply == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: <apply>=null");
-                return false;
-            }
-            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            FieldInfo fieldInfo;
             try
             {
-                
-                fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+                if (field == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(ModSettingsClass=" + ModSettingsClass + "): <field>=null");
+                    return false;
+                }
+                if (ModSettingsClass == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <ModSettingsClass>=null");
+                    return false;
+                }                
+                if (apply == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <apply>=null");
+                    return false;
+                }
+                var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+                FieldInfo fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+                if (fieldInfo == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): Failed to get field");
+                    return false;
+                }
+                object value = fieldInfo.GetValue(null);
+                XmlContainer newContainer;
+                newContainer = Helpers.substituteVariableXmlContainer(apply, field, value.ToString(), brackets);
+                int errNum = 0;
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): Error in the operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
             }
-            catch
+            catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Failed to get field");
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal(ModSettingsClass=" + ModSettingsClass + ", field=" + field + "): " + e.Message);
                 return false;
             }
-            if(fieldInfo == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Failed to get field");
-                return false;
-            }
-            object value = fieldInfo.GetValue(null);
-            XmlContainer newContainer;
-            newContainer = Helpers.substituteVariableXmlContainer(apply, field, value.ToString(), brackets);
-            int errNum = 0;
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingExternal: Error in the operation at position=" + errNum.ToString());
-                return false;
-            }
-            return true;
         }
     }
 
@@ -130,60 +134,58 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (ModSettingsClass == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: <ModSettingsClass>=null");
-                return false;
-            }
-            if (field == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: <field>=null");
-                return false;
-            }
-            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            FieldInfo fieldInfo;
             try
             {
-
-                fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
-            }
-            catch
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Failed to get field");
-                return false;
-            }
-            if (fieldInfo == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Failed to get field");
-                return false;
-            }
-            object value = fieldInfo.GetValue(null);
-
-            if ((bool)value)
-            {
-                if (this.caseTrue != null)
+                if (field == null)
                 {
-                    int errNum = 0;
-                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(ModSettingsClass=" + ModSettingsClass + "): <field>=null");
+                    return false;
                 }
-                return true;
-            }
-            else
-            {
-                if (this.caseFalse != null)
+                if (ModSettingsClass == null)
                 {
-                    int errNum = 0;
-                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal: Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(field=" + field + "): <ModSettingsClass>=null");
+                    return false;
+                }                
+                var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+                FieldInfo fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+                if (fieldInfo == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(field=" + field + "): Failed to get field");
+                    return false;
                 }
-                return true;
+                object value = fieldInfo.GetValue(null);
+
+                if ((bool)value)
+                {
+                    if (this.caseTrue != null)
+                    {
+                        int errNum = 0;
+                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(field=" + field + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+                    if (this.caseFalse != null)
+                    {
+                        int errNum = 0;
+                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(field=" + field + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.OptionalPatchExternal(ModSettingsClass=" + ModSettingsClass + ", field=" + field + "): " + e.Message);
+                return false;
             }
         }
     }
@@ -197,52 +199,60 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (ModSettingsClass == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <ModSettingsClass>=null");
-                return false;
-            }
-            if (fields == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <fields>=null");
-                return false;
-            }
-            if (apply == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <apply>=null");
-                return false;
-            }
-            List<string> values = new List<string>();
-            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            FieldInfo fieldInfo;
-            for (int i = 0; i < fields.Count; i++)
-            {
-                try
+                if (ModSettingsClass == null)
                 {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: <ModSettingsClass>=null");
+                    return false;
+                }
+                if (fields == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): <fields>=null");
+                    return false;
+                }
+                if (apply == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): <apply>=null");
+                    return false;
+                }
+                List<string> values = new List<string>();
+                var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+                FieldInfo fieldInfo;
+                for (int i = 0; i < fields.Count; i++)
+                {
+                    try
+                    {
 
-                    fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(fields[i], bindings);
+                        fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(fields[i], bindings);
+                    }
+                    catch
+                    {
+                        PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): Failed to get field");
+                        return false;
+                    }
+                    if (fieldInfo == null)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): Failed to get field");
+                        return false;
+                    }
+                    object value = fieldInfo.GetValue(null);
+                    values.Add((string)value);
                 }
-                catch
+                XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, fields, values, brackets);
+                int errNum = 0;
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Failed to get field");
+                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): Error in the operation at position=" + errNum.ToString());
                     return false;
                 }
-                if (fieldInfo == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Failed to get field");
-                    return false;
-                }
-                object value = fieldInfo.GetValue(null);
-                values.Add((string)value);
+                return true;
             }
-            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, fields, values, brackets);
-            int errNum = 0;
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal: Error in the operation at position=" + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.UseSettingsExternal(ModSettingsClass=" + ModSettingsClass + "): " + e.Message);
                 return false;
             }
-            return true;
         }
     }
 
@@ -256,61 +266,69 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (defaultValues == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: <defaultValues>=null");
-                return false;
-            }
-            if (keys == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: <keys>=null");
-                return false;
-            }
-            if (modId == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: <modId>=null");
-                return false;
-            }
-            if (keys.Count > defaultValues.Count)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: There are more keys than defaultValues");
-                return false;
-            }
-            else if (keys.Count < defaultValues.Count)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: There are more defaultValues than keys");
-                return false;
-            }
-            XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId);
-            List<string> values = new List<string>();
-            for(int i = 0; i < keys.Count; i++)
-            {
-                string value;
-                bool didContain = XmlMod.tryGetSetting(modId, keys[i], out value);
-                if (!didContain)
+                if (defaultValues == null)
                 {
-                    value = defaultValues[i];
-                    XmlMod.addSetting(modId, keys[i], defaultValues[i]);
+                    PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): <defaultValues>=null");
+                    return false;
                 }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(keys[i]))
+                if (keys == null)
                 {
-                    XmlMod.settingsPerMod[modId].defValues.Add(keys[i], defaultValues[i]);
+                    PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): <keys>=null");
+                    return false;
                 }
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(keys[i]))
+                if (modId == null)
                 {
-                    XmlMod.settingsPerMod[modId].keys.Add(keys[i]);
+                    PatchManager.errors.Add("XmlExtensions.UseSettings: <modId>=null");
+                    return false;
                 }
-                values.Add(value);
-            }            
-            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(this.apply, keys, values, this.brackets);
-            int errNum = 0;
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                if (keys.Count > defaultValues.Count)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): There are more keys than defaultValues");
+                    return false;
+                }
+                else if (keys.Count < defaultValues.Count)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): There are more defaultValues than keys");
+                    return false;
+                }
+                XmlMod.loadedMod = this.modId;
+                XmlMod.addXmlMod(this.modId);
+                List<string> values = new List<string>();
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    string value;
+                    bool didContain = XmlMod.tryGetSetting(modId, keys[i], out value);
+                    if (!didContain)
+                    {
+                        value = defaultValues[i];
+                        XmlMod.addSetting(modId, keys[i], defaultValues[i]);
+                    }
+                    if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(keys[i]))
+                    {
+                        XmlMod.settingsPerMod[modId].defValues.Add(keys[i], defaultValues[i]);
+                    }
+                    if (!XmlMod.settingsPerMod[modId].keys.Contains(keys[i]))
+                    {
+                        XmlMod.settingsPerMod[modId].keys.Add(keys[i]);
+                    }
+                    values.Add(value);
+                }
+                XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(this.apply, keys, values, this.brackets);
+                int errNum = 0;
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): Error in the operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
+            }
+            catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.UseSettings: Error in the operation at position=" + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.UseSettings(modId=" + modId + "): " + e.Message);
                 return false;
             }
-            return true;
         }
     }
 
@@ -324,6 +342,7 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            
             if (modId == null)
             {
                 PatchManager.errors.Add("XmlExtensions.CreateSettings: <modId>=null");
@@ -333,7 +352,17 @@ namespace XmlExtensions
             {
                 PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
                 return false;
-            }
+            }/*
+            if (xml.SelectSingleNode("Defs/XmlExtensions.SettingsMenuDef[defName=\"" + modId + "\"]") == null)
+            {
+                SettingsMenuDef menuDef = new SettingsMenuDef();
+                menuDef.defName = modId;
+                menuDef.label = label;
+                menuDef.defaultSpacing = defaultSpacing;
+                menuDef.settings = settings;
+                menuDef.tKey = tKey;
+                xml.SelectSingleNode("Defs").AppendChild(menuDef.);
+            }*/
             try
             {
                 XmlMod.loadedMod = this.modId;
@@ -389,64 +418,72 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (modId == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <modId>=null");
-                return false;
-            }
-            if (modId == key)
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <key>=null");
-                return false;
-            }
-            if (defaultValue == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.OptionalPatch: <defaultValue>=null");
-                return false;
-            }
-            XmlMod.loadedMod = this.modId;
-            XmlMod.addXmlMod(this.modId);
-            string value = defaultValue;
-            bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
-            if (!didContain)
-            {
-                value = defaultValue;
-                XmlMod.addSetting(this.modId, this.key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-            {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
-            }
+                if (modId == key)
+                {
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatch(modId=" + modId + "): <key>=null");
+                    return false;
+                }
+                if (modId == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatch(key=" + key + "): <modId>=null");
+                    return false;
+                }                
+                if (defaultValue == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatch(key=" + key + "): <defaultValue>=null");
+                    return false;
+                }
+                XmlMod.loadedMod = this.modId;
+                XmlMod.addXmlMod(this.modId);
+                string value = defaultValue;
+                bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
+                if (!didContain)
+                {
+                    value = defaultValue;
+                    XmlMod.addSetting(this.modId, this.key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key);
+                }
 
-            if (bool.Parse(value))
-            {
-                if (this.caseTrue != null)
+                if (bool.Parse(value))
                 {
-                    int errNum = 0;
-                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    if (this.caseTrue != null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.OptionalPatch: Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                        return false;
+                        int errNum = 0;
+                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.OptionalPatch(key=" + key + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    if (this.caseFalse != null)
+                    {
+                        int errNum = 0;
+                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.OptionalPatch(key=" + key + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
-            else
+            catch (Exception e)
             {
-                if (this.caseFalse != null)
-                {
-                    int errNum = 0;
-                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.OptionalPatch: Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
-                }
-                return true;
+                PatchManager.errors.Add("XmlExtensions.OptionalPatch(modId=" + modId + ", key=" + key + "): " + e.Message);
+                return false;
             }
         }
     }

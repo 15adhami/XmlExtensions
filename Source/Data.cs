@@ -19,49 +19,57 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            string newStr1 = this.value;
-            string newStr2 = this.value2;
-            int errNum = 0;
-            if (this.fromXml)
+            try
             {
-                XmlNode node = xml.SelectSingleNode(this.value);
-                if (node == null)
+                string newStr1 = this.value;
+                string newStr2 = this.value2;
+                int errNum = 0;
+                if (this.fromXml)
                 {
-                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in finding a node for <value> with xpath=" + value);
-                    return false;
+                    XmlNode node = xml.SelectSingleNode(this.value);
+                    if (node == null)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.CreateVariable(value=" + value + "): Failed to find a node with the given xpath");
+                        return false;
+                    }
+                    newStr1 = node.InnerText;
                 }
-                newStr1 = node.InnerText;
+                if (this.fromXml2)
+                {
+                    XmlNode node = xml.SelectSingleNode(this.value2);
+                    if (node == null)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.CreateVariable(value2=" + value2 + "): Failed to find a node with the given xpath");
+                        return false;
+                    }
+                    newStr2 = node.InnerText;
+                }
+                if (operation == "")
+                {
+                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.CreateVariable(value=" + value + "): Error in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                else
+                {
+                    string results = Helpers.operationOnString(newStr1, newStr2, operation);
+                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.CreateVariable(calculatedValue=" + results + "): Error in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                return true;
             }
-            if (this.fromXml2)
+            catch(Exception e)
             {
-                XmlNode node = xml.SelectSingleNode(this.value2);
-                if (node == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in finding a node for <value2> with xpath=" + value2);
-                    return false;
-                }
-                newStr2 = node.InnerText;
+                PatchManager.errors.Add("XmlExtensions.CreateVariable(value=" + value + "): " + e.Message);
+                return false;
             }
-            if (operation == "")
-            {
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr1, this.brackets);
-                if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                {
-                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error at operation index: " + errNum.ToString() + " (<value>=" + newStr1+")");
-                    return false;
-                }
-            }
-            else
-            {
-                string results = Helpers.operationOnString(newStr1, newStr2, operation);
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, results, this.brackets);
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                {
-                    PatchManager.errors.Add("XmlExtensions.CreateVariable: Error in the operation at position=" + errNum.ToString()+" (calculated value="+results+")");
-                    return false;
-                }
-            }
-            return true;
         }
     }
 
@@ -74,86 +82,95 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            float sum = 0;
-            XmlNodeList XmlList = xml.SelectNodes(xpath);
-            if (XmlList == null || XmlList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in finding a node with <xpath>=" + xpath);
-                return false;
-            }
-            int n = XmlList.Count;
-            string newStr1 = "";
-            if (this.operation != "count")
-            {
-                float m;
-                try
+                float sum = 0;
+                XmlNodeList XmlList;
+                XmlList = xml.SelectNodes(this.xpath);
+                if (XmlList == null || XmlList.Count == 0)
                 {
-                    m = float.Parse(XmlList[0].InnerText);
-                }
-                catch
-                {
-                    PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in getting a value from the node:" + XmlList[0].OuterXml);
+                    PatchManager.errors.Add("XmlExtensions.CumulativeMath(xpath=" + xpath + "): Failed to find a node with the given xpath");
                     return false;
                 }
-                foreach (object obj in XmlList)
+                int n = XmlList.Count;
+                string newStr1 = "";
+                if (this.operation != "count")
                 {
-                    XmlNode xmlNode = obj as XmlNode;
-                    float val;
+                    float m;
                     try
                     {
-                        val = float.Parse(xmlNode.InnerText);
+                        m = float.Parse(XmlList[0].InnerText);
                     }
                     catch
                     {
-                        PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in getting a value from the node:" + xmlNode.OuterXml);
+                        PatchManager.errors.Add("XmlExtensions.CumulativeMath(xpath=" + xpath + "): Error in getting a value from the node:" + XmlList[0].OuterXml);
                         return false;
                     }
-                    if (this.operation == "+")
+                    foreach (object obj in XmlList)
                     {
-                        sum += val;
+                        XmlNode xmlNode = obj as XmlNode;
+                        float val;
+                        try
+                        {
+                            val = float.Parse(xmlNode.InnerText);
+                        }
+                        catch
+                        {
+                            PatchManager.errors.Add("XmlExtensions.CumulativeMath(xpath=" + xpath + "): Error in getting a value from the node:" + xmlNode.OuterXml);
+                            return false;
+                        }
+                        if (this.operation == "+")
+                        {
+                            sum += val;
+                        }
+                        else if (this.operation == "-")
+                        {
+                            sum -= val;
+                        }
+                        else if (this.operation == "*")
+                        {
+                            sum *= val;
+                        }
+                        else if (this.operation == "average")
+                        {
+                            sum += val / n;
+                        }
+                        else if (this.operation == "min")
+                        {
+                            m = Math.Min(m, val);
+                        }
+                        else if (this.operation == "max")
+                        {
+                            m = Math.Max(m, val);
+                        }
                     }
-                    else if (this.operation == "-")
+                    if (this.operation == "min" || this.operation == "max")
                     {
-                        sum -= val;
-                    }
-                    else if (this.operation == "*")
-                    {
-                        sum *= val;
-                    }
-                    else if (this.operation == "average")
-                    {
-                        sum += val / n;
-                    }
-                    else if (this.operation == "min")
-                    {
-                        m = Math.Min(m, val);
-                    }
-                    else if (this.operation == "max")
-                    {
-                        m = Math.Max(m, val);
+                        sum = m;
                     }
                 }
-                if (this.operation == "min" || this.operation == "max")
+                else
                 {
-                    sum = m;
+                    sum = n;
                 }
-            }
-            else
+                if (this.operation != "concat")
+                {
+                    newStr1 = sum.ToString();
+                }
+                int errNum = 0;
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr1, this.brackets);
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.CumulativeMath(xpath=" + xpath + "): Error in the operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
+            }            
+            catch(Exception e)
             {
-                sum = n;
-            }
-            if (this.operation != "concat")
-            {
-                newStr1 = sum.ToString();
-            }
-            int errNum = 0;
-            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr1, this.brackets);
-            if(!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-            {
-                PatchManager.errors.Add("XmlExtensions.CumulativeMath: Error in the operation at position=" + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.CumulativeMath(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
-            return true;
         }
     }
 
@@ -166,28 +183,36 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            int errNum = 0;
-            XmlAttribute xattribute;
-            XmlNode node = xml.SelectSingleNode(xpath);
-            if(node == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.GetAttribute: Error in finding a node with <xpath>=" + xpath);
+                int errNum = 0;
+                XmlAttribute xattribute;
+                XmlNode node = xml.SelectSingleNode(xpath);
+                if (node == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                xattribute = node.Attributes[this.attribute];
+                if (xattribute == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Could not find attribute");
+                    return false;
+                }
+                string newStr = xattribute.Value;
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Error in operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): " + e.Message);
                 return false;
             }
-            xattribute = node.Attributes[this.attribute];
-            if(xattribute == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.GetAttribute: Could not find the attribute \"" + attribute+"\"");
-                return false;
-            }            
-            string newStr = xattribute.Value;
-            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, newStr, this.brackets);
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-            {
-                PatchManager.errors.Add("XmlExtensions.GetAttribute: Error in operation at position=" + errNum.ToString());
-                return false;
-            }
-            return true;
         }
     }
 
@@ -198,28 +223,37 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (text == null && xpath == null && error == null)
+            try
             {
-                Verse.Log.Message("XmlExtensions.Log");
-            }
-            if (text != null)
-                Verse.Log.Message(text);
-            if (error != null)
-                Verse.Log.Error(error);
-            if (xpath != null)
-            {
-                XmlNodeList nodeList = xml.SelectNodes(xpath);
-                if(nodeList == null || nodeList.Count == 0)
+                if (text == null && xpath == null && error == null)
                 {
-                    PatchManager.errors.Add("XmlExtensions.Log: Error in finding a node with <xpath>=" + xpath);
-                    return false;
+                    Verse.Log.Message("XmlExtensions.Log");
                 }
-                foreach (XmlNode node in nodeList)
+                if (text != null)
+                    Verse.Log.Message(text);
+                if (error != null)
+                    Verse.Log.Error(error);
+                if (xpath != null)
                 {
-                    Verse.Log.Message(node.OuterXml);
-                }          
+                    XmlNodeList nodeList;
+                    nodeList = xml.SelectNodes(this.xpath);
+                    if (nodeList == null || nodeList.Count == 0)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.Log(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                        return false;
+                    }
+                    foreach (XmlNode node in nodeList)
+                    {
+                        Verse.Log.Message(node.OuterXml);
+                    }
+                }
+                return true;
             }
-            return true;
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.Log: " + e.Message);
+                return false;
+            }
         }
     }
 
@@ -231,40 +265,40 @@ namespace XmlExtensions
         public XmlContainer apply;
 
         protected override bool ApplyWorker(XmlDocument xml)
-        {            
-            if (condition == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <condition>=null");
-                return false;
-            }
-            if (apply == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <apply>=null");
-                return false;
-            }
-            if (storeIn == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <storeIn>=null");
-                return false;
-            }
-            int errNum = 0;
-            string newStr;
+        {
             try
             {
+                if (storeIn == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: <storeIn>=null");
+                    return false;
+                }
+                if (condition == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <condition>=null");
+                    return false;
+                }
+                if (apply == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <apply>=null");
+                    return false;
+                }                
+                int errNum = 0;
+                string newStr;
                 newStr = condition.evaluate(xml).ToString();
-            }
-            catch
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr, brackets);
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): Error in operation at position=" + errNum.ToString());
+                    return false;
+                }
+                return true;
+            }            
+            catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: Error in evaluating condition");
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): " + e.Message);
                 return false;
             }
-            XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, newStr, brackets);
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean: Error in operation at position=" + errNum.ToString());
-                return false;
-            }
-            return true;
         }
     }
 }

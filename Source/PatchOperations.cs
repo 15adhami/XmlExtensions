@@ -15,39 +15,48 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(this.xpath);
-            if(nodeList == null || nodeList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node with <xpath>=" + xpath);
+                bool result = false;
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(this.xpath);
+                if (nodeList == null || nodeList.Count == 0)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationMath(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                foreach (XmlNode xmlNode in nodeList)
+                {
+                    result = true;
+                    XmlNode parentNode = xmlNode.ParentNode;
+                    XmlNode node2 = null;
+                    string valueStored = "";
+                    if (fromXml)
+                    {
+                        XmlNode node = xml.SelectSingleNode(value);
+                        if (node == null)
+                        {
+                            PatchManager.errors.Add("XmlExtensions.PatchOperationMath(value=" + value + "): Failed to find a node with the given xpath");
+                            return false;
+                        }
+                        valueStored = node.InnerText;
+                    }
+                    else
+                    {
+                        valueStored = value;
+                    }
+                    node2 = xmlNode.Clone();
+                    node2.InnerText = Helpers.operationOnString(xmlNode.InnerText, valueStored, this.operation);
+                    parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(node2, true), xmlNode);
+                    parentNode.RemoveChild(xmlNode);
+                }
+                return result;
+            }            
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.PatchOperationMath(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
-            foreach (XmlNode xmlNode in nodeList)
-            {
-                result = true;
-                XmlNode parentNode = xmlNode.ParentNode;
-                XmlNode node2 = null;
-                string valueStored = "";
-                if (fromXml)
-                {
-                    XmlNode node = xml.SelectSingleNode(value);
-                    if(node == null)
-                    {
-                        PatchManager.errors.Add("XmlExtensions.PatchOperationMath: Error in finding a node when using the xpath <value>=" + value);
-                        return false;
-                    }
-                    valueStored = node.InnerText;
-                }
-                else
-                {
-                    valueStored = value;
-                }
-                node2 = xmlNode.Clone();
-                node2.InnerText = Helpers.operationOnString(xmlNode.InnerText, valueStored, this.operation);
-                parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(node2, true), xmlNode);
-                parentNode.RemoveChild(xmlNode);
-            }
-            return result;
         }
 
     }
@@ -58,37 +67,46 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            XmlNode node = this.value.node;
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace: Error in finding a node with <xpath>=" + xpath);
-                return false;
-            }
-            foreach (XmlNode xmlNode in nodeList)
-            {
-                foreach (XmlNode addNode in node.ChildNodes)
+                XmlNode node = value.node;
+                bool result = false;
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(xpath);
+                if (nodeList == null || nodeList.Count == 0)
                 {
-                    result = true;
-                    if (!Helpers.containsNode(xmlNode, addNode.Name))
-                    {
-                        xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
-                    }
-                    else
-                    {
-                        xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), xmlNode[addNode.Name]);
-                        xmlNode.RemoveChild(xmlNode[addNode.Name]);                        
-                    }
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
                 }
+                foreach (XmlNode xmlNode in nodeList)
+                {
+                    foreach (XmlNode addNode in node.ChildNodes)
+                    {
+                        result = true;
+                        if (!Helpers.containsNode(xmlNode, addNode.Name))
+                        {
+                            xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
+                        }
+                        else
+                        {
+                            xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), xmlNode[addNode.Name]);
+                            xmlNode.RemoveChild(xmlNode[addNode.Name]);
+                        }
+                    }
 
-            }
-            if (!result)
+                }
+                if (!result)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace: Error in finding a node in <value>");
+                    return false;
+                }
+                return true;
+            }            
+            catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace: Error in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationAddOrReplace(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
-            return true;
         }
     }
 
@@ -99,29 +117,38 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            XmlNode node = this.value.node;
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node with <xpath>=" + xpath);
-                return false;
-            }
-            foreach (XmlNode xmlNode in nodeList)
-            {
-                foreach (XmlNode addNode in node.ChildNodes)
+                XmlNode node = this.value.node;
+                bool result = false;
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(this.xpath);
+                if (nodeList == null || nodeList.Count == 0)
                 {
-                    result = true;
-                    int d = 0;
-                    tryAddNode(xmlNode, addNode, d);
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
                 }
-            }
-            if (!result)
+                foreach (XmlNode xmlNode in nodeList)
+                {
+                    foreach (XmlNode addNode in node.ChildNodes)
+                    {
+                        result = true;
+                        int d = 0;
+                        tryAddNode(xmlNode, addNode, d);
+                    }
+                }
+                if (!result)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node in <value>");
+                    return false;
+                }
+                return result;
+            }            
+            catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
-            return result;
         }
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
@@ -189,33 +216,42 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if(nodeList == null || nodeList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy: Error in finding a node with <xpath>=" + xpath);
-                return false;
-            }
-            XmlNode parent = xml.SelectSingleNode(paste);
-            if (parent == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy: Error in finding a node for <paste>=" + paste);
-                return false;
-            }
-            foreach (XmlNode node in nodeList)
-            {                
-                if (!childNodes)
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(this.xpath);
+                if (nodeList == null || nodeList.Count == 0)
                 {
-                    parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
-                }                    
-                else
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                XmlNode parent = xml.SelectSingleNode(paste);
+                if (parent == null)
                 {
-                    foreach(XmlNode c in node.ChildNodes)
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(paste=" + paste + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                foreach (XmlNode node in nodeList)
+                {
+                    if (!childNodes)
                     {
-                        parent.AppendChild(parent.OwnerDocument.ImportNode(c, true));
+                        parent.AppendChild(parent.OwnerDocument.ImportNode(node, true));
+                    }
+                    else
+                    {
+                        foreach (XmlNode c in node.ChildNodes)
+                        {
+                            parent.AppendChild(parent.OwnerDocument.ImportNode(c, true));
+                        }
                     }
                 }
+                return true;
+            }            
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + ", paste=" + paste + "): " + e.Message);
+                return false;
             }
-            return true;
         }
     }
 
@@ -223,18 +259,14 @@ namespace XmlExtensions
     {
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            bool result = false;
             try
             {
-                foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath).Cast<XmlNode>().ToArray<XmlNode>())
+                foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath))
                 {
-                    result = true;
                     xmlNode.ParentNode.RemoveChild(xmlNode);
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return true;
         }
     }
@@ -258,29 +290,38 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            XmlNode node = this.value.node;
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace: Error in finding a node with <xpath>=" + xpath);
-                return false;
-            }
-            foreach (XmlNode xmlNode in nodeList)
-            {
-                foreach (XmlNode addNode in node.ChildNodes)
+                XmlNode node = this.value.node;
+                bool result = false;
+                XmlNodeList nodeList;
+                nodeList = xml.SelectNodes(this.xpath);
+                if (nodeList == null || nodeList.Count == 0)
                 {
-                    result = true;
-                    int d = 0;
-                    tryAddOrReplaceNode(xmlNode, addNode, d);
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
                 }
-            }
-            if (!result)
+                foreach (XmlNode xmlNode in nodeList)
+                {
+                    foreach (XmlNode addNode in node.ChildNodes)
+                    {
+                        result = true;
+                        int d = 0;
+                        tryAddOrReplaceNode(xmlNode, addNode, d);
+                    }
+                }
+                if (!result)
+                {
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace: Error in finding a node in <value>");
+                    return false;
+                }
+                return result;
+            }            
+            catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace: Error in finding a node in <value>");
+                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAddOrReplace(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
-            return result;
         }
         private void tryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
         {

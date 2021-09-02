@@ -6,14 +6,20 @@ using System.Reflection;
 
 namespace XmlExtensions
 {
-    public class XmlExtensions : Mod
+    [StaticConstructorOnStartup]
+    public static class XmlExtensions
     {
 
-
-        public XmlExtensions(ModContentPack content) : base(content)
+        
+        static XmlExtensions()
         {
-            var harmony = new Harmony("com.github.15adhami.xmlextensions");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            int i = 0;
+            foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
+            {
+                i++;
+                menuDef.ApplyWorker();
+            }
+            Verse.Log.Message("[XML Extensions]: Finished initializing " + i.ToString() + " SettingsMenuDefs");
         }
 
         /*public override string SettingsCategory()

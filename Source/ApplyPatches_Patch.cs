@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 using HarmonyLib;
+using System.Xml;
 
 namespace XmlExtensions
 {
@@ -12,10 +13,23 @@ namespace XmlExtensions
     static class ApplyPatches_Patch
     {
 
-        static void Postfix()
+        static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
+            //Add defNames to the menus
+            foreach(XmlNode node in xmlDoc.SelectNodes("Defs/XmlExtensions.SettingsMenuDef"))
+            {
+                if (node["defName"] == null)
+                {
+                    node.AppendChild(xmlDoc.CreateNode("element", "defName", null));
+                }
+                else
+                {
+                    node["defName"].InnerText = node["modId"].InnerText.Replace('.', '_');
+                }
+            }
+
             int unique = 0;
-            string tId = "";
+            string tId = "";            
             List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             kvpList.Sort(delegate (KeyValuePair<string, string> pair1, KeyValuePair<string, string> pair2) { return pair1.Key.CompareTo(pair2.Key); });
             foreach (KeyValuePair<string, string> pair in kvpList)

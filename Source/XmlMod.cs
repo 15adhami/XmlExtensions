@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace XmlExtensions
 
         static XmlMod()
         {
+            var harmony = new Harmony("com.github.15adhami.xmlextensions");
+            harmony.PatchAll();
             allSettings = new XmlModBaseSettings();
             settingsPosition = new Vector2();
             modListPosition = new Vector2();
