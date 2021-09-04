@@ -489,7 +489,7 @@ namespace XmlExtensions.Setting
             lListing.verticalSpacing = listingStandard.verticalSpacing;
             foreach (SettingContainer setting in leftCol)
             {
-                setting.drawSetting(lListing, selectedMod);
+                setting.DrawSetting(lListing, selectedMod);
             }
             lListing.End();
             Listing_Standard rListing = new Listing_Standard();
@@ -504,7 +504,7 @@ namespace XmlExtensions.Setting
             rListing.verticalSpacing = listingStandard.verticalSpacing;
             foreach (SettingContainer setting in rightCol)
             {
-                setting.drawSetting(rListing, selectedMod);
+                setting.DrawSetting(rListing, selectedMod);
             }
             rListing.End();
         }
@@ -674,7 +674,7 @@ namespace XmlExtensions.Setting
                 listing.verticalSpacing = listingStandard.verticalSpacing;
                 foreach (SettingContainer setting in settings)
                 {
-                    setting.drawSetting(listing, selectedMod);
+                    setting.DrawSetting(listing, selectedMod);
                 }
                 listing.End();
             }
@@ -765,7 +765,7 @@ namespace XmlExtensions.Setting
             listing.verticalSpacing = listingStandard.verticalSpacing;
             foreach (SettingContainer setting in settings)
             {
-                setting.drawSetting(listing, selectedMod);
+                setting.DrawSetting(listing, selectedMod);
             }
             listing.End();
             Widgets.EndScrollView();
@@ -941,7 +941,7 @@ namespace XmlExtensions.Setting
                 List<SettingContainer> settings = valSettingDict[XmlMod.allSettings.dataDict[selectedMod + ";" + key]];
                 foreach (SettingContainer setting in settings)
                 {
-                    setting.drawSetting(listingStandard, selectedMod);
+                    setting.DrawSetting(listingStandard, selectedMod);
                 }
             }
             catch
@@ -1062,7 +1062,7 @@ namespace XmlExtensions.Setting
                 {
                     foreach(SettingContainer setting in tabs[i].settings)
                     {
-                        setting.drawSetting(tempListing, selectedMod);
+                        setting.DrawSetting(tempListing, selectedMod);
                     }
                 }
             }
@@ -1124,4 +1124,73 @@ namespace XmlExtensions.Setting
         }
 
     }
+
+    public class Section : SettingContainer
+    {
+        public float height = -1f;
+        public List<SettingContainer> settings = new List<SettingContainer>();
+        public float margin = 4f;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Rect rect = listingStandard.GetRect(getHeight(listingStandard.ColumnWidth, selectedMod));
+            Widgets.DrawMenuSection(rect);
+            Listing_Standard listing_Standard = new Listing_Standard();
+            Rect rect2 = new Rect(rect.x + margin, rect.y + margin, rect.width - margin * 2f, rect.height - margin * 2f);
+            listing_Standard.Begin(rect2);
+            foreach (SettingContainer setting in settings)
+            {
+                setting.DrawSetting(listing_Standard, selectedMod);
+            }
+            listing_Standard.End();
+        }
+
+        public override int getHeight(float width, string selectedMod)
+        {
+            if(height<0)
+            {
+                int h = 0;
+                if (settings != null)
+                {
+                    foreach (SettingContainer setting in settings)
+                    {
+                        h += setting.GetHeight(width, selectedMod);
+                    }
+                }
+                return h + (int)margin * 2;
+            }
+            else
+            {
+                return (int)height + (int)margin * 2;
+            }
+        }
+
+        public override bool setDefaultValue(string modId)
+        {
+            int t = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                t++;
+                if (!setting.setDefaultValue(modId))
+                {
+                    PatchManager.errors.Add("XmlExtensions.Setting.Section: Failed to initialize a setting at position=" + t.ToString());
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public override void init()
+        {
+            base.init();
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.init();
+                }
+            }
+        }
+    }
+
 }
