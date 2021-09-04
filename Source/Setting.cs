@@ -484,12 +484,13 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> leftCol = new List<SettingContainer>();
         public List<SettingContainer> rightCol = new List<SettingContainer>();
         public bool drawLine = false;
+        private Spacing gapSize = Spacing.Small;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, listingStandard.ColumnWidth*split, selectedMod), columnHeight(rightCol, listingStandard.ColumnWidth*(1-split), selectedMod)));
-            Rect leftRect = baseRect.LeftPart(split - 0.005f);
-            Rect rightRect = baseRect.RightPart(1 - split - 0.005f);
+            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, listingStandard.ColumnWidth*split - ((int)gapSize), selectedMod), columnHeight(rightCol, listingStandard.ColumnWidth*(1-split) - ((int)gapSize), selectedMod)));
+            Rect leftRect = baseRect.LeftPartPixels(baseRect.width*split - ((int)gapSize));
+            Rect rightRect = baseRect.RightPartPixels(baseRect.width * (1 - split) - ((int)gapSize));
             Listing_Standard lListing = new Listing_Standard();
             lListing.Begin(leftRect);
             lListing.verticalSpacing = listingStandard.verticalSpacing;
@@ -513,6 +514,16 @@ namespace XmlExtensions.Setting
                 setting.DrawSetting(rListing, selectedMod);
             }
             rListing.End();
+        }
+
+        private enum Spacing : int
+        {
+            None = 0,
+            Tiny = 2,
+            Small = 3,
+            Medium = 5,
+            Large = 9,
+            Huge = 15
         }
 
         private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
@@ -575,7 +586,68 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split, selectedMod), columnHeight(rightCol, width * (1 - split), selectedMod)); }
+        public override int getHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split - ((int)gapSize), selectedMod), columnHeight(rightCol, width * (1 - split) - ((int)gapSize), selectedMod)); }
+    }
+
+    public class MiddleColumn : SettingContainer
+    {
+        public float split = 0.50f;
+        public List<SettingContainer> settings = new List<SettingContainer>();
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Rect baseRect = listingStandard.GetRect(columnHeight(settings, listingStandard.ColumnWidth * split, selectedMod)).LeftPart(split/2f+0.5f).RightPart(split/(split / 2f + 0.5f));
+            Listing_Standard lListing = new Listing_Standard();
+            lListing.Begin(baseRect);
+            lListing.verticalSpacing = listingStandard.verticalSpacing;
+            foreach (SettingContainer setting in settings)
+            {
+                setting.DrawSetting(lListing, selectedMod);
+            }
+            lListing.End();
+        }
+
+        private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
+        {
+            int h = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                h += setting.GetHeight(width, selectedMod);
+            }
+            return h;
+        }
+
+        public override bool setDefaultValue(string modId)
+        {
+            int c = 0;
+            if (settings != null)
+            {
+                c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    if (!setting.setDefaultValue(modId))
+                    {
+                        c++;
+                        PatchManager.errors.Add("XmlExtensions.Setting.MiddleColumn: Failed to initialize a setting at position: " + c.ToString());
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public override void init()
+        {
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.init();
+                }
+            }
+        }
+
+        public override int getHeight(float width, string selectedMod) { return columnHeight(settings, width * split, selectedMod); }
     }
 
     public class GapLine : SettingContainer
