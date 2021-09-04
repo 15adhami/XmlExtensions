@@ -195,18 +195,33 @@ namespace XmlExtensions.Setting
         public string tKeyTip = null;
         public int decimals = 6;
         public bool hideLabel = false;
+        private int buffer = 0;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
-        {
+        {            
             listingStandard.verticalSpacing = 0;
             string currFloat = XmlMod.allSettings.dataDict[selectedMod + ";" + this.key];
             if (!hideLabel)
+            {
                 listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
-            listingStandard.verticalSpacing = XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing;
-            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = (Math.Round(listingStandard.Slider(float.Parse(currFloat), min, max), decimals)).ToString();
+            }                
+            listingStandard.Gap((float)Math.Ceiling((double)buffer/2));
+            listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
+            float tempFloat = listingStandard.Slider(float.Parse(currFloat), min, max);
+            XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = (Math.Round(tempFloat, decimals)).ToString();
+            listingStandard.Gap((float)Math.Floor((double)buffer / 2));
         }
 
-        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing + (hideLabel? 0:22)); }
+        public override void init()
+        {
+            base.init();
+            if (label == null)
+            {
+                hideLabel = true;
+            }                
+        }
+
+        public override int getHeight(float width, string selectedMod) { return (22 + buffer + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing + (hideLabel? 0:22)); }
     }
 
     public class IntEntry : KeyedSettingContainer
@@ -338,7 +353,7 @@ namespace XmlExtensions.Setting
             TextAnchor t = TextAnchor.UpperLeft;
             if(anchor == "Middle")
             {
-                t = TextAnchor.MiddleCenter;
+                t = TextAnchor.UpperCenter;
             }
             else if (anchor == "Right")
             {
@@ -374,7 +389,7 @@ namespace XmlExtensions.Setting
             TextAnchor t = TextAnchor.UpperLeft;
             if (anchor == "Middle")
             {
-                t = TextAnchor.MiddleCenter;
+                t = TextAnchor.UpperCenter;
             }
             else if (anchor == "Right")
             {
@@ -386,7 +401,7 @@ namespace XmlExtensions.Setting
             h = (int)Verse.Text.CalcHeight(str, width);
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-            return (h + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing);
+            return (h + XmlMod.settingsPerMod[selectedMod].defaultSpacing);
         }
     }
 
@@ -403,7 +418,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
-        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[selectedMod].defaultSpacing); }
     }
 
     public class ResetSettings : SettingContainer
@@ -528,6 +543,24 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        public override void init()
+        {
+            if(leftCol != null)
+            {
+                foreach (SettingContainer setting in leftCol)
+                {
+                    setting.init();
+                }
+            }
+            if (rightCol != null)
+            {
+                foreach (SettingContainer setting in rightCol)
+                {
+                    setting.init();
+                }
+            }
+        }
+
         public override int getHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split, selectedMod), columnHeight(rightCol, width * (1 - split), selectedMod)); }
     }
 
@@ -611,8 +644,8 @@ namespace XmlExtensions.Setting
     public class ToggleableSettings : SettingContainer
     {
         public string key;
-        public List<SettingContainer> caseTrue;
-        public List<SettingContainer> caseFalse;
+        public List<SettingContainer> caseTrue = new List<SettingContainer>();
+        public List<SettingContainer> caseFalse = new List<SettingContainer>();
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
@@ -683,13 +716,33 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        public override void init()
+        {
+            base.init();
+            if (caseTrue != null)
+            {
+                foreach (SettingContainer setting in caseTrue)
+                {
+                    Verse.Log.Message("tete");
+                    setting.init();
+                }
+            }
+            if (caseFalse != null)
+            {
+                foreach (SettingContainer setting in caseFalse)
+                {
+                    setting.init();
+                }
+            }
+        }
+
         public override int getHeight(float width, string selectedMod) { return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width, selectedMod) : calcHeight(caseFalse, width, selectedMod)); }
     }
 
     public class ScrollView : SettingContainer
     {
         public float height = 72;
-        public List<SettingContainer> settings;
+        public List<SettingContainer> settings = new List<SettingContainer>();
 
         private Vector2 scrollPos = Vector2.zero;
 
@@ -739,6 +792,17 @@ namespace XmlExtensions.Setting
                 }
             }
             return true;
+        }
+
+        public override void init()
+        {
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.init();
+                }
+            }            
         }
 
         public override int getHeight(float width, string selectedMod) { return ((int)height); }
@@ -859,7 +923,7 @@ namespace XmlExtensions.Setting
     public class SwitchSettings : SettingContainer
     {
         public string key;
-        public List<SwitchSetting> cases = null;
+        public List<SwitchSetting> cases = new List<SwitchSetting>();
         private Dictionary<string, List<SettingContainer>> valSettingDict;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
@@ -903,13 +967,26 @@ namespace XmlExtensions.Setting
             base.init();
             if (cases != null)
             {
+                foreach (SwitchSetting switchSetting in cases)
+                {
+                    if(switchSetting.settings != null)
+                    {
+                        foreach (SettingContainer setting in switchSetting.settings)
+                        {
+                            setting.init();
+                        }
+                    }                    
+                }
+            }            
+            if (cases != null)
+            {
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();
                 foreach (SwitchSetting setting in cases)
                 {
                     valSettingDict.Add(setting.value, setting.settings);
                 }
-            }            
-        }
+            }                     
+    }
 
         public override bool setDefaultValue(string modId)
         {
@@ -939,14 +1016,17 @@ namespace XmlExtensions.Setting
     {
         public string label;
         public string tKey;
-        public List<SettingContainer> settings;
+        public List<SettingContainer> settings = new List<SettingContainer>();
 
         public override int getHeight(float width, string selectedMod)
         {
             int h = 0;
-            foreach(SettingContainer setting in settings)
+            if(settings != null)
             {
-                h += setting.GetHeight(width, selectedMod);
+                foreach (SettingContainer setting in settings)
+                {
+                    h += setting.GetHeight(width, selectedMod);
+                }                
             }
             return h;
         }
@@ -954,15 +1034,17 @@ namespace XmlExtensions.Setting
 
     public class TabView : SettingContainer
     {
-        protected List<Tab> tabs;
+        protected List<Tab> tabs = new List<Tab>();
         private List<TabRecord> tabRecords;
         private int selectedTab = 0;
+        private float tabHeight = 32;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            Rect rectTab = listingStandard.GetRect(tabs[selectedTab].getHeight(listingStandard.ColumnWidth, selectedMod) + 45);
-            rectTab.yMin += 45f;
-            TabDrawer.DrawTabs<TabRecord>(rectTab, tabRecords, 200f);
+            
+            Rect rectTab = listingStandard.GetRect(tabs[selectedTab].getHeight(listingStandard.ColumnWidth, selectedMod) + tabHeight+4);
+            rectTab.yMin += tabHeight;
+            TabDrawer.DrawTabs<TabRecord>(rectTab, tabRecords, 200f);            
             Listing_Standard tempListing = new Listing_Standard();
             tempListing.Begin(rectTab);
             
@@ -981,12 +1063,26 @@ namespace XmlExtensions.Setting
 
         public override int getHeight(float width, string selectedMod)
         {
-            return tabs[selectedTab].getHeight(width, selectedMod) + 45;
+            return tabs[selectedTab].getHeight(width, selectedMod) + (int)tabHeight+4;
         }
 
         public override void init()
         {
             base.init();
+            if(tabs != null)
+            {
+                foreach (Tab tab in tabs)
+                {
+                    if (tab.settings != null)
+                    {
+                        foreach (SettingContainer setting in tab.settings)
+                        {
+                            setting.init();
+                        }
+                    }                    
+                }
+            }
+            
             tabRecords = new List<TabRecord>();
             for (int i = 0; i < tabs.Count; i++)
             {
