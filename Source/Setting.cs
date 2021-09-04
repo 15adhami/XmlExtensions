@@ -426,6 +426,8 @@ namespace XmlExtensions.Setting
         protected string label = "Reset settings";
         protected List<string> keys = null;
         protected bool confirm = true;
+        public string message;
+        public string tKeyMessage;
         public string tKey;
         public string tKeyTip;
         public string tooltip;
@@ -444,10 +446,14 @@ namespace XmlExtensions.Setting
             }
             else
             {
+                if (tKeyMessage == null && message == null)
+                    tKeyMessage = "XmlExtensions_ConfirmationResetMod";
+                if(message == null)
+                    message = "Are you sure you want to reset every setting of the current mod?";
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), null))
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
                     {
                         foreach(string key in keys)
                         {
