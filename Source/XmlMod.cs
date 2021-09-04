@@ -43,8 +43,8 @@ namespace XmlExtensions
 
         public static void DrawSettingsWindow(Rect inRect)
         {
-            Rect rectSettings = inRect.RightPart(0.7f);
-            Rect rectMods = inRect.LeftPart(0.285f);
+            Rect rectSettings = inRect.RightPartPixels(inRect.width-256-6);
+            Rect rectMods = inRect.LeftPartPixels(256); //.285f
             drawXmlModSettings(rectSettings);
             drawXmlModList(rectMods);
         }

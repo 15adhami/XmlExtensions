@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             get
             {
-                return new Vector2(900f, 700f);
+                return new Vector2(900f + 256f + 6f, 700f);
             }
         }
 

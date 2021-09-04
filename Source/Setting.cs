@@ -477,6 +477,7 @@ namespace XmlExtensions.Setting
         public float split = 0.50f;
         public List<SettingContainer> leftCol = new List<SettingContainer>();
         public List<SettingContainer> rightCol = new List<SettingContainer>();
+        public bool drawLine = false;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
@@ -492,6 +493,13 @@ namespace XmlExtensions.Setting
             }
             lListing.End();
             Listing_Standard rListing = new Listing_Standard();
+            if(drawLine)
+            {
+                Color color = GUI.color;
+                GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+                GUI.DrawTexture(new Rect(baseRect.center.x, rightRect.yMin, 1f, rightRect.height), BaseContent.WhiteTex);
+                GUI.color = color;
+            }                
             rListing.Begin(rightRect);
             rListing.verticalSpacing = listingStandard.verticalSpacing;
             foreach (SettingContainer setting in rightCol)
@@ -572,7 +580,7 @@ namespace XmlExtensions.Setting
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) 
         {
             Rect gapRect = listingStandard.GetRect(spacing);
-            float y = gapRect.y + spacing / 2f - thickness / 2;
+            float y = gapRect.y + spacing / 2f - thickness / 2f;
             Color color = GUI.color;
             GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
             GUI.DrawTexture(new Rect(gapRect.x, y, listingStandard.ColumnWidth, thickness), BaseContent.WhiteTex);
