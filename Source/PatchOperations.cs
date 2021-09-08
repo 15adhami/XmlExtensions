@@ -421,8 +421,6 @@ namespace XmlExtensions
                 }
                 foreach (XmlNode list in lists)
                 {
-                    Verse.Log.Message(list.GetXPath() + "/li");
-                    Verse.Log.Message(list.SelectNodes(list.GetXPath() + "/li").Count.ToString());
                     List<XmlNode> nodeList = list.SelectNodes(list.GetXPath() + "/li").Cast<XmlNode>().ToList<XmlNode>();
                     if(reverse)
                     {

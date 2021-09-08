@@ -11,6 +11,7 @@ namespace XmlExtensions.Setting
     public abstract class SettingContainer : PatchOperation
     {
         public int errHeight = -1;
+        public string tag;
 
         public virtual void DrawSetting(Listing_Standard listingStandard, string selectedMod)
         {
@@ -1252,6 +1253,64 @@ namespace XmlExtensions.Setting
                 if (!setting.setDefaultValue(modId))
                 {
                     PatchManager.errors.Add("XmlExtensions.Setting.Section: Failed to initialize a setting at position=" + t.ToString());
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public override void init()
+        {
+            base.init();
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.init();
+                }
+            }
+        }
+    }
+
+    public class Group : SettingContainer
+    {
+        public List<SettingContainer> settings = new List<SettingContainer>();
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            Rect rect = listingStandard.GetRect(getHeight(listingStandard.ColumnWidth, selectedMod));
+            Listing_Standard listing_Standard = new Listing_Standard();
+            listing_Standard.verticalSpacing = listingStandard.verticalSpacing;
+            listing_Standard.Begin(rect);
+            foreach (SettingContainer setting in settings)
+            {
+                setting.DrawSetting(listing_Standard, selectedMod);
+            }
+            listing_Standard.End();
+        }
+
+        public override int getHeight(float width, string selectedMod)
+        {
+            int h = 0;
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    h += setting.GetHeight(width, selectedMod);
+                }
+            }
+            return h;           
+        }
+
+        public override bool setDefaultValue(string modId)
+        {
+            int t = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                t++;
+                if (!setting.setDefaultValue(modId))
+                {
+                    PatchManager.errors.Add("XmlExtensions.Setting.Group: Failed to initialize a setting at position=" + t.ToString());
                     return false;
                 }
             }
