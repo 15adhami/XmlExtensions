@@ -320,10 +320,7 @@ namespace XmlExtensions
                 t.label = label;
                 settingsPerMod.Add(modId, t);
             }
-            else
-            {
-                settingsPerMod[modId].label = label;
-            }
+            settingsPerMod[modId].label = label;
             if (settingsPerMod[modId].defValues == null)
             {
                 settingsPerMod[modId].defValues = new Dictionary<string, string>();

@@ -16,7 +16,6 @@ namespace XmlExtensions
 
         public bool ApplyWorker()
         {
-            defName = modId.Replace('.', '_');
             if (modId == null)
             {
                 PatchManager.errors.Add("XmlExtensions.CreateSettings: <modId>=null");
