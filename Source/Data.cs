@@ -13,9 +13,11 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected string value = "";
         protected string value2 = "";
+        protected string defaultValue;
+        protected string defaultValue2;
         protected bool fromXml = false;
         protected bool fromXml2 = false;
-        protected string operation = "";
+        protected string operation = "";        
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -29,20 +31,34 @@ namespace XmlExtensions
                     XmlNode node = xml.SelectSingleNode(this.value);
                     if (node == null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.CreateVariable(value=" + value + "): Failed to find a node with the given xpath");
-                        return false;
+                        if(defaultValue==null)
+                        {
+                            PatchManager.errors.Add("XmlExtensions.CreateVariable(value=" + value + "): Failed to find a node with the given xpath");
+                            return false;
+                        }
+                        newStr1 = defaultValue;
                     }
-                    newStr1 = node.InnerText;
+                    else
+                    {
+                        newStr1 = node.InnerText;
+                    }                    
                 }
                 if (this.fromXml2)
                 {
                     XmlNode node = xml.SelectSingleNode(this.value2);
                     if (node == null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.CreateVariable(value2=" + value2 + "): Failed to find a node with the given xpath");
-                        return false;
+                        if (defaultValue2 == null)
+                        {
+                            PatchManager.errors.Add("XmlExtensions.CreateVariable(value2=" + value2 + "): Failed to find a node with the given xpath");
+                            return false;
+                        }
+                        newStr2 = defaultValue2;
                     }
-                    newStr2 = node.InnerText;
+                    else
+                    {
+                        newStr2 = node.InnerText;
+                    }
                 }
                 if (operation == "")
                 {
