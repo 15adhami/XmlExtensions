@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 using Verse;
 
@@ -35,16 +36,14 @@ namespace XmlExtensions
 
         public static string substituteVariables(string str, List<string> vars, List<string> vals, string brackets)
         {            
-            string strFinal = str;
             int i = 0;
+            StringBuilder builder = new StringBuilder(str);
             foreach(string var in vars)
             {
-                string variable = brackets[0] + var + brackets[1];
-                strFinal = strFinal.Replace(variable, vals[i]);
+                builder.Replace(brackets[0] + var + brackets[1], vals[i]);
                 i++;
             }
-            
-            return strFinal;
+            return builder.ToString();
         }
 
         public static XmlContainer substituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
@@ -55,6 +54,7 @@ namespace XmlExtensions
             return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
         }
 
+        // TODO: Optimize for single-pass
         public static XmlContainer substituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
         {
             string oldXml = container.node.OuterXml;

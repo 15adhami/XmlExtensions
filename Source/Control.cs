@@ -70,7 +70,7 @@ namespace XmlExtensions
                 {
                     string path = xmlNode.GetXPath();
                     string prefix = Helpers.getPrefix(path, prefixLength);
-                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, prefix, this.brackets);
+                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
                     if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                     {
                         PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + ", curr_prefix=" + prefix + "): Error in the operation at position=" + errNum.ToString());

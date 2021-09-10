@@ -65,10 +65,6 @@ namespace XmlExtensions.Setting
                     if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
                         XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
                 }
-                else
-                {// TODO: Make a check after game boots up
-                    //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
-                }
             }
             return true;
         }
@@ -138,10 +134,6 @@ namespace XmlExtensions.Setting
                         if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
                             XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
                     }
-                    else
-                    {// TODO: Make a check after game boots up
-                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
-                    }
                 }
             }
             else
@@ -162,10 +154,6 @@ namespace XmlExtensions.Setting
                         if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
                             XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue.Split('~')[0]);
                     }
-                    else
-                    {// TODO: Make a check after game boots up
-                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
-                    }
                 }
                 if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key2))
                 {
@@ -174,10 +162,6 @@ namespace XmlExtensions.Setting
                         XmlMod.settingsPerMod[modId].defValues.Add(key2, defaultValue.Split('~')[1]);
                         if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key2))
                             XmlMod.allSettings.dataDict.Add(modId + ";" + key2, defaultValue.Split('~')[1]);
-                    }
-                    else
-                    {// TODO: Make a check after game boots up
-                     //Log.Error("[XML Extensions] " + modId + "." + ((KeyedSettingContainer)(setting)).key + " has no default value defined.");
                     }
                 }
             }
@@ -475,7 +459,6 @@ namespace XmlExtensions.Setting
         public int spacing = 24;
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(this.spacing); }
 
-        // TODO: Add the height of the line itself?
         public override int getHeight(float width, string selectedMod) { return spacing; }
     }
 

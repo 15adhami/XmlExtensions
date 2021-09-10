@@ -58,6 +58,7 @@
     <Compile Include="Data.cs" />
     <Compile Include="Dialog_Options_patch.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="PatchDef.cs" />
     <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationApply_Patch.cs" />
     <Compile Include="PatchOperationModSettings.cs" />

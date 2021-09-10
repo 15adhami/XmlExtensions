@@ -243,7 +243,6 @@ namespace XmlExtensions
                 if (settingsPerMod[modId].label != null)
                 {
                     bool t = false;
-                    // TODO: Translate label
                     t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
                     if (t)
                     {

@@ -403,7 +403,8 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationSort : PatchOperationPathed
+    // TODO: If xpathLocal is empty
+    public class PatchOperationSortList : PatchOperationPathed
     {
         public string xpathLocal;
         public bool reverse = false;
@@ -413,6 +414,10 @@ namespace XmlExtensions
         {
             try
             {
+                if(xpathLocal == null)
+                {
+                    xpathLocal = "text()";
+                }
                 XmlNodeList lists = xml.SelectNodes(xpath);
                 if (lists == null || lists.Count == 0)
                 {
@@ -534,6 +539,25 @@ namespace XmlExtensions
                 PatchManager.errors.Add("XmlExtensions.PatchOperationSort(xpath=" + xpath + ", xpathLocal=" + xpathLocal + "): " + e.Message);
                 return false;
             }
+        }
+    }
+
+    public class ApplyPatch : PatchOperation
+    {
+        public string patchName;
+        public List<string> arguments;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            PatchDef patchDef = DirectXmlToObject.ObjectFromXml<PatchDef>(xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[@Name=\""+patchName+"\"]"), false);
+            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(patchDef.apply, patchDef.parameters, arguments, patchDef.brackets);
+            int errNum = 0;
+            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            {
+                PatchManager.errors.Add("XmlExtensions.ApplyPatch(patchName=" + patchName + "): Error in the operation at position=" + errNum.ToString());
+                return false;
+            }
+            return true;
         }
     }
 }

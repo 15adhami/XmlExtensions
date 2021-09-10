@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace XmlExtensions
 {
-    public class UseSetting : PatchOperation
+    public class UseSetting : PatchOperationValue
     {
         protected string modId;
         protected string key;
@@ -23,40 +23,12 @@ namespace XmlExtensions
         {
             try
             {
-                if (key == null)
+                string temp = "";
+                if (!getValue(ref temp, xml))
                 {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(modId=" + modId + "): <key>=null");
                     return false;
                 }
-                if (defaultValue == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <defaultValue>=null");
-                    return false;
-                }                
-                if (modId == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <modId>=null");
-                    return false;
-                }
-                XmlMod.loadedMod = this.modId;
-                XmlMod.addXmlMod(this.modId);
-                string value;
-                bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
-                XmlContainer newContainer;
-                if (!didContain)
-                {
-                    value = defaultValue;
-                    XmlMod.addSetting(this.modId, this.key, defaultValue);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-                {
-                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-                }
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(key);
-                }
-                newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.key, value, this.brackets);
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, key, temp, brackets);
                 int errNum = 0;
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
@@ -71,9 +43,61 @@ namespace XmlExtensions
                 return false;
             }
         }
+
+        public override bool getVar(ref string var)
+        {
+            var = key;
+            return true;
+        }
+
+        public override bool getValue(ref string val, XmlDocument xml)
+        {
+            try
+            {
+                if (key == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(modId=" + modId + "): <key>=null");
+                    return false;
+                }
+                if (defaultValue == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <defaultValue>=null");
+                    return false;
+                }
+                if (modId == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <modId>=null");
+                    return false;
+                }
+                XmlMod.loadedMod = this.modId;
+                XmlMod.addXmlMod(this.modId);
+                string value;
+                bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
+                if (!didContain)
+                {
+                    value = defaultValue;
+                    XmlMod.addSetting(this.modId, this.key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                }
+                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+                {
+                    XmlMod.settingsPerMod[modId].keys.Add(key);
+                }
+                val = value;
+                return true;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): " + e.Message);
+                return false;
+            }
+        }
     }
 
-    public class UseSettingExternal : PatchOperation
+    public class UseSettingExternal : PatchOperationValue
     {
         protected string ModSettingsClass;
         protected string field;
@@ -84,31 +108,12 @@ namespace XmlExtensions
         {
             try
             {
-                if (field == null)
+                string temp = "";
+                if (!getValue(ref temp, xml))
                 {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(ModSettingsClass=" + ModSettingsClass + "): <field>=null");
                     return false;
                 }
-                if (ModSettingsClass == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <ModSettingsClass>=null");
-                    return false;
-                }                
-                if (apply == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <apply>=null");
-                    return false;
-                }
-                var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-                FieldInfo fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
-                if (fieldInfo == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): Failed to get field");
-                    return false;
-                }
-                object value = fieldInfo.GetValue(null);
-                XmlContainer newContainer;
-                newContainer = Helpers.substituteVariableXmlContainer(apply, field, value.ToString(), brackets);
+                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, field, temp, brackets);
                 int errNum = 0;
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
@@ -122,6 +127,40 @@ namespace XmlExtensions
                 PatchManager.errors.Add("XmlExtensions.UseSettingExternal(ModSettingsClass=" + ModSettingsClass + ", field=" + field + "): " + e.Message);
                 return false;
             }
+        }
+
+        public override bool getVar(ref string var)
+        {
+            var = field;
+            return true;
+        }
+
+        public override bool getValue(ref string val, XmlDocument xml)
+        {
+            if (field == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal(ModSettingsClass=" + ModSettingsClass + "): <field>=null");
+                return false;
+            }
+            if (ModSettingsClass == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <ModSettingsClass>=null");
+                return false;
+            }
+            if (apply == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): <apply>=null");
+                return false;
+            }
+            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+            FieldInfo fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
+            if (fieldInfo == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.UseSettingExternal(field=" + field + "): Failed to get field");
+                return false;
+            }
+            val = fieldInfo.GetValue(null).ToString();
+            return true;
         }
     }
 
