@@ -99,11 +99,16 @@ namespace XmlExtensions
             try
             {
                 int errNum = 0;
-                // TODO: Add better error reporting to Boolean.evaluate()
                 bool flag = false;
                 try
                 {
-                    flag = this.condition.evaluate(xml);
+                    bool b = false;
+                    if(!condition.evaluate(ref b, xml))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.IfStatement: Failed to evaluate <condition>");
+                        return false;
+                    }
+                    flag = b;
                 }
                 catch
                 {

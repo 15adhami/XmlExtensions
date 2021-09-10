@@ -406,52 +406,78 @@ namespace XmlExtensions
             var = storeIn;
             return true;
         }
-        // TODO: Finish
+        
         public override bool getValue(ref string value, XmlDocument xml)
         {
-            if (condition == null)
+            try
             {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <condition>=null");
+                if (condition == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <condition>=null");
+                    return false;
+                }
+                bool b = false;
+                if (!condition.evaluate(ref b, xml))
+                {
+                    PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): Failed to evaluate <condition>");
+                    return false;
+                }
+                value = b.ToString();
+                return true;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): " + e.Message);
                 return false;
             }
-            value = condition.evaluate(xml).ToString();
-            return true;
         }
     }
 
     public class AggregateValues : PatchOperation
     {
-        public List<PatchOperationValue> operations;
+        public XmlContainer valueOperations;
         public XmlContainer apply;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            List<string> values = new List<string>();
-            List<string> vars = new List<string>();
-            for(int i = 0; i < operations.Count; i++)
+            try
             {
-                string temp = "";
-                if(!operations[i].getValue(ref temp, xml))
+                List<string> values = new List<string>();
+                List<string> vars = new List<string>();
+                for (int i = 0; i < valueOperations.node.ChildNodes.Count; i++)
                 {
-                    PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <operations> at position=" + i.ToString());
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(Helpers.substituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
+                    XmlNode newNode = doc.DocumentElement;
+                    PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
+                    string temp = "";
+                    if (!patchOperation.getValue(ref temp, xml))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <operations> at position=" + i.ToString());
+                        return false;
+                    }
+                    values.Add(temp);
+                    if (!patchOperation.getVar(ref temp))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <operations> at position=" + i.ToString());
+                        return false;
+                    }
+                    vars.Add(temp);
+                }
+                int errNum = 0;
+                XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, vars, values, "{}");
+                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                {
+                    PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in the operation at position=" + errNum.ToString());
                     return false;
                 }
-                values.Add(temp);
-                if (!operations[i].getVar(ref temp))
-                {
-                    PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <operations> at position=" + i.ToString());
-                    return false;
-                }
-                vars.Add(temp);
+                return true;
             }
-            int errNum = 0;
-            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, vars, values, "{}");
-            if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+            catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in the operation at position=" + errNum.ToString());
+                PatchManager.errors.Add("XmlExtensions.AggregateValues: " + e.Message);
                 return false;
             }
-            return true;
         }
     }
 

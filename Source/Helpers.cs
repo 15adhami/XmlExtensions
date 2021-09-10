@@ -54,7 +54,6 @@ namespace XmlExtensions
             return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
         }
 
-        // TODO: Optimize for single-pass
         public static XmlContainer substituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
         {
             string oldXml = container.node.OuterXml;

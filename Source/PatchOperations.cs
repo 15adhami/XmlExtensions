@@ -403,7 +403,6 @@ namespace XmlExtensions
         }
     }
 
-    // TODO: If xpathLocal is empty
     public class PatchOperationSortList : PatchOperationPathed
     {
         public string xpathLocal;
