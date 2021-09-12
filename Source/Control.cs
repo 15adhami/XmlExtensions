@@ -68,13 +68,21 @@ namespace XmlExtensions
                 }
                 foreach (XmlNode xmlNode in nodeList)
                 {
+                    // Make sure node wasn't deleted
                     string path = xmlNode.GetXPath();
-                    string prefix = Helpers.getPrefix(path, prefixLength);
-                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
-                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    if (path[0] == '/')
                     {
-                        PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + ", curr_prefix=" + prefix + "): Error in the operation at position=" + errNum.ToString());
-                        return false;
+                        path = path.Substring(1);
+                    }
+                    if (path.Split('/').Length>1)
+                    {
+                        string prefix = Helpers.getPrefix(path, prefixLength);
+                        XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
+                        if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + ", curr_prefix=" + prefix + "): Error in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
                     }
                 }
                 return true;

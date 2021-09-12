@@ -910,25 +910,26 @@ namespace XmlExtensions.Setting
             }
             else if(scale < 0)
             {
+                float width2 = 0;
                 if (dimensions.x > listingStandard.ColumnWidth)
                 {
-                    width = (int)listingStandard.ColumnWidth;
+                    width2 = listingStandard.ColumnWidth;
                 }
                 else
                 {
-                    width = (int)dimensions.x;
+                    width2 = dimensions.x;
                 }
                 height = (int)dimensions.y;
                 Rect tempRect = listingStandard.GetRect(height);
                 if (anchor == "Middle")
                 {
-                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
-                    drawRect = drawRect.RightPartPixels(width);
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width2) / 2);
+                    drawRect = drawRect.RightPartPixels(width2);
                 }
                 else if (anchor == "Right")
-                    drawRect = tempRect.RightPartPixels(width);
+                    drawRect = tempRect.RightPartPixels(width2);
                 else
-                    drawRect = tempRect.LeftPartPixels(width);
+                    drawRect = tempRect.LeftPartPixels(width2);
             }
             else
             {

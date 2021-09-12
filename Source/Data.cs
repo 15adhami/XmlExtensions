@@ -480,5 +480,35 @@ namespace XmlExtensions
             }
         }
     }
+    /*
+    public class CreateVariableConditional : PatchOperationValue
+    {
+        public PatchOperationBoolean condition;
+        public XmlContainer caseTrue;
+        public XmlContainer caseFalse;
+        public XmlContainer apply;
+        public string storeIn;
+        public string brackets = "{}";
 
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+
+        }
+
+        public override bool getValue(ref string value, XmlDocument xml)
+        {
+            if (condition == null)
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <condition>=null");
+                return false;
+            }
+            bool b = false;
+            if (!condition.evaluate(ref b, xml))
+            {
+                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): Failed to evaluate <condition>");
+                return false;
+            }
+        }
+    }
+    */
 }
