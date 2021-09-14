@@ -74,7 +74,11 @@ namespace XmlExtensions
                     {
                         path = path.Substring(1);
                     }
-                    if (path.Split('/').Length>1)
+                    if (path[path.Length-1] == '/')
+                    {
+                        path = path.Substring(0, path.Length-1);
+                    }
+                    if (path.Split('/').Length>=prefixLength)
                     {
                         string prefix = Helpers.getPrefix(path, prefixLength);
                         XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
