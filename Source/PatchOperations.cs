@@ -549,7 +549,11 @@ namespace XmlExtensions
         protected override bool ApplyWorker(XmlDocument xml)
         {
             PatchDef patchDef = DirectXmlToObject.ObjectFromXml<PatchDef>(xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[@Name=\""+patchName+"\"]"), false);
-            XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(patchDef.apply, patchDef.parameters, arguments, patchDef.brackets);
+            XmlContainer newContainer = patchDef.apply;
+            if(arguments != null)
+            {
+                newContainer = Helpers.substituteVariablesXmlContainer(patchDef.apply, patchDef.parameters, arguments, patchDef.brackets);
+            }            
             int errNum = 0;
             if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
             {
