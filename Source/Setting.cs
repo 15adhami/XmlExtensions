@@ -1195,21 +1195,26 @@ namespace XmlExtensions.Setting
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            Rect rect = listingStandard.GetRect(getHeight(listingStandard.ColumnWidth, selectedMod));
-            Widgets.DrawMenuSection(rect);
-            Listing_Standard listing_Standard = new Listing_Standard();
-            listing_Standard.verticalSpacing = listingStandard.verticalSpacing;
-            Rect rect2 = new Rect(rect.x + padding, rect.y + padding, rect.width - padding * 2f, rect.height - padding * 2f);
-            listing_Standard.Begin(rect2);
-            foreach (SettingContainer setting in settings)
+            if(settings.Count > 0)
             {
-                setting.DrawSetting(listing_Standard, selectedMod);
-            }
-            listing_Standard.End();
+                Rect rect = listingStandard.GetRect(getHeight(listingStandard.ColumnWidth, selectedMod));
+                Widgets.DrawMenuSection(rect);
+                Listing_Standard listing_Standard = new Listing_Standard();
+                listing_Standard.verticalSpacing = listingStandard.verticalSpacing;
+                Rect rect2 = new Rect(rect.x + padding, rect.y + padding, rect.width - padding * 2f, rect.height - padding * 2f);
+                listing_Standard.Begin(rect2);
+                foreach (SettingContainer setting in settings)
+                {
+                    setting.DrawSetting(listing_Standard, selectedMod);
+                }
+                listing_Standard.End();
+            }            
         }
 
         public override int getHeight(float width, string selectedMod)
         {
+            if (settings.Count == 0)
+                return 0;
             if(height<0)
             {
                 int h = 0;

@@ -25,13 +25,13 @@ namespace XmlExtensions
 
     [HarmonyPatch(typeof(ModsConfig))]
     [HarmonyPatch("TrySortMods")]
-    static class PatchOperationLoads_Patch
+    static class TrySortMods_Patch
     {
         static Exception Finalizer(Exception __exception)
         {
             if (__exception != null)
             {
-                Verse.Log.Error("FATAL ERROR: READ WARNINGS AND OTHER ERRORS");
+                Verse.Log.Error("XML EXTENSIONS CAUGHT A FATAL ERROR: READ ALL OTHER WARNINGS AND ERRORS\n(Could maybe be an XML parsing error?)\n" + __exception);
             }
             return null;
         }
