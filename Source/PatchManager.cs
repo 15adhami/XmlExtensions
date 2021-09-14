@@ -13,6 +13,7 @@ namespace XmlExtensions
         public static Queue<PatchOperation> delayedPatches;
         public static int depth = 0;
         public static List<string> errors;
+        public static bool loadingPatches = false;
 
         static PatchManager()
         {

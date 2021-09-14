@@ -10,22 +10,51 @@ using Verse;
 namespace XmlExtensions
 {
     /*
-    [HarmonyPatch(typeof(PatchOperationPathed))]
-    [HarmonyPatch("Apply")]
-    static class PatchOperationAddExc_Patch
+    [HarmonyPatch(typeof(ModContentPack))]
+    [HarmonyPatch("ClearPatchesCache")]
+    static class ClearPatchesCache_Patch
     {
-        static void Postfix(bool __result, ref string ___xpath, XmlDocument xml)
+        static void Postfix(List<PatchOperation> ___patches)
         {
-            try
+            if(PatchManager.loadingPatches)
             {
-                if(___xpath != null)
-                    XPathExpression.Compile(___xpath);
-            }
-            catch
-            {
-                __result = false;
+                ___patches = new List<PatchOperation>();
             }
         }
+    }*/
+
+    [HarmonyPatch(typeof(ModsConfig))]
+    [HarmonyPatch("TrySortMods")]
+    static class PatchOperationLoads_Patch
+    {
+        static Exception Finalizer(Exception __exception)
+        {
+            if (__exception != null)
+            {
+                Verse.Log.Error("FATAL ERROR: READ WARNINGS AND OTHER ERRORS");
+            }
+            return null;
+        }
+
+    }
+
+    /*
+    [HarmonyPatch(typeof(LoadedModManager))]
+    [HarmonyPatch("ErrorCheckPatches")]
+    static class PatchOperationLoad_Patch
+    {
+        static Exception Finalizer(Exception __exception, List<ModContentPack> ___runningMods)
+        {
+            if (__exception != null)
+            {
+                foreach (ModContentPack modContentPack in ___runningMods)
+                {
+                    modContentPack.ClearPatchesCache();
+                }
+            }
+            return null;
+        }
+
     }*/
 
     [HarmonyPatch(typeof(PatchOperationAdd))]
