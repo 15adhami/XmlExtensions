@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -11,6 +12,7 @@ namespace XmlExtensions
     {
         public static XmlDocument xmlDoc;
         public static Queue<PatchOperation> delayedPatches;
+        public static Stopwatch watch;
         public static int depth = 0;
         public static List<string> errors;
         public static bool loadingPatches = false;
@@ -18,6 +20,7 @@ namespace XmlExtensions
         static PatchManager()
         {
             delayedPatches = new Queue<PatchOperation>();
+            watch = new Stopwatch();
             xmlDoc = new XmlDocument();
             depth = 0;
             errors = new List<string>();

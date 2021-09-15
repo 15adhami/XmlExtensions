@@ -681,4 +681,49 @@ namespace XmlExtensions
             }
         }
     }
+
+    public class StopwatchStart : PatchOperation
+    {
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                if (PatchManager.watch.IsRunning)
+                {
+                    PatchManager.errors.Add("XmlExtensions.StopwatchStart: Stopwatch is already running!");
+                    return false;
+                }
+                PatchManager.watch.Start();
+                return true;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.StopwatchStart: " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class StopwatchStop : PatchOperation
+    {
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                if (!PatchManager.watch.IsRunning)
+                {
+                    PatchManager.errors.Add("XmlExtensions.StopwatchStop: Stopwatch is not running!");
+                    return false;
+                }
+                PatchManager.watch.Stop();
+                Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.watch.ElapsedMilliseconds.ToString() + "ms");
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
+                return false;
+            }
+        }
+    }
 }
