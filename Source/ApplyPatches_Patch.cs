@@ -12,20 +12,16 @@ namespace XmlExtensions
     [HarmonyPatch("ApplyPatches")]
     static class ApplyPatches_Patch
     {
-
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
             //Add defNames to the menus
-            foreach(XmlNode node in xmlDoc.SelectNodes("Defs/XmlExtensions.SettingsMenuDef"))
+            foreach(XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))
             {
                 if (node["defName"] == null)
                 {
                     node.AppendChild(xmlDoc.CreateNode("element", "defName", null));
                 }
-                else
-                {
-                    node["defName"].InnerText = node["modId"].InnerText.Replace('.', '_');
-                }
+                node["defName"].InnerText = node["modId"].InnerText.Replace('.', '_');
             }            
         }
     }
