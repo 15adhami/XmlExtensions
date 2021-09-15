@@ -512,7 +512,7 @@ namespace XmlExtensions
     }
     */
 
-    public class FindNodeRecursive : PatchOperationValue
+    public class FindNodeInherited : PatchOperationValue
     {
         public XmlContainer apply;
         public string storeIn;
@@ -534,14 +534,14 @@ namespace XmlExtensions
                 XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, ans, brackets);
                 if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
                 {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + "): Error in the operation at position=" + errNum.ToString());
+                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): Error in the operation at position=" + errNum.ToString());
                     return false;
                 }
                 return true;
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
+                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
                 return false;
             }
         }
@@ -558,19 +558,19 @@ namespace XmlExtensions
             {
                 if (xpathDef == null)
                 {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeRecursive: <xpathDef> is null");
+                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited: <xpathDef> is null");
                     return false;
                 }
                 if (xpathLocal == null)
                 {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + "): <xpathLocal> is null");
+                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): <xpathLocal> is null");
                     return false;
                 }
                 string newStr = "";
                 XmlNode defNode = xml.SelectSingleNode(xpathDef);
                 if (defNode == null)
                 {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + "): Failed to find a node with the given xpath");
+                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): Failed to find a node with the given xpath");
                     return false;
                 }
                 XmlNode node = findNode(defNode, xpathLocal, xml);
@@ -578,7 +578,7 @@ namespace XmlExtensions
                 {
                     if(defaultValue == null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
+                        PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
                         return false;
                     }
                     newStr = defaultValue;
@@ -592,7 +592,7 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.FindNodeRecursive(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
+                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
                 return false;
             }
         }
