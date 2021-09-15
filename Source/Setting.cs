@@ -711,9 +711,8 @@ namespace XmlExtensions.Setting
         public override int getHeight(float width, string selectedMod) { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
     }
 
-    public class ToggleableSettings : SettingContainer
+    public class ToggleableSettings : KeyedSettingContainer
     {
-        public string key;
         public List<SettingContainer> caseTrue = new List<SettingContainer>();
         public List<SettingContainer> caseFalse = new List<SettingContainer>();
 
@@ -757,6 +756,24 @@ namespace XmlExtensions.Setting
 
         public override bool setDefaultValue(string modId)
         {
+            if (key == null)
+            {
+                PatchManager.errors.Add("Error in " + this.GetType().ToString() + ": <key> is null");
+                return false;
+            }
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                if (defaultValue != null)
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+                    if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+                        XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
+                }
+            }
             if (caseTrue != null)
             {
                 int c = 0;
