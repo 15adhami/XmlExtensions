@@ -512,7 +512,7 @@ namespace XmlExtensions
     }
     */
 
-    public class FindNodeRecursive : PatchOperationValue
+    public class FindNodeInherited : PatchOperationValue
     {
         public XmlContainer apply;
         public string storeIn;
