@@ -31,7 +31,7 @@ namespace XmlExtensions
         {
             if (__exception != null)
             {
-                Verse.Log.Error("XML EXTENSIONS CAUGHT A FATAL ERROR: READ ALL OTHER WARNINGS AND ERRORS\n(Could maybe be an XML parsing error?)\n" + __exception);
+                Verse.Log.Error("XML EXTENSIONS DETECTED A FATAL ERROR: READ ALL OTHER WARNINGS AND ERRORS\n(Could maybe be an XML parsing error?)\n" + __exception);
             }
             return null;
         }

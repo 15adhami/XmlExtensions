@@ -14,6 +14,7 @@ namespace XmlExtensions
     {
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
+            PatchManager.watch.Reset();
             //Add defNames to the menus
             foreach(XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))
             {

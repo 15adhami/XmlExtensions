@@ -29,7 +29,7 @@ namespace XmlExtensions
                     {
                         PatchManager.errors.Add("XmlExtensions.ForLoop: Error at iteration " + i.ToString() + ", in the operation as position=" + errNum.ToString());
                         return false;
-                    }                        
+                    }
                 }
             }
             else if (this.increment < 0)
@@ -43,7 +43,7 @@ namespace XmlExtensions
                         return false;
                     }
                 }
-            }       
+            }
             return true;
         }
     }
@@ -74,11 +74,11 @@ namespace XmlExtensions
                     {
                         path = path.Substring(1);
                     }
-                    if (path[path.Length-1] == '/')
+                    if (path[path.Length - 1] == '/')
                     {
-                        path = path.Substring(0, path.Length-1);
+                        path = path.Substring(0, path.Length - 1);
                     }
-                    if (path.Split('/').Length>=prefixLength)
+                    if (path.Split('/').Length >= prefixLength)
                     {
                         string prefix = Helpers.getPrefix(path, prefixLength);
                         XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
@@ -90,8 +90,8 @@ namespace XmlExtensions
                     }
                 }
                 return true;
-            }            
-            catch(Exception e)
+            }
+            catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + "): " + e.Message);
                 return false;
@@ -99,11 +99,11 @@ namespace XmlExtensions
         }
 
     }
-  
+
     public class IfStatement : PatchOperationPathed
     {
         protected PatchOperationBoolean condition = null;
-        protected XmlContainer caseTrue =  null;
+        protected XmlContainer caseTrue = null;
         protected XmlContainer caseFalse = null;
 
         protected override bool ApplyWorker(XmlDocument xml)
@@ -115,7 +115,7 @@ namespace XmlExtensions
                 try
                 {
                     bool b = false;
-                    if(!condition.evaluate(ref b, xml))
+                    if (!condition.evaluate(ref b, xml))
                     {
                         PatchManager.errors.Add("XmlExtensions.IfStatement: Failed to evaluate <condition>");
                         return false;
@@ -151,7 +151,7 @@ namespace XmlExtensions
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.IfStatement: " + e.Message);
                 return false;
@@ -213,7 +213,7 @@ namespace XmlExtensions
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.PatchByCase(value=" + value + "): " + e.Message);
                 return false;
@@ -280,9 +280,46 @@ namespace XmlExtensions
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.FindMod: " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class Conditional : PatchOperationPathed
+    {
+        public XmlContainer caseTrue;
+        public XmlContainer caseFalse;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                int errNum = 0;
+                XmlNode node = xml.SelectSingleNode(xpath);
+                if (node != null)
+                {
+                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                }
+                return caseTrue != null || caseFalse != null;
+            }
+            catch(Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
         }
