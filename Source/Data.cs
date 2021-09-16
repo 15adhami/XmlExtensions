@@ -706,6 +706,7 @@ namespace XmlExtensions
 
     public class StopwatchStop : PatchOperation
     {
+
         protected override bool ApplyWorker(XmlDocument xml)
         {
             try
@@ -726,4 +727,5 @@ namespace XmlExtensions
             }
         }
     }
+
 }

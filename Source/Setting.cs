@@ -168,7 +168,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[selectedMod].defaultSpacing); }
     }
 
     public class Slider : KeyedSettingContainer
