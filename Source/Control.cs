@@ -176,9 +176,13 @@ namespace XmlExtensions
                 foreach(XmlNode node in nodeList)
                 {
                     XmlAttribute abs = node.Attributes["Abstract"];
-                    if(abs != null)
+                    if (concreteOnly == false)
                     {
-                        if (!(concreteOnly && abs.InnerText == "True"))
+                        list.Add(node);
+                    }
+                    else if (abs != null)
+                    {
+                        if(abs.InnerText != "True")
                         {
                             list.Add(node);
                         }
@@ -407,19 +411,25 @@ namespace XmlExtensions
                 XmlNode node = xml.SelectSingleNode(xpath);
                 if (node != null)
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    if(caseTrue != null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }                    
                 }
                 else
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                    if (caseFalse != null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }                    
                 }
                 return caseTrue != null || caseFalse != null;
             }
@@ -462,19 +472,25 @@ namespace XmlExtensions
                 int errNum = 0;
                 if(b)
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                    if(caseTrue != null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }                    
                 }
                 else
                 {
-                    if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                    if(caseFalse != null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
+                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }                    
                 }
                 return true;
             }
