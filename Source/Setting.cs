@@ -280,23 +280,6 @@ namespace XmlExtensions.Setting
         public override int getHeight(float width, string selectedMod) { return (24 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
-    /*
-    public class IntAdjuster : KeyedSettingContainer
-    {
-        public int countChange;
-        public int min = 0;
-
-        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
-        {
-            int f = int.Parse(XmlMod.allSettings.dataDict[selectedMod + "." + this.key]);
-            listingStandard.IntAdjuster(ref f, countChange, min);
-            XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
-        }
-
-        public override int getHeight() { return (24 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
-    }
-    */
-
     public class Numeric : KeyedSettingContainer
     {
         public float min;
@@ -1480,7 +1463,7 @@ namespace XmlExtensions.Setting
         }
     }
 
-    public class SubMenu : SettingContainer
+    public class DisplayMenu : SettingContainer
     {
         protected string label = "Open";
         public string menu;

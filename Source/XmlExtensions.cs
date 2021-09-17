@@ -19,7 +19,7 @@ namespace XmlExtensions
             {
                 XmlMod.menus.Add(menuDef.defName, menuDef);
                 menuDef.Init();
-                if (!menuDef.subMenu)
+                if (!menuDef.submenu)
                     i++;            
             }
             XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) {

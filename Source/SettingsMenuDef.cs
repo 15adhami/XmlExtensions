@@ -13,7 +13,7 @@ namespace XmlExtensions
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
         public string modId;
-        public bool subMenu = false;
+        public bool submenu = false;
 
         public bool Init()
         {
@@ -25,7 +25,7 @@ namespace XmlExtensions
             try
             {
                 XmlMod.loadedMod = modId;
-                if(subMenu)
+                if(submenu)
                     XmlMod.addXmlMod(modId);
                 else
                     XmlMod.addXmlMod(modId, label);
@@ -50,7 +50,7 @@ namespace XmlExtensions
                         return false;
                     }
                 }
-                if(!subMenu)
+                if(!submenu)
                 {
                     XmlMod.settingsPerMod[modId].homeMenu = defName;                    
                 }                             
