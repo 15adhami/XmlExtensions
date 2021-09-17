@@ -16,6 +16,7 @@ namespace XmlExtensions
         public static int depth = 0;
         public static List<string> errors;
         public static bool loadingPatches = false;
+        public static int rangeCount = 1;
 
         static PatchManager()
         {

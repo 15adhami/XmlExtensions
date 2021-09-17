@@ -90,6 +90,7 @@ namespace XmlExtensions.Setting
         public int min;
         public int max;
         public string key2;
+        public int id = 0;
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
@@ -97,7 +98,10 @@ namespace XmlExtensions.Setting
             {
                 IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + this.key]);
                 Color currColor = GUI.color;
-                listingStandard.IntRange(ref range, min, max);
+                Rect rect = listingStandard.GetRect(28f);
+                Widgets.IntRange(rect, id, ref range, min, max, null, 0);
+                listingStandard.Gap(XmlMod.settingsPerMod[selectedMod].defaultSpacing);
+                //listingStandard.IntRange(ref range, min, max);
                 GUI.color = currColor;
                 XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.ToString();
             }
@@ -105,7 +109,10 @@ namespace XmlExtensions.Setting
             {
                 IntRange range = IntRange.FromString(XmlMod.allSettings.dataDict[selectedMod + ";" + key]+"~"+ XmlMod.allSettings.dataDict[selectedMod + ";" + key2]);
                 Color currColor = GUI.color;
-                listingStandard.IntRange(ref range, min, max);
+                Rect rect = listingStandard.GetRect(28f);
+                Widgets.IntRange(rect, id, ref range, min, max, null, 0);
+                listingStandard.Gap(XmlMod.settingsPerMod[selectedMod].defaultSpacing);
+                //listingStandard.IntRange(ref range, min, max);
                 GUI.color = currColor;
                 XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.min.ToString();
                 XmlMod.allSettings.dataDict[selectedMod + ";" + this.key2] = range.max.ToString();
@@ -169,6 +176,13 @@ namespace XmlExtensions.Setting
         }
 
         public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[selectedMod].defaultSpacing); }
+
+        public override void init()
+        {
+            base.init();
+            id = PatchManager.rangeCount;
+            PatchManager.rangeCount++;
+        }
     }
 
     public class Slider : KeyedSettingContainer
