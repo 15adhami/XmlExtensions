@@ -1354,7 +1354,12 @@ namespace XmlExtensions.Setting
             if(settings.Count > 0)
             {
                 Rect rect = listingStandard.GetRect(getHeight(listingStandard.ColumnWidth, selectedMod));
-                Widgets.DrawMenuSection(rect);
+                Color curColor = GUI.color;
+                GUI.color = Widgets.MenuSectionBGFillColor * curColor;
+                GUI.DrawTexture(rect, BaseContent.WhiteTex);
+                GUI.color = new ColorInt(135, 135, 135).ToColor * curColor;
+                Widgets.DrawBox(rect, 1, null);
+                GUI.color = curColor;
                 Listing_Standard listing_Standard = new Listing_Standard();
                 listing_Standard.verticalSpacing = listingStandard.verticalSpacing;
                 Rect rect2 = new Rect(rect.x + padding, rect.y + padding, rect.width - padding * 2f, rect.height - padding * 2f);
