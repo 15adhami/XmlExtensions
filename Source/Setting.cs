@@ -100,7 +100,7 @@ namespace XmlExtensions.Setting
                 Color currColor = GUI.color;
                 Rect rect = listingStandard.GetRect(28f);
                 Widgets.IntRange(rect, id, ref range, min, max, null, 0);
-                listingStandard.Gap(XmlMod.settingsPerMod[selectedMod].defaultSpacing);
+                listingStandard.Gap(XmlMod.menus[XmlMod.activeMenu].defaultSpacing);
                 //listingStandard.IntRange(ref range, min, max);
                 GUI.color = currColor;
                 XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.ToString();
@@ -111,7 +111,7 @@ namespace XmlExtensions.Setting
                 Color currColor = GUI.color;
                 Rect rect = listingStandard.GetRect(28f);
                 Widgets.IntRange(rect, id, ref range, min, max, null, 0);
-                listingStandard.Gap(XmlMod.settingsPerMod[selectedMod].defaultSpacing);
+                listingStandard.Gap(XmlMod.menus[XmlMod.activeMenu].defaultSpacing);
                 //listingStandard.IntRange(ref range, min, max);
                 GUI.color = currColor;
                 XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = range.min.ToString();
@@ -175,7 +175,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.settingsPerMod[selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (28 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
 
         public override void init()
         {
@@ -205,7 +205,7 @@ namespace XmlExtensions.Setting
                 listingStandard.Label(Helpers.substituteVariable(Helpers.tryTranslate(label, tKey), key, currFloat.ToString(), "{}"), 22, Helpers.tryTranslate(tooltip, tKeyTip));
             }                
             listingStandard.Gap((float)Math.Ceiling((double)buffer/2));
-            listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
+            listingStandard.verticalSpacing = XmlMod.menus[XmlMod.activeMenu].defaultSpacing;
             float tempFloat = listingStandard.Slider(float.Parse(currFloat), min, max);
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = (Math.Round(tempFloat, decimals)).ToString();
             listingStandard.Gap((float)Math.Floor((double)buffer / 2));
@@ -220,7 +220,7 @@ namespace XmlExtensions.Setting
             }                
         }
 
-        public override int getHeight(float width, string selectedMod) { return (22 + buffer + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing + (hideLabel? 0:22)); }
+        public override int getHeight(float width, string selectedMod) { return (22 + buffer + XmlMod.menus[XmlMod.activeMenu].defaultSpacing + (hideLabel? 0:22)); }
     }
 
     public class IntEntry : KeyedSettingContainer
@@ -277,7 +277,7 @@ namespace XmlExtensions.Setting
             
         }
 
-        public override int getHeight(float width, string selectedMod) { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (24 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
     /*
@@ -293,7 +293,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + "." + this.key] = f.ToString();
         }
 
-        public override int getHeight() { return (24 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight() { return (24 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
     */
 
@@ -311,7 +311,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = f.ToString();
         }
 
-        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
     public class Textbox : KeyedSettingContainer
@@ -333,7 +333,7 @@ namespace XmlExtensions.Setting
             
         }
 
-        public override int getHeight(float width, string selectedMod) { return (lines*22 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (lines*22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
     public class Text : SettingContainer
@@ -400,7 +400,7 @@ namespace XmlExtensions.Setting
             h = (int)Math.Ceiling(Verse.Text.CalcHeight(str, width));
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-            return h + XmlMod.settingsPerMod[selectedMod].defaultSpacing;
+            return h + XmlMod.menus[XmlMod.activeMenu].defaultSpacing;
         }
     }
 
@@ -417,7 +417,7 @@ namespace XmlExtensions.Setting
             XmlMod.allSettings.dataDict[selectedMod + ";" + this.key] = currBool.ToString();
         }
 
-        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.settingsPerMod[selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
     public class ResetSettings : SettingContainer
@@ -465,7 +465,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        public override int getHeight(float width, string selectedMod) { return (30 + XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing); }
+        public override int getHeight(float width, string selectedMod) { return (30 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 
     public class Gap : SettingContainer
@@ -810,7 +810,7 @@ namespace XmlExtensions.Setting
 
         public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
         {
-            listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.settingsPerMod[selectedMod].defaultSpacing : spacing);
+            listingStandard.verticalSpacing = (spacing < 0 ? XmlMod.menus[XmlMod.activeMenu].defaultSpacing : spacing);
             foreach (XmlContainer option in buttons)
             {                
                 bool b = false;
@@ -844,10 +844,10 @@ namespace XmlExtensions.Setting
                 b = listingStandard.RadioButton(Helpers.tryTranslate(option.node["label"].InnerText, tKey), XmlMod.allSettings.dataDict[selectedMod+";" +key] == option.node["value"].InnerText, 0, Helpers.tryTranslate(str, tKeyTip));
                 if (b) { XmlMod.allSettings.dataDict[selectedMod + ";" + key] = option.node["value"].InnerText; }
             }
-            listingStandard.verticalSpacing = XmlMod.settingsPerMod[selectedMod].defaultSpacing;
+            listingStandard.verticalSpacing = XmlMod.menus[XmlMod.activeMenu].defaultSpacing;
         }
 
-        public override int getHeight(float width, string selectedMod) { return (buttons.Count * ((spacing < 0 ? XmlMod.settingsPerMod[XmlMod.selectedMod].defaultSpacing : spacing) + 22)); }
+        public override int getHeight(float width, string selectedMod) { return (buttons.Count * ((spacing < 0 ? XmlMod.menus[XmlMod.activeMenu].defaultSpacing : spacing) + 22)); }
     }
 
     public class ToggleableSettings : KeyedSettingContainer
@@ -1475,4 +1475,20 @@ namespace XmlExtensions.Setting
         }
     }
 
+    public class SubMenu : SettingContainer
+    {
+        protected string label = "Open";
+        public string menu;
+        public string tKey;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod)
+        {
+            if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), null))
+            {
+                XmlMod.activeMenu = menu;
+            }
+        }
+
+        public override int getHeight(float width, string selectedMod) { return (30 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
+    }
 }

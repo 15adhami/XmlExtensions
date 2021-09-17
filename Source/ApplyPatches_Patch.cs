@@ -21,8 +21,12 @@ namespace XmlExtensions
                 if (node["defName"] == null)
                 {
                     node.AppendChild(xmlDoc.CreateNode("element", "defName", null));
+                    node["defName"].InnerText = node["modId"].InnerText.Replace('.', '_');
                 }
-                node["defName"].InnerText = node["modId"].InnerText.Replace('.', '_');
+                else
+                {
+                    node["defName"].InnerText = node["defName"].InnerText.Replace('.', '_');
+                }               
             }            
         }
     }

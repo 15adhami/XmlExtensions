@@ -13,61 +13,73 @@ namespace XmlExtensions
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
         public string modId;
+        public bool subMenu = false;
 
-        public bool ApplyWorker()
+        public bool Init()
         {
             if (modId == null)
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings: <modId>=null");
-                return false;
-            }
-            if (label == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
+                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef: <modId>=null");
                 return false;
             }
             try
             {
                 XmlMod.loadedMod = modId;
-                XmlMod.addXmlMod(modId, label);
-                XmlMod.settingsPerMod[modId].tKey = tKey;
-                if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
-                {
-                    XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
-                }
+                if(subMenu)
+                    XmlMod.addXmlMod(modId);
+                else
+                    XmlMod.addXmlMod(modId, label);
+                if(tKey != null)
+                    XmlMod.settingsPerMod[modId].tKey = tKey;
                 int c = 0;
-                foreach (SettingContainer setting in this.settings)
+                foreach (SettingContainer setting in settings)
                 {
                     try
                     {
                         c++;
-                        XmlMod.tryAddSettings(setting, modId);
                         if (!setting.setDefaultValue(modId))
                         {
-                            PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
+                            PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                             return false;
                         }
                         setting.init();
                     }
                     catch
                     {
-                        PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
+                        PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                         return false;
                     }
                 }
-                XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) {
-                    if (XmlMod.settingsPerMod[id1].label != null && XmlMod.settingsPerMod[id2].label != null)
-                        return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label);
-                    else
-                        return 0;
-                });
+                if(!subMenu)
+                {
+                    XmlMod.settingsPerMod[modId].homeMenu = defName;                    
+                }                             
             }
             catch
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error");
+                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error");
                 return false;
             }
             return true;
+        }
+
+        public int CalculateHeight(float width, string selectedMod)
+        {
+            int h = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                h += setting.GetHeight(width, selectedMod);
+            }
+            return h;
+        }
+
+        public void DrawSettings(Listing_Standard listingStandard)
+        {
+            listingStandard.verticalSpacing = defaultSpacing;
+            foreach (SettingContainer setting in settings)
+            {
+                setting.DrawSetting(listingStandard, modId);
+            }
         }
     }
 }

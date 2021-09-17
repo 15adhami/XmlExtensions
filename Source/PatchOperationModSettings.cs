@@ -376,7 +376,7 @@ namespace XmlExtensions
         protected string modId;
         protected string label;
         protected int defaultSpacing = 2;
-        protected List<SettingContainer> settings;
+        protected XmlContainer settings;
         protected string tKey;
 
         protected override bool ApplyWorker(XmlDocument xml)
@@ -391,52 +391,19 @@ namespace XmlExtensions
             {
                 PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
                 return false;
-            }/*
-            if (xml.SelectSingleNode("Defs/XmlExtensions.SettingsMenuDef[defName=\"" + modId + "\"]") == null)
-            {
-                SettingsMenuDef menuDef = new SettingsMenuDef();
-                menuDef.defName = modId;
-                menuDef.label = label;
-                menuDef.defaultSpacing = defaultSpacing;
-                menuDef.settings = settings;
-                menuDef.tKey = tKey;
-                xml.SelectSingleNode("Defs").AppendChild(menuDef.);
-            }*/
+            }
             try
             {
-                XmlMod.loadedMod = this.modId;
-                XmlMod.addXmlMod(this.modId, label);
-                XmlMod.settingsPerMod[modId].tKey = tKey;
-                if (XmlMod.settingsPerMod[modId].defaultSpacing == 2)
-                {
-                    XmlMod.settingsPerMod[modId].defaultSpacing = this.defaultSpacing;
-                }
-                int c = 0;
-                foreach (SettingContainer setting in this.settings)
-                {
-                    try
-                    {
-                        c++;
-                        XmlMod.tryAddSettings(setting, this.modId);
-                        if (!setting.setDefaultValue(modId))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
-                            return false;
-                        }
-                        setting.init();
-                    }
-                    catch
-                    {
-                        PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error in initializing a setting at position=" + c.ToString());
-                        return false;
-                    }
-                }
-                XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) {
-                    if (XmlMod.settingsPerMod[id1].label != null && XmlMod.settingsPerMod[id2].label != null)
-                        return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label);
-                    else
-                        return 0;
-                });
+                string defStr = "";
+                defStr += "<defName>" + modId.Replace('.', '_') + "</defName>";
+                defStr += "<modId>" + modId + "</modId>";
+                defStr += "<tKey>" + (tKey==null?"":tKey) + "</tKey>";
+                defStr += "<defaultSpacing>" + defaultSpacing.ToString() + "</defaultSpacing>";
+                defStr += "<label>" + label + "</label>";
+                defStr += settings.node.OuterXml;
+                XmlNode node = xml.CreateNode("element", "XmlExtensions.SettingsMenuDef", null);
+                node.InnerXml = defStr;
+                xml.SelectSingleNode("/Defs").AppendChild(node);
             }
             catch
             {

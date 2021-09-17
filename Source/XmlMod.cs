@@ -22,11 +22,14 @@ namespace XmlExtensions
         public static string selectedMod;
         public static string selectedExtraMod;
         public static bool viewingSettings = false;
+        public static Dictionary<string, SettingsMenuDef> menus;
+        public static string activeMenu = null;
 
         static XmlMod()
         {
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
             harmony.PatchAll();
+            menus = new Dictionary<string, SettingsMenuDef>();
             allSettings = new XmlModBaseSettings();
             settingsPosition = new Vector2();
             modListPosition = new Vector2();
@@ -40,7 +43,6 @@ namespace XmlExtensions
             allSettings = GetSettings<XmlModBaseSettings>();
         }
 
-
         public static void DrawSettingsWindow(Rect inRect)
         {
             Rect rectSettings = inRect.RightPartPixels(inRect.width-256-6);
@@ -49,22 +51,16 @@ namespace XmlExtensions
             drawXmlModList(rectMods);
         }
 
-
         private static void drawXmlModSettings(Rect rect)
         {
             if (selectedMod != null)
             {
-                Rect scrollRect = new Rect(0, 0, rect.width - 20f, settingsPerMod[selectedMod].calculateHeight(rect.width - 20f, selectedMod));
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, menus[activeMenu].CalculateHeight(rect.width - 20f, selectedMod));
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Listing_Standard listingStandard = new Listing_Standard();
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
                 listingStandard.Begin(rect2);
-                listingStandard.verticalSpacing = settingsPerMod[selectedMod].defaultSpacing;
-                //listingStandard.Label(settingsPerMod[selectedMod].label);
-                foreach (SettingContainer setting in settingsPerMod[selectedMod].settings)
-                {
-                    setting.DrawSetting(listingStandard, selectedMod);
-                }
+                menus[activeMenu].DrawSettings(listingStandard);                
                 GUI.color = Color.white;
                 listingStandard.End();
                 Widgets.EndScrollView();
@@ -91,7 +87,6 @@ namespace XmlExtensions
                 listingStandard.End();
             }
         }
-
 
         private static void drawXmlSettingsList(Rect rect)
         {
@@ -221,10 +216,6 @@ namespace XmlExtensions
             }
         }
 
-        public static int tempInt = 600;
-    
-
-
         private static void drawXmlModList(Rect rect)
         {
             int count = 0;
@@ -247,6 +238,7 @@ namespace XmlExtensions
                     if (t)
                     {
                         selectedMod = modId;
+                        activeMenu = settingsPerMod[modId].homeMenu;
                         selectedExtraMod = null;
                         viewingSettings = false;
                     }
@@ -262,16 +254,9 @@ namespace XmlExtensions
                 selectedExtraMod = null;
                 viewingSettings = false;
             }
-            /*
-            float f = (float)(tempInt);
-            string buf = f.ToString();
-            listingStandard.TextFieldNumericLabeled<float>("height", ref f, ref buf, 0, 99999);
-            tempInt = (int)f;
-            */
             listingStandard.End();
             Widgets.EndScrollView();
         }
-
 
         public static void addSetting(string modId, string key, string value)
         {
@@ -349,15 +334,6 @@ namespace XmlExtensions
             {
                 settingsPerMod[modId].defValues = new Dictionary<string, string>();
             }
-        }
-
-        public static void tryAddSettings(SettingContainer container, string modId)
-        {
-            if (settingsPerMod[modId].settings == null)
-            {
-                settingsPerMod[modId].settings = new List<SettingContainer>();
-            }
-            settingsPerMod[modId].settings.Add(container);
         }
 
         public static string getSetting(string modId, string key)
