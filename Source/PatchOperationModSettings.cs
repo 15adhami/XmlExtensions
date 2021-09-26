@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using Verse;
-using XmlExtensions.Setting;
-using HarmonyLib;
 using System.Reflection;
 
 namespace XmlExtensions
@@ -371,6 +366,7 @@ namespace XmlExtensions
         }
     }
 
+    [Obsolete]
     public class CreateSettings : PatchOperation
     {
         protected string modId;
@@ -426,9 +422,9 @@ namespace XmlExtensions
         {
             try
             {
-                if (modId == key)
+                if (key == null)
                 {
-                    PatchManager.errors.Add("XmlExtensions.OptionalPatch(modId=" + modId + "): <key>=null");
+                    PatchManager.errors.Add("XmlExtensions.OptionalPatch: <key>=null");
                     return false;
                 }
                 if (modId == null)

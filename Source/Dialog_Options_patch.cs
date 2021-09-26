@@ -42,11 +42,11 @@ namespace XmlExtensions
                 CodeInstruction item = new CodeInstruction(OpCodes.Ldloc, 1);
                 codes.Insert(startIndex, item);
                 item = new CodeInstruction(OpCodes.Ldstr, "More Mod Settings");
-                codes.Insert(startIndex+1, item);
+                codes.Insert(startIndex + 1, item);
                 item = new CodeInstruction(OpCodes.Ldstr, "XmlExtensions_MoreModSettings");
-                codes.Insert(startIndex+2, item);
+                codes.Insert(startIndex + 2, item);
                 item = new CodeInstruction(OpCodes.Call, translate);
-                codes.Insert(startIndex+3, item);
+                codes.Insert(startIndex + 3, item);
                 item = new CodeInstruction(OpCodes.Ldnull);
                 codes.Insert(startIndex + 4, item);
                 item = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Listing_Standard), "ButtonText", new Type[] { typeof(string), typeof(string)}));

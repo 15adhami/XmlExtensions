@@ -322,6 +322,32 @@ namespace XmlExtensions
         }
     }
 
+    [HarmonyPatch(typeof(PatchOperationTest))]
+    [HarmonyPatch("ApplyWorker")]
+    static class PatchOperationTest_Patch
+    {
+        static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, XmlDocument xml)
+        {
+            if (__exception != null)
+            {
+                PatchManager.errors.Add("PatchOperationTest(xpath = " + ___xpath + "): " + __exception.Message);
+                __result = false;
+            }
+            return null;
+        }
+
+        static void Postfix(ref bool __result, ref string ___xpath, XmlDocument xml)
+        {
+            if (!__result)
+            {
+                if (xml.SelectSingleNode(___xpath) == null)
+                    PatchManager.errors.Add("PatchOperationTest(xpath=" + ___xpath + "): Failed to find a node with the given xpath");
+                else
+                    PatchManager.errors.Add("PatchOperationTest(xpath=" + ___xpath + "): Error");
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(PatchOperationSequence))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationSequence_Patch

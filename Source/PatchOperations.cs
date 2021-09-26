@@ -1,12 +1,25 @@
 ﻿using System.Collections.Generic;
 using System;
-using System.Collections;
 using System.Xml;
 using Verse;
 using System.Linq;
 
 namespace XmlExtensions
 {
+    public class PatchContainer
+    {
+        public List<PatchOperation> patches = new List<PatchOperation>();
+
+        public void LoadDataFromXmlCustom(XmlNode xmlRoot)
+        {
+            XmlNodeList nodeList = xmlRoot.ChildNodes;
+            foreach(XmlNode node in nodeList)
+            {
+                patches.Add(Helpers.getPatchFromString(node.OuterXml));
+            }
+        }
+    }
+
     public class PatchOperationMath : PatchOperationPathed
     {
         protected string value;
@@ -415,12 +428,12 @@ namespace XmlExtensions
             {
                 if(xpathLocal == null)
                 {
-                    xpathLocal = "text()";
+                    xpathLocal = "li";
                 }
                 XmlNodeList lists = xml.SelectNodes(xpath);
                 if (lists == null || lists.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationSort(xpath=" + xpath + "): Failed to find a list with the given xpath");
+                    PatchManager.errors.Add("XmlExtensions.PatchOperationSortList(xpath=" + xpath + "): Failed to find a list with the given xpath");
                     return false;
                 }
                 foreach (XmlNode list in lists)

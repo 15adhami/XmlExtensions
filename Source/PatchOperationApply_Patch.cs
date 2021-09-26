@@ -12,7 +12,7 @@ namespace XmlExtensions
     [HarmonyPatch("Apply")]
     static class PatchOperationApply_Patch
     {
-        static void Prefix(XmlDocument xml)
+        static void Prefix(ref XmlDocument xml)
         {
             PatchManager.depth += 1;
         }

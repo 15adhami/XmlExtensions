@@ -1,12 +1,9 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using Verse;
-using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -24,6 +21,7 @@ namespace XmlExtensions
         public static bool viewingSettings = false;
         public static Dictionary<string, SettingsMenuDef> menus;
         public static string activeMenu = null;
+        public static Delegate createPatch;
 
         static XmlMod()
         {
@@ -253,7 +251,7 @@ namespace XmlExtensions
                 selectedMod = null;
                 selectedExtraMod = null;
                 viewingSettings = false;
-            }
+            }            
             listingStandard.End();
             Widgets.EndScrollView();
         }

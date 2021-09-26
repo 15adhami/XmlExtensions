@@ -4,6 +4,7 @@ using Verse;
 using XmlExtensions.Boolean;
 using System.Linq;
 using System;
+using System.Reflection;
 
 namespace XmlExtensions
 {
@@ -479,18 +480,48 @@ namespace XmlExtensions
                             PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
                             return false;
                         }
-                    }                    
+                    }
                 }
                 else
                 {
-                    if(caseFalse != null)
+                    if (xml == PatchManager.defaultDoc)
                     {
-                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                        if (caseFalse != null)
                         {
-                            PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                            return false;
+                            if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                            {
+                                PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                                return false;
+                            }
                         }
-                    }                    
+                    }
+                    else
+                    {
+                        b = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
+                        errNum = 0;
+                        if (b)
+                        {
+                            if (caseTrue != null)
+                            {
+                                if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
+                                {
+                                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (caseFalse != null)
+                            {
+                                if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
+                                {
+                                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
+                                    return false;
+                                }
+                            }
+                        }
+                    }            
                 }
                 return true;
             }
@@ -531,7 +562,7 @@ namespace XmlExtensions
     public class WhileLoop : PatchOperation
     {
         public PatchOperationBoolean condition;
-        public XmlContainer apply;
+        public PatchContainer apply;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -558,7 +589,7 @@ namespace XmlExtensions
                 while(b)
                 {
                     int errNum = 0;
-                    if(!Helpers.runPatchesInXmlContainer(apply, xml, ref errNum))
+                    if(!Helpers.runPatchesInPatchContainer(apply, xml, ref errNum))
                     {
                         PatchManager.errors.Add("XmlExtensions.WhileLoop(iter_num=" + c.ToString() + "): Error in the operation at position=" + errNum.ToString());
                         return false;
@@ -580,6 +611,83 @@ namespace XmlExtensions
             catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.WhileLoop(iter_num=" + c.ToString() + "): " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class SetRoot : PatchOperationPathed
+    {
+        public PatchContainer apply;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                if (apply == null)
+                {
+                    PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): <apply> is null");
+                    return false;
+                }
+                XmlNodeList nodeList = xml.SelectNodes(xpath);
+                if (nodeList == null || nodeList.Count == 0)
+                {
+                    PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                foreach (XmlNode node in nodeList)
+                {
+                    XmlDocument newDoc = new XmlDocument();
+                    XmlNode newNode = newDoc.ImportNode(node.Clone(), true);
+                    newDoc.AppendChild(newNode);
+                    int errNum = 0;
+                    if (!Helpers.runPatchesInPatchContainer(apply, newDoc, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): Error in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                    XmlNode parentNode = node.ParentNode;
+                    parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(newNode, true), node);
+                    parentNode.RemoveChild(node);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class TryCatch : PatchOperation
+    {
+        public PatchContainer tryApply;
+        public XmlContainer catchApply;
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                int errNum = 0;
+                if (!Helpers.runPatchesInPatchContainer(tryApply, xml, ref errNum))
+                {
+                    errNum = 0;
+                    PatchManager.errors.Clear();
+                    if (catchApply != null)
+                    {
+                        if (!Helpers.runPatchesInXmlContainer(catchApply, xml, ref errNum))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.TryCatch: Error in <catchApply> in the operation at position=" + errNum.ToString());
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.TryCatch: " + e.Message);
                 return false;
             }
         }

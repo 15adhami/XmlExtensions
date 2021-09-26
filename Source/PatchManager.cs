@@ -11,18 +11,22 @@ namespace XmlExtensions
     static class PatchManager
     {
         public static XmlDocument xmlDoc;
+        public static XmlDocument defaultDoc;
         public static Queue<PatchOperation> delayedPatches;
         public static Stopwatch watch;
         public static int depth = 0;
         public static List<string> errors;
         public static bool loadingPatches = false;
         public static int rangeCount = 1;
+        public static bool context = false;
+        public static string contextPath;
 
         static PatchManager()
         {
             delayedPatches = new Queue<PatchOperation>();
             watch = new Stopwatch();
             xmlDoc = new XmlDocument();
+            defaultDoc = new XmlDocument();
             depth = 0;
             errors = new List<string>();
         }

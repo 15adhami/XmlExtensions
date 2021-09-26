@@ -5,6 +5,7 @@ using System.Text;
 using Verse;
 using HarmonyLib;
 using System.Xml;
+using System.Linq.Expressions;
 
 namespace XmlExtensions
 {
@@ -12,6 +13,19 @@ namespace XmlExtensions
     [HarmonyPatch("ApplyPatches")]
     static class ApplyPatches_Patch
     {
+        static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
+        {
+            PatchManager.context = false;
+            PatchManager.xmlDoc = xmlDoc;
+            PatchManager.defaultDoc = xmlDoc;
+            /*
+            NewExpression newExp = Expression.New(typeof(AggregateValues).GetConstructor(Type.EmptyTypes));
+            LambdaExpression lambda = Expression.Lambda(newExp);
+            Delegate compiled = lambda.Compile();
+            XmlMod.createPatch = compiled;
+            */
+        }
+
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
             PatchManager.watch.Reset();

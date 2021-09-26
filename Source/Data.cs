@@ -9,6 +9,14 @@ namespace XmlExtensions
 {
     public abstract class PatchOperationValue : PatchOperationPathed
     {
+        public bool GetValue(ref string val, XmlDocument xml)
+        {
+            XmlDocument xmlDoc = xml;
+            if (PatchManager.context)
+                xmlDoc = PatchManager.xmlDoc;
+            return getValue(ref val, xmlDoc);
+        }
+
         public virtual bool getValue(ref string val, XmlDocument xml)
         {
             return false;
@@ -22,16 +30,16 @@ namespace XmlExtensions
 
     public class CreateVariable : PatchOperationValue
     {
-        protected XmlContainer apply;
-        protected string storeIn;
-        protected string brackets = "{}";
-        protected string value = "";
-        protected string value2 = "";
-        protected string defaultValue;
-        protected string defaultValue2;
-        protected bool fromXml = false;
-        protected bool fromXml2 = false;
-        protected string operation = "";        
+        public XmlContainer apply;
+        public string storeIn;
+        public string brackets = "{}";
+        public string value = "";
+        public string value2 = "";
+        public string defaultValue;
+        public string defaultValue2;
+        public bool fromXml = false;
+        public bool fromXml2 = false;
+        public string operation = "";        
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
@@ -41,7 +49,7 @@ namespace XmlExtensions
                 string newStr2 = this.value2;
                 int errNum = 0;
                 string ans = "";
-                if(!getValue(ref ans, xml))
+                if(!GetValue(ref ans, xml))
                 { // Error message already added
                     return false;
                 }
@@ -98,7 +106,7 @@ namespace XmlExtensions
                     }
                     else
                     {
-                        newStr1 = node.InnerText;
+                        newStr1 = node.InnerXml;
                     }
                 }
                 if (this.fromXml2)
@@ -115,7 +123,7 @@ namespace XmlExtensions
                     }
                     else
                     {
-                        newStr2 = node.InnerText;
+                        newStr2 = node.InnerXml;
                     }
                 }
                 if (operation == "")
@@ -148,7 +156,7 @@ namespace XmlExtensions
             try
             {
                 string temp = "";
-                if(!getValue(ref temp, xml))
+                if(!GetValue(ref temp, xml))
                 {
                     return false;
                 }
@@ -265,7 +273,7 @@ namespace XmlExtensions
             {
                 int errNum = 0;
                 string temp = "";
-                if (!getValue(ref temp, xml))
+                if (!GetValue(ref temp, xml))
                 {
                     return false;
                 }
@@ -382,7 +390,7 @@ namespace XmlExtensions
                 }                
                 int errNum = 0;
                 string temp = "";
-                if (!getValue(ref temp, xml))
+                if (!GetValue(ref temp, xml))
                 {
                     return false;
                 }
@@ -437,41 +445,73 @@ namespace XmlExtensions
     {
         public XmlContainer valueOperations;
         public XmlContainer apply;
+        public string root;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
             try
             {
+                XmlDocument xmlDoc = xml;
+                if(root!=null)
+                {                    
+                    // TODO: Make sure FindNodeInherited doesnt mess up when not AggregateValues
+                    PatchManager.contextPath = root;
+                    XmlNode node = xml.SelectSingleNode(root);
+                    if (node == null)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.AggregateValues(root=" + root + "): Failed to find a node with the given xpath");
+                        return false;
+                    }
+                    xmlDoc = new XmlDocument();
+                    xmlDoc.AppendChild(xmlDoc.ImportNode(node.Clone(), true));
+                }                
                 List<string> values = new List<string>();
                 List<string> vars = new List<string>();
                 for (int i = 0; i < valueOperations.node.ChildNodes.Count; i++)
                 {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(Helpers.substituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
-                    XmlNode newNode = doc.DocumentElement;
-                    PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
-                    string temp = "";
-                    if (!patchOperation.getValue(ref temp, xml))
+                    try
                     {
-                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <operations> at position=" + i.ToString());
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(Helpers.substituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
+                        XmlNode newNode = doc.DocumentElement;
+                        PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
+                        string temp = "";
+                        if (!patchOperation.GetValue(ref temp, xmlDoc))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <operations> at position=" + (i + 1).ToString());
+                            return false;
+                        }
+                        values.Add(temp);
+                        if (!patchOperation.getVar(ref temp))
+                        {
+                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <operations> at position=" + (i + 1).ToString());
+                            return false;
+                        }
+                        vars.Add(temp);
+                    }
+                    catch
+                    {
+                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in the valueOperation at position=" + (i + 1).ToString());
                         return false;
                     }
-                    values.Add(temp);
-                    if (!patchOperation.getVar(ref temp))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <operations> at position=" + i.ToString());
-                        return false;
-                    }
-                    vars.Add(temp);
                 }
                 int errNum = 0;
-                XmlContainer newContainer = Helpers.substituteVariablesXmlContainer(apply, vars, values, "{}");
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                try
                 {
-                    PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in the operation at position=" + errNum.ToString());
+                    XmlContainer newContainer = new XmlContainer();
+                    newContainer = Helpers.substituteVariablesXmlContainer(apply, vars, values, "{}");
+                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
+                    {
+                        PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in the operation at position=" + errNum.ToString());
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    PatchManager.errors.Add("XmlExtensions.AggregateValues: " + errNum.ToString());
                     return false;
                 }
-                return true;
             }
             catch(Exception e)
             {
@@ -527,7 +567,7 @@ namespace XmlExtensions
             {
                 int errNum = 0;
                 string ans = "";
-                if (!getValue(ref ans, xml))
+                if (!GetValue(ref ans, xml))
                 { // Error message already added
                     return false;
                 }
@@ -576,16 +616,26 @@ namespace XmlExtensions
                 XmlNode node = findNode(defNode, xpathLocal, xml);
                 if (node == null)
                 {
-                    if(defaultValue == null)
+                    xpathDef = PatchManager.contextPath;
+                    defNode = PatchManager.defaultDoc.SelectSingleNode(xpathDef);
+                    node = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
+                    if (node == null)
                     {
-                        PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
-                        return false;
+                        if (defaultValue == null)
+                        {
+                            PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
+                            return false;
+                        }
+                        newStr = defaultValue;
                     }
-                    newStr = defaultValue;
+                    else
+                    {
+                        newStr = node.InnerXml;
+                    }
                 }
                 else
                 {
-                    newStr = node.InnerText;
+                    newStr = node.InnerXml;
                 }                
                 val = newStr;
                 return true;
@@ -599,6 +649,8 @@ namespace XmlExtensions
 
         private XmlNode findNode(XmlNode defNode, string path, XmlDocument xml)
         {
+            if (defNode == null)
+                return null;
             XmlNode node = defNode.SelectSingleNode(path);
             if (node != null)
             {
@@ -607,7 +659,7 @@ namespace XmlExtensions
             else
             {
                 XmlAttribute att = defNode.Attributes["ParentName"];
-                if(att == null)
+                if (att == null)
                 {
                     return null;
                 }
@@ -636,7 +688,7 @@ namespace XmlExtensions
             {
                 int errNum = 0;
                 string temp = "";
-                if (!getValue(ref temp, xml))
+                if (!GetValue(ref temp, xml))
                 {
                     return false;
                 }
@@ -688,12 +740,8 @@ namespace XmlExtensions
         {
             try
             {
-                if (PatchManager.watch.IsRunning)
-                {
-                    PatchManager.errors.Add("XmlExtensions.StopwatchStart: Stopwatch is already running!");
-                    return false;
-                }
-                PatchManager.watch.Start();
+                PatchManager.watch.Reset();
+                PatchManager.watch.Start();               
                 return true;
             }
             catch(Exception e)
@@ -711,18 +759,51 @@ namespace XmlExtensions
         {
             try
             {
-                if (!PatchManager.watch.IsRunning)
-                {
-                    PatchManager.errors.Add("XmlExtensions.StopwatchStop: Stopwatch is not running!");
-                    return false;
-                }
                 PatchManager.watch.Stop();
-                Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.watch.ElapsedMilliseconds.ToString() + "ms");
+                Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.watch.ElapsedMilliseconds.ToString() + "ms");                
                 return true;
             }
             catch (Exception e)
             {
                 PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class StopwatchPause : PatchOperation
+    {
+
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                if (PatchManager.watch.IsRunning)
+                {
+                    PatchManager.watch.Stop();
+                }                
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
+                return false;
+            }
+        }
+    }
+
+    public class StopwatchResume : PatchOperation
+    {
+        protected override bool ApplyWorker(XmlDocument xml)
+        {
+            try
+            {
+                PatchManager.watch.Start();
+                return true;
+            }
+            catch (Exception e)
+            {
+                PatchManager.errors.Add("XmlExtensions.StopwatchStart: " + e.Message);
                 return false;
             }
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace XmlExtensions
@@ -19,10 +15,11 @@ namespace XmlExtensions
 
         public XmlExtensions_SettingsMenu()
         {
-            this.doCloseButton = true;
-            this.forcePause = true;
-            this.absorbInputAroundWindow = true;
-            this.doCloseX = true;
+            doCloseButton = true;
+            forcePause = true;
+            absorbInputAroundWindow = true;
+            doCloseX = true;
+            closeOnAccept = false;
         }
         public override void DoWindowContents(Rect inRect)
         {
