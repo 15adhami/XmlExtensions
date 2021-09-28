@@ -12,19 +12,25 @@ namespace XmlExtensions
     {
         public static XmlDocument xmlDoc;
         public static XmlDocument defaultDoc;
-        public static Queue<PatchOperation> delayedPatches;
         public static Stopwatch watch;
+        public static Stopwatch watch2;
         public static int depth = 0;
         public static List<string> errors;
         public static bool loadingPatches = false;
         public static int rangeCount = 1;
         public static bool context = false;
         public static string contextPath;
+        public static Dictionary<Type, Delegate> patchConstructors;
+        public static Dictionary<string, XmlDocument> XmlDocs;
+        public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
 
         static PatchManager()
         {
-            delayedPatches = new Queue<PatchOperation>();
+            patchConstructors = new Dictionary<Type, Delegate>();
+            nodeMap = new Dictionary<string, Dictionary<XmlNode, XmlNode>>();
+            XmlDocs = new Dictionary<string, XmlDocument>();
             watch = new Stopwatch();
+            watch2 = new Stopwatch();
             xmlDoc = new XmlDocument();
             defaultDoc = new XmlDocument();
             depth = 0;
@@ -44,13 +50,5 @@ namespace XmlExtensions
             errors.Clear();
         }
 
-        public static void runPatches()
-        {
-            for(int i = 0; i < delayedPatches.Count; i++)
-            {
-                PatchOperation patch = delayedPatches.Dequeue();
-                patch.Apply(xmlDoc);
-            }
-        }
     }
 }

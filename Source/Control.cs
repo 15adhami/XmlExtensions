@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace XmlExtensions
 {
-    public class ForLoop : PatchOperation
+    public class ForLoop : PatchOperationExtended
     {
         protected XmlContainer apply;
         protected string storeIn = "i";
@@ -17,7 +17,7 @@ namespace XmlExtensions
         protected int to;
         protected int increment = 1;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             int errNum = 0;
             string oldXml = this.apply.node.OuterXml;
@@ -49,13 +49,13 @@ namespace XmlExtensions
         }
     }
 
-    public class ForEach : PatchOperationPathed
+    public class ForEach : PatchOperationExtendedPathed
     {
         protected XmlContainer apply;
         protected string storeIn = "DEF";
         protected string brackets = "{}";
         protected int prefixLength = 2;
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace XmlExtensions
 
     }
 
-    public class ForEachDescendant : PatchOperation
+    public class ForEachDescendant : PatchOperationExtended
     {
         public bool concreteOnly = false;
         public string xpathParent;
@@ -110,7 +110,7 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected int prefixLength = 2;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -211,13 +211,13 @@ namespace XmlExtensions
         }
     }
 
-    public class IfStatement : PatchOperationPathed
+    public class IfStatement : PatchOperationExtendedPathed
     {
         protected PatchOperationBoolean condition = null;
         protected XmlContainer caseTrue = null;
         protected XmlContainer caseFalse = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -271,18 +271,18 @@ namespace XmlExtensions
 
     }
 
-    public class Case : PatchOperation
+    public class Case
     {
         public string value;
         public XmlContainer apply;
     }
 
-    public class PatchByCase : PatchOperationPathed
+    public class PatchByCase : PatchOperationExtended
     {
         public string value;
         public List<Case> cases;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -333,7 +333,7 @@ namespace XmlExtensions
 
     }
 
-    public class FindMod : PatchOperation
+    public class FindMod : PatchOperationExtended
     {
         public List<string> mods;
         public bool packageId = false;
@@ -341,7 +341,7 @@ namespace XmlExtensions
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -399,12 +399,12 @@ namespace XmlExtensions
         }
     }
 
-    public class Conditional : PatchOperationPathed
+    public class Conditional : PatchOperationExtendedPathed
     {
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -442,14 +442,14 @@ namespace XmlExtensions
         }
     }
 
-    public class ConditionalInherited : PatchOperation
+    public class ConditionalInherited : PatchOperationExtended
     {
         public string xpathDef;
         public string xpathLocal;
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -559,12 +559,12 @@ namespace XmlExtensions
         }
     }
 
-    public class WhileLoop : PatchOperation
+    public class WhileLoop : PatchOperationExtended
     {
         public PatchOperationBoolean condition;
         public PatchContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             int c = 0;
             try
@@ -616,56 +616,12 @@ namespace XmlExtensions
         }
     }
 
-    public class SetRoot : PatchOperationPathed
-    {
-        public PatchContainer apply;
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            try
-            {
-                if (apply == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): <apply> is null");
-                    return false;
-                }
-                XmlNodeList nodeList = xml.SelectNodes(xpath);
-                if (nodeList == null || nodeList.Count == 0)
-                {
-                    PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                foreach (XmlNode node in nodeList)
-                {
-                    XmlDocument newDoc = new XmlDocument();
-                    XmlNode newNode = newDoc.ImportNode(node.Clone(), true);
-                    newDoc.AppendChild(newNode);
-                    int errNum = 0;
-                    if (!Helpers.runPatchesInPatchContainer(apply, newDoc, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): Error in the operation at position=" + errNum.ToString());
-                        return false;
-                    }
-                    XmlNode parentNode = node.ParentNode;
-                    parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(newNode, true), node);
-                    parentNode.RemoveChild(node);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): " + e.Message);
-                return false;
-            }
-        }
-    }
-
-    public class TryCatch : PatchOperation
+    public class TryCatch : PatchOperationExtended
     {
         public PatchContainer tryApply;
         public XmlContainer catchApply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {

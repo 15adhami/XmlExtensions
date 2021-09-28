@@ -20,13 +20,33 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationMath : PatchOperationPathed
+    public class PatchOperationExtended : PatchOperation
+    {
+        public string xmlDoc;
+
+        protected sealed override bool ApplyWorker(XmlDocument xml)
+        {
+            return applyWorker(xmlDoc == null?xml:PatchManager.XmlDocs[xmlDoc]);
+        }
+
+        protected virtual bool applyWorker(XmlDocument xml)
+        {
+            return false;
+        }
+    }
+
+    public class PatchOperationExtendedPathed : PatchOperationExtended
+    {
+        public string xpath;
+    }
+
+    public class PatchOperationMath : PatchOperationExtendedPathed
     {
         protected string value;
         protected bool fromXml = false;
         protected string operation;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -74,11 +94,11 @@ namespace XmlExtensions
 
     }
 
-    public class PatchOperationAddOrReplace : PatchOperationPathed
+    public class PatchOperationAddOrReplace : PatchOperationExtendedPathed
     {
         protected XmlContainer value;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -123,12 +143,12 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationSafeAdd : PatchOperationPathed
+    public class PatchOperationSafeAdd : PatchOperationExtendedPathed
     {
         protected XmlContainer value;
         protected int safetyDepth = -1;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -222,11 +242,11 @@ namespace XmlExtensions
         }
     }*/
 
-    public class PatchOperationCopy : PatchOperationPathed
+    public class PatchOperationCopy : PatchOperationExtendedPathed
     {
         public string paste;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -260,9 +280,9 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationSafeRemove : PatchOperationPathed
+    public class PatchOperationSafeRemove : PatchOperationExtendedPathed
     {
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -288,12 +308,12 @@ namespace XmlExtensions
         }
     }*/
 
-    public class PatchOperationSafeAddOrReplace : PatchOperationPathed
+    public class PatchOperationSafeAddOrReplace : PatchOperationExtendedPathed
     {
         protected XmlContainer value;
         protected int safetyDepth = -1;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -359,12 +379,12 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationSafeCopy : PatchOperationPathed
+    public class PatchOperationSafeCopy : PatchOperationExtendedPathed
     {
         public string paste;
         protected int safetyDepth = -1;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -416,13 +436,13 @@ namespace XmlExtensions
         }
     }
 
-    public class PatchOperationSortList : PatchOperationPathed
+    public class PatchOperationSortList : PatchOperationExtendedPathed
     {
         public string xpathLocal;
         public bool reverse = false;
         public bool nonNumeric = false;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -554,12 +574,12 @@ namespace XmlExtensions
         }
     }
 
-    public class ApplyPatch : PatchOperation
+    public class ApplyPatch : PatchOperationExtended
     {
         public string patchName;
         public List<string> arguments;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {

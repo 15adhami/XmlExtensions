@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" /> 
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,13 +9,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XmlExtensions</RootNamespace>
     <AssemblyName>XmlExtensions</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Common\Assemblies\</OutputPath>
+    <OutputPath>..\Assemblies\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -59,10 +60,12 @@
     <Compile Include="Dialog_Options_patch.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PatchDef.cs" />
+    <Compile Include="PatchLoader.cs" />
     <Compile Include="PatchManager.cs" />
     <Compile Include="PatchOperationApply_Patch.cs" />
     <Compile Include="PatchOperationModSettings.cs" />
     <Compile Include="PatchOperationPatches.cs" />
+    <Compile Include="Performance.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="SettingsMenuDef.cs" />

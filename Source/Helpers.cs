@@ -67,31 +67,7 @@ namespace XmlExtensions
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(str);
             XmlNode newNode = doc.DocumentElement;
-            return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
-            /*
-            XmlAttribute att = newNode.Attributes["Class"];
-            if (att != null && att.InnerText == "XmlExtensions.AggregateValues")
-            {
-                AggregateValues patch =  (AggregateValues)XmlMod.createPatch.Method.Invoke(null, new Object[] { null});
-                if(newNode["apply"]!=null)
-                {
-                    patch.apply = new XmlContainer() { node = newNode["apply"] };
-                }
-                if (newNode["valueOperations"] != null)
-                {
-                    patch.valueOperations = new XmlContainer() { node = newNode["valueOperations"] };
-                }
-                if (newNode["root"] != null)
-                {
-                    patch.root = newNode["root"].InnerXml;
-                }
-                return patch;
-            }
-            else
-            {
-                return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
-            }      
-            */
+            return DirectXmlToPatch.ObjectFromXml<PatchOperation>(newNode, false);
         }
 
         public static XmlNode getNodeFromString(string str)

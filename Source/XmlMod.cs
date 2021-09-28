@@ -21,7 +21,6 @@ namespace XmlExtensions
         public static bool viewingSettings = false;
         public static Dictionary<string, SettingsMenuDef> menus;
         public static string activeMenu = null;
-        public static Delegate createPatch;
 
         static XmlMod()
         {

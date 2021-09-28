@@ -6,14 +6,14 @@ using Verse;
 
 namespace XmlExtensions.Boolean
 {
-    public abstract class PatchOperationBoolean : PatchOperationPathed
+    public abstract class PatchOperationBoolean : PatchOperationExtendedPathed
     {
         public override string ToString()
         {
             return string.Format("{0}({1})", base.ToString(), this.xpath);
         }
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             PatchManager.errors.Add(this.GetType().ToString() + " was applied like a regular patch operation");
             return false;
@@ -21,9 +21,11 @@ namespace XmlExtensions.Boolean
 
         public bool evaluate(ref bool b, XmlDocument xml)
         {
+            XmlDocument doc = (xmlDoc == null ? xml : PatchManager.XmlDocs[xmlDoc]);
             if (!this.valid)
             {
-                this.flag = evaluation(ref b, xml);
+                // cache the result
+                this.flag = evaluation(ref b, doc);
             }
             return this.flag;
         }
@@ -994,13 +996,13 @@ namespace XmlExtensions.Boolean
                 b = findNode(defNode, xpathLocal, xml);
                 if (!b)
                 {
-                    if (PatchManager.defaultDoc == xml)
+                    if (xml == PatchManager.XmlDocs["Defs"])
                     {
                         return true;
                     }
                     else
                     {
-                        b = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
+                        b = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
                         return true;
                     }
                 }

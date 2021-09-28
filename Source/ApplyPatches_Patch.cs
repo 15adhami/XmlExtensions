@@ -18,16 +18,23 @@ namespace XmlExtensions
             PatchManager.context = false;
             PatchManager.xmlDoc = xmlDoc;
             PatchManager.defaultDoc = xmlDoc;
-            /*
-            NewExpression newExp = Expression.New(typeof(AggregateValues).GetConstructor(Type.EmptyTypes));
-            LambdaExpression lambda = Expression.Lambda(newExp);
-            Delegate compiled = lambda.Compile();
-            XmlMod.createPatch = compiled;
-            */
+            PatchManager.XmlDocs.Add("Defs", xmlDoc);
+            foreach(Type T in typeof(PatchOperation).AllSubclasses())
+            {
+                if(!T.IsAbstract)
+                {
+                    NewExpression newExp = Expression.New(T.GetConstructor(Type.EmptyTypes));
+                    LambdaExpression lambda = Expression.Lambda(newExp);
+                    Delegate compiled = lambda.Compile();
+                    PatchManager.patchConstructors.Add(T, compiled);
+                }                
+            }
         }
 
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
+            PatchManager.XmlDocs.Clear();
+            PatchManager.nodeMap.Clear();
             PatchManager.watch.Reset();
             //Add defNames to the menus
             foreach(XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))

@@ -7,14 +7,14 @@ using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {
-    public abstract class PatchOperationValue : PatchOperationPathed
+    public abstract class PatchOperationValue : PatchOperationExtendedPathed
     {
         public bool GetValue(ref string val, XmlDocument xml)
         {
-            XmlDocument xmlDoc = xml;
-            if (PatchManager.context)
-                xmlDoc = PatchManager.xmlDoc;
-            return getValue(ref val, xmlDoc);
+            XmlDocument xmldoc = xml;
+            if (xmlDoc != null)
+                xmldoc = PatchManager.XmlDocs[xmlDoc];
+            return getValue(ref val, xmldoc);
         }
 
         public virtual bool getValue(ref string val, XmlDocument xml)
@@ -41,7 +41,7 @@ namespace XmlExtensions
         public bool fromXml2 = false;
         public string operation = "";        
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -151,7 +151,7 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected string operation;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -267,7 +267,7 @@ namespace XmlExtensions
         public string storeIn;
         public string brackets = "{}";        
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -326,12 +326,12 @@ namespace XmlExtensions
         }
     }
 
-    public class Log : PatchOperationPathed
+    public class Log : PatchOperationExtendedPathed
     {
         protected string text = null;
         protected string error = null;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -374,7 +374,7 @@ namespace XmlExtensions
         public string brackets = "{}";
         public XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -441,20 +441,20 @@ namespace XmlExtensions
         }
     }
 
-    public class AggregateValues : PatchOperation
+    public class AggregateValues : PatchOperationExtended
     {
         public XmlContainer valueOperations;
         public XmlContainer apply;
         public string root;
+        public string docName;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
                 XmlDocument xmlDoc = xml;
                 if(root!=null)
-                {                    
-                    // TODO: Make sure FindNodeInherited doesnt mess up when not AggregateValues
+                {
                     PatchManager.contextPath = root;
                     XmlNode node = xml.SelectSingleNode(root);
                     if (node == null)
@@ -464,7 +464,11 @@ namespace XmlExtensions
                     }
                     xmlDoc = new XmlDocument();
                     xmlDoc.AppendChild(xmlDoc.ImportNode(node.Clone(), true));
-                }                
+                }
+                else if (docName != null)
+                {
+                    xmlDoc = PatchManager.XmlDocs[docName];
+                }
                 List<string> values = new List<string>();
                 List<string> vars = new List<string>();
                 for (int i = 0; i < valueOperations.node.ChildNodes.Count; i++)
@@ -474,17 +478,17 @@ namespace XmlExtensions
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(Helpers.substituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
                         XmlNode newNode = doc.DocumentElement;
-                        PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
+                        PatchOperationValue patchOperation = DirectXmlToPatch.ObjectFromXml<PatchOperationValue>(newNode, false);
                         string temp = "";
                         if (!patchOperation.GetValue(ref temp, xmlDoc))
                         {
-                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <operations> at position=" + (i + 1).ToString());
+                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a value in <valueOperations> at position=" + (i + 1).ToString());
                             return false;
                         }
                         values.Add(temp);
                         if (!patchOperation.getVar(ref temp))
                         {
-                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <operations> at position=" + (i + 1).ToString());
+                            PatchManager.errors.Add("XmlExtensions.AggregateValues: Error in getting a variable name in <valueOperations> at position=" + (i + 1).ToString());
                             return false;
                         }
                         vars.Add(temp);
@@ -561,7 +565,7 @@ namespace XmlExtensions
         public string xpathDef;
         public string xpathLocal;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -616,10 +620,24 @@ namespace XmlExtensions
                 XmlNode node = findNode(defNode, xpathLocal, xml);
                 if (node == null)
                 {
-                    xpathDef = PatchManager.contextPath;
-                    defNode = PatchManager.defaultDoc.SelectSingleNode(xpathDef);
-                    node = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
-                    if (node == null)
+                    if(xml != PatchManager.XmlDocs["Defs"])
+                    {
+                        node = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
+                        if (node == null)
+                        {
+                            if (defaultValue == null)
+                            {
+                                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
+                                return false;
+                            }
+                            newStr = defaultValue;
+                        }
+                        else
+                        {
+                            newStr = node.InnerXml;
+                        }
+                    }
+                    else
                     {
                         if (defaultValue == null)
                         {
@@ -627,10 +645,6 @@ namespace XmlExtensions
                             return false;
                         }
                         newStr = defaultValue;
-                    }
-                    else
-                    {
-                        newStr = node.InnerXml;
                     }
                 }
                 else
@@ -682,7 +696,7 @@ namespace XmlExtensions
         public string brackets = "{}";
         public XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -734,76 +748,23 @@ namespace XmlExtensions
         }
     }
 
-    public class StopwatchStart : PatchOperation
+
+    public class Test : PatchOperationExtendedPathed
     {
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
-                PatchManager.watch.Reset();
-                PatchManager.watch.Start();               
-                return true;
-            }
-            catch(Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStart: " + e.Message);
-                return false;
-            }
-        }
-    }
-
-    public class StopwatchStop : PatchOperation
-    {
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            try
-            {
-                PatchManager.watch.Stop();
-                Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.watch.ElapsedMilliseconds.ToString() + "ms");                
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
-                return false;
-            }
-        }
-    }
-
-    public class StopwatchPause : PatchOperation
-    {
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            try
-            {
-                if (PatchManager.watch.IsRunning)
+                if (xml.SelectSingleNode(xpath) == null)
                 {
-                    PatchManager.watch.Stop();
-                }                
+                    PatchManager.errors.Add("XmlExtensions.Test(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    return false;
+                }
                 return true;
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
-                return false;
-            }
-        }
-    }
-
-    public class StopwatchResume : PatchOperation
-    {
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            try
-            {
-                PatchManager.watch.Start();
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStart: " + e.Message);
+                PatchManager.errors.Add("XmlExtensions.Test(xpath=" + xpath + "): " + e.Message);
                 return false;
             }
         }

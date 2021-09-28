@@ -7,7 +7,7 @@ using Verse.Sound;
 
 namespace XmlExtensions.Setting
 {
-    public abstract class SettingContainer //: PatchOperation
+    public abstract class SettingContainer 
     {
         public int errHeight = -1;
         public string tag;

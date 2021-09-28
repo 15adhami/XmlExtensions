@@ -14,7 +14,7 @@ namespace XmlExtensions
         protected string defaultValue;
         protected XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -159,14 +159,14 @@ namespace XmlExtensions
         }
     }
 
-    public class OptionalPatchExternal : PatchOperation
+    public class OptionalPatchExternal : PatchOperationExtended
     {
         protected string field;
         protected string ModSettingsClass;
         protected XmlContainer caseTrue;
         protected XmlContainer caseFalse;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -224,14 +224,14 @@ namespace XmlExtensions
         }
     }
 
-    public class UseSettingsExternal : PatchOperation
+    public class UseSettingsExternal : PatchOperationExtended
     {
         protected string ModSettingsClass;
         protected List<string> fields;
         protected string brackets = "{}";
         protected XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -290,7 +290,7 @@ namespace XmlExtensions
         }
     }
 
-    public class UseSettings : PatchOperation
+    public class UseSettings : PatchOperationExtended
     {
         protected string modId;
         protected List<string> keys;
@@ -298,7 +298,7 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected XmlContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
@@ -410,7 +410,7 @@ namespace XmlExtensions
         }
     }
 
-    public class OptionalPatch : PatchOperation
+    public class OptionalPatch : PatchOperationExtended
     {
         protected string key;
         protected string modId;
@@ -418,7 +418,7 @@ namespace XmlExtensions
         protected XmlContainer caseTrue;
         protected XmlContainer caseFalse;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool applyWorker(XmlDocument xml)
         {
             try
             {
