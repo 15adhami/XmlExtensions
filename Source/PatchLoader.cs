@@ -208,15 +208,15 @@ namespace XmlExtensions
 			currentlyInstantiatingObjectOfType.Push(type3);
 			T val2;
 			try
-			{
+			{/*
 				if (typeof(PatchOperation).IsAssignableFrom(type3))
                 {
 					val2 = (T)PatchManager.patchConstructors[type3].Method.Invoke(null, new Object[] { null });
                 }
                 else
-                {
+                {*/
 					val2 = (T)Activator.CreateInstance(type3);
-				}				
+				//}				
 			}
 			finally
 			{

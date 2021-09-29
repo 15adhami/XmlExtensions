@@ -67,7 +67,7 @@ namespace XmlExtensions
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(str);
             XmlNode newNode = doc.DocumentElement;
-            return DirectXmlToPatch.ObjectFromXml<PatchOperation>(newNode, false);
+            return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
         }
 
         public static XmlNode getNodeFromString(string str)

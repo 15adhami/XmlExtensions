@@ -19,6 +19,8 @@ namespace XmlExtensions
             PatchManager.xmlDoc = xmlDoc;
             PatchManager.defaultDoc = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
+            // Bug: Same patch being defined twice (argon mod)
+            /*
             foreach(Type T in typeof(PatchOperation).AllSubclasses())
             {
                 if(!T.IsAbstract)
@@ -28,7 +30,7 @@ namespace XmlExtensions
                     Delegate compiled = lambda.Compile();
                     PatchManager.patchConstructors.Add(T, compiled);
                 }                
-            }
+            }*/
         }
 
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)

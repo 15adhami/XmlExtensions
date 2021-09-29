@@ -42,7 +42,7 @@ namespace XmlExtensions
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(Helpers.substituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
                         XmlNode newNode = doc.DocumentElement;
-                        PatchOperationValue patchOperation = DirectXmlToPatch.ObjectFromXml<PatchOperationValue>(newNode, false);
+                        PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
                         string temp = "";
                         if (!patchOperation.GetValue(ref temp, xmlDoc))
                         {
