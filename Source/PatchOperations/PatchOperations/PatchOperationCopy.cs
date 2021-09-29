@@ -3,46 +3,6 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    /*
-    public class PatchOperationMerge : PatchOperationPathed
-    {
-        protected XmlContainer value;
-        protected int safetyDepth = -1;
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-            XmlNode node = this.value.node;
-            bool result = false;
-            foreach (XmlNode xmlNode in xml.SelectNodes(this.xpath))
-            {
-                foreach (XmlNode addNode in node.ChildNodes)
-                {
-                    result = true;
-                    int d = 0;
-                    tryAddNode(xmlNode, addNode, d);
-                }
-            }
-            return result;
-        }
-        private void tryAddNode(XmlNode parent, XmlNode child, int depth)
-        {
-            if (!Helpers.containsNode(parent, child.Name) || depth == safetyDepth)
-            {
-                parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
-            }
-            else
-            {
-                if (child.HasChildNodes && child.FirstChild.HasChildNodes)
-                {
-                    foreach (XmlNode newChild in child.ChildNodes)
-                    {
-                        tryAddNode(parent[child.Name], newChild, depth + 1);
-                    }
-                }
-            }
-        }
-    }*/
-
     public class PatchOperationCopy : PatchOperationExtendedPathed
     {
         public string paste;
