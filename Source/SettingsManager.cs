@@ -1,4 +1,6 @@
-﻿namespace XmlExtensions
+﻿using System.Collections.Generic;
+
+namespace XmlExtensions
 {
     public static class SettingsManager
     {
@@ -30,5 +32,10 @@
         {
 			return XmlMod.menus[XmlMod.activeMenu].defaultSpacing;
 		}
+
+        public static IEnumerable<string> GetKeys(string modId)
+        {
+            return XmlMod.settingsPerMod[modId].keys;
+        }
     }
 }
