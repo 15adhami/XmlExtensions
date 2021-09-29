@@ -14,8 +14,7 @@
 			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
 		</li>
 	</modDependencies>
-	<description>Extends the functionality of XML patch operations, and allows for the easy creation of mod settings.
-While this mod is loaded, XML errors will generate a stack trace.
+	<description>Extends the functionality of XML patch operations, and allows for the easy creation of mod settings. While this mod is loaded, XML errors will generate a stack trace.
 
 packageId: imranfish.xmlextensions
 	</description>

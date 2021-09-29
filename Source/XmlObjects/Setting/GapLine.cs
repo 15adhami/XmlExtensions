@@ -1,0 +1,23 @@
+﻿using UnityEngine;
+using Verse;
+
+namespace XmlExtensions.Setting
+{
+    public class GapLine : SettingContainer
+    {
+        public int spacing = 24;
+        protected int thickness = 1;
+
+        public override void drawSetting(Listing_Standard listingStandard, string selectedMod) 
+        {
+            Rect gapRect = listingStandard.GetRect(spacing);
+            float y = gapRect.y + spacing / 2f - thickness / 2f;
+            Color color = GUI.color;
+            GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+            GUI.DrawTexture(new Rect(gapRect.x, y, listingStandard.ColumnWidth, thickness), BaseContent.WhiteTex);
+            GUI.color = color;
+        }
+
+        public override int getHeight(float width, string selectedMod) { return spacing; }
+    }
+}
