@@ -7,7 +7,17 @@ namespace XmlExtensions.Boolean
 
         public bool evaluate(ref bool b, XmlDocument xml)
         {
-            XmlDocument doc = (xmlDoc == null ? xml : PatchManager.XmlDocs[xmlDoc]);
+            XmlDocument doc = xml;
+            if (xmlDoc != null)
+            {
+                if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
+                {
+                    PatchManager.errors.Add(this.GetType().ToString() + "(xmlDoc=" + xmlDoc + "): No document exists with the given name");
+                    return false;
+                }
+                else
+                    doc = PatchManager.XmlDocs[xmlDoc];
+            }
             if (!this.valid)
             {
                 // cache the result

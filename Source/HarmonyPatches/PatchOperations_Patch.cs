@@ -57,7 +57,7 @@ namespace XmlExtensions
 
     }*/
 
-    [HarmonyPatch(typeof(PatchOperationAdd))]
+    [HarmonyPatch(typeof(Verse.PatchOperationAdd))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAdd_Patch
     {
@@ -83,7 +83,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationAddModExtension))]
+    [HarmonyPatch(typeof(Verse.PatchOperationAddModExtension))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAddModExtension_Patch
     {
@@ -109,7 +109,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationAttributeAdd))]
+    [HarmonyPatch(typeof(Verse.PatchOperationAttributeAdd))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAttributeAdd_Patch
     {
@@ -135,7 +135,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationAttributeRemove))]
+    [HarmonyPatch(typeof(Verse.PatchOperationAttributeRemove))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAttributeRemove_Patch
     {
@@ -161,7 +161,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationAttributeSet))]
+    [HarmonyPatch(typeof(Verse.PatchOperationAttributeSet))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationAttributeSet_Patch
     {
@@ -244,7 +244,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationInsert))]
+    [HarmonyPatch(typeof(Verse.PatchOperationInsert))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationInsert_Patch
     {
@@ -270,7 +270,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationRemove))]
+    [HarmonyPatch(typeof(Verse.PatchOperationRemove))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationRemove_Patch
     {
@@ -296,7 +296,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationReplace))]
+    [HarmonyPatch(typeof(Verse.PatchOperationReplace))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationReplace_Patch
     {
@@ -382,7 +382,7 @@ namespace XmlExtensions
         }
     }
 
-    [HarmonyPatch(typeof(PatchOperationSetName))]
+    [HarmonyPatch(typeof(Verse.PatchOperationSetName))]
     [HarmonyPatch("ApplyWorker")]
     static class PatchOperationSetName_Patch
     {

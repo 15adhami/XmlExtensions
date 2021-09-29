@@ -6,10 +6,18 @@ namespace XmlExtensions
     {
         public bool GetValue(ref string val, XmlDocument xml)
         {
-            XmlDocument xmldoc = xml;
+            XmlDocument doc = xml;
             if (xmlDoc != null)
-                xmldoc = PatchManager.XmlDocs[xmlDoc];
-            return getValue(ref val, xmldoc);
+            {
+                if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
+                {
+                    PatchManager.errors.Add(this.GetType().ToString() + "(xmlDoc=" + xmlDoc + "): No document exists with the given name");
+                    return false;
+                }
+                else
+                    doc = PatchManager.XmlDocs[xmlDoc];
+            }
+            return getValue(ref val, doc);
         }
 
         public virtual bool getValue(ref string val, XmlDocument xml)

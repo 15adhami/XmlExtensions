@@ -15,6 +15,11 @@ namespace XmlExtensions
         {
             try
             {
+                if(!PatchManager.XmlDocs.ContainsKey(docName))
+                {
+                    PatchManager.errors.Add("XmlExtensions.MergeDocument(docName=" + docName + "): No document exists with the given name");
+                    return false;
+                }
                 XmlDocument doc = PatchManager.XmlDocs[docName];
                 foreach(XmlNode node in doc.DocumentElement.ChildNodes)
                 {                    

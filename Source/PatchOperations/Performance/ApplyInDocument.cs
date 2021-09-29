@@ -13,6 +13,11 @@ namespace XmlExtensions
         {
             try
             {
+                if (!PatchManager.XmlDocs.ContainsKey(docName))
+                {
+                    PatchManager.errors.Add("XmlExtensions.ApplyInDocument(docName=" + docName + "): No document exists with the given name");
+                    return false;
+                }
                 if (apply == null)
                 {
                     PatchManager.errors.Add("XmlExtensions.ApplyInDocument(docName=" + docName + "): <apply> is null");

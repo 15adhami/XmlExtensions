@@ -7,9 +7,9 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    class Sequence : PatchOperationExtended
+    public class Sequence : PatchOperationExtended
     {
-        PatchContainer apply;
+        public PatchContainer apply;
 
         protected override bool applyWorker(XmlDocument xml)
         {
