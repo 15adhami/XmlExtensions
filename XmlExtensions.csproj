@@ -184,7 +184,6 @@
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
     <Content Include="Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="LoadFolders.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About\Untitled.xcf" />
