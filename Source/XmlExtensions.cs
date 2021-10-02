@@ -31,7 +31,7 @@ namespace XmlExtensions
             Verse.Log.Message("[XML Extensions] Finished initializing " + i.ToString() + " SettingsMenuDefs");
 
             // Initializing unloaded mod settings
-            int unique = 0;
+            int c = 0;
             string tId = "";
             List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             kvpList.Sort(delegate (KeyValuePair<string, string> pair1, KeyValuePair<string, string> pair2) { return pair1.Key.CompareTo(pair2.Key); });
@@ -44,9 +44,11 @@ namespace XmlExtensions
                         if (tId != pair.Key.Split(';')[0])
                         {
                             tId = pair.Key.Split(';')[0];
-                            unique++;
+                            XmlMod.unusedMods.Add(tId);
+                            XmlMod.unusedSettings.Add(tId, new List<string>());
                         }
-                        XmlMod.keyList.Add(pair.Key);
+                        c++;
+                        XmlMod.unusedSettings[tId].Add(pair.Key.Split(';')[1]);
                     }
                 }
                 else
@@ -55,8 +57,12 @@ namespace XmlExtensions
                 }
 
             }
-            Verse.Log.Message("[XML Extensions] Found " + XmlMod.keyList.Count.ToString() + " extra keys from " + unique.ToString() + " unloaded mods");
-            XmlMod.keyList.Sort();
+            XmlMod.unusedMods.Sort();
+            foreach(List<string> list in XmlMod.unusedSettings.Values)
+            {
+                list.Sort();
+            }
+            Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " extra keys from " + XmlMod.unusedMods.Count.ToString() + " unloaded mods");
                 
         }
     }
