@@ -5,7 +5,7 @@ namespace XmlExtensions.Setting
 {
     public class ResetSettings : SettingContainer
     {
-        protected string label = "Reset settings";
+        protected string label;
         protected List<string> keys = null;
         protected bool confirm = true;
         public string message;
@@ -28,10 +28,7 @@ namespace XmlExtensions.Setting
             }
             else
             {
-                if (tKeyMessage == null && message == null)
-                    tKeyMessage = "XmlExtensions_ConfirmationResetMod";
-                if(message == null)
-                    message = "Are you sure you want to reset every setting of the current mod?";
+                
                 if (keys == null) { keys = XmlMod.settingsPerMod[selectedMod].keys; }
                 if (listingStandard.ButtonText(Helpers.tryTranslate(label, tKey), null))
                 {
@@ -46,6 +43,21 @@ namespace XmlExtensions.Setting
                     }, "No".Translate(), null, null, false, null, null));
                 }
             }
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            if (label == null)
+            {
+                label = "Reset Settings";
+                tKey = "XmlExtensions_ResetSettings";
+            }
+            if (message == null)
+            {
+                tKeyMessage = "XmlExtensions_Confirmation";
+                message = "Are you sure?";
+            }                
         }
 
         public override int getHeight(float width, string selectedMod) { return (30 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }

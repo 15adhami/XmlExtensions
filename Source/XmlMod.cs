@@ -107,7 +107,7 @@ namespace XmlExtensions
             modListing.Begin(rect2);
             if (unusedMods.Count == 0)
             {
-                modListing.Label(Helpers.tryTranslate("No extra settings at the moment.", "XmlExtensions_NoExtraSettings"));
+                modListing.Label(Helpers.tryTranslate("No extra settings at the moment", "XmlExtensions_NoExtraSettings"));
             }
             foreach (string mod in unusedMods)
             {
@@ -122,7 +122,7 @@ namespace XmlExtensions
             {
                 Listing_Standard keyListListing = new Listing_Standard();
                 keyListListing.Begin(keyListRect);
-                keyListListing.Label(Helpers.tryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedSettings"));
+                keyListListing.Label(Helpers.tryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedKeys"));
                 keyListListing.GapLine(4);
                 keyListListing.Gap(2);
 
@@ -165,7 +165,7 @@ namespace XmlExtensions
                     buttonLeftListing.Begin(firstRect);
                     if (buttonLeftListing.ButtonText(Helpers.tryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", unusedSettings[selectedExtraMod].Count.ToString())))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to delete every unused key of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                         {
                             foreach (string key in unusedSettings[selectedExtraMod])
                             {
@@ -189,7 +189,7 @@ namespace XmlExtensions
                     }
                     if (buttonRightListing.ButtonText(Helpers.tryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of every unloaded mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to delete all unused keys from every mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
                         {
                             foreach (string mod in unusedMods)
                             {
