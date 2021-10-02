@@ -117,6 +117,7 @@ namespace XmlExtensions
             Widgets.EndScrollView();
             modListListing.End();
 
+            // Draw right column
             if (selectedExtraMod != null)
             {
                 Listing_Standard keyListListing = new Listing_Standard();
@@ -149,56 +150,62 @@ namespace XmlExtensions
                     {
                         unusedMods.Remove(selectedExtraMod);
                         unusedSettings.Remove(selectedExtraMod);
+                        selectedExtraMod = null;
                     }
                 }
                 keyListing.End();
                 Widgets.EndScrollView();
-                keyListListing.GapLine(4);
-                Rect tempRect = keyListListing.GetRect(32f);
-                Rect firstRect = tempRect.LeftPart(0.495f);
-                Listing_Standard buttonLeftListing = new Listing_Standard();
-                buttonLeftListing.Begin(firstRect);
-                if (buttonLeftListing.ButtonText(Helpers.tryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", unusedSettings[selectedExtraMod].Count.ToString())))
+                // Make sure the last key wasn't just deleted (otherwise missing key in dict exception)
+                if (selectedExtraMod != null)
                 {
-                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                    keyListListing.GapLine(4);
+                    Rect tempRect = keyListListing.GetRect(32f);
+                    Rect firstRect = tempRect.LeftPart(0.495f);
+                    Listing_Standard buttonLeftListing = new Listing_Standard();
+                    buttonLeftListing.Begin(firstRect);
+                    if (buttonLeftListing.ButtonText(Helpers.tryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", unusedSettings[selectedExtraMod].Count.ToString())))
                     {
-                        foreach (string key in unusedSettings[selectedExtraMod])
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                         {
-                            DeleteSetting(selectedExtraMod, key);
-                        }
-                        unusedMods.Remove(selectedExtraMod);
-                        unusedSettings.Remove(selectedExtraMod);
-                        selectedExtraMod = null;
-                    }, "No".Translate(), null, null, false, null, null));
-                }
-                buttonLeftListing.End();
-                Rect secondRect = tempRect.RightPart(0.495f);
-                Listing_Standard buttonRightListing = new Listing_Standard();
-                buttonRightListing.Begin(secondRect);
-                GUI.color = Color.red;
-                int count = 0;
-                foreach(List<string> list in unusedSettings.Values)
-                {
-                    count += list.Count;
-                }
-                if (buttonRightListing.ButtonText(Helpers.tryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}",count.ToString()), null))
-                {
-                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of every unloaded mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
-                    {
-                        foreach (string mod in unusedMods)
-                        {
-                            foreach (string key in unusedSettings[mod])
+                            foreach (string key in unusedSettings[selectedExtraMod])
                             {
-                                DeleteSetting(mod, key);
+                                DeleteSetting(selectedExtraMod, key);
                             }
-                        }
-                        unusedSettings.Clear();
-                        unusedMods.Clear();
-                        selectedExtraMod = null;
-                    }, "No".Translate(), null, null, false, null, null));
-                }
-                GUI.color = Color.white;
-                buttonRightListing.End();
+                            unusedMods.Remove(selectedExtraMod);
+                            unusedSettings.Remove(selectedExtraMod);
+                            selectedExtraMod = null;
+                        }, "No".Translate(), null, null, false, null, null));
+                    }
+                    buttonLeftListing.End();
+
+                    Rect secondRect = tempRect.RightPart(0.495f);
+                    Listing_Standard buttonRightListing = new Listing_Standard();
+                    buttonRightListing.Begin(secondRect);
+                    GUI.color = Color.red;
+                    int count = 0;
+                    foreach (List<string> list in unusedSettings.Values)
+                    {
+                        count += list.Count;
+                    }
+                    if (buttonRightListing.ButtonText(Helpers.tryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
+                    {
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to reset every setting of every unloaded mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
+                        {
+                            foreach (string mod in unusedMods)
+                            {
+                                foreach (string key in unusedSettings[mod])
+                                {
+                                    DeleteSetting(mod, key);
+                                }
+                            }
+                            unusedSettings.Clear();
+                            unusedMods.Clear();
+                            selectedExtraMod = null;
+                        }, "No".Translate(), null, null, false, null, null));
+                    }
+                    GUI.color = Color.white;
+                    buttonRightListing.End();
+                }                
                 keyListListing.End();
             }
             
