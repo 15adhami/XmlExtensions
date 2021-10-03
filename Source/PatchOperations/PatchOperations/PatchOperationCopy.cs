@@ -7,7 +7,7 @@ namespace XmlExtensions
     {
         public string paste;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

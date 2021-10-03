@@ -12,7 +12,7 @@ namespace XmlExtensions
         protected string defaultValue;
         protected XmlContainer apply;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

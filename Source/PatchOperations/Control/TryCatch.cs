@@ -9,7 +9,7 @@ namespace XmlExtensions
         public PatchContainer tryApply;
         public XmlContainer catchApply;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

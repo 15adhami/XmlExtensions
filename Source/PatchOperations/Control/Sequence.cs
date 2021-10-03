@@ -11,7 +11,7 @@ namespace XmlExtensions
     {
         public PatchContainer apply;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

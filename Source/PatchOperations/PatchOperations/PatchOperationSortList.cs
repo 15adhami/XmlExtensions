@@ -12,7 +12,7 @@ namespace XmlExtensions
         public bool reverse = false;
         public bool nonNumeric = false;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

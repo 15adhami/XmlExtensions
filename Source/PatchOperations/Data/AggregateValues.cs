@@ -12,7 +12,7 @@ namespace XmlExtensions
         public string root;
         public string docName;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

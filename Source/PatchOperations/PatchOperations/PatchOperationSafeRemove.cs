@@ -4,7 +4,7 @@ namespace XmlExtensions
 {
     public class PatchOperationSafeRemove : PatchOperationExtendedPathed
     {
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

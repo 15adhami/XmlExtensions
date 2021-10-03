@@ -16,7 +16,7 @@ namespace XmlExtensions
 
 		private Order order = Order.Append;
 
-		protected override bool applyWorker(XmlDocument xml)
+		protected override bool Patch(XmlDocument xml)
 		{
             try
             {

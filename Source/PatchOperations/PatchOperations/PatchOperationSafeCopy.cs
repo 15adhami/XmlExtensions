@@ -8,7 +8,7 @@ namespace XmlExtensions
         public string paste;
         protected int safetyDepth = -1;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

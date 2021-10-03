@@ -9,7 +9,7 @@ namespace XmlExtensions
         protected XmlContainer value;
         protected int safetyDepth = -1;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

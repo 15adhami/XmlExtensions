@@ -14,7 +14,7 @@ namespace XmlExtensions
         protected string brackets = "{}";
         protected int prefixLength = 2;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

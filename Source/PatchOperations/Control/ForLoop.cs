@@ -12,7 +12,7 @@ namespace XmlExtensions
         protected int to;
         protected int increment = 1;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             int errNum = 0;
             string oldXml = this.apply.node.OuterXml;

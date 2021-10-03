@@ -20,12 +20,17 @@ namespace XmlExtensions
                 else
                     doc = PatchManager.XmlDocs[xmlDoc];
             }
-            return applyWorker(doc);
+            return Patch(doc);
         }
 
-        protected virtual bool applyWorker(XmlDocument xml)
+        protected virtual bool Patch(XmlDocument xml)
         {
             return false;
+        }
+
+        protected void xpathError(string xpath, string field)
+        {
+            PatchManager.errors.Add(this.GetType().ToString() + "(" + field + "=" + xpath + "): Failed to find a node with the given xpath");
         }
     }
 }

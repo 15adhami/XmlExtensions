@@ -10,7 +10,7 @@ namespace XmlExtensions
         public string brackets = "{}";
         public XmlContainer apply;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

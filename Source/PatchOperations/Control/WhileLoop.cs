@@ -9,7 +9,7 @@ namespace XmlExtensions
         public BooleanBase condition;
         public PatchContainer apply;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             int c = 0;
             try

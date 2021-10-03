@@ -8,7 +8,7 @@ namespace XmlExtensions
         protected string text = null;
         protected string error = null;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

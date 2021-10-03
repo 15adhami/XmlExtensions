@@ -11,7 +11,7 @@ namespace XmlExtensions
         public string storeIn;
         public string brackets = "{}";        
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

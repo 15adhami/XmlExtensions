@@ -7,7 +7,7 @@ namespace XmlExtensions
 	{
 		private XmlContainer value;
 
-		protected override bool applyWorker(XmlDocument xml)
+		protected override bool Patch(XmlDocument xml)
 		{
             try
             {

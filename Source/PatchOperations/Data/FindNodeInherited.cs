@@ -45,7 +45,7 @@ namespace XmlExtensions
         public string xpathDef;
         public string xpathLocal;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

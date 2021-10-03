@@ -17,7 +17,7 @@ namespace XmlExtensions
         public bool fromXml2 = false;
         public string operation = "";        
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {

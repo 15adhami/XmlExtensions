@@ -14,7 +14,7 @@ namespace XmlExtensions
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
-        protected override bool applyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             try
             {
