@@ -115,6 +115,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeAddOrReplace.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeCopy.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeRemove.cs" />
+    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeReplace.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSetName.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSortList.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAdd.cs" />
