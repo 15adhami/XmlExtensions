@@ -18,7 +18,7 @@ namespace XmlExtensions
                 nodeList = xml.SelectNodes(this.xpath);
                 if (nodeList == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationMath(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    XPathError(xpath, "xpath");
                     return false;
                 }
                 foreach (XmlNode xmlNode in nodeList)
@@ -32,7 +32,7 @@ namespace XmlExtensions
                         XmlNode node = xml.SelectSingleNode(value);
                         if (node == null)
                         {
-                            PatchManager.errors.Add("XmlExtensions.PatchOperationMath(value=" + value + "): Failed to find a node with the given xpath");
+                            XPathError(value, "value");
                             return false;
                         }
                         valueStored = node.InnerText;
@@ -50,7 +50,7 @@ namespace XmlExtensions
             }            
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationMath(xpath=" + xpath + ", value=" + value + "): " + e.Message);
+                ExceptionError(e, new string[] { xpath, value }, new string[] { "xpath", "value" }); 
                 return false;
             }
         }

@@ -108,6 +108,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAddOrReplace.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationCopy.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationExtended.cs" />
+    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationExtendedAttribute.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationExtendedPathed.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationMath.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationReplace.cs" />

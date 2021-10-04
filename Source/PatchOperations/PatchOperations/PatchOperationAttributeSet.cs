@@ -21,7 +21,7 @@ namespace XmlExtensions
 				XmlNodeList nodeList = xml.SelectNodes(xpath);
 				if (nodeList == null || nodeList.Count == 0)
 				{
-					PatchManager.errors.Add("XmlExtensions.PatchOperationAttributeSet(xpath=" + xpath + "): Failed to find a node with the given xpath");
+					XPathError(xpath, "xpath");
 					return false;
 				}
 				foreach (object item in nodeList)
@@ -43,7 +43,7 @@ namespace XmlExtensions
 			}
 			catch (Exception e)
 			{
-				PatchManager.errors.Add("XmlExtensions.PatchOperationAttributeSet(xpath=" + xpath + ", attribute=" + attribute + "): " + e.Message);
+				ExceptionError(e, new string[] { attribute, xpath }, new string[] { "attribute", "xpath" });
 				return false;
 			}
 		}

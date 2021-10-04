@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -6,6 +7,9 @@ namespace XmlExtensions
     public abstract class PatchOperationExtended : PatchOperation
     {
         public string xmlDoc;
+
+        protected string[] exceptionVals;
+        protected string[] exceptionFields;
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {
@@ -20,7 +24,16 @@ namespace XmlExtensions
                 else
                     doc = PatchManager.XmlDocs[xmlDoc];
             }
-            return Patch(doc);
+            try
+            {
+                SetException();
+                return Patch(doc);
+            }
+            catch (Exception e)
+            {
+                ExceptionError(e, exceptionVals, exceptionFields);
+                return false;
+            }
         }
 
         protected virtual bool Patch(XmlDocument xml)
@@ -28,9 +41,27 @@ namespace XmlExtensions
             return false;
         }
 
-        protected void xpathError(string xpath, string field)
+        protected abstract void SetException();
+
+        protected void XPathError(string xpath, string field)
         {
             PatchManager.errors.Add(this.GetType().ToString() + "(" + field + "=" + xpath + "): Failed to find a node with the given xpath");
+        }
+
+        protected void ExceptionError(Exception e, string[] values, string[] fields)
+        {
+            string str = this.GetType().ToString();
+            if (values != null)
+            {
+                str += "(" + fields[0] + "=" + values[0];
+                for (int i = 1; i < values.Length; i++)
+                {
+                    str += ", " + fields[i] + "=" + values[i];
+                }
+                str += ")";
+            }
+            str += ": " + e.Message;
+            PatchManager.errors.Add(str);
         }
     }
 }

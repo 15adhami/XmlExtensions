@@ -15,13 +15,13 @@ namespace XmlExtensions
                 nodeList = xml.SelectNodes(this.xpath);
                 if (nodeList == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
+                    XPathError(xpath, "xpath");
                     return false;
                 }
                 XmlNodeList parents = xml.SelectNodes(paste);
                 if (parents == null || nodeList.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(paste=" + paste + "): Failed to find a node with the given xpath");
+                    XPathError(paste, "paste");
                     return false;
                 }
                 foreach (XmlNode node in nodeList)
@@ -35,7 +35,7 @@ namespace XmlExtensions
             }            
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationCopy(xpath=" + xpath + ", paste=" + paste + "): " + e.Message);
+                ExceptionError(e, new string[] { xpath, paste }, new string[] { "xpath", "paste" });
                 return false;
             }
         }

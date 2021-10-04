@@ -1,7 +1,13 @@
 ﻿namespace XmlExtensions
 {
-    public class PatchOperationExtendedPathed : PatchOperationExtended
+    public abstract class PatchOperationExtendedPathed : PatchOperationExtended
     {
         public string xpath;
+
+        protected override void SetException()
+        {
+            exceptionVals = new string[] { xpath };
+            exceptionFields = new string[] { "xpath" };
+        }
     }
 }
