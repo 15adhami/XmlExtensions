@@ -21,6 +21,7 @@ namespace XmlExtensions
             doCloseX = true;
             closeOnAccept = false;
         }
+
         public override void DoWindowContents(Rect inRect)
         {
             Listing_Standard listing = new Listing_Standard();

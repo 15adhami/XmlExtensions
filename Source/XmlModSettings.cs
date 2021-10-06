@@ -24,26 +24,8 @@ namespace XmlExtensions
         }
         public XmlModSettings(string modId)
         {
-            this.keys = new List<string>();
+            keys = new List<string>();
             this.modId = modId;
-        }
-
-        public int calculateHeight(float width, string selectedMod)
-        {
-            int h = 0;
-            foreach (SettingContainer setting in XmlMod.menus[XmlMod.activeMenu].settings)
-            {
-                h += setting.GetHeight(width, selectedMod);
-            }
-            return h;
-        }
-
-        public void resetSettings()
-        {
-            foreach (string key in keys)
-            {
-                XmlMod.allSettings.dataDict[modId + ";" + key] = defValues[key];
-            }
         }
     }
 }

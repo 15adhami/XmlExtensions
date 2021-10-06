@@ -4,30 +4,14 @@ using System.Xml;
 namespace XmlExtensions
 {
     public class PatchOperationRemove : PatchOperationExtendedPathed
-	{
-		protected override bool Patch(XmlDocument xml)
-		{
-            try
+    {
+        protected override bool Patch(XmlDocument xml)
+        {
+            foreach (XmlNode xmlNode in nodes)
             {
-				bool result = false;
-				XmlNodeList nodeList = xml.SelectNodes(xpath);
-				if (nodeList == null || nodeList.Count == 0)
-				{
-					PatchManager.errors.Add("XmlExtensions.PatchOperationRemove(xpath=" + xpath + "): Failed to find a node with the given xpath");
-					return false;
-				}
-				foreach (XmlNode xmlNode in nodeList)
-				{
-					result = true;
-					xmlNode.ParentNode.RemoveChild(xmlNode);
-				}
-				return result;
-			}
-			catch (Exception e)
-			{
-				PatchManager.errors.Add("XmlExtensions.PatchOperationRemove(xpath=" + xpath + "): " + e.Message);
-				return false;
-			}
-		}
-	}
+                xmlNode.ParentNode.RemoveChild(xmlNode);
+            }
+            return true;
+        }
+    }
 }

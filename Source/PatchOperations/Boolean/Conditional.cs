@@ -7,7 +7,7 @@ namespace XmlExtensions.Boolean
     {
         public string xpath;
 
-        protected override bool evaluation(ref bool b, XmlDocument xml)
+        protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
             try
             {

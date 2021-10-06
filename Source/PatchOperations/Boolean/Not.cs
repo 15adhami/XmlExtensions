@@ -7,14 +7,14 @@ namespace XmlExtensions.Boolean
     {
         protected BooleanBase condition = null;
 
-        protected override bool evaluation(ref bool b, XmlDocument xml)
+        protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
             try
             {
                 bool b1 = false;
-                if (!condition.evaluate(ref b1, xml))
+                if (!condition.Evaluate(ref b1, xml))
                 {
-                    PatchManager.errors.Add(this.GetType().ToString() + ": Failed to evaluate <condition>");
+                    PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition>");
                     return false;
                 }
                 b = !b1;
@@ -22,7 +22,7 @@ namespace XmlExtensions.Boolean
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add(this.GetType().ToString() + ": " + e.Message);
+                PatchManager.errors.Add(GetType().ToString() + ": " + e.Message);
                 return false;
             }
         }

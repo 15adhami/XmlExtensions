@@ -15,17 +15,17 @@ namespace XmlExtensions.Boolean
         protected string fromXml2 = "false";
         protected string nonNumeric = "false";      
 
-        protected override bool evaluation(ref bool b, XmlDocument xml)
+        protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
             try
             {
                 bool isOr = true;
-                if (this.logic == "and")
+                if (logic == "and")
                 {
                     isOr = false;
                 }
-                flag = !isOr;
-                if (bool.Parse(this.nonNumeric))
+                bool flag = !isOr;
+                if (bool.Parse(nonNumeric))
                 {
                     string val2 = "";
                     if (fromXml2 == "true")
@@ -39,7 +39,7 @@ namespace XmlExtensions.Boolean
 
                     if (bool.Parse(fromXml1))
                     {
-                        foreach (object obj in xml.SelectNodes(this.value1))
+                        foreach (object obj in xml.SelectNodes(value1))
                         {
                             XmlNode xmlNode = obj as XmlNode;
                             string xval = xmlNode.InnerText;
@@ -340,7 +340,7 @@ namespace XmlExtensions.Boolean
                     }
                     if (bool.Parse(fromXml1))
                     {
-                        foreach (object obj in xml.SelectNodes(this.value1))
+                        foreach (object obj in xml.SelectNodes(value1))
                         {
                             XmlNode xmlNode = obj as XmlNode;
                             float xval = float.Parse(xmlNode.InnerText);

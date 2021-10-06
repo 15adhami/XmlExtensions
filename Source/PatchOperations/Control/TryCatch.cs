@@ -6,34 +6,20 @@ namespace XmlExtensions
 {
     public class TryCatch : PatchOperationExtended
     {
-        public PatchContainer tryApply;
+        public XmlContainer tryApply;
         public XmlContainer catchApply;
 
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            if (!RunPatches(tryApply, "tryApply", xml))
             {
-                int errNum = 0;
-                if (!Helpers.runPatchesInPatchContainer(tryApply, xml, ref errNum))
+                PatchManager.errors.Clear();
+                if (catchApply != null)
                 {
-                    errNum = 0;
-                    PatchManager.errors.Clear();
-                    if (catchApply != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(catchApply, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.TryCatch: Error in <catchApply> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
+                    return RunPatches(catchApply, "catchApply", xml);
                 }
-                return true;
             }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.TryCatch: " + e.Message);
-                return false;
-            }
+            return true;
         }
     }
 }

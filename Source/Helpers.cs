@@ -4,14 +4,18 @@ using System.Text;
 using System.Xml;
 using Verse;
 
-
 namespace XmlExtensions
 {
     public static class Helpers
     {
-        public static string getPrefix(string str, int length)
+        /// <summary>
+        /// Calculates the prefix the given length.
+        /// </summary>
+        /// <param name="path">The xpath you want to get the prefix of.</param>
+        /// <param name="length">The number of nodes that appear in the xpath.</param>
+        /// <returns>The prefix.</returns>
+        public static string GetPrefix(string path, int length = 2)
         {
-            string path = str;
             if (path[0] == '/')
             {
                 path = path.Substring(1);
@@ -28,17 +32,33 @@ namespace XmlExtensions
             return ans;
         }
 
-        public static string substituteVariable(string str, string var, string val, string brackets)
+        /// <summary>
+        /// Substitutes a variable with its value in a given a string.
+        /// </summary>
+        /// <param name="str">The string that you want to edit.</param>
+        /// <param name="var">The name of the variable.</param>
+        /// <param name="val">The value of the variable.</param>
+        /// <param name="brackets">The left and right brackets that surround the variable.</param>
+        /// <returns>The new string after the substitution.</returns>
+        public static string SubstituteVariable(string str, string var, string val, string brackets = "{}")
         {
-            string variable = brackets[0]+var+ brackets[1];
+            string variable = brackets[0] + var + brackets[1];
             return str.Replace(variable, val);
         }
 
-        public static string substituteVariables(string str, List<string> vars, List<string> vals, string brackets)
-        {            
+        /// <summary>
+        /// Substitutes a list of variables with their corresponding values in a given string.
+        /// </summary>
+        /// <param name="str">The string that you want to edit.</param>
+        /// <param name="vars">The list of variable names.</param>
+        /// <param name="vals">The list of values for the variables.</param>
+        /// <param name="brackets">The left and right brackets that surround the variables.</param>
+        /// <returns>The new string after the substitution.</returns>
+        public static string SubstituteVariables(string str, List<string> vars, List<string> vals, string brackets)
+        {
             int i = 0;
             StringBuilder builder = new StringBuilder(str);
-            foreach(string var in vars)
+            foreach (string var in vars)
             {
                 builder.Replace(brackets[0] + var + brackets[1], vals[i]);
                 i++;
@@ -46,31 +66,52 @@ namespace XmlExtensions
             return builder.ToString();
         }
 
-        public static XmlContainer substituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
+        /// <summary>
+        /// Substitutes a variable with its value in a given XmlContainer.
+        /// </summary>
+        /// <param name="container">The XmlContainer that you want to edit.</param>
+        /// <param name="var">The name of the variable.</param>
+        /// <param name="val">The value of the variable.</param>
+        /// <param name="brackets">The left and right brackets that surround the variable.</param>
+        /// <returns>The new XmlContainer after the substitution.</returns>
+        public static XmlContainer SubstituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
         {
             string oldXml = container.node.OuterXml;
             string newXml;
-            newXml = Helpers.substituteVariable(oldXml, var, val, brackets);
-            return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
+            newXml = Helpers.SubstituteVariable(oldXml, var, val, brackets);
+            return new XmlContainer() { node = Helpers.GetNodeFromString(newXml) };
         }
 
-        public static XmlContainer substituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
+        /// <summary>
+        /// Substitutes a list of variables with their corresponding values in a given string.
+        /// </summary>
+        /// <param name="container">The string that you want to edit.</param>
+        /// <param name="var">The list of variable names.</param>
+        /// <param name="val">The list of values for the variables.</param>
+        /// <param name="brackets">The left and right brackets that surround the variables.</param>
+        /// <returns>The new string after the substitution.</returns>
+        public static XmlContainer SubstituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
         {
             string oldXml = container.node.OuterXml;
             string newXml;
-            newXml = Helpers.substituteVariables(oldXml, var, val, brackets);
-            return new XmlContainer() { node = Helpers.getNodeFromString(newXml) };
+            newXml = Helpers.SubstituteVariables(oldXml, var, val, brackets);
+            return new XmlContainer() { node = Helpers.GetNodeFromString(newXml) };
         }
 
-        public static PatchOperation getPatchFromString(string str)
+        /// <summary>
+        /// Creates a PatchOperation from its OuterXml.
+        /// </summary>
+        /// <param name="OuterXml">The OuterXml of the PatchOperation.</param>
+        /// <returns>A PatchOperation from the given OuterXml.</returns>
+        public static PatchOperation GetPatchFromString(string OuterXml)
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(str);
+            doc.LoadXml(OuterXml);
             XmlNode newNode = doc.DocumentElement;
             return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
         }
 
-        public static XmlNode getNodeFromString(string str)
+        public static XmlNode GetNodeFromString(string str)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(str);
@@ -78,14 +119,21 @@ namespace XmlExtensions
             return newNode;
         }
 
-        public static string operationOnString(string str1, string str2, string operation)
+        /// <summary>
+        /// Performs a mathematical on two strings.
+        /// </summary>
+        /// <param name="str1">The first string.</param>
+        /// <param name="str2">The second string.</param>
+        /// <param name="operation">The operation to be performed.</param>
+        /// <returns>The resulting string.</returns>
+        public static string OperationOnString(string str1, string str2, string operation)
         {
             string result = "";
             if (operation == "negate")
             {
                 if (str1 == "true")
                 {
-                    result = "false";                    
+                    result = "false";
                 }
                 else
                 {
@@ -193,9 +241,17 @@ namespace XmlExtensions
             return result;
         }
 
-        public static bool relationOnString(string str1, string str2, string relation, bool nonNumeric)
+        /// <summary>
+        /// Computes a binary relation between two strings.
+        /// </summary>
+        /// <param name="str1">The first string.</param>
+        /// <param name="str2">The second string.</param>
+        /// <param name="relation">The binary relation.</param>
+        /// <param name="nonNumeric">If true, then the inputs will be interpreted as strings and dictionary order is used instead.</param>
+        /// <returns>Whether or not the relations holds.</returns>
+        public static bool RelationOnString(string str1, string str2, string relation, bool nonNumeric)
         {
-            if(nonNumeric)
+            if (nonNumeric)
             {
                 int compare = str1.CompareTo(str2);
                 if (relation == "eq")
@@ -262,38 +318,7 @@ namespace XmlExtensions
             }
         }
 
-        public static bool runPatchesInXmlContainer(XmlContainer container, XmlDocument xml, ref int errNum)
-        {
-            try
-            {
-                for (int j = 0; j < container.node.ChildNodes.Count; j++)
-                {
-                    PatchOperation patch = new PatchOperation();
-                    try
-                    {
-                        patch = getPatchFromString(container.node.ChildNodes[j].OuterXml);
-                    }
-                    catch(Exception e)
-                    {
-                        PatchManager.errors.Add("Could not create patch from:\n" + container.node.ChildNodes[j].OuterXml+"\n"+e.Message);
-                        errNum = j + 1;
-                        return false;
-                    }
-                    if (!patch.Apply(xml))
-                    {
-                        errNum = j + 1;
-                        return false;
-                    }
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool runPatchesInPatchContainer(PatchContainer container, XmlDocument xml, ref int errNum)
+        public static bool RunPatchesInPatchContainer(PatchContainer container, XmlDocument xml, ref int errNum)
         {
             try
             {
@@ -314,17 +339,17 @@ namespace XmlExtensions
             }
         }
 
-        public static bool containsNode(XmlNode node, string nodeName)
+        public static bool ContainsNode(XmlNode node, string nodeName)
         {
-            foreach(XmlNode childNode in node.ChildNodes)
+            foreach (XmlNode childNode in node.ChildNodes)
             {
                 if (childNode.Name == nodeName) { return true; }
             }
             return false;
         }
 
-        public static string tryTranslate(string str, string tKey)
-        {            
+        public static string TryTranslate(string str, string tKey)
+        {
             if (tKey != null)
             {
                 TaggedString temp = new TaggedString();
@@ -338,10 +363,5 @@ namespace XmlExtensions
                 return str;
             }
         }
-
     }
-
-    
-    
-    
 }

@@ -1,8 +1,6 @@
-﻿using Verse;
-using HarmonyLib;
-using System.Reflection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Verse;
 
 // This code is so bad
 
@@ -10,7 +8,7 @@ namespace XmlExtensions
 {
     [StaticConstructorOnStartup]
     public static class XmlExtensions
-    {        
+    {
         static XmlExtensions()
         {
             // Initializing mod settings menus
@@ -18,17 +16,24 @@ namespace XmlExtensions
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
             {
                 XmlMod.menus.Add(menuDef.defName, menuDef);
-                menuDef.Init();
-                if (!menuDef.submenu)
-                    i++;            
+                if (!menuDef.Init())
+                {
+                    PatchManager.PrintError();
+                }
+                else
+                {
+                    if (!menuDef.submenu)
+                        i++;
+                }
             }
-            XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2) {
+            XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2)
+            {
                 if (XmlMod.settingsPerMod[id1].label != null && XmlMod.settingsPerMod[id2].label != null)
                     return XmlMod.settingsPerMod[id1].label.CompareTo(XmlMod.settingsPerMod[id2].label);
                 else
                     return 0;
             });
-            Verse.Log.Message("[XML Extensions] Finished initializing " + i.ToString() + " SettingsMenuDefs");
+            Verse.Log.Message("[XML Extensions] Finished initializing " + i.ToString() + " SettingsMenuDef(s)");
 
             // Initializing unloaded mod settings
             int c = 0;
@@ -55,17 +60,13 @@ namespace XmlExtensions
                 {
                     XmlMod.allSettings.dataDict.Remove(pair.Key);
                 }
-
             }
             XmlMod.unusedMods.Sort();
-            foreach(List<string> list in XmlMod.unusedSettings.Values)
+            foreach (List<string> list in XmlMod.unusedSettings.Values)
             {
                 list.Sort();
             }
-            Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " extra keys from " + XmlMod.unusedMods.Count.ToString() + " unloaded mods");
-                
+            Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
         }
     }
-
-
 }

@@ -11,87 +11,36 @@ namespace XmlExtensions
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
+        protected override void SetException()
+        {
+            exceptionVals = new string[] { xpathDef, xpathLocal };
+            exceptionFields = new string[] { "xpathDef", "xpathLocal" };
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            if (xpathDef == null)
             {
-                if (xpathDef == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited: <xpathDef> is null");
-                    return false;
-                }
-                if (xpathLocal == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + "): <xpathLocal> is null");
-                    return false;
-                }
-                XmlNode defNode = xml.SelectSingleNode(xpathDef);
-                if (defNode == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                bool b = findNode(defNode, xpathLocal, xml);
-                int errNum = 0;
-                if(b)
-                {
-                    if(caseTrue != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    if (xml == PatchManager.defaultDoc)
-                    {
-                        if (caseFalse != null)
-                        {
-                            if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
-                            {
-                                PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                                return false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        b = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
-                        errNum = 0;
-                        if (b)
-                        {
-                            if (caseTrue != null)
-                            {
-                                if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
-                                {
-                                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                                    return false;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (caseFalse != null)
-                            {
-                                if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
-                                {
-                                    PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                                    return false;
-                                }
-                            }
-                        }
-                    }            
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.ConditionalInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
+                NullError("xpathDef");
                 return false;
             }
+            if (xpathLocal == null)
+            {
+                NullError("xpathLocal");
+                return false;
+            }
+            XmlNode defNode = xml.SelectSingleNode(xpathDef);
+            if (defNode == null)
+            {
+                XPathError("xpathDef");
+                return false;
+            }
+            bool b = findNode(defNode, xpathLocal, xml);
+            if (xml != PatchManager.defaultDoc && !b)
+            {
+                b = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
+            }
+            return RunPatchesConditional(b, caseTrue, caseFalse, xml);
         }
 
         private bool findNode(XmlNode defNode, string path, XmlDocument xml)

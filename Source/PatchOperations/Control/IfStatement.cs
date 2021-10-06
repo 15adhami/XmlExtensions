@@ -5,7 +5,7 @@ using System;
 
 namespace XmlExtensions
 {
-    public class IfStatement : PatchOperationExtendedPathed
+    public class IfStatement : PatchOperationExtended
     {
         protected BooleanBase condition = null;
         protected XmlContainer caseTrue = null;
@@ -13,54 +13,21 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
+            bool flag = false;
             try
             {
-                int errNum = 0;
-                bool flag = false;
-                try
+                if (!condition.Evaluate(ref flag, xml))
                 {
-                    bool b = false;
-                    if (!condition.evaluate(ref b, xml))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.IfStatement: Failed to evaluate <condition>");
-                        return false;
-                    }
-                    flag = b;
-                }
-                catch
-                {
-                    PatchManager.errors.Add("XmlExtensions.IfStatement: Error in evaluating the condition");
+                    Error("Failed to evaluate <condition>");
                     return false;
                 }
-                if (flag)
-                {
-                    if (this.caseTrue != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(this.caseTrue, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.IfStatement: Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    if (this.caseFalse != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(this.caseFalse, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.IfStatement: Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
-                }
-                return true;
             }
-            catch (Exception e)
+            catch
             {
-                PatchManager.errors.Add("XmlExtensions.IfStatement: " + e.Message);
+                Error("Failed to evaluate <condition>");
                 return false;
             }
+            return RunPatchesConditional(flag, caseTrue, caseFalse, xml);
         }
 
     }

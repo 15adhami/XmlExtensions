@@ -1,144 +1,77 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-    /*
-    public class CreateVariableConditional : PatchOperationValue
-    {
-        public PatchOperationBoolean condition;
-        public XmlContainer caseTrue;
-        public XmlContainer caseFalse;
-        public XmlContainer apply;
-        public string storeIn;
-        public string brackets = "{}";
-
-        protected override bool ApplyWorker(XmlDocument xml)
-        {
-
-        }
-
-        public override bool getValue(ref string value, XmlDocument xml)
-        {
-            if (condition == null)
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): <condition>=null");
-                return false;
-            }
-            bool b = false;
-            if (!condition.evaluate(ref b, xml))
-            {
-                PatchManager.errors.Add("XmlExtensions.EvaluateBoolean(storeIn=" + storeIn + "): Failed to evaluate <condition>");
-                return false;
-            }
-        }
-    }
-    */
-
     public class FindNodeInherited : PatchOperationValue
     {
-        public XmlContainer apply;
-        public string storeIn;
-        public string brackets = "{}";
         public string defaultValue;
         public string xpathDef;
         public string xpathLocal;
 
-        protected override bool Patch(XmlDocument xml)
+        protected override void SetException()
         {
-            try
+            exceptionVals = new string[] { storeIn, xpathDef, xpathLocal };
+            exceptionFields = new string[] { "storeIn", "xpathDef", "xpathLocal" };
+        }
+
+        public override bool getValues(List<string> vals, XmlDocument xml)
+        {
+            if (xpathDef == null)
             {
-                int errNum = 0;
-                string ans = "";
-                if (!GetValue(ref ans, xml))
-                { // Error message already added
-                    return false;
-                }
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, ans, brackets);
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): Error in the operation at position=" + errNum.ToString());
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
+                NullError("xpathDef");
                 return false;
             }
-        }
-
-        public override bool getVar(ref string var)
-        {
-            var = storeIn;
-            return true;
-        }
-
-        public override bool getValue(ref string val, XmlDocument xml)
-        {
-            try
+            if (xpathLocal == null)
             {
-                if (xpathDef == null)
+                NullError("xpathLocal");
+                return false;
+            }
+            string newStr = "";
+            XmlNode defNode = xml.SelectSingleNode(xpathDef);
+            if (defNode == null)
+            {
+                XPathError("xpathDef");
+                return false;
+            }
+            XmlNode node = findNode(defNode, xpathLocal, xml);
+            if (node == null)
+            {
+                if (xml != PatchManager.XmlDocs["Defs"])
                 {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited: <xpathDef> is null");
-                    return false;
-                }
-                if (xpathLocal == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): <xpathLocal> is null");
-                    return false;
-                }
-                string newStr = "";
-                XmlNode defNode = xml.SelectSingleNode(xpathDef);
-                if (defNode == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                XmlNode node = findNode(defNode, xpathLocal, xml);
-                if (node == null)
-                {
-                    if(xml != PatchManager.XmlDocs["Defs"])
-                    {
-                        node = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
-                        if (node == null)
-                        {
-                            if (defaultValue == null)
-                            {
-                                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
-                                return false;
-                            }
-                            newStr = defaultValue;
-                        }
-                        else
-                        {
-                            newStr = node.InnerXml;
-                        }
-                    }
-                    else
+                    node = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
+                    if (node == null)
                     {
                         if (defaultValue == null)
                         {
-                            PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): The Def and all of its ancestors failed to match <xpathLocal>");
+                            Error("The Def and all of its ancestors failed to match <xpathLocal>");
                             return false;
                         }
                         newStr = defaultValue;
                     }
+                    else
+                    {
+                        newStr = node.InnerXml;
+                    }
                 }
                 else
                 {
-                    newStr = node.InnerXml;
-                }                
-                val = newStr;
-                return true;
+                    if (defaultValue == null)
+                    {
+                        Error("The Def and all of its ancestors failed to match <xpathLocal>");
+                        return false;
+                    }
+                    newStr = defaultValue;
+                }
             }
-            catch (Exception e)
+            else
             {
-                PatchManager.errors.Add("XmlExtensions.FindNodeInherited(xpathDef=" + xpathDef + ", xpathLocal=" + xpathLocal + "): " + e.Message);
-                return false;
+                newStr = node.InnerXml;
             }
+            vals.Add(newStr);
+            return true;
         }
 
         private XmlNode findNode(XmlNode defNode, string path, XmlDocument xml)

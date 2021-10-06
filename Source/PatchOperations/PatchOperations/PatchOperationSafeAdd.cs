@@ -11,42 +11,20 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            XmlNode node = value.node;
+            foreach (XmlNode xmlNode in nodes)
             {
-                XmlNode node = this.value.node;
-                bool result = false;
-                XmlNodeList nodeList;
-                nodeList = xml.SelectNodes(this.xpath);
-                if (nodeList == null || nodeList.Count == 0)
+                foreach (XmlNode addNode in node.ChildNodes)
                 {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): Failed to find a node with the given xpath");
-                    return false;
+                    int d = 0;
+                    tryAddNode(xmlNode, addNode, d);
                 }
-                foreach (XmlNode xmlNode in nodeList)
-                {
-                    foreach (XmlNode addNode in node.ChildNodes)
-                    {
-                        result = true;
-                        int d = 0;
-                        tryAddNode(xmlNode, addNode, d);
-                    }
-                }
-                if (!result)
-                {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd: Error in finding a node in <value>");
-                    return false;
-                }
-                return result;
-            }            
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeAdd(xpath=" + xpath + "): " + e.Message);
-                return false;
             }
+            return true;
         }
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!Helpers.containsNode(parent, child.Name) || depth == safetyDepth)
+            if (!Helpers.ContainsNode(parent, child.Name) || depth == safetyDepth)
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
@@ -56,7 +34,7 @@ namespace XmlExtensions
                 {
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
-                        tryAddNode(parent[child.Name], newChild, depth+1);
+                        tryAddNode(parent[child.Name], newChild, depth + 1);
                     }
                 }
             }

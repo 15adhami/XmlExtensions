@@ -9,15 +9,12 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            base.Patch(xml);
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            if (value == null)
             {
-                XPathError(xpath, "xpath");
+                Error("<value> is null");
                 return false;
             }
-            foreach (object item in nodeList)
+            foreach (object item in nodes)
             {
                 XmlNode xmlNode = item as XmlNode;
                 if (xmlNode.Attributes[attribute] == null)
@@ -25,10 +22,9 @@ namespace XmlExtensions
                     XmlAttribute xmlAttribute = xmlNode.OwnerDocument.CreateAttribute(attribute);
                     xmlAttribute.Value = value;
                     xmlNode.Attributes.Append(xmlAttribute);
-                    result = true;
                 }
             }
-            return result;
+            return true;
         }
     }
 }

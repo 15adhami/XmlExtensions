@@ -10,22 +10,22 @@ namespace XmlExtensions.Boolean
         protected BooleanBase condition2 = null;
         public List<BooleanBase> conditions;
 
-        protected override bool evaluation(ref bool b, XmlDocument xml)
+        protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
             try
             {
                 if (conditions == null)
                 {
                     bool b1 = false;
-                    if (!condition1.evaluate(ref b1, xml))
+                    if (!condition1.Evaluate(ref b1, xml))
                     {
-                        PatchManager.errors.Add(this.GetType().ToString() + ": Failed to evaluate <condition1>");
+                        PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition1>");
                         return false;
                     }
                     bool b2 = false;
-                    if (!condition2.evaluate(ref b2, xml))
+                    if (!condition2.Evaluate(ref b2, xml))
                     {
-                        PatchManager.errors.Add(this.GetType().ToString() + ": Failed to evaluate <condition2>");
+                        PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition2>");
                         return false;
                     }
                     b = (b1 && !b2) || (!b1 && b2);
@@ -39,9 +39,9 @@ namespace XmlExtensions.Boolean
                     foreach (BooleanBase condition in conditions)
                     {
                         num++;
-                        if (!condition.evaluate(ref b1, xml))
+                        if (!condition.Evaluate(ref b1, xml))
                         {
-                            PatchManager.errors.Add(this.GetType().ToString() + ": Failed to evaluate the condition at position=" + num.ToString());
+                            PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate the condition at position=" + num.ToString());
                             return false;
                         }
                         if (b1)
@@ -52,7 +52,7 @@ namespace XmlExtensions.Boolean
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add(this.GetType().ToString() + ": " + e.Message);
+                PatchManager.errors.Add(GetType().ToString() + ": " + e.Message);
                 return false;
             }
         }

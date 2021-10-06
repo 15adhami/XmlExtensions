@@ -19,17 +19,8 @@ namespace XmlExtensions
         protected override bool Patch(XmlDocument xml)
         {
             XmlNode node = value.node;
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            foreach (XmlNode xmlNode in nodes)
             {
-                XPathError(xpath, "xpath");
-                return false;
-            }
-            foreach (object item in nodeList)
-            {
-                result = true;
-                XmlNode xmlNode = item as XmlNode;
                 if (order == Order.Append)
                 {
                     foreach (XmlNode childNode in node.ChildNodes)
@@ -45,7 +36,7 @@ namespace XmlExtensions
                     }
                 }
             }
-            return result;
+            return true;
         }
     }
 }

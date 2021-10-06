@@ -8,53 +8,39 @@ namespace XmlExtensions
     {
         public string docName;
 
+        protected override void SetException()
+        {
+            exceptionVals = new string[] { docName, xpath };
+            exceptionFields = new string[] { "docName", "xpath" };
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            if (!PatchManager.XmlDocs.ContainsKey(docName))
             {
-                if(!PatchManager.XmlDocs.ContainsKey(docName))
+                PatchManager.nodeMap.Add(docName, new Dictionary<XmlNode, XmlNode>());
+                XmlDocument doc = new XmlDocument();
+                doc.AppendChild(doc.CreateNode(XmlNodeType.Element, null, docName, null));
+                foreach (XmlNode node in nodes)
                 {
-                    PatchManager.nodeMap.Add(docName, new Dictionary<XmlNode, XmlNode>());
-                    XmlNodeList nodeList = xml.SelectNodes(xpath);
-                    if (nodeList == null || nodeList.Count == 0)
-                    {
-                        PatchManager.errors.Add("XmlExtensions.CreateDocument(xpath=" + xpath + "): Failed to find a node with the given xpath");
-                        return false;
-                    }
-                    XmlDocument doc = new XmlDocument();
-                    doc.AppendChild(doc.CreateNode(XmlNodeType.Element, null, docName, null));
-                    foreach (XmlNode node in nodeList)
-                    {
-                        XmlNode newNode = doc.ImportNode(node, true);
-                        doc.DocumentElement.AppendChild(newNode);
-                        PatchManager.nodeMap[docName].Add(newNode, node);
-                    }
-                    PatchManager.XmlDocs.Add(docName, doc);
+                    XmlNode newNode = doc.ImportNode(node, true);
+                    doc.DocumentElement.AppendChild(newNode);
+                    PatchManager.nodeMap[docName].Add(newNode, node);
                 }
-                else
-                {
-                    XmlNodeList nodeList = xml.SelectNodes(xpath);
-                    if (nodeList == null || nodeList.Count == 0)
-                    {
-                        PatchManager.errors.Add("XmlExtensions.CreateDocument(xpath=" + xpath + "): Failed to find a node with the given xpath");
-                        return false;
-                    }
-                    XmlDocument doc = PatchManager.XmlDocs[docName];
-                    foreach (XmlNode node in nodeList)
-                    {
-                        XmlNode newNode = doc.ImportNode(node, true);
-                        doc.DocumentElement.AppendChild(newNode);
-                        PatchManager.nodeMap[docName].Add(newNode, node);
-                    }
-                    PatchManager.XmlDocs.Add(docName, doc);
-                }
-                return true;
+                PatchManager.XmlDocs.Add(docName, doc);
             }
-            catch (Exception e)
+            else
             {
-                PatchManager.errors.Add("XmlExtensions.CreateDocument(xpath=" + xpath + ", docName=" + docName + "): " + e.Message);
-                return false;
+                XmlDocument doc = PatchManager.XmlDocs[docName];
+                foreach (XmlNode node in nodes)
+                {
+                    XmlNode newNode = doc.ImportNode(node, true);
+                    doc.DocumentElement.AppendChild(newNode);
+                    PatchManager.nodeMap[docName].Add(newNode, node);
+                }
+                PatchManager.XmlDocs.Add(docName, doc);
             }
+            return true;
         }
     }
 }

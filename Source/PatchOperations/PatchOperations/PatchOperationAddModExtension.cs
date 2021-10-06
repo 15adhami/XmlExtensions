@@ -11,14 +11,7 @@ namespace XmlExtensions
         protected override bool Patch(XmlDocument xml)
         {
             XmlNode node = value.node;
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
-            {
-                XPathError(xpath, "xpath");
-                return false;
-            }
-            foreach (object item in nodeList)
+            foreach (object item in nodes)
             {
                 XmlNode xmlNode = item as XmlNode;
                 XmlNode xmlNode2 = xmlNode["modExtensions"];
@@ -31,9 +24,8 @@ namespace XmlExtensions
                 {
                     xmlNode2.AppendChild(xmlNode.OwnerDocument.ImportNode(childNode, true));
                 }
-                result = true;
             }
-            return result;
+            return true;
         }
     }
 }

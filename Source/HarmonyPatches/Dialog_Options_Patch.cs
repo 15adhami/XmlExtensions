@@ -17,7 +17,7 @@ namespace XmlExtensions
         
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator gen)
         {
-            var translate = AccessTools.Method(typeof(Helpers), "tryTranslate");
+            var translate = AccessTools.Method(typeof(Helpers), "TryTranslate");
             var foundModSettings = false;
             var startIndex = -1;            
             var codes = new List<CodeInstruction>(instructions);

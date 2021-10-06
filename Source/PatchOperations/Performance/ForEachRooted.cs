@@ -33,7 +33,7 @@ namespace XmlExtensions
                     newDoc.AppendChild(newNode);
 
                     int errNum = 0;
-                    if (!Helpers.runPatchesInPatchContainer(apply, newDoc, ref errNum))
+                    if (!Helpers.RunPatchesInPatchContainer(apply, newDoc, ref errNum))
                     {
                         PatchManager.errors.Add("XmlExtensions.SetRoot(xpath=" + xpath + "): Error in the operation at position=" + errNum.ToString());
                         return false;

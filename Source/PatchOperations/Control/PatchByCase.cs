@@ -16,53 +16,40 @@ namespace XmlExtensions
         public string value;
         public List<Case> cases;
 
+        protected override void SetException()
+        {
+            exceptionVals = new string[] { value };
+            exceptionFields = new string[] { "value" };
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            if (value == null)
             {
-                int errNum = 0;
-                if (value == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.PatchByCase: <value> is null");
-                    return false;
-                }
-                if (cases == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.PatchByCase(value=" + value + "): <cases> is null");
-                    return false;
-                }
-                int c = 0;
-                foreach (Case casePatch in cases)
-                {
-                    c++;
-                    if (value == casePatch.value)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(casePatch.apply, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.PatchByCase(value=" + value + "): Error in case with <value>=" + value + ", in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                        return true;
-                    }
-
-                    // run first case as default case
-                    if (c == cases.Count)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(cases[0].apply, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.PatchByCase(value=" + value + "): Error while running the first case as default case, in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.PatchByCase(value=" + value + "): " + e.Message);
+                NullError("value");
                 return false;
             }
+            if (cases == null)
+            {
+                NullError("cases");
+                return false;
+            }
+            int c = 0;
+            foreach (Case casePatch in cases)
+            {
+                c++;
+                if (value == casePatch.value)
+                {
+                    return RunPatches(casePatch.apply, value, xml);
+                }
+
+                // run first case as default case
+                if (c == cases.Count)
+                {
+                    return RunPatches(cases[0].apply, value, xml);
+                }
+            }
+            return true;
         }
 
     }

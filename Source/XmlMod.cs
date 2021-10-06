@@ -83,8 +83,8 @@ namespace XmlExtensions
             {
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.Begin(rect);
-                listingStandard.CheckboxLabeled(Helpers.tryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref allSettings.trace);
-                if (listingStandard.ButtonText(Helpers.tryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
+                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref allSettings.trace);
+                if (listingStandard.ButtonText(Helpers.TryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
                     viewingSettings = true;
                 listingStandard.End();
             }
@@ -96,7 +96,7 @@ namespace XmlExtensions
             Rect keyListRect = rect.RightPartPixels(rect.width - 300f - 8f);
             Listing_Standard modListListing = new Listing_Standard();
             modListListing.Begin(modListRect);
-            modListListing.Label(Helpers.tryTranslate("Currently inactive mods:", "XmlExtensions_InactiveMods"));
+            modListListing.Label(Helpers.TryTranslate("Currently inactive mods:", "XmlExtensions_InactiveMods"));
             modListListing.GapLine(4);
             modListListing.Gap(2);
             Rect modRect = modListListing.GetRect(rect.height - 30f);
@@ -107,7 +107,7 @@ namespace XmlExtensions
             modListing.Begin(rect2);
             if (unusedMods.Count == 0)
             {
-                modListing.Label(Helpers.tryTranslate("No extra settings at the moment", "XmlExtensions_NoExtraSettings"));
+                modListing.Label(Helpers.TryTranslate("No extra settings at the moment", "XmlExtensions_NoExtraSettings"));
             }
             foreach (string mod in unusedMods)
             {
@@ -122,7 +122,7 @@ namespace XmlExtensions
             {
                 Listing_Standard keyListListing = new Listing_Standard();
                 keyListListing.Begin(keyListRect);
-                keyListListing.Label(Helpers.tryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedKeys"));
+                keyListListing.Label(Helpers.TryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedKeys"));
                 keyListListing.GapLine(4);
                 keyListListing.Gap(2);
 
@@ -136,7 +136,7 @@ namespace XmlExtensions
                 foreach (string key in unusedSettings[selectedExtraMod])
                 {
                     bool del = false;
-                    keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedExtraMod, key), ref del, Helpers.tryTranslate("Delete", "XmlExtensions_Delete"));
+                    keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedExtraMod, key), ref del, Helpers.TryTranslate("Delete", "XmlExtensions_Delete"));
                     if (del)
                     {
                         DeleteSetting(selectedExtraMod, key);
@@ -163,9 +163,9 @@ namespace XmlExtensions
                     Rect firstRect = tempRect.LeftPart(0.495f);
                     Listing_Standard buttonLeftListing = new Listing_Standard();
                     buttonLeftListing.Begin(firstRect);
-                    if (buttonLeftListing.ButtonText(Helpers.tryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", unusedSettings[selectedExtraMod].Count.ToString())))
+                    if (buttonLeftListing.ButtonText(Helpers.TryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", unusedSettings[selectedExtraMod].Count.ToString())))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to delete every unused key of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete every unused key of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                         {
                             foreach (string key in unusedSettings[selectedExtraMod])
                             {
@@ -187,9 +187,9 @@ namespace XmlExtensions
                     {
                         count += list.Count;
                     }
-                    if (buttonRightListing.ButtonText(Helpers.tryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
+                    if (buttonRightListing.ButtonText(Helpers.TryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.tryTranslate("Are you sure you want to delete all unused keys from every mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete all unused keys from every mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
                         {
                             foreach (string mod in unusedMods)
                             {
@@ -229,7 +229,7 @@ namespace XmlExtensions
                 if (settingsPerMod[modId].label != null)
                 {
                     bool t = false;
-                    t = listingStandard.ButtonText(Helpers.tryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
+                    t = listingStandard.ButtonText(Helpers.TryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
                     if (t)
                     {
                         selectedMod = modId;
@@ -242,7 +242,7 @@ namespace XmlExtensions
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
             bool t1 = false;
-            t1 = listingStandard.ButtonText(Helpers.tryTranslate("XML Extensions", "XmlExtensions_Label"));
+            t1 = listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label"));
             if (t1)
             {
                 selectedMod = null;
@@ -268,15 +268,6 @@ namespace XmlExtensions
             {
                 settingsPerMod[modId].defValues.Add(key, value);
             }
-        }
-
-        public static bool tryGetSetting(string modId, string key, out string value)
-        {
-            string temp = "";
-            bool b;
-            b = allSettings.dataDict.TryGetValue(modId + ";" + key, out temp);
-            value = temp;
-            return b;
         }
 
         public static void addXmlMod(string modId, string label)
@@ -334,11 +325,6 @@ namespace XmlExtensions
         public static void DeleteSetting(string modId, string key)
         {
             allSettings.dataDict.Remove(modId + ';' + key);
-        }
-
-        public static string getSetting(string modId, string key)
-        {
-            return allSettings.dataDict.TryGetValue<string, string>(modId + ";" + key);
         }
 
         public static void setSetting(string modId, string key, string value)

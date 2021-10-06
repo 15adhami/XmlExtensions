@@ -10,40 +10,25 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            XmlNodeList parents = xml.SelectNodes(paste);
+            if (parents == null || nodes.Count == 0)
             {
-                XmlNodeList nodeList;
-                nodeList = xml.SelectNodes(this.xpath);
-                if (nodeList == null || nodeList.Count == 0)
-                {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(xpath=" + xpath + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                XmlNodeList parents = xml.SelectNodes(paste);
-                if (parents == null || nodeList.Count == 0)
-                {
-                    PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(paste=" + paste + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                foreach (XmlNode node in nodeList)
-                {
-                    foreach (XmlNode parent in parents)
-                    {
-                        int d = 0;
-                        tryAddNode(parent, node, d);
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.PatchOperationSafeCopy(xpath=" + xpath + ", paste=" + paste + "): " + e.Message);
+                XPathError("paste");
                 return false;
             }
+            foreach (XmlNode node in nodes)
+            {
+                foreach (XmlNode parent in parents)
+                {
+                    int d = 0;
+                    tryAddNode(parent, node, d);
+                }
+            }
+            return true;
         }
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!Helpers.containsNode(parent, child.Name) || depth == safetyDepth)
+            if (!Helpers.ContainsNode(parent, child.Name) || depth == safetyDepth)
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }

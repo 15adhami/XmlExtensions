@@ -4,24 +4,15 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class StopwatchPause : PatchOperation
+    public class StopwatchPause : PatchOperationExtended
     {
-
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
-            try
+            if (PatchManager.watch.IsRunning)
             {
-                if (PatchManager.watch.IsRunning)
-                {
-                    PatchManager.watch.Stop();
-                }
-                return true;
+                PatchManager.watch.Stop();
             }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStop: " + e.Message);
-                return false;
-            }
+            return true;
         }
     }
 }

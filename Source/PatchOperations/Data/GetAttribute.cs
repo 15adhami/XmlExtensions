@@ -1,71 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-    public class GetAttribute : PatchOperationValue
+    public class GetAttribute : PatchOperationValuePathed
     {
-        public XmlContainer apply;
         public string attribute;
-        public string storeIn;
-        public string brackets = "{}";        
 
-        protected override bool Patch(XmlDocument xml)
+        protected override void SetException()
         {
-            try
-            {
-                int errNum = 0;
-                string temp = "";
-                if (!GetValue(ref temp, xml))
-                {
-                    return false;
-                }
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, temp, brackets);
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                {
-                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Error in operation at position=" + errNum.ToString());
-                    return false;
-                }
-                return true;
-            }
-            catch(Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): " + e.Message);
-                return false;
-            }
+            exceptionVals = new string[] { storeIn, attribute, xpath };
+            exceptionFields = new string[] { "storeIn", "attribute", "xpath" };
         }
 
-        public override bool getValue(ref string value, XmlDocument xml)
+        public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            try
+            XmlAttribute xattribute;
+            xattribute = node.Attributes[attribute];
+            if (xattribute == null)
             {
-                XmlAttribute xattribute;
-                XmlNode node = xml.SelectSingleNode(xpath);
-                if (node == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Failed to find a node with the given xpath");
-                    return false;
-                }
-                xattribute = node.Attributes[this.attribute];
-                if (xattribute == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): Could not find attribute");
-                    return false;
-                }
-                value = xattribute.Value;
-                return true;
-            }
-            catch(Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.GetAttribute(xpath=" + xpath + ", attribute=" + attribute + "): "+e.Message);
+                Error("Failed to find attribute");
                 return false;
             }
-        }
-
-        public override bool getVar(ref string var)
-        {
-            var = storeIn;
+            vals.Add(xattribute.Value);
             return true;
         }
     }

@@ -10,48 +10,45 @@ namespace XmlExtensions
         protected string storeIn = "DEF";
         protected string brackets = "{}";
         protected int prefixLength = 2;
+
+        private string currPrefix;
+
+        protected override void SetException()
+        {
+            if (currPrefix == null)
+            {
+                exceptionVals = new string[] { storeIn, xpath };
+                exceptionFields = new string[] { "storeIn", "xpath" };
+            }
+            else
+            {
+                exceptionVals = new string[] { storeIn, currPrefix, xpath, };
+                exceptionFields = new string[] { "storeIn", "currPrefix", "xpath" };
+            }
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            foreach (XmlNode xmlNode in nodes)
             {
-                int errNum = 0;
-                XmlNodeList nodeList;
-                nodeList = xml.SelectNodes(this.xpath);
-                if (nodeList == null || nodeList.Count == 0)
+                // TODO: Make sure node wasn't deleted
+                string path = xmlNode.GetXPath();
+                if (path[0] == '/')
                 {
-                    PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + "): Error in finding a node with <xpath>=" + xpath);
-                    return false;
+                    path = path.Substring(1);
                 }
-                foreach (XmlNode xmlNode in nodeList)
+                if (path[path.Length - 1] == '/')
                 {
-                    // Make sure node wasn't deleted
-                    string path = xmlNode.GetXPath();
-                    if (path[0] == '/')
-                    {
-                        path = path.Substring(1);
-                    }
-                    if (path[path.Length - 1] == '/')
-                    {
-                        path = path.Substring(0, path.Length - 1);
-                    }
-                    if (path.Split('/').Length >= prefixLength)
-                    {
-                        string prefix = Helpers.getPrefix(path, prefixLength);
-                        XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, storeIn, prefix, brackets);
-                        if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + ", curr_prefix=" + prefix + "): Error in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
+                    path = path.Substring(0, path.Length - 1);
                 }
-                return true;
+                if (path.Split('/').Length >= prefixLength)
+                {
+                    currPrefix = Helpers.GetPrefix(path, prefixLength);
+                    XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, currPrefix, brackets);
+                    if (!RunPatches(newContainer, xml)) { return false; }
+                }
             }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.ForEach(xpath=" + xpath + "): " + e.Message);
-                return false;
-            }
+            return true;
         }
 
     }

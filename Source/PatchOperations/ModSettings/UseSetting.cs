@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
@@ -8,85 +9,56 @@ namespace XmlExtensions
     {
         protected string modId;
         protected string key;
-        protected string brackets = "{}";
         protected string defaultValue;
-        protected XmlContainer apply;
 
-        protected override bool Patch(XmlDocument xml)
+        protected override void SetException()
         {
-            try
-            {
-                string temp = "";
-                if (!getValue(ref temp, xml))
-                {
-                    return false;
-                }
-                XmlContainer newContainer = Helpers.substituteVariableXmlContainer(apply, key, temp, brackets);
-                int errNum = 0;
-                if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(key = " + key + "): Error in the operation at position=" + errNum.ToString());
-                    return false;
-                }
-                return true;
-            }
-            catch(Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): " + e.Message);
-                return false;
-            }
+            exceptionVals = new string[] { key, defaultValue };
+            exceptionFields = new string[] { "key", "defaultValue" };
         }
 
-        public override bool getVar(ref string var)
+        public override bool getVars(List<string> vars)
         {
-            var = key;
+            vars.Add(key);
             return true;
         }
 
-        public override bool getValue(ref string val, XmlDocument xml)
+        public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            try
+            if (key == null)
             {
-                if (key == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(modId=" + modId + "): <key>=null");
-                    return false;
-                }
-                if (defaultValue == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <defaultValue>=null");
-                    return false;
-                }
-                if (modId == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): <modId>=null");
-                    return false;
-                }
-                XmlMod.loadedMod = this.modId;
-                XmlMod.addXmlMod(this.modId);
-                string value;
-                bool didContain = XmlMod.allSettings.dataDict.TryGetValue(this.modId + ";" + this.key, out value);
-                if (!didContain)
-                {
-                    value = defaultValue;
-                    XmlMod.addSetting(this.modId, this.key, defaultValue);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-                {
-                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-                }
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(key);
-                }
-                val = value;
-                return true;
-            }
-            catch(Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.UseSetting(key=" + key + "): " + e.Message);
+                NullError("key");
                 return false;
             }
+            if (defaultValue == null)
+            {
+                NullError("defaultValue");
+                return false;
+            }
+            if (modId == null)
+            {
+                NullError("modId");
+                return false;
+            }
+            XmlMod.loadedMod = modId;
+            XmlMod.addXmlMod(modId);
+            string value;
+            bool didContain = SettingsManager.TryGetSetting(modId, key, out value);
+            if (!didContain)
+            {
+                value = defaultValue;
+                XmlMod.addSetting(modId, key, defaultValue);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
+            }
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            vals.Add(value);
+            return true;
         }
     }
 

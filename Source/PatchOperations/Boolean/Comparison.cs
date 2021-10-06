@@ -17,55 +17,33 @@ namespace XmlExtensions.Boolean
         protected bool fromXml2 = false;
         protected bool nonNumeric = false;
 
-        protected override bool evaluation(ref bool b, XmlDocument xml)
+        protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
-            try
+            string str1 = value1;
+            string str2 = value2;
+            if (fromXml1)
             {
-                string str1 = value1;
-                string str2 = value2;
-                if (fromXml1)
+                XmlNodeList nodes1 = xml.SelectNodes(value1);
+                if (nodes1 == null || nodes1.Count == 0)
                 {
-                    XmlNodeList nodes1 = xml.SelectNodes(value1);
-                    if (nodes1 == null || nodes1.Count == 0)
+                    PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value1=" + value1 + "): Failed to find a node with the given xpath");
+                    return false;
+                }
+                if (fromXml2)
+                {
+                    XmlNodeList nodes2 = xml.SelectNodes(value2);
+                    if (nodes2 == null || nodes2.Count == 0)
                     {
-                        PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value1=" + value1 + "): Failed to find a node with the given xpath");
+                        PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
                         return false;
                     }
-                    if (fromXml2)
+                    foreach (XmlNode node1 in nodes1)
                     {
-                        XmlNodeList nodes2 = xml.SelectNodes(value2);
-                        if (nodes2 == null || nodes2.Count == 0)
-                        {
-                            PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
-                            return false;
-                        }
-                        foreach (XmlNode node1 in nodes1)
-                        {
-                            foreach (XmlNode node2 in nodes2)
-                            {
-                                str1 = node1.InnerText;
-                                str2 = node2.InnerText;
-                                if (Helpers.relationOnString(str1, str2, relation, nonNumeric))
-                                {
-                                    b = true;
-                                    if (logic == "or")
-                                        return true;
-                                }
-                                else
-                                {
-                                    b = false;
-                                    if (logic == "and")
-                                        return true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (XmlNode node1 in nodes1)
+                        foreach (XmlNode node2 in nodes2)
                         {
                             str1 = node1.InnerText;
-                            if (Helpers.relationOnString(str1, str2, relation, nonNumeric))
+                            str2 = node2.InnerText;
+                            if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
                             {
                                 b = true;
                                 if (logic == "or")
@@ -82,44 +60,58 @@ namespace XmlExtensions.Boolean
                 }
                 else
                 {
-                    if (fromXml2)
+                    foreach (XmlNode node1 in nodes1)
                     {
-                        XmlNodeList nodes2 = xml.SelectNodes(value2);
-                        if (nodes2 == null || nodes2.Count == 0)
+                        str1 = node1.InnerText;
+                        if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
                         {
-                            PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
-                            return false;
+                            b = true;
+                            if (logic == "or")
+                                return true;
                         }
-                        foreach (XmlNode node2 in nodes2)
+                        else
                         {
-                            str2 = node2.InnerText;
-                            if (Helpers.relationOnString(str1, str2, relation, nonNumeric))
-                            {
-                                b = true;
-                                if (logic == "or")
-                                    return true;
-                            }
-                            else
-                            {
-                                b = false;
-                                if (logic == "and")
-                                    return true;
-                            }
+                            b = false;
+                            if (logic == "and")
+                                return true;
                         }
-                    }
-                    else
-                    {
-                        b = Helpers.relationOnString(str1, str2, relation, nonNumeric);
-                        return true;
                     }
                 }
-                return true;
             }
-            catch (Exception e)
+            else
             {
-                PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value1=" + value1 + ", value2=" + value2 + "): " + e.Message);
-                return false;
+                if (fromXml2)
+                {
+                    XmlNodeList nodes2 = xml.SelectNodes(value2);
+                    if (nodes2 == null || nodes2.Count == 0)
+                    {
+                        PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
+                        return false;
+                    }
+                    foreach (XmlNode node2 in nodes2)
+                    {
+                        str2 = node2.InnerText;
+                        if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
+                        {
+                            b = true;
+                            if (logic == "or")
+                                return true;
+                        }
+                        else
+                        {
+                            b = false;
+                            if (logic == "and")
+                                return true;
+                        }
+                    }
+                }
+                else
+                {
+                    b = Helpers.RelationOnString(str1, str2, relation, nonNumeric);
+                    return true;
+                }
             }
+            return true;
         }
     }
 }

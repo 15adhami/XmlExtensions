@@ -7,24 +7,14 @@ namespace XmlExtensions
     {
         protected override bool Patch(XmlDocument xml)
         {
-            base.Patch(xml);
-            bool result = false;
-            XmlNodeList nodeList = xml.SelectNodes(xpath);
-            if (nodeList == null || nodeList.Count == 0)
+            foreach (XmlNode xmlNode in nodes)
             {
-                XPathError(xpath, "xpath");
-                return false;
-            }
-            foreach (object item in nodeList)
-            {
-                XmlNode xmlNode = item as XmlNode;
                 if (xmlNode.Attributes[attribute] != null)
                 {
                     xmlNode.Attributes.Remove(xmlNode.Attributes[attribute]);
-                    result = true;
                 }
             }
-            return result;
+            return true;
         }
     }
 }

@@ -6,6 +6,7 @@ using Verse;
 using HarmonyLib;
 using System.Xml;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
 
 namespace XmlExtensions
 {
@@ -13,12 +14,19 @@ namespace XmlExtensions
     [HarmonyPatch("ApplyPatches")]
     static class ApplyPatches_Patch
     {
-        static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
+        static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
         {
             PatchManager.context = false;
             PatchManager.xmlDoc = xmlDoc;
             PatchManager.defaultDoc = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
+            foreach(ModContentPack mod in ___runningMods)
+            {
+                foreach (PatchOperation patch in mod.Patches)
+                {
+                    PatchManager.ModPatchDict.Add(patch, mod);
+                }
+            }
             // Bug: Same patch being defined twice (argon mod)
             /*
             foreach(Type T in typeof(PatchOperation).AllSubclasses())
@@ -39,7 +47,7 @@ namespace XmlExtensions
             PatchManager.nodeMap.Clear();
             PatchManager.watch.Reset();
             //Add defNames to the menus
-            foreach(XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))
+            foreach (XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))
             {
                 if (node["defName"] == null)
                 {
@@ -49,8 +57,8 @@ namespace XmlExtensions
                 else
                 {
                     node["defName"].InnerText = node["defName"].InnerText.Replace('.', '_');
-                }               
-            }            
+                }
+            }
         }
     }
 }

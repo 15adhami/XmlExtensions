@@ -37,12 +37,12 @@ namespace XmlExtensions
                     try
                     {
                         c++;
-                        if (!setting.SetDefaultValue(modId))
+                        if (!setting.DefaultValue(modId))
                         {
                             PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                             return false;
                         }
-                        setting.Init();
+                        setting.Initialize();
                     }
                     catch
                     {

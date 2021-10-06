@@ -4,20 +4,12 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class StopwatchResume : PatchOperation
+    public class StopwatchResume : PatchOperationExtended
     {
-        protected override bool ApplyWorker(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
-            try
-            {
-                PatchManager.watch.Start();
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.StopwatchStart: " + e.Message);
-                return false;
-            }
+            PatchManager.watch.Start();
+            return true;
         }
     }
 }

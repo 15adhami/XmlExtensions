@@ -1,14 +1,13 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-    static class PatchManager
+    internal static class PatchManager
     {
         public static XmlDocument xmlDoc;
         public static XmlDocument defaultDoc;
@@ -23,9 +22,16 @@ namespace XmlExtensions
         public static Dictionary<Type, Delegate> patchConstructors;
         public static Dictionary<string, XmlDocument> XmlDocs;
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
+        public static ModContentPack ActiveMod;
+        public static Dictionary<PatchOperation, ModContentPack> ModPatchDict;
+
+        public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), 
+            typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
+             typeof(Verse.PatchOperationSetName),  };
 
         static PatchManager()
         {
+            ModPatchDict = new Dictionary<PatchOperation, ModContentPack>();
             patchConstructors = new Dictionary<Type, Delegate>();
             nodeMap = new Dictionary<string, Dictionary<XmlNode, XmlNode>>();
             XmlDocs = new Dictionary<string, XmlDocument>();
@@ -37,17 +43,86 @@ namespace XmlExtensions
             errors = new List<string>();
         }
 
-        public static void printError(string source)
+        /// <summary>
+        /// Prints the stack of errors, then clears them.
+        /// </summary>
+        /// <param name="source">The path to the source file.</param>
+        public static void PrintError(string source, ModContentPack mod)
         {
             string trace = "";
-            foreach(string error in errors)
+            foreach (string error in errors)
             {
                 trace += error + "\n";
             }
             trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\nSource file: " + source + "\n";
             if (XmlMod.allSettings.trace)
+                Verse.Log.Error("[" + mod.Name + " - Start of stack trace]\n" + trace);
+            errors.Clear();
+        }
+
+        public static void SetActiveMod(ModContentPack mod)
+        {
+            if (mod != null)
+            {
+                ActiveMod = mod;
+                Verse.Log.Message(mod.PackageId);
+            }
+            else
+            {
+                Verse.Log.Message("null");
+            }
+        }
+
+        public static void PrintError()
+        {
+            string trace = "";
+            foreach (string error in errors)
+            {
+                trace += error + "\n";
+            }
+            trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\n";
+            if (XmlMod.allSettings.trace)
                 Verse.Log.Error("[Start of stack trace]\n" + trace);
             errors.Clear();
+        }
+
+        public static bool CheckType(Type T)
+        {
+            if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
+            if (T.Namespace == "XmlExtensions") { return false; }
+            if (typeof(PatchOperationPathed).IsAssignableFrom(T)) { return false; }
+            if (PatchedClasses.Contains(T)) { return false; }
+            try
+            {
+                if (AccessTools.Method(T, "ApplyWorker") == null)
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool CheckTypePathed(Type T)
+        {
+            if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
+            if (T.Namespace == "XmlExtensions") { return false; }
+            if (PatchedClasses.Contains(T)) { return false; }
+            try
+            {
+                if (AccessTools.Method(T, "ApplyWorker") == null)
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

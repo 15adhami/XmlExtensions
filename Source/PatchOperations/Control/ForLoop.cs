@@ -12,32 +12,30 @@ namespace XmlExtensions
         protected int to;
         protected int increment = 1;
 
+        private int i = 0;
+
+        protected override void SetException()
+        {
+            exceptionVals = new string[] { i.ToString() };
+            exceptionFields = new string[] { storeIn };
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            int errNum = 0;
-            string oldXml = this.apply.node.OuterXml;
-            if (this.increment > 0)
+            if (increment > 0)
             {
-                for (int i = this.from; i < this.to; i += increment)
+                for (i = from; i < to; i += increment)
                 {
-                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.ForLoop: Error at iteration " + i.ToString() + ", in the operation as position=" + errNum.ToString());
-                        return false;
-                    }
+                    XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, i.ToString(), brackets);
+                    if (!RunPatches(newContainer, xml)) { return false; }
                 }
             }
-            else if (this.increment < 0)
+            else if (increment < 0)
             {
-                for (int i = this.from - 1; i >= this.to; i -= increment)
+                for (i = from - 1; i >= to; i -= increment)
                 {
-                    XmlContainer newContainer = Helpers.substituteVariableXmlContainer(this.apply, this.storeIn, i.ToString(), this.brackets);
-                    if (!Helpers.runPatchesInXmlContainer(newContainer, xml, ref errNum))
-                    {
-                        PatchManager.errors.Add("XmlExtensions.ForLoop: Error at iteration " + i.ToString() + ", in the operation as position=" + errNum.ToString());
-                        return false;
-                    }
+                    XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, i.ToString(), brackets);
+                    if (!RunPatches(newContainer, xml)) { return false; }
                 }
             }
             return true;

@@ -1,34 +1,26 @@
 ﻿using System;
 using System.Xml;
+using Verse;
 
 namespace XmlExtensions
 {
     public class PatchOperationSafeReplace : PatchOperationExtendedPathed
-	{
-		private XmlContainer value;
+    {
+        private XmlContainer value;
 
-		protected override bool Patch(XmlDocument xml)
-		{
-            try
+        protected override bool Patch(XmlDocument xml)
+        {
+            XmlNode node = value.node;
+            foreach (XmlNode xmlNode in nodes)
             {
-				XmlNode node = value.node;
-				XmlNodeList nodeList = xml.SelectNodes(xpath);
-				foreach (XmlNode xmlNode in nodeList)
-				{
-					XmlNode parentNode = xmlNode.ParentNode;
-					foreach (XmlNode childNode in node.ChildNodes)
-					{
-						parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(childNode, deep: true), xmlNode);
-					}
-					parentNode.RemoveChild(xmlNode);
-				}
-				return true;
-			}
-			catch (Exception e)
-			{
-				PatchManager.errors.Add("XmlExtensions.PatchOperationSafeReplace(xpath=" + xpath + "): " + e.Message);
-				return false;
-			}
-		}
-	}
+                XmlNode parentNode = xmlNode.ParentNode;
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                    parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(childNode, deep: true), xmlNode);
+                }
+                parentNode.RemoveChild(xmlNode);
+            }
+            return true;
+        }
+    }
 }

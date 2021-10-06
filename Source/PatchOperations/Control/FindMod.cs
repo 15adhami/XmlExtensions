@@ -14,61 +14,55 @@ namespace XmlExtensions
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
+        private string foundMod;
+
+        protected override void SetException()
+        {
+            if (foundMod != null)
+            {
+                exceptionVals = new string[] { foundMod };
+                exceptionFields = new string[] { "Mod" };
+            }
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
-            try
+            bool flag = false;
+            if (mods == null)
             {
-                bool flag = false;
-                int errNum = 0;
-                if (mods == null)
-                {
-                    PatchManager.errors.Add("XmlExtensions.FindMod: <mods> is null");
-                    return false;
-                }
-                if (logic == "or")
-                {
-                    if (!packageId)
-                        flag = mods.Any(x => LoadedModManager.RunningMods.Any(y => y.Name == x));
-                    else
-                        flag = mods.Any(x => LoadedModManager.RunningMods.Any(y => y.PackageId.ToLower() == x.ToLower()));
-                }
-                else
-                {
-                    if (!packageId)
-                        flag = mods.All(x => LoadedModManager.RunningMods.Any(y => y.Name == x));
-                    else
-                        flag = mods.All(x => LoadedModManager.RunningMods.Any(y => y.PackageId.ToLower() == x.ToLower()));
-                }
-
-                if (flag)
-                {
-                    if (caseTrue != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(caseTrue, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.FindMod: Error in <caseTrue> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    if (caseFalse != null)
-                    {
-                        if (!Helpers.runPatchesInXmlContainer(caseFalse, xml, ref errNum))
-                        {
-                            PatchManager.errors.Add("XmlExtensions.FindMod: Error in <caseFalse> in the operation at position=" + errNum.ToString());
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.FindMod: " + e.Message);
+                NullError("mods");
                 return false;
             }
+            foreach (ModContentPack mod in LoadedModManager.RunningMods)
+            {
+                string str;
+                if (packageId)
+                {
+                    str = mod.PackageId;
+                }
+                else
+                {
+                    str = mod.Name;
+                }
+                if (mods.Contains(str))
+                {
+                    foundMod = str;
+                    flag = true;
+                    if (logic == "or")
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    flag = false;
+                    if (logic == "and")
+                    {
+                        break;
+                    }
+                }
+            }
+            return RunPatchesConditional(flag, caseTrue, caseFalse, xml);
         }
     }
 }

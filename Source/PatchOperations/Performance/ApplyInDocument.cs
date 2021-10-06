@@ -25,7 +25,7 @@ namespace XmlExtensions
                 }
                 int errNum = 0;
                 XmlDocument doc = PatchManager.XmlDocs[docName];
-                if (!Helpers.runPatchesInPatchContainer(apply, doc, ref errNum))
+                if (!Helpers.RunPatchesInPatchContainer(apply, doc, ref errNum))
                 {
                     PatchManager.errors.Add("XmlExtensions.ApplyInDocument(docName=" + docName + "): Error in the operation at position=" + errNum.ToString());
                     return false;
