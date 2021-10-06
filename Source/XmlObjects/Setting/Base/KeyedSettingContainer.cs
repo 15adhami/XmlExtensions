@@ -31,20 +31,5 @@ namespace XmlExtensions.Setting
             }
             return true;
         }
-
-        public override void DrawSetting(Listing_Standard listingStandard, string selectedMod)
-        {
-            try
-            {
-                DrawSettingContents(listingStandard, selectedMod);
-            }
-            catch
-            {
-                GUI.color = Color.red;
-                listingStandard.Label("Error drawing setting (maybe <defaultValue> needs to be defined?)");
-                errHeight = 22;
-                GUI.color = Color.white;
-            }
-        }
     }
 }

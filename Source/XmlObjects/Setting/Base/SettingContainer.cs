@@ -19,7 +19,7 @@ namespace XmlExtensions.Setting
             catch
             {
                 GUI.color = Color.red;
-                listingStandard.Label("Error drawing setting");
+                listingStandard.Label("Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
                 errHeight = 22;
                 GUI.color = Color.white;
             }
