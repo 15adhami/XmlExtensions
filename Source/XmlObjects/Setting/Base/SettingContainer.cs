@@ -93,6 +93,10 @@ namespace XmlExtensions.Setting
             return 0;
         }
 
+        /// <summary>
+        /// This method will be run exactly one time after the game finishes booting, it is used to initialize the setting.
+        /// </summary>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
         public bool Initialize()
         {
             try
@@ -112,11 +116,67 @@ namespace XmlExtensions.Setting
         /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
         protected virtual bool Init() { return true; }
 
+        public bool DoPreClose(string selectedMod)
+        {
+            return PreClose(selectedMod);
+        }
+
+        protected virtual bool PreClose(string selectedMod)
+        {
+            return true;
+        }
+
+        protected bool DoPreCloseSetting(SettingContainer setting, string selectedMod)
+        {
+            if (!setting.DoPreClose(selectedMod))
+            {
+                ThrowError("Failed to run PreClose() for a setting");
+                return false;
+            }
+            return true;
+        }
+
+        protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings)
+        {
+            if (settings != null)
+            {
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    c++;
+                    if (!setting.DoPreClose(selectedMod))
+                    {
+                        ThrowError("Failed to run PreClose() for a setting at position=" + c.ToString());
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings, string name)
+        {
+            if (settings != null)
+            {
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    c++;
+                    if (!setting.DoPreClose(selectedMod))
+                    {
+                        ThrowError("Failed to run PreClose() for a setting in <" + name + "> at position=" + c.ToString());
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         protected bool InitializeSetting(SettingContainer setting)
         {
             if (!setting.Initialize())
             {
-                ThrowError("Failed to initialize a setting of Class=\"" + setting.GetType().ToString() + "\"");
+                ThrowError("Failed to initialize a setting");
                 return false;
             }
             return true;

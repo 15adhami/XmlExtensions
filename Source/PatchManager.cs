@@ -47,6 +47,7 @@ namespace XmlExtensions
         /// Prints the stack of errors, then clears them.
         /// </summary>
         /// <param name="source">The path to the source file.</param>
+        /// <param name="mod">The ModContentPack of the active mod.</param>
         public static void PrintError(string source, ModContentPack mod)
         {
             string trace = "";
@@ -73,6 +74,9 @@ namespace XmlExtensions
             }
         }
 
+        /// <summary>
+        /// Prints the stack of errors, then clears them.
+        /// </summary>
         public static void PrintError()
         {
             string trace = "";

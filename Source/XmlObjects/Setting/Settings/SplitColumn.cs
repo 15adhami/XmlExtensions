@@ -90,5 +90,18 @@ namespace XmlExtensions.Setting
         }
 
         protected override int CalcHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split - ((int)gapSize), selectedMod), columnHeight(rightCol, width * (1 - split) - ((int)gapSize), selectedMod)); }
+
+        protected override bool PreClose(string selectedMod)
+        {
+            if (!DoPreCloseSettingsList(selectedMod, leftCol, "leftCol"))
+            {
+                return false;
+            }
+            if (!DoPreCloseSettingsList(selectedMod, rightCol, "rightCol"))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

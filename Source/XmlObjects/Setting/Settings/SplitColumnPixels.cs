@@ -104,5 +104,18 @@ namespace XmlExtensions.Setting
             float leftSize = Math.Min(width - (int)gapSize, pixels);
             return Math.Max(columnHeight(leftCol, leftSize, selectedMod), columnHeight(rightCol, width - leftSize - (int)gapSize, selectedMod));
         }
+
+        protected override bool PreClose(string selectedMod)
+        {
+            if (!DoPreCloseSettingsList(selectedMod, leftCol, "leftCol"))
+            {
+                return false;
+            }
+            if (!DoPreCloseSettingsList(selectedMod, rightCol, "rightCol"))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

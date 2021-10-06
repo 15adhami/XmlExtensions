@@ -14,6 +14,7 @@ namespace XmlExtensions
         public string label;
         public string modId;
         public Dictionary<string, string> defValues;
+        public Dictionary<string, SettingsMenuDef> menus;
         public string tKey;
         public string homeMenu;
 
@@ -21,11 +22,24 @@ namespace XmlExtensions
         {
             keys = new List<string>();
             defValues = new Dictionary<string, string>();
+            menus = new Dictionary<string, SettingsMenuDef>();
         }
         public XmlModSettings(string modId)
         {
             keys = new List<string>();
             this.modId = modId;
+        }
+
+        public bool PreClose()
+        {
+            foreach(SettingsMenuDef menu in menus.Values)
+            {
+                if (!menu.PreClose())
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

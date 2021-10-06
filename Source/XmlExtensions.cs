@@ -15,7 +15,7 @@ namespace XmlExtensions
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
             {
-                XmlMod.menus.Add(menuDef.defName, menuDef);
+                XmlMod.menus.Add(menuDef.defName, menuDef);                
                 if (!menuDef.Init())
                 {
                     PatchManager.PrintError();
@@ -25,6 +25,11 @@ namespace XmlExtensions
                     if (!menuDef.submenu)
                         i++;
                 }
+                if (XmlMod.settingsPerMod[menuDef.modId].menus == null)
+                {
+                    XmlMod.settingsPerMod[menuDef.modId].menus = new Dictionary<string, SettingsMenuDef>();
+                }
+                XmlMod.settingsPerMod[menuDef.modId].menus.Add(menuDef.defName, menuDef);
             }
             XmlMod.loadedXmlMods.Sort(delegate (string id1, string id2)
             {

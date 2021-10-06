@@ -20,7 +20,7 @@ namespace XmlExtensions
         public static string selectedExtraMod;
         public static bool viewingSettings = false;
         public static Dictionary<string, SettingsMenuDef> menus;
-        public static string activeMenu = null;
+        public static string activeMenu = null; // defName
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;
 
@@ -51,6 +51,52 @@ namespace XmlExtensions
             Rect rectMods = inRect.LeftPartPixels(256); //.285f
             drawXmlModSettings(rectSettings);
             drawXmlModList(rectMods);
+        }
+
+        private static void drawXmlModList(Rect rect)
+        {
+            int count = 0;
+            foreach (string modId in loadedXmlMods)
+            {
+                if (settingsPerMod[modId].label != null)
+                    count++;
+            }
+            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max((loadedXmlMods.Count - count) * (30 + 2) + 38, rect.height + 1));
+            Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
+            Listing_Standard listingStandard = new Listing_Standard();
+            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+            listingStandard.Begin(rect2);
+
+            // Draw the button list
+            foreach (string modId in loadedXmlMods)
+            {
+                if (settingsPerMod[modId].label != null)
+                {
+                    bool t = false;
+                    t = listingStandard.ButtonText(Helpers.TryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
+                    if (t)
+                    {
+                        PreClose();
+                        selectedMod = modId;
+                        activeMenu = settingsPerMod[modId].homeMenu;
+                        selectedExtraMod = null;
+                        viewingSettings = false;
+                    }
+                }
+            }
+            listingStandard.GapLine(4);
+            listingStandard.Gap(2);
+            bool t1 = false;
+            t1 = listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label"));
+            if (t1)
+            {
+                PreClose();
+                selectedMod = null;
+                selectedExtraMod = null;
+                viewingSettings = false;
+            }
+            listingStandard.End();
+            Widgets.EndScrollView();
         }
 
         private static void drawXmlModSettings(Rect rect)
@@ -211,46 +257,17 @@ namespace XmlExtensions
             
         }
 
-        private static void drawXmlModList(Rect rect)
+        public static void PreClose()
         {
-            int count = 0;
-            foreach(string modId in loadedXmlMods)
+            if (selectedMod != null)
             {
-                if (settingsPerMod[modId].label != null)
-                    count++;
-            }
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max((loadedXmlMods.Count-count) * (30 + 2) + 38, rect.height+1));
-            Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
-            Listing_Standard listingStandard = new Listing_Standard();
-            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
-            listingStandard.Begin(rect2);
-            foreach (string modId in loadedXmlMods)
-            {
-                if (settingsPerMod[modId].label != null)
+                PatchManager.errors.Clear();
+                if (!settingsPerMod[selectedMod].PreClose())
                 {
-                    bool t = false;
-                    t = listingStandard.ButtonText(Helpers.TryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
-                    if (t)
-                    {
-                        selectedMod = modId;
-                        activeMenu = settingsPerMod[modId].homeMenu;
-                        selectedExtraMod = null;
-                        viewingSettings = false;
-                    }
-                }                 
-            }
-            listingStandard.GapLine(4);
-            listingStandard.Gap(2);
-            bool t1 = false;
-            t1 = listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label"));
-            if (t1)
-            {
-                selectedMod = null;
-                selectedExtraMod = null;
-                viewingSettings = false;
+                    PatchManager.errors.Add("Failed to run PreClose() for modId=" + selectedMod);
+                    PatchManager.PrintError();
+                }
             }            
-            listingStandard.End();
-            Widgets.EndScrollView();
         }
 
         public static void addSetting(string modId, string key, string value)

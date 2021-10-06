@@ -77,5 +77,18 @@ namespace XmlExtensions.Setting
         {
             return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width, selectedMod) : calcHeight(caseFalse, width, selectedMod));
         }
+
+        protected override bool PreClose(string selectedMod)
+        {
+            if (!DoPreCloseSettingsList(selectedMod, caseTrue, "caseTrue"))
+            {
+                return false;
+            }
+            if (!DoPreCloseSettingsList(selectedMod, caseFalse, "caseFalse"))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

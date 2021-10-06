@@ -43,5 +43,10 @@ namespace XmlExtensions.Setting
         {
             return InitializeSettingsList(settings);
         }
+
+        protected override bool PreClose(string selectedMod)
+        {
+            return DoPreCloseSettingsList(selectedMod, settings);
+        }
     }
 }

@@ -97,5 +97,16 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        protected override bool PreClose(string selectedMod)
+        {
+            foreach (Tab tab in tabs)
+            {
+                if (!DoPreCloseSettingsList(selectedMod, tab.settings, tab.label))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

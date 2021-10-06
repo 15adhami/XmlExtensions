@@ -81,5 +81,17 @@ namespace XmlExtensions
                 setting.DrawSetting(listingStandard, modId);
             }
         }
+
+        public bool PreClose()
+        {
+            foreach(SettingContainer setting in settings)
+            {
+                if(!setting.DoPreClose(modId))
+                {
+                    return false;
+                }
+            }
+            return true; ;
+        }
     }
 }

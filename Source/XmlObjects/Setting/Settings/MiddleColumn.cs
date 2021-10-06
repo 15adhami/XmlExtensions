@@ -43,5 +43,10 @@ namespace XmlExtensions.Setting
         }
 
         protected override int CalcHeight(float width, string selectedMod) { return columnHeight(settings, width * split, selectedMod); }
+
+        protected override bool PreClose(string selectedMod)
+        {
+            return DoPreCloseSettingsList(selectedMod, settings);
+        }
     }
 }

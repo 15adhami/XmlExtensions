@@ -1,26 +1,54 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
     public class PatchOperationSafeReplace : PatchOperationExtendedPathed
     {
-        private XmlContainer value;
+        protected XmlContainer value;
+        protected int safetyDepth = -1;
 
         protected override bool Patch(XmlDocument xml)
         {
             XmlNode node = value.node;
             foreach (XmlNode xmlNode in nodes)
             {
-                XmlNode parentNode = xmlNode.ParentNode;
-                foreach (XmlNode childNode in node.ChildNodes)
+                foreach (XmlNode addNode in node.ChildNodes)
                 {
-                    parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(childNode, deep: true), xmlNode);
+                    int d = 0;
+                    tryReplaceNode(xmlNode, addNode, d);
                 }
-                parentNode.RemoveChild(xmlNode);
             }
             return true;
+        }
+
+        private void tryReplaceNode(XmlNode parent, XmlNode child, int depth)
+        {
+            if (Helpers.ContainsNode(parent, child.Name))
+            {
+                if (safetyDepth != depth)
+                {
+                    if (child.HasChildNodes && child.FirstChild.HasChildNodes)
+                    {
+                        foreach (XmlNode newChild in child.ChildNodes)
+                        {
+                            tryReplaceNode(parent[child.Name], newChild, depth + 1);
+                        }
+                    }
+                    else
+                    {
+                        XmlNode xmlNode = parent[child.Name];
+                        parent.InsertBefore(parent.OwnerDocument.ImportNode(child, true), xmlNode);
+                        parent.RemoveChild(xmlNode);
+                    }
+                }
+                else
+                {
+                    XmlNode xmlNode = parent[child.Name];
+                    parent.InsertBefore(parent.OwnerDocument.ImportNode(child, true), xmlNode);
+                    parent.RemoveChild(xmlNode);
+                }
+            }
         }
     }
 }
