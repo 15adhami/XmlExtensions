@@ -63,9 +63,9 @@ namespace XmlExtensions
             return true;
         }
 
-        public int CalculateHeight(float width, string selectedMod)
+        public float CalculateHeight(float width, string selectedMod)
         {
-            int h = 0;
+            float h = 0;
             foreach (SettingContainer setting in settings)
             {
                 h += setting.GetHeight(width, selectedMod);
@@ -76,9 +76,10 @@ namespace XmlExtensions
         public void DrawSettings(Listing_Standard listingStandard)
         {
             listingStandard.verticalSpacing = defaultSpacing;
+            float width = listingStandard.ColumnWidth;
             foreach (SettingContainer setting in settings)
             {
-                setting.DrawSetting(listingStandard, modId);
+                setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width, modId)), modId);
             }
         }
 

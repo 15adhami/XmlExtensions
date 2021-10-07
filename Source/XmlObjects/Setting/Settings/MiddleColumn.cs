@@ -7,29 +7,11 @@ namespace XmlExtensions.Setting
     public class MiddleColumn : SettingContainer
     {
         public float split = 0.50f;
-        public List<SettingContainer> settings = new List<SettingContainer>();
+        public List<SettingContainer> settings;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override bool Init()
         {
-            Rect baseRect = listingStandard.GetRect(columnHeight(settings, listingStandard.ColumnWidth * split, selectedMod)).LeftPart(split/2f+0.5f).RightPart(split/(split / 2f + 0.5f));
-            Listing_Standard lListing = new Listing_Standard();
-            lListing.Begin(baseRect);
-            lListing.verticalSpacing = listingStandard.verticalSpacing;
-            foreach (SettingContainer setting in settings)
-            {
-                setting.DrawSetting(lListing, selectedMod);
-            }
-            lListing.End();
-        }
-
-        private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
-        {
-            int h = 0;
-            foreach (SettingContainer setting in settings)
-            {
-                h += setting.GetHeight(width, selectedMod);
-            }
-            return h;
+            return InitializeSettingsList(settings);
         }
 
         protected override bool SetDefaultValue(string modId)
@@ -37,12 +19,16 @@ namespace XmlExtensions.Setting
             return DefaultValueSettingsList(modId, settings);
         }
 
-        protected override bool Init()
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            return InitializeSettingsList(settings);
+            return GetHeightSettingsList(width * split, selectedMod, settings);
         }
 
-        protected override int CalcHeight(float width, string selectedMod) { return columnHeight(settings, width * split, selectedMod); }
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            Rect middleRect = inRect.LeftPart(split/2f+0.5f).RightPart(split/(split / 2f + 0.5f));
+            DrawSettingsList(middleRect, selectedMod, settings);
+        }
 
         protected override bool PreClose(string selectedMod)
         {

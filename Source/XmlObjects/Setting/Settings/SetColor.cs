@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Verse;
 
 namespace XmlExtensions.Setting
 {
@@ -7,11 +6,9 @@ namespace XmlExtensions.Setting
     {
         protected Color color = Color.white;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             GUI.color = color;
         }
-
-        protected override int CalcHeight(float width, string selectedMod) { return 0; }
     }
 }

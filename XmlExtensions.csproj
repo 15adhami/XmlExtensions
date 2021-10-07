@@ -153,14 +153,11 @@
     <Compile Include="Source\PatchOperations\Performance\MergeDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Checkbox.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Base\CustomKeyedSettingContainer.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Base\CustomSettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\DisplayMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\DrawImage.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Gap.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\GapLine.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Group.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Settings\Hyperlink.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\IntEntry.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\KeyedSettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\MiddleColumn.cs" />

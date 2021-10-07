@@ -343,18 +343,5 @@ namespace XmlExtensions
         {
             allSettings.dataDict.Remove(modId + ';' + key);
         }
-
-        public static void setSetting(string modId, string key, string value)
-        {
-            string fullKey = modId + ";" + key;
-            if (allSettings.dataDict.ContainsKey(fullKey))
-            {
-                allSettings.dataDict[fullKey] = value;
-            }
-            else
-            {
-                addSetting(modId, key, value);
-            }
-        }
     }
 }

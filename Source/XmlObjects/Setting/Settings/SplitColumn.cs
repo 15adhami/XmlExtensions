@@ -8,59 +8,22 @@ namespace XmlExtensions.Setting
     public class SplitColumn : SettingContainer
     {
         public float split = 0.50f;
-        public List<SettingContainer> leftCol = new List<SettingContainer>();
-        public List<SettingContainer> rightCol = new List<SettingContainer>();
+        public List<SettingContainer> leftCol;
+        public List<SettingContainer> rightCol;
         public bool drawLine = false;
         private Spacing gapSize = Spacing.Small;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override bool Init()
         {
-            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, listingStandard.ColumnWidth*split - ((int)gapSize), selectedMod), columnHeight(rightCol, listingStandard.ColumnWidth*(1-split) - ((int)gapSize), selectedMod)));
-            Rect leftRect = baseRect.LeftPartPixels(baseRect.width*split - ((int)gapSize));
-            Rect rightRect = baseRect.RightPartPixels(baseRect.width * (1 - split) - ((int)gapSize));
-            Listing_Standard lListing = new Listing_Standard();
-            lListing.Begin(leftRect);
-            lListing.verticalSpacing = listingStandard.verticalSpacing;
-            foreach (SettingContainer setting in leftCol)
+            if (!InitializeSettingsList(leftCol, "leftCol"))
             {
-                setting.DrawSetting(lListing, selectedMod);
+                return false;
             }
-            lListing.End();
-            Listing_Standard rListing = new Listing_Standard();
-            if(drawLine)
+            if (!InitializeSettingsList(rightCol, "rightCol"))
             {
-                Color color = GUI.color;
-                GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                GUI.DrawTexture(new Rect(baseRect.center.x, rightRect.yMin, 1f, rightRect.height), BaseContent.WhiteTex);
-                GUI.color = color;
-            }                
-            rListing.Begin(rightRect);
-            rListing.verticalSpacing = listingStandard.verticalSpacing;
-            foreach (SettingContainer setting in rightCol)
-            {
-                setting.DrawSetting(rListing, selectedMod);
+                return false;
             }
-            rListing.End();
-        }
-
-        private enum Spacing : int
-        {
-            None = 0,
-            Tiny = 2,
-            Small = 3,
-            Medium = 5,
-            Large = 9,
-            Huge = 15
-        }
-
-        private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
-        {
-            int h = 0;
-            foreach (SettingContainer setting in settings)
-            {
-                h += setting.GetHeight(width, selectedMod);
-            }
-            return h;
+            return true;
         }
 
         protected override bool SetDefaultValue(string modId)
@@ -76,20 +39,25 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override bool Init()
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            if (!InitializeSettingsList(leftCol, "leftCol"))
-            {
-                return false;
-            }
-            if (!InitializeSettingsList(rightCol, "rightCol"))
-            {
-                return false;
-            }
-            return true;
+            return Math.Max(GetHeightSettingsList(width * split - (float)gapSize, selectedMod, leftCol), GetHeightSettingsList(width * (1 - split) - (float)gapSize, selectedMod, rightCol));
         }
 
-        protected override int CalcHeight(float width, string selectedMod) { return Math.Max(columnHeight(leftCol, width * split - ((int)gapSize), selectedMod), columnHeight(rightCol, width * (1 - split) - ((int)gapSize), selectedMod)); }
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            Rect leftRect = inRect.LeftPartPixels(inRect.width*split - ((int)gapSize));
+            Rect rightRect = inRect.RightPartPixels(inRect.width * (1 - split) - ((int)gapSize));
+            DrawSettingsList(leftRect, selectedMod, leftCol);
+            if (drawLine)
+            {
+                Color color = GUI.color;
+                GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+                GUI.DrawTexture(new Rect(inRect.center.x, rightRect.yMin, 1f, rightRect.height), BaseContent.WhiteTex);
+                GUI.color = color;
+            }
+            DrawSettingsList(rightRect, selectedMod, rightCol);
+        }
 
         protected override bool PreClose(string selectedMod)
         {
@@ -102,6 +70,15 @@ namespace XmlExtensions.Setting
                 return false;
             }
             return true;
+        }
+        private enum Spacing : int
+        {
+            None = 0,
+            Tiny = 2,
+            Small = 3,
+            Medium = 5,
+            Large = 9,
+            Huge = 15
         }
     }
 }

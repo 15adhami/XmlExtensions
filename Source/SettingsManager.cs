@@ -15,6 +15,22 @@ namespace XmlExtensions
             return XmlMod.settingsPerMod[modId].defValues[key];
         }
 
+        public static void SetDefaultValue(string modId, string key, string value)
+        {
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                XmlMod.settingsPerMod[modId].defValues.Add(key, value);
+                if (!ContainsKey(modId, key))
+                {
+                    SetSetting(modId, key, value);
+                }                    
+            }
+        }
+
         /// <summary>
         /// Gets the current value of a setting.
         /// </summary>
@@ -50,16 +66,27 @@ namespace XmlExtensions
         /// <param name="value">The value you want to store.</param>
         public static void SetSetting(string modId, string key, string value)
         {
-            XmlMod.setSetting(modId, key, value);
+            string fullKey = modId + ";" + key;
+            if (XmlMod.allSettings.dataDict.ContainsKey(fullKey))
+            {
+                XmlMod.allSettings.dataDict[fullKey] = value;
+            }
+            else
+            {
+                // TODO: Remove
+                XmlMod.addSetting(modId, key, value);
+            }
         }
 
         /// <summary>
-        /// Gets the defaultSpacing of the currently open <c>SettingsMenuDef</c>.
+        /// Determines whether or not the given mod has a setting associated with the given key
         /// </summary>
-        /// <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
-		public static int GetDefaultSpacing()
+        /// <param name="modId">The <c>modId</c> of your mod</param>
+        /// <param name="key">The key of the setting you want to check</param>
+        /// <returns><c>true</c> if the mod contains the key, <c>false</c> otherwise</returns>
+        public static bool ContainsKey(string modId, string key)
         {
-            return XmlMod.menus[XmlMod.activeMenu].defaultSpacing;
+            return XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key);
         }
 
         // TODO: Finalize

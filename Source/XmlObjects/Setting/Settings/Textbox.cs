@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 
 namespace XmlExtensions.Setting
 {
@@ -7,20 +8,22 @@ namespace XmlExtensions.Setting
         public string tKey;
         public int lines = 1;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            string currStr = XmlMod.allSettings.dataDict[selectedMod + ";" + key];
+            return lines * 22 + GetDefaultSpacing();
+        }
+
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            string currStr = SettingsManager.GetSetting(selectedMod, key);
             if (label != null)
             {
-                XmlMod.allSettings.dataDict[selectedMod + ";" + key] = listingStandard.TextEntryLabeled(Helpers.TryTranslate(label, tKey), currStr, lines);
+                SettingsManager.SetSetting(selectedMod, key, Widgets.TextEntryLabeled(inRect, Helpers.TryTranslate(label, tKey), currStr));
             }
             else
             {
-                XmlMod.allSettings.dataDict[selectedMod + ";" + key] = listingStandard.TextEntry(currStr, lines);
+                SettingsManager.SetSetting(selectedMod, key, (lines > 1) ? Widgets.TextArea(inRect, currStr) : Widgets.TextField(inRect, currStr));
             }
-            
         }
-
-        protected override int CalcHeight(float width, string selectedMod) { return (lines*22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
     }
 }

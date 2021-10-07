@@ -10,78 +10,20 @@ namespace XmlExtensions.Setting
         public Vector2 dimensions = new Vector2(-1,-1);
         public float scale = -1;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        private Texture2D img;
+
+        protected override bool Init()
         {
-            Texture2D img = ContentFinder<Texture2D>.Get(texPath);
-            int height = img.height;
-            int width = img.width;
-            Rect drawRect = new Rect();
-            if((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
+            img = ContentFinder<Texture2D>.Get(texPath, false);
+            if (img == null)
             {
-                if (width > listingStandard.ColumnWidth)
-                {
-                    height = (int)(height/(width/ listingStandard.ColumnWidth));
-                    width = (int)listingStandard.ColumnWidth;
-                }
-                Rect tempRect = listingStandard.GetRect(height);
-                if (anchor == "Middle")
-                {
-                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
-                    drawRect = drawRect.RightPartPixels(width);
-                }
-                else if (anchor == "Right")
-                    drawRect = tempRect.RightPartPixels(width);
-                else
-                    drawRect = tempRect.LeftPartPixels(width);
+                ThrowError("Failed to find a texture with texpath=\"" + texPath + "\"");
+                return false;
             }
-            else if(scale < 0)
-            {
-                float width2 = 0;
-                if (dimensions.x > listingStandard.ColumnWidth)
-                {
-                    width2 = listingStandard.ColumnWidth;
-                }
-                else
-                {
-                    width2 = dimensions.x;
-                }
-                height = (int)dimensions.y;
-                Rect tempRect = listingStandard.GetRect(height);
-                if (anchor == "Middle")
-                {
-                    drawRect = tempRect.LeftPartPixels((tempRect.width + width2) / 2);
-                    drawRect = drawRect.RightPartPixels(width2);
-                }
-                else if (anchor == "Right")
-                    drawRect = tempRect.RightPartPixels(width2);
-                else
-                    drawRect = tempRect.LeftPartPixels(width2);
-            }
-            else
-            {
-                width = (int)(width * scale);
-                height = (int)(height * scale);
-                if (width > listingStandard.ColumnWidth)
-                {
-                    height = (int)(height / (width / listingStandard.ColumnWidth));
-                    width = (int)listingStandard.ColumnWidth;
-                }
-                Rect tempRect = listingStandard.GetRect(height);
-                if (anchor == "Middle")
-                {
-                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
-                    drawRect = drawRect.RightPartPixels(width);
-                }
-                else if (anchor == "Right")
-                    drawRect = tempRect.RightPartPixels(width);
-                else
-                    drawRect = tempRect.LeftPartPixels(width);
-            }
-            
-            GUI.DrawTexture(drawRect, img);
+            return true;
         }
 
-        protected override int CalcHeight(float width2, string selectedMod)
+        protected override float CalcHeight(float width2, string selectedMod)
         {
             Texture2D img = ContentFinder<Texture2D>.Get(texPath);
             int height = img.height;
@@ -108,5 +50,75 @@ namespace XmlExtensions.Setting
             }
             return height;
         }
+
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            int height = img.height;
+            int width = img.width;
+            Rect drawRect = new Rect();
+            if((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
+            {
+                if (width > inRect.width)
+                {
+                    height = (int)(height/(width/ inRect.width));
+                    width = (int)inRect.width;
+                }
+                Rect tempRect = inRect.TopPartPixels(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
+                    drawRect = drawRect.RightPartPixels(width);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width);
+                else
+                    drawRect = tempRect.LeftPartPixels(width);
+            }
+            else if(scale < 0)
+            {
+                float width2 = 0;
+                if (dimensions.x > inRect.width)
+                {
+                    width2 = inRect.width;
+                }
+                else
+                {
+                    width2 = dimensions.x;
+                }
+                height = (int)dimensions.y;
+                Rect tempRect = inRect.TopPartPixels(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width2) / 2);
+                    drawRect = drawRect.RightPartPixels(width2);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width2);
+                else
+                    drawRect = tempRect.LeftPartPixels(width2);
+            }
+            else
+            {
+                width = (int)(width * scale);
+                height = (int)(height * scale);
+                if (width > inRect.width)
+                {
+                    height = (int)(height / (width / inRect.width));
+                    width = (int)inRect.width;
+                }
+                Rect tempRect = inRect.TopPartPixels(height);
+                if (anchor == "Middle")
+                {
+                    drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
+                    drawRect = drawRect.RightPartPixels(width);
+                }
+                else if (anchor == "Right")
+                    drawRect = tempRect.RightPartPixels(width);
+                else
+                    drawRect = tempRect.LeftPartPixels(width);
+            }
+            GUI.DrawTexture(drawRect, img);
+        }
+
     }
 }

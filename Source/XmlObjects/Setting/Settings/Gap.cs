@@ -1,12 +1,15 @@
-﻿using Verse;
+﻿using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
     public class Gap : SettingContainer
     {
         public int spacing = 24;
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod) { listingStandard.Gap(spacing); }
+        protected override float CalcHeight(float width, string selectedMod)
+        {
+            return spacing;
+        }
 
-        protected override int CalcHeight(float width, string selectedMod) { return spacing; }
+        protected override void DrawSettingContents(Rect inRect, string selectedMod) { }    
     }
 }

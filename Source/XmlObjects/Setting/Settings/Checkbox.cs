@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 
 namespace XmlExtensions.Setting
 {
@@ -8,13 +9,17 @@ namespace XmlExtensions.Setting
         public string tKey;
         public string tKeyTip;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            bool currBool = bool.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + key]);
-            listingStandard.CheckboxLabeled(Helpers.TryTranslate(label, tKey), ref currBool, Helpers.TryTranslate(tooltip, tKeyTip));
-            XmlMod.allSettings.dataDict[selectedMod + ";" + key] = currBool.ToString();
+            return 22 + GetDefaultSpacing();
         }
 
-        protected override int CalcHeight(float width, string selectedMod) { return (22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            // TODO: Add tooltip
+            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));
+            Widgets.CheckboxLabeled(inRect, Helpers.TryTranslate(label, tKey), ref currBool);
+            SettingsManager.SetSetting(selectedMod, key, currBool.ToString());
+        }        
     }
 }

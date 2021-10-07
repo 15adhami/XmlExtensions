@@ -8,65 +8,22 @@ namespace XmlExtensions.Setting
     public class SplitColumnPixels : SettingContainer
     {
         public float pixels = -1f;
-        public List<SettingContainer> leftCol = new List<SettingContainer>();
-        public List<SettingContainer> rightCol = new List<SettingContainer>();
+        public List<SettingContainer> leftCol;
+        public List<SettingContainer> rightCol;
         public bool drawLine = false;
         private Spacing gapSize = Spacing.Small;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override bool Init()
         {
-            if (pixels < 0)
+            if (!InitializeSettingsList(leftCol, "leftCol"))
             {
-                pixels = listingStandard.ColumnWidth / 2 - (int)gapSize;
+                return false;
             }
-            float leftSize = Math.Min(listingStandard.ColumnWidth - (int)gapSize, pixels);
-            float rightSize = listingStandard.ColumnWidth - leftSize - 2 * (int)gapSize;
-            Rect baseRect = listingStandard.GetRect(Math.Max(columnHeight(leftCol, leftSize, selectedMod), columnHeight(rightCol, rightSize, selectedMod)));
-            Rect leftRect = baseRect.LeftPartPixels(leftSize);
-            Rect rightRect = baseRect.RightPartPixels(rightSize);
-            Listing_Standard lListing = new Listing_Standard();
-            lListing.Begin(leftRect);
-            lListing.verticalSpacing = listingStandard.verticalSpacing;
-            foreach (SettingContainer setting in leftCol)
+            if (!InitializeSettingsList(rightCol, "rightCol"))
             {
-                setting.DrawSetting(lListing, selectedMod);
+                return false;
             }
-            lListing.End();
-            Listing_Standard rListing = new Listing_Standard();
-            if (drawLine)
-            {
-                Color color = GUI.color;
-                GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                GUI.DrawTexture(new Rect(baseRect.center.x, rightRect.yMin, 1f, rightRect.height), BaseContent.WhiteTex);
-                GUI.color = color;
-            }
-            rListing.Begin(rightRect);
-            rListing.verticalSpacing = listingStandard.verticalSpacing;
-            foreach (SettingContainer setting in rightCol)
-            {
-                setting.DrawSetting(rListing, selectedMod);
-            }
-            rListing.End();
-        }
-
-        private enum Spacing : int
-        {
-            None = 0,
-            Tiny = 2,
-            Small = 3,
-            Medium = 5,
-            Large = 9,
-            Huge = 15
-        }
-
-        private int columnHeight(List<SettingContainer> settings, float width, string selectedMod)
-        {
-            int h = 0;
-            foreach (SettingContainer setting in settings)
-            {
-                h += setting.GetHeight(width, selectedMod);
-            }
-            return h;
+            return true;
         }
 
         protected override bool SetDefaultValue(string modId)
@@ -82,27 +39,31 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override bool Init()
-        {
-            if (!InitializeSettingsList(leftCol, "leftCol"))
-            {
-                return false;
-            }
-            if (!InitializeSettingsList(rightCol, "rightCol"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        protected override int CalcHeight(float width, string selectedMod)
+        protected override float CalcHeight(float width, string selectedMod)
         {
             if (pixels < 0)
             {
                 pixels = width / 2 - (int)gapSize;
             }
             float leftSize = Math.Min(width - (int)gapSize, pixels);
-            return Math.Max(columnHeight(leftCol, leftSize, selectedMod), columnHeight(rightCol, width - leftSize - (int)gapSize, selectedMod));
+            return Math.Max(GetHeightSettingsList(leftSize, selectedMod, leftCol), GetHeightSettingsList(width - leftSize - (int)gapSize, selectedMod, leftCol));
+        }
+
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            float leftSize = Math.Min(inRect.width - (int)gapSize, pixels);
+            float rightSize = inRect.width - leftSize - 2 * (int)gapSize;
+            Rect leftRect = inRect.LeftPartPixels(leftSize);
+            Rect rightRect = inRect.RightPartPixels(rightSize);
+            DrawSettingsList(leftRect, selectedMod, leftCol);
+            if (drawLine)
+            {
+                Color color = GUI.color;
+                GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+                GUI.DrawTexture(new Rect(inRect.center.x, rightRect.yMin, 1f, rightRect.height), BaseContent.WhiteTex);
+                GUI.color = color;
+            }
+            DrawSettingsList(rightRect, selectedMod, rightCol);
         }
 
         protected override bool PreClose(string selectedMod)
@@ -116,6 +77,16 @@ namespace XmlExtensions.Setting
                 return false;
             }
             return true;
+        }
+
+        private enum Spacing : int
+        {
+            None = 0,
+            Tiny = 2,
+            Small = 3,
+            Medium = 5,
+            Large = 9,
+            Huge = 15
         }
     }
 }

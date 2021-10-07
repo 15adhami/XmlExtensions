@@ -16,19 +16,10 @@ namespace XmlExtensions.Setting
                 ThrowError("<key> is null");
                 return false;
             }
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            if (defaultValue != null)
             {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                if (defaultValue != null)
-                {
-                    XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-                    if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
-                        XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
-                }
-            }
+                SettingsManager.SetDefaultValue(modId, key, defaultValue);
+            }            
             return true;
         }
     }

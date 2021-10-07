@@ -1,50 +1,25 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Verse;
 
 namespace XmlExtensions.Setting
 {
     public class ToggleableSettings : KeyedSettingContainer
     {
-        public List<SettingContainer> caseTrue = new List<SettingContainer>();
-        public List<SettingContainer> caseFalse = new List<SettingContainer>();
+        public List<SettingContainer> caseTrue;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
-        {
-            List<SettingContainer> settings;
-            if (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]))
-            {
-                settings = caseTrue;
-            }
-            else
-            {
-                settings = caseFalse;
-            }
-            if (settings != null)
-            {
-                Rect baseRect = listingStandard.GetRect(calcHeight(settings, listingStandard.ColumnWidth, selectedMod));
-                Listing_Standard listing = new Listing_Standard();
-                listing.Begin(baseRect);
-                listing.verticalSpacing = listingStandard.verticalSpacing;
-                foreach (SettingContainer setting in settings)
-                {
-                    setting.DrawSetting(listing, selectedMod);
-                }
-                listing.End();
-            }
-        }
+        public List<SettingContainer> caseFalse;
 
-        private int calcHeight(List<SettingContainer> settings, float width, string selectedMod)
+        protected override bool Init()
         {
-            int h = 0;
-            if (settings != null)
+            if (!InitializeSettingsList(caseTrue, "caseTrue"))
             {
-                foreach (SettingContainer setting in settings)
-                {
-                    h += setting.GetHeight(width, selectedMod);
-                }
+                return false;
             }
-            return h;
+            if (!InitializeSettingsList(caseFalse, "caseFalse"))
+            {
+                return false;
+            }
+            return true;
         }
 
         protected override bool SetDefaultValue(string modId)
@@ -60,22 +35,26 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override bool Init()
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            if (!InitializeSettingsList(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            if (!InitializeSettingsList(caseFalse, "caseFalse"))
-            {
-                return false;
-            }
-            return true;
+            return bool.Parse(SettingsManager.GetSetting(selectedMod, key)) ? GetHeightSettingsList(width, selectedMod, caseTrue) : GetHeightSettingsList(width, selectedMod, caseFalse);
         }
 
-        protected override int CalcHeight(float width, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            return (bool.Parse(XmlMod.allSettings.dataDict[XmlMod.selectedMod + ";" + key]) ? calcHeight(caseTrue, width, selectedMod) : calcHeight(caseFalse, width, selectedMod));
+            List<SettingContainer> settings;
+            if (bool.Parse(SettingsManager.GetSetting(selectedMod, key)))
+            {
+                settings = caseTrue;
+            }
+            else
+            {
+                settings = caseFalse;
+            }
+            if (settings != null)
+            {
+                DrawSettingsList(inRect, selectedMod, settings);
+            }
         }
 
         protected override bool PreClose(string selectedMod)

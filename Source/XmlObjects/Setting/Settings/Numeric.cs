@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 
 namespace XmlExtensions.Setting
 {
@@ -8,14 +9,17 @@ namespace XmlExtensions.Setting
         public float max;
         public string tKey;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            float f = float.Parse(XmlMod.allSettings.dataDict[selectedMod + ";" + key]);
-            string buf = f.ToString();
-            listingStandard.TextFieldNumericLabeled<float>(Helpers.TryTranslate(label, tKey), ref f, ref buf, min, max);
-            XmlMod.allSettings.dataDict[selectedMod + ";" + key] = f.ToString();
+            return 22 + GetDefaultSpacing();
         }
 
-        protected override int CalcHeight(float width, string selectedMod) { return (22 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            float f = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            string buf = f.ToString();
+            Widgets.TextFieldNumericLabeled(inRect, Helpers.TryTranslate(label, tKey), ref f, ref buf, min, max);
+            SettingsManager.SetSetting(selectedMod, key, f.ToString());
+        }                
     }
 }

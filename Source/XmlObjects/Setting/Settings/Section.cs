@@ -7,39 +7,25 @@ namespace XmlExtensions.Setting
     public class Section : SettingContainer
     {
         public float height = -1f;
-        public List<SettingContainer> settings = new List<SettingContainer>();
+        public List<SettingContainer> settings;
         public float padding = 4f;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        protected override bool Init()
         {
-            if(settings.Count > 0)
-            {
-                Rect rect = listingStandard.GetRect(CalcHeight(listingStandard.ColumnWidth, selectedMod));
-                Color curColor = GUI.color;
-                GUI.color = Widgets.MenuSectionBGFillColor * curColor;
-                GUI.DrawTexture(rect, BaseContent.WhiteTex);
-                GUI.color = new ColorInt(135, 135, 135).ToColor * curColor;
-                Widgets.DrawBox(rect, 1, null);
-                GUI.color = curColor;
-                Listing_Standard listing_Standard = new Listing_Standard();
-                listing_Standard.verticalSpacing = listingStandard.verticalSpacing;
-                Rect rect2 = new Rect(rect.x + padding, rect.y + padding, rect.width - padding * 2f, rect.height - padding * 2f);
-                listing_Standard.Begin(rect2);
-                foreach (SettingContainer setting in settings)
-                {
-                    setting.DrawSetting(listing_Standard, selectedMod);
-                }
-                listing_Standard.End();
-            }            
+            return InitializeSettingsList(settings);
         }
 
-        protected override int CalcHeight(float width, string selectedMod)
+        protected override bool SetDefaultValue(string modId)
+        {
+            return DefaultValueSettingsList(modId, settings);
+        }
+        protected override float CalcHeight(float width, string selectedMod)
         {
             if (settings.Count == 0)
                 return 0;
-            if(height<0)
+            if (height < 0)
             {
-                int h = 0;
+                float h = 0;
                 if (settings != null)
                 {
                     foreach (SettingContainer setting in settings)
@@ -47,22 +33,27 @@ namespace XmlExtensions.Setting
                         h += setting.GetHeight(width - padding * 2f, selectedMod);
                     }
                 }
-                return h + (int)padding * 2;
+                return h + padding * 2;
             }
             else
             {
-                return (int)height + (int)padding * 2;
+                return height + padding * 2;
             }
         }
 
-        protected override bool SetDefaultValue(string modId)
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            return DefaultValueSettingsList(modId, settings);
-        }
-
-        protected override bool Init()
-        {
-            return InitializeSettingsList(settings);
+            if(settings.Count > 0)
+            {
+                Color curColor = GUI.color;
+                GUI.color = Widgets.MenuSectionBGFillColor * curColor;
+                GUI.DrawTexture(inRect, BaseContent.WhiteTex);
+                GUI.color = new ColorInt(135, 135, 135).ToColor * curColor;
+                Widgets.DrawBox(inRect, 1, null);
+                GUI.color = curColor;
+                Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
+                DrawSettingsList(rect2, selectedMod, settings);
+            }            
         }
 
         protected override bool PreClose(string selectedMod)

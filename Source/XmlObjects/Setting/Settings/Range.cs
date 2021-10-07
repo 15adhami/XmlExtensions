@@ -14,118 +14,59 @@ namespace XmlExtensions.Setting
         public int id = 0;
         public int decimals = 0;
 
-        protected override void DrawSettingContents(Listing_Standard listingStandard, string selectedMod)
+        private Color cColor;
+
+        protected override bool Init()
         {
-            cColor = GUI.color;
-            if (decimals == 0)
-            {
-                if (key2 == null)
-                {
-                    IntRange range = IntRange.FromString(SettingsManager.GetSetting(selectedMod, key));
-                    Rect rect = listingStandard.GetRect(28f);
-                    Widgets.IntRange(rect, id, ref range, min, max, null, 0);
-                    listingStandard.Gap(SettingsManager.GetDefaultSpacing());
-                    SettingsManager.SetSetting(selectedMod, key, range.ToString());
-                }
-                else
-                {
-                    IntRange range = IntRange.FromString(SettingsManager.GetSetting(selectedMod, key) + "~" + SettingsManager.GetSetting(selectedMod, key2));
-                    Rect rect = listingStandard.GetRect(28f);
-                    Widgets.IntRange(rect, id, ref range, min, max, null, 0);
-                    listingStandard.Gap(SettingsManager.GetDefaultSpacing());
-                    SettingsManager.SetSetting(selectedMod, key, range.min.ToString());
-                    SettingsManager.SetSetting(selectedMod, key2, range.max.ToString());
-                }
-            }
-            else
-            {
-                if (key2 == null)
-                {
-                    FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key));
-                    Rect rect = listingStandard.GetRect(28f);
-                    FloatRange(rect, id, ref range, min, max, null);
-                    listingStandard.Gap(SettingsManager.GetDefaultSpacing());
-                    SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString() + "~" + Math.Round(range.max, decimals).ToString());
-                }
-                else
-                {
-                    FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key) + "~" + SettingsManager.GetSetting(selectedMod, key2));
-                    Rect rect = listingStandard.GetRect(28f);
-                    FloatRange(rect, id, ref range, min, max, null);
-                    listingStandard.Gap(SettingsManager.GetDefaultSpacing());
-                    SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString());
-                    SettingsManager.SetSetting(selectedMod, key2, Math.Round(range.max, decimals).ToString());
-                }
-            }
-            GUI.color = cColor;
+            // Used to avoid a vanilla bug in how ranges are dragged
+            id = PatchManager.rangeCount;
+            PatchManager.rangeCount++;
+            return true;
         }
 
         protected override bool SetDefaultValue(string modId)
         {
             if (key == null)
             {
-                PatchManager.errors.Add("Error in XmlExtensions.Setting.Range: <key> is null");
+                ThrowError("<key> is null");
                 return false;
             }
             if (key2 == null)
             {
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(key);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-                {
-                    if (defaultValue != null)
-                    {
-                        XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
-                            XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue);
-                    }
-                }
+                SettingsManager.SetDefaultValue(modId, key, defaultValue);
             }
             else
             {
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(key);
-                }
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(key2))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(key2);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-                {
-                    if (defaultValue != null)
-                    {
-                        XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue.Split('~')[0]);
-                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
-                            XmlMod.allSettings.dataDict.Add(modId + ";" + key, defaultValue.Split('~')[0]);
-                    }
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key2))
-                {
-                    if (defaultValue != null)
-                    {
-                        XmlMod.settingsPerMod[modId].defValues.Add(key2, defaultValue.Split('~')[1]);
-                        if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key2))
-                            XmlMod.allSettings.dataDict.Add(modId + ";" + key2, defaultValue.Split('~')[1]);
-                    }
-                }
+                SettingsManager.SetDefaultValue(modId, key, defaultValue.Split('~')[0]);
+                SettingsManager.SetDefaultValue(modId, key2, defaultValue.Split('~')[1]);
             }
             return true;
         }
 
-        protected override int CalcHeight(float width, string selectedMod) { return (28 + XmlMod.menus[XmlMod.activeMenu].defaultSpacing); }
-
-        protected override bool Init()
+        protected override float CalcHeight(float width, string selectedMod)
         {
-            base.Init();
-            id = PatchManager.rangeCount;
-            PatchManager.rangeCount++;
-            return true;
+            return 28 + GetDefaultSpacing();
         }
 
-        private Color cColor;
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {
+            cColor = GUI.color;
+            Rect rect = inRect.TopPartPixels(28f);
+            if (key2 == null)
+            {
+                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key));
+                FloatRange(rect, id, ref range, min, max, null);
+                SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString() + "~" + Math.Round(range.max, decimals).ToString());
+            }
+            else
+            {
+                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key) + "~" + SettingsManager.GetSetting(selectedMod, key2));
+                FloatRange(rect, id, ref range, min, max, null);
+                SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString());
+                SettingsManager.SetSetting(selectedMod, key2, Math.Round(range.max, decimals).ToString());
+            }
+            GUI.color = cColor;
+        }
 
         private enum RangeEnd : byte
         {
@@ -133,6 +74,7 @@ namespace XmlExtensions.Setting
             Min,
             Max
         }
+
         private RangeEnd curDragEnd;
 
         private int draggingId = 0;
