@@ -15,9 +15,9 @@ namespace XmlExtensions.Setting
         // Public methods
 
         /// <summary>
-        /// This method will be run exactly one time after the game finishes booting, it is used to initialize the setting.
+        /// This method will be run exactly one time after the game finishes booting, it is used to initialize the setting
         /// </summary>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool Initialize()
         {
             try
@@ -31,6 +31,11 @@ namespace XmlExtensions.Setting
             }
         }
 
+        /// <summary>
+        /// Sets the defaultValue of this setting
+        /// </summary>
+        /// <param name="modId">The modId of the mod that is using this setting</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool DefaultValue(string modId)
         {
             try
@@ -44,6 +49,12 @@ namespace XmlExtensions.Setting
             }
         }
 
+        /// <summary>
+        /// Returns the height of the setting for the current frame
+        /// </sumary>
+        /// <param name="width">The width of the column the setting is contaiend in</param>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <returns>The height of the setting, in pixels</returns>
         public float GetHeight(float width, string selectedMod)
         {
             if (cachedHeight < 0)
@@ -53,6 +64,11 @@ namespace XmlExtensions.Setting
             return cachedHeight;
         }
 
+        /// <summary>
+        /// Draw the setting in the given <c>Rect</c>
+        /// </summary>
+        /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         public virtual void DrawSetting(Rect inRect, string selectedMod)
         {
             try
@@ -69,6 +85,11 @@ namespace XmlExtensions.Setting
             cachedHeight = -1f;
         }
 
+        /// <summary>
+        /// Run the setting's <c>PreClose()</c> method
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool DoPreClose(string selectedMod)
         {
             return PreClose(selectedMod);
@@ -85,18 +106,39 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        /// <summary>
+        /// Sets the defaultValue of this setting. You may skip this if your setting doesn't contain other settings, or doesn't require a special method
+        /// </summary>
+        /// <param name="modId">The modId of the mod that is using this setting</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected virtual bool SetDefaultValue(string modId)
         {
             return true;
         }
 
+        /// <summary>
+        /// Returns the height of the setting for the current frame
+        /// </sumary>
+        /// <param name="width">The width of the column the setting is contaiend in</param>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <returns>The height of the setting, in pixels</returns>
         protected virtual float CalcHeight(float width, string selectedMod)
         {
             return 0;
         }
 
+        /// <summary>
+        /// Draw the setting in the given <c>Rect</c>
+        /// </summary>
+        /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         protected abstract void DrawSettingContents(Rect inRect, string selectedMod);
 
+        /// <summary>
+        /// This method will be run when the menu containing this setting is closed
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected virtual bool PreClose(string selectedMod)
         {
             return true;
@@ -123,7 +165,7 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Draws a list of SettingsContainers
+        /// Draws a list of SettingsContainer, error handling is done automatically
         /// </summary>
         /// <param name="rect">The <c>Rect</c> to draw in, should be the same height as the height of the list of settings</param>
         /// <param name="selectedMod">The <c>modId</c> of the selected mod in the menu</param>
@@ -191,16 +233,6 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        protected bool DoPreCloseSetting(SettingContainer setting, string selectedMod)
-        {
-            if (!setting.DoPreClose(selectedMod))
-            {
-                ThrowError("Failed to run PreClose() for a setting");
-                return false;
-            }
-            return true;
-        }
-
         protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings)
         {
             if (settings != null)
@@ -233,16 +265,6 @@ namespace XmlExtensions.Setting
                         return false;
                     }
                 }
-            }
-            return true;
-        }
-
-        protected bool InitializeSetting(SettingContainer setting)
-        {
-            if (!setting.Initialize())
-            {
-                ThrowError("Failed to initialize a setting");
-                return false;
             }
             return true;
         }
