@@ -23,14 +23,7 @@ namespace XmlExtensions
         /// <param name="value">The value you want to set as default</param>
         public static void SetDefaultValue(string modId, string key, string value)
         {
-            if (!ContainsKey(modId, key))
-            {
-                SetSetting(modId, key, value);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                XmlMod.settingsPerMod[modId].defValues.Add(key, value);
-            }
+            RegisterKey(modId, key, value);
             XmlMod.settingsPerMod[modId].defValues[key] = value;
         }
 
@@ -69,19 +62,8 @@ namespace XmlExtensions
         /// <param name="value">The value you want to store.</param>
         public static void SetSetting(string modId, string key, string value)
         {
-            string fullKey = modId + ";" + key;
-            if (XmlMod.allSettings.dataDict.ContainsKey(fullKey))
-            {
-                XmlMod.allSettings.dataDict[fullKey] = value;
-            }
-            else
-            {
-                XmlMod.allSettings.dataDict.Add(modId + ";" + key, value);
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-                {
-                    XmlMod.settingsPerMod[modId].defValues.Add(key, value);
-                }
-            }
+            RegisterKey(modId, key, value);
+            XmlMod.allSettings.dataDict[modId + ";" + key] = value;
         }
 
         /// <summary>
@@ -92,13 +74,73 @@ namespace XmlExtensions
         /// <returns><c>true</c> if the mod contains the key, <c>false</c> otherwise</returns>
         public static bool ContainsKey(string modId, string key)
         {
-            return XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key);
+            return XmlMod.settingsPerMod[modId].keys.Contains(key);
         }
 
-        // TODO: Finalize
+        /// <summary>
+        /// Register a new mod into XML Extensions, only use if you know what you are doing
+        /// </summary>
+        /// <param name="modId">The modId of the new mod</param>
+        /// <param name="label">The label of the new mod</param>
+        public static void AddMod(string modId, string label)
+        {
+            AddMod(modId);
+            XmlMod.settingsPerMod[modId].label = label;
+        }
+
+        /// <summary>
+        /// Register a new mod into XML Extensions, only use if you know what you are doing
+        /// </summary>
+        /// <param name="modId">The modId of the new mod</param>
+        public static void AddMod(string modId)
+        {
+            if (XmlMod.loadedXmlMods == null)
+            {
+                XmlMod.loadedXmlMods = new List<string>();
+            }
+            if (!XmlMod.loadedXmlMods.Contains(modId))
+            {
+                XmlMod.loadedXmlMods.Add(modId);
+            }
+            if (XmlMod.settingsPerMod == null)
+            {
+                XmlMod.settingsPerMod = new Dictionary<string, XmlModSettings>();
+            }
+            if (!XmlMod.settingsPerMod.ContainsKey(modId))
+            {
+                XmlModSettings t = new XmlModSettings(modId);
+                XmlMod.settingsPerMod.Add(modId, t);
+            }
+            if (XmlMod.settingsPerMod[modId].defValues == null)
+            {
+                XmlMod.settingsPerMod[modId].defValues = new Dictionary<string, string>();
+            }
+        }
+
+        /// <summary>
+        /// Iterator for all active keys associated with the given mod
+        /// </summary>
+        /// <param name="modId">The modId of the mod</param>
+        /// <returns>An iterator for every active key associated with the given mod</returns>
         public static IEnumerable<string> GetKeys(string modId)
         {
             return XmlMod.settingsPerMod[modId].keys;
+        }
+
+        private static void RegisterKey(string modId, string key, string value)
+        {
+            if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+            {
+                XmlMod.allSettings.dataDict.Add(modId + ";" + key, value);
+            }
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                XmlMod.settingsPerMod[modId].defValues.Add(key, value);
+            }
         }
     }
 }

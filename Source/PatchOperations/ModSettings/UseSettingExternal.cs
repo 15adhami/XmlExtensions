@@ -8,8 +8,8 @@ namespace XmlExtensions
 {
     public class UseSettingExternal : PatchOperationValue
     {
-        protected string ModSettingsClass;
-        protected string field;
+        public string ModSettingsClass;
+        public string field;
 
         protected override void SetException()
         {

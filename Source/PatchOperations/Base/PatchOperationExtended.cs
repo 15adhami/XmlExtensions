@@ -38,7 +38,10 @@ namespace XmlExtensions
             }
         }
 
-        protected virtual bool PreCheck(XmlDocument xml) { return true; }
+        protected virtual bool PreCheck(XmlDocument xml)
+        {
+            return true;
+        }
 
         protected virtual bool Patch(XmlDocument xml)
         {

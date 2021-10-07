@@ -3,6 +3,8 @@ using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
+    // TODO: Refactor all Boolean code
+
     public abstract class BooleanBase
     {
         public string xmlDoc;

@@ -15,14 +15,15 @@ namespace XmlExtensions.Setting
         // Public methods
 
         /// <summary>
-        /// This method will be run exactly one time after the game finishes booting, it is used to initialize the setting
+        /// Sets the defaultValue of this setting. It is run immediately after the game finishes loading
         /// </summary>
+        /// <param name="modId">The modId of the mod that is using this setting</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool Initialize()
+        public bool DefaultValue(string modId)
         {
             try
             {
-                return Init();
+                return SetDefaultValue(modId);
             }
             catch (Exception e)
             {
@@ -32,15 +33,14 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Sets the defaultValue of this setting
+        /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
-        /// <param name="modId">The modId of the mod that is using this setting</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool DefaultValue(string modId)
+        public bool Initialize()
         {
             try
             {
-                return SetDefaultValue(modId);
+                return Init();
             }
             catch (Exception e)
             {
@@ -75,10 +75,11 @@ namespace XmlExtensions.Setting
             {
                 DrawSettingContents(inRect, selectedMod);
             }
-            catch
+            catch (Exception e)
             {
                 GUI.color = Color.red;
                 Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
+                Verse.Log.Error(e.Message);
                 errHeight = 22;
                 GUI.color = Color.white;
             }
@@ -98,20 +99,22 @@ namespace XmlExtensions.Setting
         // Methods to override
 
         /// <summary>
-        /// This method will be run exactly one time after the game finishes booting. You may run any initialization or pre-computations here.
+        /// Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
+        /// You may skip this if your setting doesn't contain other settings, or doesn't require a special method
         /// </summary>
-        /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
-        protected virtual bool Init()
+        /// <param name="modId">The modId of the mod that is using this setting</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        protected virtual bool SetDefaultValue(string modId)
         {
             return true;
         }
 
         /// <summary>
-        /// Sets the defaultValue of this setting. You may skip this if your setting doesn't contain other settings, or doesn't require a special method
+        /// This method will be run exactly one time after the game finishes booting and after running <c>SetDefaultValue()</c><br/>
+        /// You may run any initialization or pre-computation code here
         /// </summary>
-        /// <param name="modId">The modId of the mod that is using this setting</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected virtual bool SetDefaultValue(string modId)
+        /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
+        protected virtual bool Init()
         {
             return true;
         }

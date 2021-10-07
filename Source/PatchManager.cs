@@ -18,7 +18,6 @@ namespace XmlExtensions
         public static bool loadingPatches = false;
         public static int rangeCount = 1;
         public static bool context = false;
-        public static string contextPath;
         public static Dictionary<Type, Delegate> patchConstructors;
         public static Dictionary<string, XmlDocument> XmlDocs;
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;

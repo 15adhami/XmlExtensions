@@ -37,11 +37,14 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            // TODO: Add tooltip
             if (!confirm)
             {
                 if (keys == null)
                 {
+                    if (!tooltip.NullOrEmpty())
+                    {
+                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                    }
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
                         foreach (string key in SettingsManager.GetKeys(selectedMod))
@@ -50,6 +53,10 @@ namespace XmlExtensions.Setting
                 }
                 else
                 {
+                    if (!tooltip.NullOrEmpty())
+                    {
+                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                    }
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
                         foreach (string key in keys)
@@ -61,6 +68,10 @@ namespace XmlExtensions.Setting
             {
                 if (keys == null)
                 {
+                    if (!tooltip.NullOrEmpty())
+                    {
+                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                    }
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
                         Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
@@ -76,6 +87,10 @@ namespace XmlExtensions.Setting
                 }
                 else
                 {
+                    if (!tooltip.NullOrEmpty())
+                    {
+                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                    }
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
                         Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()

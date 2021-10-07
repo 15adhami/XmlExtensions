@@ -27,18 +27,6 @@ namespace XmlExtensions
                     PatchManager.ModPatchDict.Add(patch, mod);
                 }
             }
-            // Bug: Same patch being defined twice (argon mod)
-            /*
-            foreach(Type T in typeof(PatchOperation).AllSubclasses())
-            {
-                if(!T.IsAbstract)
-                {
-                    NewExpression newExp = Expression.New(T.GetConstructor(Type.EmptyTypes));
-                    LambdaExpression lambda = Expression.Lambda(newExp);
-                    Delegate compiled = lambda.Compile();
-                    PatchManager.patchConstructors.Add(T, compiled);
-                }                
-            }*/
         }
 
         static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
@@ -46,6 +34,7 @@ namespace XmlExtensions
             PatchManager.XmlDocs.Clear();
             PatchManager.nodeMap.Clear();
             PatchManager.watch.Reset();
+
             //Add defNames to the menus
             foreach (XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))
             {

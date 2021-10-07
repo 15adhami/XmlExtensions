@@ -6,7 +6,7 @@ namespace XmlExtensions
 {
     public class PatchOperationAddModExtension : PatchOperationExtendedPathed
     {
-        private XmlContainer value;
+        public XmlContainer value;
 
         protected override bool Patch(XmlDocument xml)
         {

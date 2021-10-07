@@ -24,12 +24,11 @@ namespace XmlExtensions
             }
             try
             {
-                XmlMod.loadedMod = modId;
                 if(submenu)
-                    XmlMod.addXmlMod(modId);
+                    SettingsManager.AddMod(modId);
                 else
-                    XmlMod.addXmlMod(modId, label);
-                if(tKey != null)
+                    SettingsManager.AddMod(modId, label);
+                if (tKey != null)
                     XmlMod.settingsPerMod[modId].tKey = tKey;
                 int c = 0;
                 foreach (SettingContainer setting in settings)

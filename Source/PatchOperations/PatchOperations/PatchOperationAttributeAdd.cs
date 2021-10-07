@@ -5,7 +5,7 @@ namespace XmlExtensions
 {
     public class PatchOperationAttributeAdd : PatchOperationExtendedAttribute
     {
-        protected string value;
+        public string value;
 
         protected override bool Patch(XmlDocument xml)
         {

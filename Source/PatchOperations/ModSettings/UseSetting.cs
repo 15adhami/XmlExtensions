@@ -7,9 +7,9 @@ namespace XmlExtensions
 {
     public class UseSetting : PatchOperationValue
     {
-        protected string modId;
-        protected string key;
-        protected string defaultValue;
+        public string modId;
+        public string key;
+        public string defaultValue;
 
         protected override void SetException()
         {
@@ -40,22 +40,13 @@ namespace XmlExtensions
                 NullError("modId");
                 return false;
             }
-            XmlMod.loadedMod = modId;
-            XmlMod.addXmlMod(modId);
-            string value;
-            bool didContain = SettingsManager.TryGetSetting(modId, key, out value);
+            SettingsManager.AddMod(modId);
+            SettingsManager.SetDefaultValue(modId, key, defaultValue);
+            bool didContain = SettingsManager.TryGetSetting(modId, key, out string value);
             if (!didContain)
             {
                 value = defaultValue;
-                XmlMod.addSetting(modId, key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                XmlMod.settingsPerMod[modId].defValues.Add(key, defaultValue);
-            }
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-            {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
+                SettingsManager.SetSetting(modId, key, defaultValue);
             }
             vals.Add(value);
             return true;

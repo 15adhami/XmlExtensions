@@ -8,6 +8,16 @@ namespace XmlExtensions.Setting
         public string tooltip;
         public string tKey;
         public string tKeyTip;
+        public bool highlight = true;
+
+        protected override bool Init()
+        {
+            if (tooltip != null)
+            {
+                highlight = true;
+            }
+            return true;
+        }
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
@@ -16,10 +26,21 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            // TODO: Add tooltip
-            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));
+            if (key == "hardwork_kemomimihouse_wvc")
+            {
+                Verse.Log.Message(SettingsManager.GetSetting(selectedMod, key));
+            }
+            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));            
+            if (highlight && Mouse.IsOver(inRect))
+            {
+                Widgets.DrawHighlight(inRect);
+            }
+            if (!tooltip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+            }
             Widgets.CheckboxLabeled(inRect, Helpers.TryTranslate(label, tKey), ref currBool);
             SettingsManager.SetSetting(selectedMod, key, currBool.ToString());
-        }        
+        }
     }
 }

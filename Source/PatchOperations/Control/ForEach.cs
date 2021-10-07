@@ -31,7 +31,6 @@ namespace XmlExtensions
         {
             foreach (XmlNode xmlNode in nodes)
             {
-                // TODO: Make sure node wasn't deleted
                 string path = xmlNode.GetXPath();
                 if (path[0] == '/')
                 {

@@ -67,7 +67,10 @@ namespace XmlExtensions.Setting
                     str = Helpers.SubstituteVariable(str, key, XmlMod.allSettings.dataDict[selectedMod + ";" + key], "{}");
                 }
             }
-            // TODO: Add tooltip
+            if (!tooltip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+            }
             Widgets.Label(inRect, str);                       
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;

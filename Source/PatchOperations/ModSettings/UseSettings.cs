@@ -7,9 +7,9 @@ namespace XmlExtensions
 {
     public class UseSettings : PatchOperationValue
     {
-        protected string modId;
-        protected List<string> keys;
-        protected List<string> defaultValues;
+        public string modId;
+        public List<string> keys;
+        public List<string> defaultValues;
 
         public override bool getVars(List<string> vars)
         {
@@ -37,23 +37,15 @@ namespace XmlExtensions
                 Error("There are more defaultValues than keys");
                 return false;
             }
-            XmlMod.addXmlMod(modId);
+            SettingsManager.AddMod(modId);
             for (int i = 0; i < keys.Count; i++)
             {
-                string value;
-                bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out value);
+                SettingsManager.SetDefaultValue(modId, keys[i], defaultValues[i]);
+                bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out string value );
                 if (!didContain)
                 {
                     value = defaultValues[i];
                     SettingsManager.SetSetting(modId, keys[i], defaultValues[i]);
-                }
-                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(keys[i]))
-                {
-                    XmlMod.settingsPerMod[modId].defValues.Add(keys[i], defaultValues[i]);
-                }
-                if (!XmlMod.settingsPerMod[modId].keys.Contains(keys[i]))
-                {
-                    XmlMod.settingsPerMod[modId].keys.Add(keys[i]);
                 }
                 vals.Add(value);
             }

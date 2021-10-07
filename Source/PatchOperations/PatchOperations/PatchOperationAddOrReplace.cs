@@ -6,7 +6,7 @@ namespace XmlExtensions
 {
     public class PatchOperationAddOrReplace : PatchOperationExtendedPathed
     {
-        protected XmlContainer value;
+        public XmlContainer value;
 
         protected override bool Patch(XmlDocument xml)
         {

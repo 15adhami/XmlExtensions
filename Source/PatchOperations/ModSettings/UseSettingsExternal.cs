@@ -8,8 +8,8 @@ namespace XmlExtensions
 {
     public class UseSettingsExternal : PatchOperationValue
     {
-        protected string ModSettingsClass;
-        protected List<string> fields;
+        public string ModSettingsClass;
+        public List<string> fields;
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {

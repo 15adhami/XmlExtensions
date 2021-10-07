@@ -7,11 +7,11 @@ namespace XmlExtensions
     [Obsolete]
     public class CreateSettings : PatchOperation
     {
-        protected string modId;
-        protected string label;
-        protected int defaultSpacing = 2;
-        protected XmlContainer settings;
-        protected string tKey;
+        public string modId;
+        public string label;
+        public int defaultSpacing = 2;
+        public XmlContainer settings;
+        public string tKey;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
