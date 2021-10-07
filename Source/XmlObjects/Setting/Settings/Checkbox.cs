@@ -26,10 +26,6 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            if (key == "hardwork_kemomimihouse_wvc")
-            {
-                Verse.Log.Message(SettingsManager.GetSetting(selectedMod, key));
-            }
             bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));            
             if (highlight && Mouse.IsOver(inRect))
             {
