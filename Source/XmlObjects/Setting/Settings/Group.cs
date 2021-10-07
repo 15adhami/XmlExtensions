@@ -15,7 +15,7 @@ namespace XmlExtensions.Setting
 
         protected override bool SetDefaultValue(string modId)
         {
-            return DefaultValueSettingsList(modId, settings);
+            return SetDefaultValueSettingsList(modId, settings);
         }
 
         protected override float CalculateHeight(float width, string selectedMod)

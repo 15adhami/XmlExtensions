@@ -218,7 +218,7 @@ namespace XmlExtensions.Setting
         /// <param name="modId">The modID of the active menu</param>
         /// <param name="settings">The list of settings</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool DefaultValueSettingsList(string modId, List<SettingContainer> settings)
+        protected bool SetDefaultValueSettingsList(string modId, List<SettingContainer> settings)
         {
             if (settings != null)
             {
