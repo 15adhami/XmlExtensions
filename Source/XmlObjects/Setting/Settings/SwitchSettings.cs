@@ -41,7 +41,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (SwitchSetting switchSetting in cases)
                 {
-                    if (!DefaultValueSettingsList(modId, switchSetting.settings, switchSetting.value.ToString()))
+                    if (!SetDefaultValueSettingsList(modId, switchSetting.settings, switchSetting.value.ToString()))
                     {
                         return false;
                     }

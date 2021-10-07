@@ -194,7 +194,7 @@ namespace XmlExtensions.Setting
         /// <param name="settings">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns></returns>
-        protected bool DefaultValueSettingsList(string modId, List<SettingContainer> settings, string name)
+        protected bool SetDefaultValueSettingsList(string modId, List<SettingContainer> settings, string name)
         {
             if (settings != null)
             {

@@ -3,11 +3,24 @@ using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
-    public class ToggleableSettings : KeyedSettingContainer
+    public class ToggleableSettings : SettingContainer
     {
+        public string key;
         public List<SettingContainer> caseTrue;
-
         public List<SettingContainer> caseFalse;
+
+        protected override bool SetDefaultValue(string modId)
+        {
+            if (!SetDefaultValueSettingsList(modId, caseTrue, "caseTrue"))
+            {
+                return false;
+            }
+            if (!SetDefaultValueSettingsList(modId, caseFalse, "caseFalse"))
+            {
+                return false;
+            }
+            return true;
+        }
 
         protected override bool Init()
         {
@@ -16,19 +29,6 @@ namespace XmlExtensions.Setting
                 return false;
             }
             if (!InitializeSettingsList(caseFalse, "caseFalse"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            if (!DefaultValueSettingsList(modId, caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            if (!DefaultValueSettingsList(modId, caseFalse, "caseFalse"))
             {
                 return false;
             }

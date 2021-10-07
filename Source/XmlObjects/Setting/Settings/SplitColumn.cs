@@ -28,11 +28,11 @@ namespace XmlExtensions.Setting
 
         protected override bool SetDefaultValue(string modId)
         {
-            if (!DefaultValueSettingsList(modId, leftCol, "leftCol"))
+            if (!SetDefaultValueSettingsList(modId, leftCol, "leftCol"))
             {
                 return false;
             }
-            if (!DefaultValueSettingsList(modId, rightCol, "rightCol"))
+            if (!SetDefaultValueSettingsList(modId, rightCol, "rightCol"))
             {
                 return false;
             }

@@ -49,7 +49,7 @@ namespace XmlExtensions.Setting
         {
             foreach (Tab tab in tabs)
             {
-                if (!DefaultValueSettingsList(modId, tab.settings, tab.label))
+                if (!SetDefaultValueSettingsList(modId, tab.settings, tab.label))
                 {
                     return false;
                 }
