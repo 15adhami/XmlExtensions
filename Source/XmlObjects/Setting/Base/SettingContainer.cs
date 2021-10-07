@@ -187,6 +187,13 @@ namespace XmlExtensions.Setting
             }
         }
 
+        /// <summary>
+        /// Initializes the default values of every setting in the list. Error handling done automatically, and prints the name of the list
+        /// </summary>
+        /// <param name="modId">The modID of the active menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <param name="name">The name of the list (for error reporting purposes)</param>
+        /// <returns></returns>
         protected bool DefaultValueSettingsList(string modId, List<SettingContainer> settings, string name)
         {
             if (settings != null)
@@ -205,6 +212,12 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        /// <summary>
+        /// Initializes the default values of every setting in the list. Error handling done automatically
+        /// </summary>
+        /// <param name="modId">The modID of the active menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected bool DefaultValueSettingsList(string modId, List<SettingContainer> settings)
         {
             if (settings != null)
@@ -223,6 +236,13 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        /// <summary>
+        /// Calculates the total height of every setting in the list
+        /// </summary>
+        /// <param name="width">The width of the column the settings will be placed in</param>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <returns>The total height of the settings</returns>
         protected float GetHeightSettingsList(float width, string selectedMod, List<SettingContainer> settings)
         {
             float h = 0;
@@ -236,6 +256,12 @@ namespace XmlExtensions.Setting
             return h;
         }
 
+        /// <summary>
+        /// Applies the <c>PreClose()</c> method on every setting in the list, error handling done automatically
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings)
         {
             if (settings != null)
@@ -254,6 +280,14 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+
+        /// <summary>
+        /// Applies the <c>PreClose()</c> method on every setting in the list, error handling done automatically and prints the name of the list
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <param name="name">The name of the list (for error reporting purposes)</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings, string name)
         {
             if (settings != null)
@@ -272,6 +306,12 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        /// <summary>
+        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected bool InitializeSettingsList(List<SettingContainer> settings)
         {
             if (settings != null)
@@ -290,6 +330,13 @@ namespace XmlExtensions.Setting
             return true;
         }
 
+        /// <summary>
+        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically and prints the name of the list
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <param name="name">The name of the list (for error reporting purposes)</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected bool InitializeSettingsList(List<SettingContainer> settings, string name)
         {
             if (settings != null)
