@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
         public string tKey;
         public string tKeyTip;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return 22 + GetDefaultSpacing();
         }

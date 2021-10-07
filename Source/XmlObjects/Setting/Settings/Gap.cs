@@ -5,7 +5,7 @@ namespace XmlExtensions.Setting
     public class Gap : SettingContainer
     {
         public int spacing = 24;
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return spacing;
         }

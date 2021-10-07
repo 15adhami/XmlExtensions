@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
         public string tKey;
         public int lines = 1;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return lines * 22 + GetDefaultSpacing();
         }

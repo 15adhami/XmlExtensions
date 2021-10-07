@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
         public List<RadioButton> buttons;
         protected int spacing = -1;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return buttons.Count * ((spacing < 0 ? GetDefaultSpacing() : spacing) + 22);
         }

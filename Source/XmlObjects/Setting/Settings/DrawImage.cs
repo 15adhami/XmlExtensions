@@ -23,7 +23,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalcHeight(float width2, string selectedMod)
+        protected override float CalculateHeight(float width2, string selectedMod)
         {
             Texture2D img = ContentFinder<Texture2D>.Get(texPath);
             int height = img.height;

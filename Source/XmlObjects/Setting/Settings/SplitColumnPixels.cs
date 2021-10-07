@@ -39,7 +39,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             if (pixels < 0)
             {

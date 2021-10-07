@@ -39,7 +39,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return Math.Max(GetHeightSettingsList(width * split - (float)gapSize, selectedMod, leftCol), GetHeightSettingsList(width * (1 - split) - (float)gapSize, selectedMod, rightCol));
         }

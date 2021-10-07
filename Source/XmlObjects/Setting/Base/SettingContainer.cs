@@ -59,7 +59,7 @@ namespace XmlExtensions.Setting
         {
             if (cachedHeight < 0)
             {
-                cachedHeight = errHeight < 0 ? CalcHeight(width, selectedMod) : errHeight;
+                cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
             }
             return cachedHeight;
         }
@@ -122,7 +122,7 @@ namespace XmlExtensions.Setting
         /// <param name="width">The width of the column the setting is contaiend in</param>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <returns>The height of the setting, in pixels</returns>
-        protected virtual float CalcHeight(float width, string selectedMod)
+        protected virtual float CalculateHeight(float width, string selectedMod)
         {
             return 0;
         }

@@ -19,7 +19,7 @@ namespace XmlExtensions.Setting
         {
             return DefaultValueSettingsList(modId, settings);
         }
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             if (settings.Count == 0)
                 return 0;

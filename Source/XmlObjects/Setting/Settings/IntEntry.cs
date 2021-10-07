@@ -11,7 +11,7 @@ namespace XmlExtensions.Setting
         public string min;
         public string max;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return 24 + GetDefaultSpacing();
         }

@@ -7,28 +7,31 @@ namespace XmlExtensions
         /// <summary>
         /// Gets the defaultValue of a given setting.
         /// </summary>
-        /// <param name="modId">The modId of your mod.</param>
-        /// <param name="key">The key of the setting.</param>
-        /// <returns>The defaultValue of the setting associated with the given key.</returns>
+        /// <param name="modId">The modId of your mod</param>
+        /// <param name="key">The key of the setting</param>
+        /// <returns>The defaultValue of the setting associated with the given key</returns>
         public static string GetDefaultValue(string modId, string key)
         {
             return XmlMod.settingsPerMod[modId].defValues[key];
         }
 
+        /// <summary>
+        /// Sets the defaultValue of a setting to the value given
+        /// </summary>
+        /// <param name="modId">The modId of your mod</param>
+        /// <param name="key">The key of the setting</param>
+        /// <param name="value">The value you want to set as default</param>
         public static void SetDefaultValue(string modId, string key, string value)
         {
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            if (!ContainsKey(modId, key))
             {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
+                SetSetting(modId, key, value);
             }
             if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
             {
                 XmlMod.settingsPerMod[modId].defValues.Add(key, value);
-                if (!ContainsKey(modId, key))
-                {
-                    SetSetting(modId, key, value);
-                }                    
             }
+            XmlMod.settingsPerMod[modId].defValues[key] = value;
         }
 
         /// <summary>
@@ -73,8 +76,11 @@ namespace XmlExtensions
             }
             else
             {
-                // TODO: Remove
-                XmlMod.addSetting(modId, key, value);
+                XmlMod.allSettings.dataDict.Add(modId + ";" + key, value);
+                if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+                {
+                    XmlMod.settingsPerMod[modId].defValues.Add(key, value);
+                }
             }
         }
 

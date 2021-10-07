@@ -11,7 +11,7 @@ namespace XmlExtensions.Setting
         public string tKey;
         public int decimals = 6;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return (label == null ? 0 : 22) + 22 + GetDefaultSpacing();
         }

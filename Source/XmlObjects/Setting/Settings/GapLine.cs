@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
         public int spacing = 24;
         protected int thickness = 1;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             return spacing;
         }

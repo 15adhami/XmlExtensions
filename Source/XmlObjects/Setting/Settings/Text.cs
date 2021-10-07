@@ -16,7 +16,7 @@ namespace XmlExtensions.Setting
         public List<string> keys;
         public string xpath;
 
-        protected override float CalcHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width, string selectedMod)
         {
             Verse.Text.Font = font;
             TextAnchor t = TextAnchor.UpperLeft;
