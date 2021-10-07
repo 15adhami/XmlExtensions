@@ -185,7 +185,7 @@ namespace XmlExtensions
                     keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedExtraMod, key), ref del, Helpers.TryTranslate("Delete", "XmlExtensions_Delete"));
                     if (del)
                     {
-                        DeleteSetting(selectedExtraMod, key);
+                        SettingsManager.DeleteSetting(selectedExtraMod, key);
                         tempStr = key;
                     }
                 }
@@ -215,7 +215,7 @@ namespace XmlExtensions
                         {
                             foreach (string key in unusedSettings[selectedExtraMod])
                             {
-                                DeleteSetting(selectedExtraMod, key);
+                                SettingsManager.DeleteSetting(selectedExtraMod, key);
                             }
                             unusedMods.Remove(selectedExtraMod);
                             unusedSettings.Remove(selectedExtraMod);
@@ -241,7 +241,7 @@ namespace XmlExtensions
                             {
                                 foreach (string key in unusedSettings[mod])
                                 {
-                                    DeleteSetting(mod, key);
+                                    SettingsManager.DeleteSetting(mod, key);
                                 }
                             }
                             unusedSettings.Clear();
@@ -268,30 +268,6 @@ namespace XmlExtensions
                     PatchManager.PrintError();
                 }
             }            
-        }
-
-        public static void addSetting(string modId, string key, string value)
-        {
-            if (allSettings == null)
-            {
-                allSettings = new XmlModBaseSettings();
-            }
-            allSettings.dataDict.Add(modId + ";" + key, value);
-            if(settingsPerMod[modId].defValues == null)
-            {
-                settingsPerMod[modId].defValues = new Dictionary<string, string>();
-            }
-            if (!settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                settingsPerMod[modId].defValues.Add(key, value);
-            }
-        }
-
-        
-
-        public static void DeleteSetting(string modId, string key)
-        {
-            allSettings.dataDict.Remove(modId + ';' + key);
         }
     }
 }

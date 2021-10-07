@@ -127,6 +127,16 @@ namespace XmlExtensions
             return XmlMod.settingsPerMod[modId].keys;
         }
 
+        /// <summary>
+        /// Deletes the setting and key for the given mod
+        /// </summary>
+        /// <param name="modId">The modId of the mod</param>
+        /// <param name="key">THe key you want to delete</param>
+        public static void DeleteSetting(string modId, string key)
+        {
+            XmlMod.allSettings.dataDict.Remove(modId + ';' + key);
+        }
+
         private static void RegisterKey(string modId, string key, string value)
         {
             if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
