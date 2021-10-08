@@ -19,7 +19,7 @@ namespace XmlExtensions
                 XmlMod.menus.Add(menuDef.defName, menuDef);                
                 if (!menuDef.Init())
                 {
-                    PatchManager.PrintError();
+                    PatchManager.PrintErrors();
                 }
                 else
                 {
@@ -73,11 +73,6 @@ namespace XmlExtensions
                 list.Sort();
             }
             Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
-        }
-
-        private static void edit(List<string> list)
-        {
-            list[0] = "2";
         }
     }
 }

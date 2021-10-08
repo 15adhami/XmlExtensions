@@ -22,7 +22,7 @@ namespace XmlExtensions
             PatchManager.depth -= 1;
             if (PatchManager.depth == 0 && PatchManager.errors.Count > 0 && !__result)
             {
-                PatchManager.PrintError(__instance.sourceFile, PatchManager.ModPatchDict[__instance]);
+                PatchManager.PrintErrors(__instance.sourceFile, PatchManager.ModPatchDict[__instance]);
             }
             else if (__result)
             {

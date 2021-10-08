@@ -23,9 +23,7 @@ namespace XmlExtensions
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
         public static ModContentPack ActiveMod;
         public static Dictionary<PatchOperation, ModContentPack> ModPatchDict;
-
-        public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), 
-            typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
+        public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
              typeof(Verse.PatchOperationSetName),  };
 
         static PatchManager()
@@ -47,7 +45,7 @@ namespace XmlExtensions
         /// </summary>
         /// <param name="source">The path to the source file.</param>
         /// <param name="mod">The ModContentPack of the active mod.</param>
-        public static void PrintError(string source, ModContentPack mod)
+        public static void PrintErrors(string source, ModContentPack mod)
         {
             string trace = "";
             foreach (string error in errors)
@@ -76,7 +74,7 @@ namespace XmlExtensions
         /// <summary>
         /// Prints the stack of errors, then clears them.
         /// </summary>
-        public static void PrintError()
+        public static void PrintErrors()
         {
             string trace = "";
             foreach (string error in errors)
@@ -87,6 +85,16 @@ namespace XmlExtensions
             if (XmlMod.allSettings.trace)
                 Verse.Log.Error("[Start of stack trace]\n" + trace);
             errors.Clear();
+        }
+
+        public static void ClearErrors()
+        {
+            errors.Clear();
+        }
+
+        public static void AddError(string msg)
+        {
+            errors.Add(msg);
         }
 
         public static bool CheckType(Type T)

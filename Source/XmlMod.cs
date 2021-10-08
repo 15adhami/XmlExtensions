@@ -267,7 +267,7 @@ namespace XmlExtensions
                 if (!settingsPerMod[selectedMod].PreClose())
                 {
                     PatchManager.errors.Add("Failed to run PreClose() for modId=" + selectedMod);
-                    PatchManager.PrintError();
+                    PatchManager.PrintErrors();
                 }
             }            
         }

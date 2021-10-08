@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
     {
         public string label;
         public string tKey;
-        public Vector2 size = new Vector2(400, 500);
+        public Vector2 size = new Vector2(500, 500);
         public string menu;
         public List<SettingContainer> settings;
 
@@ -17,7 +17,7 @@ namespace XmlExtensions.Setting
         public bool resizeable = false;        
         public bool draggable = false;
         public bool absorbInputAroundWindow = true;
-        public bool onlyOneOfTypeAllowed = true;
+        public bool allowMultipleWindows = false;
 
         public class SettingsWindow : Window
         {
@@ -107,7 +107,7 @@ namespace XmlExtensions.Setting
                 window.doCloseX = doCloseX;
                 window.draggable = draggable;
                 window.absorbInputAroundWindow = absorbInputAroundWindow;
-                window.onlyOneOfTypeAllowed = onlyOneOfTypeAllowed;
+                window.onlyOneOfTypeAllowed = !allowMultipleWindows;
                 if (doCloseButton)
                 {
                     window.initSize.y += 50;
