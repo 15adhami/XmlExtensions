@@ -44,17 +44,5 @@ namespace XmlExtensions.Setting
         {
             DrawSettingsList(inRect, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            foreach (SwitchSetting switchSetting in cases)
-            {
-                if (!DoPreCloseSettingsList(selectedMod, switchSetting.settings, switchSetting.value.ToString()))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

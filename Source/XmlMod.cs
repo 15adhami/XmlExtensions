@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -23,8 +22,6 @@ namespace XmlExtensions
         public static string activeMenu = null; // defName
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;
-
-        private bool b = true;
 
         static XmlMod()
         {
@@ -49,7 +46,7 @@ namespace XmlExtensions
 
         public static void DrawSettingsWindow(Rect inRect)
         {
-            Rect rectSettings = inRect.RightPartPixels(inRect.width-256-6);
+            Rect rectSettings = inRect.RightPartPixels(inRect.width - 256 - 6);
             Rect rectMods = inRect.LeftPartPixels(256); //.285f
             drawXmlModSettings(rectSettings);
             drawXmlModList(rectMods);
@@ -110,7 +107,7 @@ namespace XmlExtensions
                 Listing_Standard listingStandard = new Listing_Standard();
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
                 listingStandard.Begin(rect2);
-                menus[activeMenu].DrawSettings(listingStandard);                
+                menus[activeMenu].DrawSettings(listingStandard);
                 GUI.color = Color.white;
                 listingStandard.End();
                 Widgets.EndScrollView();
@@ -120,7 +117,7 @@ namespace XmlExtensions
                 drawXmlExtensionsSettings(rect);
             }
         }
-        
+
         private static void drawXmlExtensionsSettings(Rect rect)
         {
             if (viewingSettings)
@@ -253,23 +250,17 @@ namespace XmlExtensions
                     }
                     GUI.color = Color.white;
                     buttonRightListing.End();
-                }                
+                }
                 keyListListing.End();
             }
-            
         }
 
         public static void PreClose()
         {
             if (selectedMod != null)
             {
-                PatchManager.errors.Clear();
-                if (!settingsPerMod[selectedMod].PreClose())
-                {
-                    PatchManager.errors.Add("Failed to run PreClose() for modId=" + selectedMod);
-                    PatchManager.PrintErrors();
-                }
-            }            
+                settingsPerMod[selectedMod].PreClose();
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ namespace XmlExtensions.Setting
         {
             return InitializeSettingsList(selectedMod, settings);
         }
+
         protected override float CalculateHeight(float width, string selectedMod)
         {
             if (settings.Count == 0)
@@ -49,11 +50,6 @@ namespace XmlExtensions.Setting
                 Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
                 DrawSettingsList(rect2, selectedMod, settings);
             }            
-        }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            return DoPreCloseSettingsList(selectedMod, settings);
         }
     }
 }

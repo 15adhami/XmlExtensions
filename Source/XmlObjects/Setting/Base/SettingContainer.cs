@@ -9,6 +9,8 @@ namespace XmlExtensions.Setting
     {
         public string tag;
 
+        private List<List<SettingContainer>> cachedLists = new List<List<SettingContainer>>();
+        private Dictionary<List<SettingContainer>, string> listNameDict = new Dictionary<List<SettingContainer>, string>();
         private float cachedHeight = -1f;
         private int errHeight = -1;
 
@@ -29,7 +31,7 @@ namespace XmlExtensions.Setting
             }
             catch (Exception e)
             {
-                ThrowError("Failed to set the default value\n" + e.Message);
+                ThrowError("Failed to set the default value:\n" + e.Message);
                 return false;
             }
             try
@@ -38,7 +40,7 @@ namespace XmlExtensions.Setting
             }
             catch (Exception e)
             {
-                ThrowError("Failed to initialize\n" + e.Message);
+                ThrowError("Failed to initialize:\n" + e.Message);
                 return false;
             }
         }
@@ -87,7 +89,29 @@ namespace XmlExtensions.Setting
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool DoPreClose(string selectedMod)
         {
-            return PreClose(selectedMod);
+            try
+            {
+                // Run this setting's PreClose() method
+                if (!PreClose(selectedMod))
+                {
+                    return false;                                                                                                                                                                                                           
+                }
+
+                // Run all of the cached setting's PreClose() method
+                foreach (List<SettingContainer> list in cachedLists)
+                {
+                    if (!DoPreCloseSettingsList(selectedMod, list, listNameDict[list]))
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ThrowError("Failed to run PreClose():\n" + e.Message);
+                return false;
+            }
+            return true;
         }
 
         // Methods to override
@@ -202,37 +226,13 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Applies the <c>PreClose()</c> method on every setting in the list, error handling done automatically
-        /// </summary>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        /// <param name="settings">The list of settings</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.DoPreClose(selectedMod))
-                    {
-                        ThrowError("Failed to run PreClose() for a setting at position=" + c.ToString());
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Applies the <c>PreClose()</c> method on every setting in the list, error handling done automatically and prints the name of the list
         /// </summary>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <param name="settings">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings, string name)
+        protected bool DoPreCloseSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
         {
             if (settings != null)
             {
@@ -241,8 +241,15 @@ namespace XmlExtensions.Setting
                 {
                     c++;
                     if (!setting.DoPreClose(selectedMod))
-                    {
-                        ThrowError("Failed to run PreClose() for a setting in <" + name + "> at position=" + c.ToString());
+                    { 
+                        if (name != null)
+                        {
+                            ThrowError("Failed to run PreClose() for a setting in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            ThrowError("Failed to run PreClose() for a setting at position=" + c.ToString());
+                        }
                         return false;
                     }
                 }
@@ -251,47 +258,32 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically
-        /// </summary>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        /// <param name="settings">The list of settings</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.Initialize(selectedMod))
-                    {
-                        ThrowError(c);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically and prints the name of the list
+        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
         /// </summary>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <param name="settings">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings, string name)
+        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
         {
             if (settings != null)
             {
+                cachedLists.Add(settings);
+                listNameDict.Add(settings, name);
                 int c = 0;
                 foreach (SettingContainer setting in settings)
                 {
                     c++;
                     if (!setting.Initialize(selectedMod))
                     {
-                        ThrowError(name, c);
+                        if (name != null)
+                        {
+                            ThrowError("Failed to initialize a setting in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            ThrowError("Failed to initialize a setting at position = " + c.ToString());
+                        }
                         return false;
                     }
                 }
@@ -301,21 +293,9 @@ namespace XmlExtensions.Setting
 
         // Error handling
 
-        protected void ThrowError(string msg = "Failed to initialize")
+        protected void ThrowError(string msg = "Error")
         {
             PatchManager.errors.Add(GetType().ToString() + ": " + msg);
-        }
-
-        protected void ThrowError(int errNum)
-        {
-            PatchManager.errors.Add(GetType().ToString() + ": Failed to initialize a setting at position=" + errNum.ToString());
-        }
-
-        protected void ThrowError(string name, int errNum)
-        {
-            PatchManager.errors.Add(GetType().ToString() + ": Failed to initialize a setting in <" + name + "> at position=" + errNum.ToString());
-        }
-
-       
+        }       
     }
 }

@@ -53,19 +53,6 @@ namespace XmlExtensions.Setting
             DrawSettingsList(rightRect, selectedMod, rightCol);
         }
 
-        protected override bool PreClose(string selectedMod)
-        {
-            if (!DoPreCloseSettingsList(selectedMod, leftCol, "leftCol"))
-            {
-                return false;
-            }
-            if (!DoPreCloseSettingsList(selectedMod, rightCol, "rightCol"))
-            {
-                return false;
-            }
-            return true;
-        }
-
         private enum Spacing : int
         {
             None = 0,

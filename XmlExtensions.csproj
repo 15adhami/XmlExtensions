@@ -180,9 +180,11 @@
     <Compile Include="Source\XmlModBaseSettings.cs" />
     <Compile Include="Source\XmlModSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\SettingContainer.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\ShowWidth.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Slider.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumnPixels.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumns.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SwitchSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\TabView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Text.cs" />

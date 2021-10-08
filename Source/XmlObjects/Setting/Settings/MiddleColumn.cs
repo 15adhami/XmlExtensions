@@ -24,10 +24,5 @@ namespace XmlExtensions.Setting
             Rect middleRect = inRect.LeftPart(split/2f+0.5f).RightPart(split/(split / 2f + 0.5f));
             DrawSettingsList(middleRect, selectedMod, settings);
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            return DoPreCloseSettingsList(selectedMod, settings);
-        }
     }
 }

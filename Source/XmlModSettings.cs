@@ -30,16 +30,12 @@ namespace XmlExtensions
             this.modId = modId;
         }
 
-        public bool PreClose()
+        public void PreClose()
         {
             foreach(SettingsMenuDef menu in menus.Values)
             {
-                if (!menu.PreClose())
-                {
-                    return false;
-                }
+                menu.PreClose();
             }
-            return true;
         }
     }
 }

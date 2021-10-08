@@ -43,18 +43,5 @@ namespace XmlExtensions.Setting
                 DrawSettingsList(inRect, selectedMod, settings);
             }
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            if (!DoPreCloseSettingsList(selectedMod, caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            if (!DoPreCloseSettingsList(selectedMod, caseFalse, "caseFalse"))
-            {
-                return false;
-            }
-            return true;
-        }
     }
 }

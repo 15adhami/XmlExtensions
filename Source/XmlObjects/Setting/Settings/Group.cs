@@ -22,10 +22,5 @@ namespace XmlExtensions.Setting
         {
             DrawSettingsList(inRect, selectedMod, settings);
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            return DoPreCloseSettingsList(selectedMod, settings);
-        }
     }
 }

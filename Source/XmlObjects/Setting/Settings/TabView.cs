@@ -56,17 +56,5 @@ namespace XmlExtensions.Setting
             TabDrawer.DrawTabs(inRect, tabRecords, 200f);
             DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            foreach (Tab tab in tabs)
-            {
-                if (!DoPreCloseSettingsList(selectedMod, tab.settings, tab.label))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

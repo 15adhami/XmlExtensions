@@ -29,10 +29,5 @@ namespace XmlExtensions.Setting
             DrawSettingsList(rect2, selectedMod, settings);
             Widgets.EndScrollView();
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            return DoPreCloseSettingsList(selectedMod, settings);
-        }
     }
 }

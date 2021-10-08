@@ -119,10 +119,5 @@ namespace XmlExtensions.Setting
                 Find.WindowStack.Add(window);
             }
         }
-
-        protected override bool PreClose(string selectedMod)
-        {
-            return DoPreCloseSettingsList(selectedMod, settings);
-        }
     }
 }

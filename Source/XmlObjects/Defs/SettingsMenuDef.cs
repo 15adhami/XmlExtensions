@@ -81,16 +81,17 @@ namespace XmlExtensions
             }
         }
 
-        public bool PreClose()
+        public void PreClose()
         {
+            PatchManager.ClearErrors();
             foreach(SettingContainer setting in settings)
             {
                 if(!setting.DoPreClose(modId))
                 {
-                    return false;
+                    PatchManager.errors.Add("Failed to run PreClose() for modId=" + modId);
+                    PatchManager.PrintErrors();
                 }
             }
-            return true; ;
         }
     }
 }
