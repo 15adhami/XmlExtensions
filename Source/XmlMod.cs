@@ -47,19 +47,6 @@ namespace XmlExtensions
             allSettings = GetSettings<XmlModBaseSettings>();
         }
 
-        public override void DoSettingsWindowContents(Rect inRect)
-        {
-            base.DoSettingsWindowContents(inRect);
-            List<object> list = new List<object> { b };
-            DefDatabase<UIDef>.GetNamed("exampleUI").DrawUI(inRect, list);
-            b = (bool)list[0];
-        }
-
-        public override string SettingsCategory()
-        {
-            return "XML Extensions";
-        }
-
         public static void DrawSettingsWindow(Rect inRect)
         {
             Rect rectSettings = inRect.RightPartPixels(inRect.width-256-6);

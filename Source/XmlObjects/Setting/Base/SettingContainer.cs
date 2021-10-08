@@ -7,10 +7,10 @@ namespace XmlExtensions.Setting
 {
     public abstract class SettingContainer
     {
-        protected int errHeight = -1;
         public string tag;
 
         private float cachedHeight = -1f;
+        private int errHeight = -1;
 
         // Public methods
 

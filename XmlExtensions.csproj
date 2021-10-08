@@ -187,7 +187,6 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\Text.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Textbox.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\ToggleableSettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Class1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="About\About.xml" />
