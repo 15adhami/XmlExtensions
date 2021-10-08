@@ -12,7 +12,7 @@ namespace XmlExtensions.Setting
 
         private Texture2D img;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             img = ContentFinder<Texture2D>.Get(texPath, false);
             if (img == null)

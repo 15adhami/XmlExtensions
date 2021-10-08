@@ -15,36 +15,30 @@ namespace XmlExtensions.Setting
         // Public methods
 
         /// <summary>
-        /// Sets the defaultValue of this setting. It is run immediately after the game finishes loading
-        /// </summary>
-        /// <param name="modId">The modId of the mod that is using this setting</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool DefaultValue(string modId)
-        {
-            try
-            {
-                return SetDefaultValue(modId);
-            }
-            catch (Exception e)
-            {
-                ThrowError(e.Message);
-                return false;
-            }
-        }
-
-        /// <summary>
         /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool Initialize()
+        public bool Initialize(string selectedMod)
         {
             try
             {
-                return Init();
+                if (!SetDefaultValue(selectedMod))
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {
-                ThrowError(e.Message);
+                ThrowError("Failed to set the default value\n" + e.Message);
+                return false;
+            }
+            try
+            {
+                return Init(selectedMod);
+            }
+            catch (Exception e)
+            {
+                ThrowError("Failed to initialize\n" + e.Message);
                 return false;
             }
         }
@@ -102,9 +96,9 @@ namespace XmlExtensions.Setting
         /// Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
         /// You may skip this if your setting doesn't contain other settings, or doesn't require a special method
         /// </summary>
-        /// <param name="modId">The modId of the mod that is using this setting</param>
+        /// <param name="selectedMod"></param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected virtual bool SetDefaultValue(string modId)
+        protected virtual bool SetDefaultValue(string selectedMod)
         {
             return true;
         }
@@ -114,7 +108,7 @@ namespace XmlExtensions.Setting
         /// You may run any initialization or pre-computation code here
         /// </summary>
         /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
-        protected virtual bool Init()
+        protected virtual bool Init(string selectedMod)
         {
             return true;
         }
@@ -188,55 +182,6 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Initializes the default values of every setting in the list. Error handling done automatically, and prints the name of the list
-        /// </summary>
-        /// <param name="modId">The modID of the active menu</param>
-        /// <param name="settings">The list of settings</param>
-        /// <param name="name">The name of the list (for error reporting purposes)</param>
-        /// <returns></returns>
-        protected bool SetDefaultValueSettingsList(string modId, List<SettingContainer> settings, string name)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.DefaultValue(modId))
-                    {
-                        ThrowError(name, c);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Initializes the default values of every setting in the list. Error handling done automatically
-        /// </summary>
-        /// <param name="modId">The modID of the active menu</param>
-        /// <param name="settings">The list of settings</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool SetDefaultValueSettingsList(string modId, List<SettingContainer> settings)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.DefaultValue(modId))
-                    {
-                        ThrowError(c);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Calculates the total height of every setting in the list
         /// </summary>
         /// <param name="width">The width of the column the settings will be placed in</param>
@@ -280,7 +225,6 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-
         /// <summary>
         /// Applies the <c>PreClose()</c> method on every setting in the list, error handling done automatically and prints the name of the list
         /// </summary>
@@ -312,7 +256,7 @@ namespace XmlExtensions.Setting
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <param name="settings">The list of settings</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeSettingsList(List<SettingContainer> settings)
+        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings)
         {
             if (settings != null)
             {
@@ -320,7 +264,7 @@ namespace XmlExtensions.Setting
                 foreach (SettingContainer setting in settings)
                 {
                     c++;
-                    if (!setting.Initialize())
+                    if (!setting.Initialize(selectedMod))
                     {
                         ThrowError(c);
                         return false;
@@ -337,7 +281,7 @@ namespace XmlExtensions.Setting
         /// <param name="settings">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeSettingsList(List<SettingContainer> settings, string name)
+        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings, string name)
         {
             if (settings != null)
             {
@@ -345,7 +289,7 @@ namespace XmlExtensions.Setting
                 foreach (SettingContainer setting in settings)
                 {
                     c++;
-                    if (!setting.Initialize())
+                    if (!setting.Initialize(selectedMod))
                     {
                         ThrowError(name, c);
                         return false;

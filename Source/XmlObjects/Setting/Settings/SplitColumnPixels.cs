@@ -13,26 +13,13 @@ namespace XmlExtensions.Setting
         public bool drawLine = false;
         private Spacing gapSize = Spacing.Small;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
-            if (!InitializeSettingsList(leftCol, "leftCol"))
+            if (!InitializeSettingsList(selectedMod, leftCol, "leftCol"))
             {
                 return false;
             }
-            if (!InitializeSettingsList(rightCol, "rightCol"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            if (!SetDefaultValueSettingsList(modId, leftCol, "leftCol"))
-            {
-                return false;
-            }
-            if (!SetDefaultValueSettingsList(modId, rightCol, "rightCol"))
+            if (!InitializeSettingsList(selectedMod, rightCol, "rightCol"))
             {
                 return false;
             }

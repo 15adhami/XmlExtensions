@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
         public string label = null;
         public string defaultValue = null;
 
-        protected override bool SetDefaultValue(string modId)
+        protected override bool SetDefaultValue(string selectedMod)
         {
             if (key == null)
             {
@@ -18,7 +18,7 @@ namespace XmlExtensions.Setting
             }
             if (defaultValue != null)
             {
-                SettingsManager.SetDefaultValue(modId, key, defaultValue);
+                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue);
             }            
             return true;
         }

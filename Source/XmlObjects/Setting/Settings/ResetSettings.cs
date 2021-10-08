@@ -15,7 +15,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip;
         public string tooltip;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (label == null)
             {

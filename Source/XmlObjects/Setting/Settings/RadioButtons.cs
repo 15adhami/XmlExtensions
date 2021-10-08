@@ -20,7 +20,7 @@ namespace XmlExtensions.Setting
             public bool highlight = true;
         }
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             foreach (RadioButton button in buttons)
             {

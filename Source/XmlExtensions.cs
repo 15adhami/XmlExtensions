@@ -9,6 +9,7 @@ namespace XmlExtensions
     [StaticConstructorOnStartup]
     public static class XmlExtensions
     {
+
         static XmlExtensions()
         {
             // Initializing mod settings menus
@@ -72,6 +73,16 @@ namespace XmlExtensions
                 list.Sort();
             }
             Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
+
+            List<string> l = new List<string>() { "1"};
+            Verse.Log.Message(l[0]);
+            edit(l);
+            Verse.Log.Message(l[0]);
+        }
+
+        private static void edit(List<string> list)
+        {
+            list[0] = "2";
         }
     }
 }

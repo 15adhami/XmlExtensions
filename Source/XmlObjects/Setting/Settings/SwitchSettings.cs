@@ -18,33 +18,18 @@ namespace XmlExtensions.Setting
 
         private Dictionary<string, List<SettingContainer>> valSettingDict;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (cases != null)
             {
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();
                 foreach (SwitchSetting switchSetting in cases)
                 {
-                    if (!InitializeSettingsList(switchSetting.settings, switchSetting.value.ToString()))
+                    if (!InitializeSettingsList(selectedMod, switchSetting.settings, switchSetting.value.ToString()))
                     {
                         return false;
                     }
                     valSettingDict.Add(switchSetting.value, switchSetting.settings);
-                }
-            }
-            return true;
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            if (cases != null)
-            {
-                foreach (SwitchSetting switchSetting in cases)
-                {
-                    if (!SetDefaultValueSettingsList(modId, switchSetting.settings, switchSetting.value.ToString()))
-                    {
-                        return false;
-                    }
                 }
             }
             return true;

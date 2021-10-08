@@ -78,6 +78,51 @@ namespace XmlExtensions
         }
 
         /// <summary>
+        /// Iterator for all active keys associated with the given mod
+        /// </summary>
+        /// <param name="modId">The modId of the mod</param>
+        /// <returns>An iterator for every active key associated with the given mod</returns>
+        public static IEnumerable<string> GetKeys(string modId)
+        {
+            return XmlMod.settingsPerMod[modId].keys;
+        }
+
+        /// <summary>
+        /// Deletes the setting and key for the given mod
+        /// </summary>
+        /// <param name="modId">The modId of the mod</param>
+        /// <param name="key">The key you want to delete</param>
+        public static void DeleteSetting(string modId, string key)
+        {
+            if (XmlMod.allSettings.dataDict.ContainsKey(modId + ';' + key))
+            {
+                XmlMod.allSettings.dataDict.Remove(modId + ';' + key);
+            }
+        }
+
+        /// <summary>
+        /// Registers the key-value pair into XML Extensions settings database
+        /// </summary>
+        /// <param name="modId">The modId of the mod</param>
+        /// <param name="key">The key you want to delete</param>
+        /// <param name="value">The potential value to register</param>
+        public static void RegisterKey(string modId, string key, string value)
+        {
+            if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+            {
+                XmlMod.allSettings.dataDict.Add(modId + ";" + key, value);
+            }
+            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
+            {
+                XmlMod.settingsPerMod[modId].keys.Add(key);
+            }
+            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
+            {
+                XmlMod.settingsPerMod[modId].defValues.Add(key, value);
+            }
+        }
+
+        /// <summary>
         /// Register a new mod into XML Extensions, only use if you know what you are doing
         /// </summary>
         /// <param name="modId">The modId of the new mod</param>
@@ -114,42 +159,6 @@ namespace XmlExtensions
             if (XmlMod.settingsPerMod[modId].defValues == null)
             {
                 XmlMod.settingsPerMod[modId].defValues = new Dictionary<string, string>();
-            }
-        }
-
-        /// <summary>
-        /// Iterator for all active keys associated with the given mod
-        /// </summary>
-        /// <param name="modId">The modId of the mod</param>
-        /// <returns>An iterator for every active key associated with the given mod</returns>
-        public static IEnumerable<string> GetKeys(string modId)
-        {
-            return XmlMod.settingsPerMod[modId].keys;
-        }
-
-        /// <summary>
-        /// Deletes the setting and key for the given mod
-        /// </summary>
-        /// <param name="modId">The modId of the mod</param>
-        /// <param name="key">THe key you want to delete</param>
-        public static void DeleteSetting(string modId, string key)
-        {
-            XmlMod.allSettings.dataDict.Remove(modId + ';' + key);
-        }
-
-        private static void RegisterKey(string modId, string key, string value)
-        {
-            if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
-            {
-                XmlMod.allSettings.dataDict.Add(modId + ";" + key, value);
-            }
-            if (!XmlMod.settingsPerMod[modId].keys.Contains(key))
-            {
-                XmlMod.settingsPerMod[modId].keys.Add(key);
-            }
-            if (!XmlMod.settingsPerMod[modId].defValues.ContainsKey(key))
-            {
-                XmlMod.settingsPerMod[modId].defValues.Add(key, value);
             }
         }
     }

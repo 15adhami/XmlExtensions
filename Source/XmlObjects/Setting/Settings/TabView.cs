@@ -19,13 +19,13 @@ namespace XmlExtensions.Setting
         private int selectedTab = 0;
         private float tabHeight = 32;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (tabs != null)
             {
                 foreach (Tab tab in tabs)
                 {
-                    if (!InitializeSettingsList(tab.settings, tab.label))
+                    if (!InitializeSettingsList(selectedMod, tab.settings, tab.label))
                     {
                         return false;
                     }
@@ -41,18 +41,6 @@ namespace XmlExtensions.Setting
                     selectedTab = t;
                 }, () => selectedTab == t);
                 tabRecords.Add(temp);
-            }
-            return true;
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            foreach (Tab tab in tabs)
-            {
-                if (!SetDefaultValueSettingsList(modId, tab.settings, tab.label))
-                {
-                    return false;
-                }
             }
             return true;
         }

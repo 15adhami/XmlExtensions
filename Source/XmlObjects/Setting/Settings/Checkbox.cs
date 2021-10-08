@@ -10,7 +10,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip;
         public bool highlight = true;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (tooltip != null)
             {

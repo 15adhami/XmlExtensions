@@ -10,14 +10,9 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> settings;
         public float padding = 4f;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
-            return InitializeSettingsList(settings);
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            return SetDefaultValueSettingsList(modId, settings);
+            return InitializeSettingsList(selectedMod, settings);
         }
         protected override float CalculateHeight(float width, string selectedMod)
         {

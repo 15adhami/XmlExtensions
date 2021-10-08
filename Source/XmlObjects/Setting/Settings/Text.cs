@@ -76,7 +76,7 @@ namespace XmlExtensions.Setting
             Verse.Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (xpath != null)
             {

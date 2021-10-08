@@ -16,7 +16,7 @@ namespace XmlExtensions.Setting
 
         private Color cColor;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             // Used to avoid a vanilla bug in how ranges are dragged
             id = PatchManager.rangeCount;
@@ -24,7 +24,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override bool SetDefaultValue(string modId)
+        protected override bool SetDefaultValue(string selectedMod)
         {
             if (key == null)
             {
@@ -33,12 +33,12 @@ namespace XmlExtensions.Setting
             }
             if (key2 == null)
             {
-                SettingsManager.SetDefaultValue(modId, key, defaultValue);
+                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue);
             }
             else
             {
-                SettingsManager.SetDefaultValue(modId, key, defaultValue.Split('~')[0]);
-                SettingsManager.SetDefaultValue(modId, key2, defaultValue.Split('~')[1]);
+                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue.Split('~')[0]);
+                SettingsManager.SetDefaultValue(selectedMod, key2, defaultValue.Split('~')[1]);
             }
             return true;
         }

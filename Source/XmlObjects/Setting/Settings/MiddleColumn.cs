@@ -9,14 +9,9 @@ namespace XmlExtensions.Setting
         public float split = 0.50f;
         public List<SettingContainer> settings;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
-            return InitializeSettingsList(settings);
-        }
-
-        protected override bool SetDefaultValue(string modId)
-        {
-            return SetDefaultValueSettingsList(modId, settings);
+            return InitializeSettingsList(selectedMod, settings);
         }
 
         protected override float CalculateHeight(float width, string selectedMod)

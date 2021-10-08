@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
         public string menu;
         public string tKey;
 
-        protected override bool Init()
+        protected override bool Init(string selectedMod)
         {
             if (label == null)
             {

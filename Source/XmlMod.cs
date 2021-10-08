@@ -24,6 +24,8 @@ namespace XmlExtensions
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;
 
+        private bool b = true;
+
         static XmlMod()
         {
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
@@ -43,6 +45,19 @@ namespace XmlExtensions
         public XmlMod(ModContentPack content) : base(content)
         {
             allSettings = GetSettings<XmlModBaseSettings>();
+        }
+
+        public override void DoSettingsWindowContents(Rect inRect)
+        {
+            base.DoSettingsWindowContents(inRect);
+            List<object> list = new List<object> { b };
+            DefDatabase<UIDef>.GetNamed("exampleUI").DrawUI(inRect, list);
+            b = (bool)list[0];
+        }
+
+        public override string SettingsCategory()
+        {
+            return "XML Extensions";
         }
 
         public static void DrawSettingsWindow(Rect inRect)

@@ -9,26 +9,13 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> caseTrue;
         public List<SettingContainer> caseFalse;
 
-        protected override bool SetDefaultValue(string modId)
+        protected override bool Init(string selectedMod)
         {
-            if (!SetDefaultValueSettingsList(modId, caseTrue, "caseTrue"))
+            if (!InitializeSettingsList(selectedMod, caseTrue, "caseTrue"))
             {
                 return false;
             }
-            if (!SetDefaultValueSettingsList(modId, caseFalse, "caseFalse"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        protected override bool Init()
-        {
-            if (!InitializeSettingsList(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            if (!InitializeSettingsList(caseFalse, "caseFalse"))
+            if (!InitializeSettingsList(selectedMod, caseFalse, "caseFalse"))
             {
                 return false;
             }
