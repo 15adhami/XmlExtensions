@@ -15,6 +15,7 @@ namespace XmlExtensions
     {
         public string value;
         public List<Case> cases;
+        public string defaultCase;
 
         protected override void SetException()
         {
@@ -35,6 +36,7 @@ namespace XmlExtensions
                 return false;
             }
             int c = 0;
+            int defaultCaseIndex = 0;
             foreach (Case casePatch in cases)
             {
                 c++;
@@ -42,11 +44,16 @@ namespace XmlExtensions
                 {
                     return RunPatches(casePatch.apply, value, xml);
                 }
-
-                // run first case as default case
+                if (defaultCase == casePatch.value)
+                {
+                    defaultCaseIndex = c;
+                }
                 if (c == cases.Count)
                 {
-                    return RunPatches(cases[0].apply, value, xml);
+                    if (defaultCase != null)
+                    {
+                        return RunPatches(cases[defaultCaseIndex].apply, defaultCase, xml);
+                    }
                 }
             }
             return true;
