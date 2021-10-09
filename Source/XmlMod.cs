@@ -52,6 +52,14 @@ namespace XmlExtensions
             drawXmlModList(rectMods);
         }
 
+        public static void PreClose()
+        {
+            if (selectedMod != null)
+            {
+                settingsPerMod[selectedMod].PreClose();
+            }
+        }
+
         private static void drawXmlModList(Rect rect)
         {
             int count = 0;
@@ -75,11 +83,7 @@ namespace XmlExtensions
                     t = listingStandard.ButtonText(Helpers.TryTranslate(settingsPerMod[modId].label, settingsPerMod[modId].tKey));
                     if (t)
                     {
-                        PreClose();
-                        selectedMod = modId;
-                        activeMenu = settingsPerMod[modId].homeMenu;
-                        selectedExtraMod = null;
-                        viewingSettings = false;
+                        SetSelectedMod(modId);
                     }
                 }
             }
@@ -89,10 +93,13 @@ namespace XmlExtensions
             t1 = listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label"));
             if (t1)
             {
+                /*
                 PreClose();
                 selectedMod = null;
                 selectedExtraMod = null;
                 viewingSettings = false;
+                */
+                SetSelectedMod(null);
             }
             listingStandard.End();
             Widgets.EndScrollView();
@@ -104,12 +111,9 @@ namespace XmlExtensions
             {
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, menus[activeMenu].CalculateHeight(rect.width - 20f, selectedMod));
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
-                Listing_Standard listingStandard = new Listing_Standard();
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-                listingStandard.Begin(rect2);
-                menus[activeMenu].DrawSettings(listingStandard);
+                menus[activeMenu].DrawSettings(rect2);
                 GUI.color = Color.white;
-                listingStandard.End();
                 Widgets.EndScrollView();
             }
             else
@@ -255,11 +259,16 @@ namespace XmlExtensions
             }
         }
 
-        public static void PreClose()
+        private static void SetSelectedMod(string modId)
         {
-            if (selectedMod != null)
+            PreClose();
+            selectedMod = modId;
+            selectedExtraMod = null;
+            viewingSettings = false;
+            if (modId != null)
             {
-                settingsPerMod[selectedMod].PreClose();
+                activeMenu = settingsPerMod[modId].homeMenu;
+                menus[settingsPerMod[modId].homeMenu].PostOpen();
             }
         }
     }

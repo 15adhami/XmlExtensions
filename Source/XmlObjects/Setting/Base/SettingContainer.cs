@@ -45,6 +45,33 @@ namespace XmlExtensions.Setting
             }
         }
 
+        public bool DoPostOpen(string selectedMod)
+        {
+            try
+            {
+                // Run this setting's PreClose() method
+                if (!PostOpen(selectedMod))
+                {
+                    return false;
+                }
+
+                // Run all of the cached setting's PreClose() method
+                foreach (List<SettingContainer> list in cachedLists)
+                {
+                    if (!DoPostOpenSettingsList(selectedMod, list, listNameDict[list]))
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ThrowError("Failed to run PostOpen():\n" + e.Message);
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Returns the height of the setting for the current frame
         /// </sumary>
@@ -133,6 +160,17 @@ namespace XmlExtensions.Setting
         /// </summary>
         /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
         protected virtual bool Init(string selectedMod)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// This method will be run as soon as a mod's setting menu is opened<br/>
+        /// It will be run everytime a menu is opened
+        /// </summary>
+        /// <param name="selectedMod">The modId of the mod whose menu was just selected</param>
+        /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        protected virtual bool PostOpen(string selectedMod)
         {
             return true;
         }
@@ -290,6 +328,40 @@ namespace XmlExtensions.Setting
             }
             return true;
         }
+
+        /// <summary>
+        /// Runs the PostOpen() method on every setting in the list<br/>
+        /// Error handling is done automatically
+        /// </summary>
+        /// <param name="selectedMod">The modId of the selected mod</param>
+        /// <param name="settings">The list of settings</param>
+        /// <param name="name">(optional) the name of the list of settings; used in error reporting</param>
+        /// <returns>Returns <c>false</c> if there was an error</returns>
+        protected bool DoPostOpenSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
+        {
+            if (settings != null)
+            {
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    c++;
+                    if (!setting.DoPostOpen(selectedMod))
+                    {
+                        if (name != null)
+                        {
+                            ThrowError("Failed to run PostOpen() in a setting in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            ThrowError("Failed to run PostOpen() in a setting at position = " + c.ToString());
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
 
         // Error handling
 

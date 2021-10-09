@@ -6,8 +6,9 @@ namespace XmlExtensions
 {
     public class PatchOperationSafeAdd : PatchOperationExtendedPathed
     {
-        protected XmlContainer value;
-        protected int safetyDepth = -1;
+        public XmlContainer value;
+        public int safetyDepth = -1;
+        public bool checkAttributes = false;
 
         protected override bool Patch(XmlDocument xml)
         {

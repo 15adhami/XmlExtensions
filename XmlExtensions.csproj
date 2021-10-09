@@ -144,6 +144,7 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
+    <Compile Include="Source\XmlObjects\KeyedAction.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
     <Compile Include="Source\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\RadioButtons.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Range.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\ResetSettings.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\ScrollArea.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\ScrollView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Section.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SetColor.cs" />

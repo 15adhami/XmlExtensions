@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 using XmlExtensions.Setting;
 
@@ -12,6 +10,7 @@ namespace XmlExtensions
         public string tKey;
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
+        //public List<BaseAction> onClose;
         public string modId;
         public bool submenu = false;
 
@@ -61,6 +60,19 @@ namespace XmlExtensions
             return true;
         }
 
+        public void PostOpen()
+        {
+            PatchManager.ClearErrors();
+            foreach (SettingContainer setting in settings)
+            {
+                if (!setting.DoPostOpen(modId))
+                {
+                    PatchManager.errors.Add("Failed to run PostOpen() for modId=" + modId);
+                    PatchManager.PrintErrors();
+                }
+            }
+        }
+
         public float CalculateHeight(float width, string selectedMod)
         {
             float h = 0;
@@ -71,14 +83,17 @@ namespace XmlExtensions
             return h;
         }
 
-        public void DrawSettings(Listing_Standard listingStandard)
+        public void DrawSettings(Rect rect)
         {
+            Listing_Standard listingStandard = new Listing_Standard();
+            listingStandard.Begin(rect);
             listingStandard.verticalSpacing = defaultSpacing;
             float width = listingStandard.ColumnWidth;
             foreach (SettingContainer setting in settings)
             {
                 setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width, modId)), modId);
             }
+            listingStandard.End();
         }
 
         public void PreClose()
@@ -93,5 +108,20 @@ namespace XmlExtensions
                 }
             }
         }
+        /*
+        public void RunOnCloseAction()
+        {
+            if (onClose != null)
+            {
+                PatchManager.ClearErrors();
+                foreach (BaseAction action in onClose)
+                {
+                    if (!action.DoAction())
+                    {
+                        PatchManager.PrintErrors();
+                    }
+                }
+            }
+        }*/
     }
 }
