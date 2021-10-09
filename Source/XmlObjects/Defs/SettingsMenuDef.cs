@@ -10,7 +10,7 @@ namespace XmlExtensions
         public string tKey;
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
-        //public List<BaseAction> onClose;
+        public List<KeyedAction> keyedActions;
         public string modId;
         public bool submenu = false;
 
@@ -50,7 +50,11 @@ namespace XmlExtensions
                 if(!submenu)
                 {
                     XmlMod.settingsPerMod[modId].homeMenu = defName;                    
-                }                             
+                }
+                foreach (KeyedAction action in keyedActions)
+                {
+                    XmlMod.AddKeyedAction(modId, action);
+                }
             }
             catch
             {
@@ -62,12 +66,16 @@ namespace XmlExtensions
 
         public void PostOpen()
         {
+            foreach (KeyedAction action in keyedActions)
+            {
+
+            }
             PatchManager.ClearErrors();
             foreach (SettingContainer setting in settings)
             {
                 if (!setting.DoPostOpen(modId))
                 {
-                    PatchManager.errors.Add("Failed to run PostOpen() for modId=" + modId);
+                    PatchManager.AddError("Failed to run PostOpen() for modId=" + modId);
                     PatchManager.PrintErrors();
                 }
             }
@@ -103,9 +111,13 @@ namespace XmlExtensions
             {
                 if(!setting.DoPreClose(modId))
                 {
-                    PatchManager.errors.Add("Failed to run PreClose() for modId=" + modId);
+                    PatchManager.AddError("Failed to run PreClose() for modId=" + modId);
                     PatchManager.PrintErrors();
                 }
+            }
+            foreach (string key in SettingsManager.GetKeys(modId))
+            {
+
             }
         }
         /*

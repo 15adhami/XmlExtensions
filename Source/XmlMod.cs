@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -22,11 +23,13 @@ namespace XmlExtensions
         public static string activeMenu = null; // defName
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;
+        public static Dictionary<string, List<KeyedAction>> keyedActionListDict;
 
         static XmlMod()
         {
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
             harmony.PatchAll();
+            keyedActionListDict = new Dictionary<string, List<KeyedAction>>();
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
@@ -58,6 +61,15 @@ namespace XmlExtensions
             {
                 settingsPerMod[selectedMod].PreClose();
             }
+        }
+
+        public static void AddKeyedAction(string modId, KeyedAction action)
+        {
+            if (!keyedActionListDict.ContainsKey(modId))
+            {
+                keyedActionListDict.Add(modId, new List<KeyedAction>());
+            }
+            keyedActionListDict[modId].Add(action);
         }
 
         private static void drawXmlModList(Rect rect)

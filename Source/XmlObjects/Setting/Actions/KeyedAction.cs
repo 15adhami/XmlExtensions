@@ -9,6 +9,7 @@ namespace XmlExtensions.Setting
     public class KeyedAction
     {
         public string key;
+        public string modId;
 
         public bool DoAction(string oldValue, string newValue)
         {
