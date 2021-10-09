@@ -42,7 +42,6 @@ namespace XmlExtensions
         public override void PreClose()
         {
             XmlMod.SetSelectedMod(null);
-            XmlMod.PreClose();
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
             base.PreClose();
         }

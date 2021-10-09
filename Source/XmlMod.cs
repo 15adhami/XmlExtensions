@@ -59,14 +59,6 @@ namespace XmlExtensions
             drawXmlModList(rectMods);
         }
 
-        public static void PreClose()
-        {
-            if (selectedMod != null)
-            {
-                settingsPerMod[selectedMod].PreClose();
-            }
-        }
-
         public static void AddKeyedAction(string modId, string key, KeyedAction action)
         {
             if (!keyedActionListDict.ContainsKey(modId))
@@ -275,7 +267,6 @@ namespace XmlExtensions
 
         public static void SetSelectedMod(string modId)
         {
-            PreClose();
             // Run KeyedActions
             if (selectedMod != null && keyedActionListDict.ContainsKey(selectedMod))
             {
@@ -305,7 +296,6 @@ namespace XmlExtensions
             if (modId != null)
             {
                 activeMenu = settingsPerMod[modId].homeMenu;
-                menus[settingsPerMod[modId].homeMenu].PostOpen();
             }
         }
     }

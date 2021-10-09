@@ -70,19 +70,6 @@ namespace XmlExtensions
             return true;
         }
 
-        public void PostOpen()
-        {
-            PatchManager.ClearErrors();
-            foreach (SettingContainer setting in settings)
-            {
-                if (!setting.DoPostOpen(modId))
-                {
-                    PatchManager.AddError("Failed to run PostOpen() for modId=" + modId);
-                    PatchManager.PrintErrors();
-                }
-            }
-        }
-
         public float CalculateHeight(float width, string selectedMod)
         {
             float h = 0;
@@ -104,19 +91,6 @@ namespace XmlExtensions
                 setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width, modId)), modId);
             }
             listingStandard.End();
-        }
-
-        public void PreClose()
-        {
-            PatchManager.ClearErrors();
-            foreach(SettingContainer setting in settings)
-            {
-                if(!setting.DoPreClose(modId))
-                {
-                    PatchManager.AddError("Failed to run PreClose() for modId=" + modId);
-                    PatchManager.PrintErrors();
-                }
-            }
         }
     }
 }
