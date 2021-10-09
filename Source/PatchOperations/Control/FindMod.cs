@@ -20,8 +20,7 @@ namespace XmlExtensions
         {
             if (foundMod != null)
             {
-                exceptionVals = new string[] { foundMod };
-                exceptionFields = new string[] { "Mod" };
+                CreateExceptions(foundMod, "Mod");
             }
         }
 

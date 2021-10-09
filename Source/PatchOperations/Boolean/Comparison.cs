@@ -17,6 +17,11 @@ namespace XmlExtensions.Boolean
         protected bool fromXml2 = false;
         protected bool nonNumeric = false;
 
+        protected override void SetException()
+        {
+            CreateExceptions(value1, "value1", value2, "value2", relation, "relation");
+        }
+
         protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
             string str1 = value1;
@@ -26,7 +31,7 @@ namespace XmlExtensions.Boolean
                 XmlNodeList nodes1 = xml.SelectNodes(value1);
                 if (nodes1 == null || nodes1.Count == 0)
                 {
-                    PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value1=" + value1 + "): Failed to find a node with the given xpath");
+                    XPathError("value1");
                     return false;
                 }
                 if (fromXml2)
@@ -34,7 +39,7 @@ namespace XmlExtensions.Boolean
                     XmlNodeList nodes2 = xml.SelectNodes(value2);
                     if (nodes2 == null || nodes2.Count == 0)
                     {
-                        PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
+                        XPathError("value2");
                         return false;
                     }
                     foreach (XmlNode node1 in nodes1)
@@ -85,7 +90,7 @@ namespace XmlExtensions.Boolean
                     XmlNodeList nodes2 = xml.SelectNodes(value2);
                     if (nodes2 == null || nodes2.Count == 0)
                     {
-                        PatchManager.errors.Add("XmlExtensions.Boolean.Comparison(value2=" + value2 + "): Failed to find a node with the given xpath");
+                        XPathError("value2");
                         return false;
                     }
                     foreach (XmlNode node2 in nodes2)

@@ -14,19 +14,19 @@ namespace XmlExtensions
     {
         static void Prefix(ref XmlDocument xml)
         {
-            PatchManager.depth += 1;
+            ErrorManager.depth += 1;
         }
 
         static void Postfix(PatchOperation __instance, ref bool __result, XmlDocument xml)
         {
-            PatchManager.depth -= 1;
-            if (PatchManager.depth == 0 && PatchManager.errors.Count > 0 && !__result)
+            ErrorManager.depth -= 1;
+            if (ErrorManager.depth == 0 && ErrorManager.ErrorCount() > 0 && !__result)
             {
-                PatchManager.PrintErrors(__instance.sourceFile, PatchManager.ModPatchDict[__instance]);
+                ErrorManager.PrintErrors(__instance.sourceFile, PatchManager.ModPatchDict[__instance]);
             }
             else if (__result)
             {
-                PatchManager.errors.Clear();
+                ErrorManager.ClearErrors();
             }
         }
     }

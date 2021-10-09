@@ -17,7 +17,7 @@ namespace XmlExtensions.Setting
             img = ContentFinder<Texture2D>.Get(texPath, false);
             if (img == null)
             {
-                ThrowError("Failed to find a texture with texpath=\"" + texPath + "\"");
+                Error("Failed to find a texture with texpath=\"" + texPath + "\"");
                 return false;
             }
             return true;

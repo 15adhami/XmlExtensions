@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 
 namespace XmlExtensions.Boolean
@@ -10,54 +9,45 @@ namespace XmlExtensions.Boolean
         protected BooleanBase condition2 = null;
         public List<BooleanBase> conditions;
 
-
         protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
-            try
+            if (conditions == null)
             {
-                if (conditions == null)
+                bool b1 = false;
+                if (!condition1.Evaluate(ref b1, xml))
                 {
-                    bool b1 = false;
-                    if (!condition1.Evaluate(ref b1, xml))
-                    {
-                        PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition1>");
-                        return false;
-                    }
-                    bool b2 = false;
-                    if (!condition2.Evaluate(ref b2, xml))
-                    {
-                        PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition2>");
-                        return false;
-                    }
-                    b = b1 && b2;
-                    return true;
+                    EvaluationError("condition1");
+                    return false;
                 }
-                else
+                bool b2 = false;
+                if (!condition2.Evaluate(ref b2, xml))
                 {
-                    bool b1 = true;
-                    int num = 0;
-                    foreach(BooleanBase condition in conditions)
-                    {
-                        num++;
-                        if (!condition.Evaluate(ref b1, xml))
-                        {
-                            PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate the condition at position=" + num.ToString());
-                            return false;
-                        }
-                        if(!b1)
-                        {
-                            b = b1;
-                            return true;
-                        }
-                    }
-                    b = true;
-                    return true;
+                    EvaluationError("condition2");
+                    return false;
                 }
+                b = b1 && b2;
+                return true;
             }
-            catch (Exception e)
+            else
             {
-                PatchManager.errors.Add(GetType().ToString() + ": " + e.Message);
-                return false;
+                bool b1 = true;
+                int num = 0;
+                foreach (BooleanBase condition in conditions)
+                {
+                    num++;
+                    if (!condition.Evaluate(ref b1, xml))
+                    {
+                        EvaluationError(num);
+                        return false;
+                    }
+                    if (!b1)
+                    {
+                        b = b1;
+                        return true;
+                    }
+                }
+                b = true;
+                return true;
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
@@ -7,20 +6,16 @@ namespace XmlExtensions.Boolean
     {
         public string xpath;
 
+        protected override void SetException()
+        {
+            CreateExceptions(xpath, "xpath");
+        }
+
         protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
-            try
-            {
-                XmlNode node = xml.SelectSingleNode(xpath);
-                b = (node != null);
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add("XmlExtensions.Conditional(xpath=" + xpath + "): " + e.Message);
-                return false;
-            }
+            XmlNode node = xml.SelectSingleNode(xpath);
+            b = (node != null);
+            return true;
         }
     }
-
 }

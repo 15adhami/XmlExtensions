@@ -21,7 +21,7 @@ namespace XmlExtensions.Action
             }
             catch (Exception e)
             {
-                PatchManager.AddError(GetType().ToString() + ": " + e.Message);
+                Error(e.Message);
                 return false;
             }
             return true;

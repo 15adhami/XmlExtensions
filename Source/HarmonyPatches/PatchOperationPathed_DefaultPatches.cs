@@ -26,7 +26,7 @@ namespace XmlExtensions.Source.HarmonyPatches
         {
             if (__exception != null)
             {
-                PatchManager.errors.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): " + __exception.Message);
+                ErrorManager.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): " + __exception.Message);
                 __result = false;
                 return null;
             }
@@ -34,11 +34,11 @@ namespace XmlExtensions.Source.HarmonyPatches
             {
                 if (xml.SelectSingleNode(___xpath) == null)
                 {
-                    PatchManager.errors.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Failed to find a node with the given xpath");
+                    ErrorManager.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Failed to find a node with the given xpath");
                 }
                 else
                 {
-                    PatchManager.errors.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Error");
+                    ErrorManager.Add(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Error");
                 }
             }
             return null;

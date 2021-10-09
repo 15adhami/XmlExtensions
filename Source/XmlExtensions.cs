@@ -19,7 +19,7 @@ namespace XmlExtensions
                 XmlMod.menus.Add(menuDef.defName, menuDef);                
                 if (!menuDef.Init())
                 {
-                    PatchManager.PrintErrors();
+                    ErrorManager.PrintErrors();
                 }
                 else
                 {

@@ -9,8 +9,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { xpath };
-            exceptionFields = new string[] { "xpath" };
+            CreateExceptions(xpath, "xpath");
         }
 
         protected override bool PreCheck(XmlDocument xml)

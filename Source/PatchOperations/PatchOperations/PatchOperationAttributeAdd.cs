@@ -14,9 +14,8 @@ namespace XmlExtensions
                 Error("<value> is null");
                 return false;
             }
-            foreach (object item in nodes)
+            foreach (XmlNode xmlNode in nodes)
             {
-                XmlNode xmlNode = item as XmlNode;
                 if (xmlNode.Attributes[attribute] == null)
                 {
                     XmlAttribute xmlAttribute = xmlNode.OwnerDocument.CreateAttribute(attribute);

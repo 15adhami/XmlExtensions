@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\ErrorManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
@@ -75,9 +76,10 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
+    <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\BooleanBase.cs" />
+    <Compile Include="Source\PatchOperations\Base\BooleanBase.cs" />
     <Compile Include="Source\PatchOperations\Boolean\Comparision.cs" />
     <Compile Include="Source\PatchOperations\Boolean\Comparison.cs" />
     <Compile Include="Source\PatchOperations\Boolean\Conditional.cs" />
@@ -138,8 +140,6 @@
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemove.cs" />
     <Compile Include="Source\PatchOperations\Performance\ApplyInDocument.cs" />
     <Compile Include="Source\PatchOperations\Performance\CreateDocument.cs" />
-    <Compile Include="Source\PatchOperations\Performance\ForEachRooted.cs" />
-    <Compile Include="Source\PatchOperations\Performance\SetRoot.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchPause.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />

@@ -13,8 +13,7 @@ namespace XmlExtensions
         {
             if (xpath != null)
             {
-                exceptionVals = new string[] { xpath };
-                exceptionFields = new string[] { "xpath" };
+                CreateExceptions(xpath, "xpath");
             }
         }
 

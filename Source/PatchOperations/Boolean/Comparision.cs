@@ -633,7 +633,7 @@ namespace XmlExtensions.Boolean
             }
             catch(Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.Boolean.Comparision(value1=" + value1 + ", value2=" + value2 + "): " + e.Message);
+               ErrorManager.Add("XmlExtensions.Boolean.Comparision(value1=" + value1 + ", value2=" + value2 + "): " + e.Message);
                 return false;
             }
         }

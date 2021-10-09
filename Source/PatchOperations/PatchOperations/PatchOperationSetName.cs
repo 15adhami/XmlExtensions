@@ -26,8 +26,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { xpath, name };
-            exceptionFields = new string[] { "xpath", "name" };
+            CreateExceptions(xpath, "xpath", name, "name");
         }
     }
 }

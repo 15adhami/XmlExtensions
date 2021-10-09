@@ -13,8 +13,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { field };
-            exceptionFields = new string[] { "field" };
+            CreateExceptions(field, "field");
         }
 
         public override bool getVars(List<string> vars)

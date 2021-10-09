@@ -20,13 +20,11 @@ namespace XmlExtensions
         {
             if (currPrefix == null)
             {
-                exceptionVals = new string[] { storeIn, xpathParent };
-                exceptionFields = new string[] { "storeIn", "xpathParent" };
+                CreateExceptions(storeIn, "storeIn", xpathParent, "xpathParent");
             }
             else
             {
-                exceptionVals = new string[] { storeIn, currPrefix, xpathParent };
-                exceptionFields = new string[] { "storeIn", "currPrefix", "xpathParent" };
+                CreateExceptions(storeIn, "storeIn", currPrefix, "currPrefix", xpathParent, "xpathParent");
             }
         }
 

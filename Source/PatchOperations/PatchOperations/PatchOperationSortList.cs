@@ -130,8 +130,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { xpath, xpathLocal };
-            exceptionFields = new string[] { "xpath", "xpathLocal" };
+            CreateExceptions(xpath, "xpath", xpathLocal, "xpathLocal");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace XmlExtensions
         {
             if (modId == null)
             {
-                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef: <modId>=null");
+                ErrorManager.Add("XmlExtensions.SettingsMenuDef: <modId>=null");
                 return false;
             }
             try
@@ -40,13 +40,13 @@ namespace XmlExtensions
                         c++;
                         if (!setting.Initialize(modId))
                         {
-                            PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
+                            ErrorManager.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                             return false;
                         }
                     }
                     catch
                     {
-                        PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
+                        ErrorManager.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                         return false;
                     }
                 }
@@ -64,7 +64,7 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): " + e.Message);
+                ErrorManager.Add("XmlExtensions.SettingsMenuDef(" + defName + "): " + e.Message);
                 return false;
             }
             return true;

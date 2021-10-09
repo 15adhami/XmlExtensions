@@ -3,9 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
-    // TODO: Refactor all Boolean code
-
-    public abstract class BooleanBase
+    public abstract class BooleanBase : ErrorHandler
     {
         public string xmlDoc;
 
@@ -16,7 +14,7 @@ namespace XmlExtensions.Boolean
             {
                 if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
                 {
-                    PatchManager.errors.Add(GetType().ToString() + "(xmlDoc=" + xmlDoc + "): No document exists with the given name");
+                    Error(new string[] { xmlDoc }, new string[] { "xmlDoc" }, "(xmlDoc=" + xmlDoc + "): No document exists with the given name");
                     return false;
                 }
                 else
@@ -28,9 +26,19 @@ namespace XmlExtensions.Boolean
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add(GetType().ToString() + ": Error");
+                Error(e.Message);
                 return false;
             }
+        }
+
+        protected void EvaluationError(string name)
+        {
+            Error("Failed to evaluate <" + name + ">");
+        }
+
+        protected void EvaluationError(int errNum)
+        {
+            Error("Failed to evaluate the condition at position=" + errNum.ToString());
         }
 
         protected abstract bool Evaluation(ref bool b, XmlDocument xml);

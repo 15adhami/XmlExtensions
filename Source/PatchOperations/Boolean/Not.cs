@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
@@ -9,22 +8,14 @@ namespace XmlExtensions.Boolean
 
         protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
-            try
+            bool b1 = false;
+            if (!condition.Evaluate(ref b1, xml))
             {
-                bool b1 = false;
-                if (!condition.Evaluate(ref b1, xml))
-                {
-                    PatchManager.errors.Add(GetType().ToString() + ": Failed to evaluate <condition>");
-                    return false;
-                }
-                b = !b1;
-                return true;
-            }
-            catch (Exception e)
-            {
-                PatchManager.errors.Add(GetType().ToString() + ": " + e.Message);
+                EvaluationError("condition");
                 return false;
             }
+            b = !b1;
+            return true;
         }
     }
 }

@@ -13,8 +13,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { xpathDef, xpathLocal };
-            exceptionFields = new string[] { "xpathDef", "xpathLocal" };
+            CreateExceptions(xpathDef, "xpathDef", xpathLocal, "xpathLocal");
         }
 
         protected override bool Patch(XmlDocument xml)

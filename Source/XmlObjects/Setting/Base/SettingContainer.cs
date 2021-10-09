@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public abstract class SettingContainer
+    public abstract class SettingContainer : ErrorHandler
     {
         public string tag;
 
@@ -31,7 +31,7 @@ namespace XmlExtensions.Setting
             }
             catch (Exception e)
             {
-                ThrowError("Failed to set the default value:\n" + e.Message);
+                Error("Failed to set the default value:\n" + e.Message);
                 return false;
             }
             try
@@ -40,7 +40,7 @@ namespace XmlExtensions.Setting
             }
             catch (Exception e)
             {
-                ThrowError("Failed to initialize:\n" + e.Message);
+                Error("Failed to initialize:\n" + e.Message);
                 return false;
             }
         }
@@ -204,11 +204,11 @@ namespace XmlExtensions.Setting
                     {
                         if (name != null)
                         {
-                            ThrowError("Failed to initialize a setting in <" + name + "> at position=" + c.ToString());
+                            Error("Failed to initialize a setting in <" + name + "> at position=" + c.ToString());
                         }
                         else
                         {
-                            ThrowError("Failed to initialize a setting at position = " + c.ToString());
+                            Error("Failed to initialize a setting at position = " + c.ToString());
                         }
                         return false;
                     }
@@ -216,13 +216,5 @@ namespace XmlExtensions.Setting
             }
             return true;
         }
-
-
-        // Error handling
-
-        protected void ThrowError(string msg = "Error")
-        {
-            PatchManager.errors.Add(GetType().ToString() + ": " + msg);
-        }       
     }
 }

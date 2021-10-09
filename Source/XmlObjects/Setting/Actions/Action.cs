@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Action
 {
-    public abstract class Action
+    public abstract class Action : ErrorHandler
     {
         public string modId;
 
@@ -17,7 +17,7 @@ namespace XmlExtensions.Action
             }
             catch (Exception e)
             {
-                PatchManager.AddError(GetType().ToString() + ": " + e.Message);
+                Error(e.Message);
                 return false;
             }
             return true;

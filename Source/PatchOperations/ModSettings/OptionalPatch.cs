@@ -15,8 +15,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { key, defaultValue };
-            exceptionFields = new string[] { "key", "defaultValue" };
+            CreateExceptions(key, "key", defaultValue, "defaultValue");
         }
 
         protected override bool Patch(XmlDocument xml)

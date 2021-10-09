@@ -17,7 +17,7 @@ namespace XmlExtensions
             {
                 if(!PatchManager.XmlDocs.ContainsKey(docName))
                 {
-                    PatchManager.errors.Add("XmlExtensions.MergeDocument(docName=" + docName + "): No document exists with the given name");
+                    ErrorManager.Add("XmlExtensions.MergeDocument(docName=" + docName + "): No document exists with the given name");
                     return false;
                 }
                 XmlDocument doc = PatchManager.XmlDocs[docName];
@@ -56,7 +56,7 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.MergeDocument(docName=" + docName + "): " + e.Message);
+                ErrorManager.Add("XmlExtensions.MergeDocument(docName=" + docName + "): " + e.Message);
                 return false;
             }
         }

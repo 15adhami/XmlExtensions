@@ -334,7 +334,7 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                PatchManager.errors.Add(e.Message);
+                ErrorManager.Add(e.Message);
                 return false;
             }
         }

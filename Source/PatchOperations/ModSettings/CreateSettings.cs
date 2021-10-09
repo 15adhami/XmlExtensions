@@ -18,12 +18,12 @@ namespace XmlExtensions
             
             if (modId == null)
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings: <modId>=null");
+                ErrorManager.Add("XmlExtensions.CreateSettings: <modId>=null");
                 return false;
             }
             if (label == null)
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
+                ErrorManager.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
                 return false;
             }
             try
@@ -41,7 +41,7 @@ namespace XmlExtensions
             }
             catch
             {
-                PatchManager.errors.Add("XmlExtensions.CreateSettings(" + modId + "): Error");
+                ErrorManager.Add("XmlExtensions.CreateSettings(" + modId + "): Error");
                 return false;
             }
             return true;

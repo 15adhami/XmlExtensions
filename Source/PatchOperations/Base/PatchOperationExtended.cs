@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
@@ -8,8 +9,8 @@ namespace XmlExtensions
     {
         public string xmlDoc;
 
-        protected string[] exceptionVals;
-        protected string[] exceptionFields;
+        protected List<string> exceptionVals;
+        protected List<string> exceptionFields;
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {
@@ -50,6 +51,23 @@ namespace XmlExtensions
 
         protected virtual void SetException() { }
 
+        protected void CreateExceptions(params string[] values)
+        {
+            exceptionFields = new List<string>();
+            exceptionVals = new List<string>();
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    exceptionVals.Add(values[i]);
+                }
+                else
+                {
+                    exceptionFields.Add(values[i]);
+                }
+            }
+        }
+
         /// <summary>
         /// Throws an error for the patch operation
         /// </summary>
@@ -61,13 +79,13 @@ namespace XmlExtensions
             if (exceptionVals != null)
             {
                 str += "(" + exceptionFields[0] + "=" + exceptionVals[0];
-                for (int i = 1; i < exceptionVals.Length; i++)
+                for (int i = 1; i < exceptionVals.Count; i++)
                 {
                     str += ", " + exceptionFields[i] + "=" + exceptionVals[i];
                 }
                 str += ")";
             }
-            PatchManager.errors.Add(str + ": " + msg);
+            ErrorManager.Add(str + ": " + msg);
         }
 
         protected void Error(string[] vals, string[] fields, string msg)
@@ -82,7 +100,7 @@ namespace XmlExtensions
                 }
                 str += ")";
             }
-            PatchManager.errors.Add(str + ": " + msg);
+            ErrorManager.Add(str + ": " + msg);
         }
 
         protected void XPathError(string node = "xpath")

@@ -12,8 +12,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { storeIn, operation, xpath };
-            exceptionFields = new string[] { "storeIn", "operation", "xpath" };
+            CreateExceptions(storeIn, "storeIn", operation, "operation", xpath, "xpath");
         }
 
         public override bool getValues(List<string> vals, XmlDocument xml)

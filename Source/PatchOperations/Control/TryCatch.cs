@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             if (!RunPatches(tryApply, "tryApply", xml))
             {
-                PatchManager.errors.Clear();
+                ErrorManager.ClearErrors();
                 if (catchApply != null)
                 {
                     return RunPatches(catchApply, "catchApply", xml);

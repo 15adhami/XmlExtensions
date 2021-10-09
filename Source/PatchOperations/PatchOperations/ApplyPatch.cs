@@ -13,8 +13,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { patchName };
-            exceptionFields = new string[] { "patchName" };
+            CreateExceptions(patchName, "patchName");
         }
 
         protected override bool Patch(XmlDocument xml)

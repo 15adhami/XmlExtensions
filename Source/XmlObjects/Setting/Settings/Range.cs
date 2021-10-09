@@ -28,7 +28,7 @@ namespace XmlExtensions.Setting
         {
             if (key == null)
             {
-                ThrowError("<key> is null");
+                Error("<key> is null");
                 return false;
             }
             if (key2 == null)

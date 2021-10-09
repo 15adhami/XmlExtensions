@@ -276,7 +276,7 @@ namespace XmlExtensions
                     {
                         if (!action.DoKeyedAction(oldValuesCache[key], SettingsManager.GetSetting(selectedMod, key)))
                         {
-                            PatchManager.PrintErrors();
+                            ErrorManager.PrintErrors();
                         }
                     }
                 }

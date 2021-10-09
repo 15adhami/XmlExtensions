@@ -16,8 +16,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            exceptionVals = new string[] { i.ToString() };
-            exceptionFields = new string[] { storeIn };
+            CreateExceptions(i.ToString(), storeIn);
         }
 
         protected override bool Patch(XmlDocument xml)

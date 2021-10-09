@@ -9,11 +9,16 @@ namespace XmlExtensions.Setting
         public string label = null;
         public string defaultValue = null;
 
+        protected override void SetException()
+        {
+            CreateExceptions(key, "key", defaultValue, "defaultValue");
+        }
+
         protected override bool SetDefaultValue(string selectedMod)
         {
             if (key == null)
             {
-                ThrowError("<key> is null");
+                Error("<key> is null");
                 return false;
             }
             if (defaultValue != null)

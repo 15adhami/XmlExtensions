@@ -17,13 +17,11 @@ namespace XmlExtensions
         {
             if (currPrefix == null)
             {
-                exceptionVals = new string[] { storeIn, xpath };
-                exceptionFields = new string[] { "storeIn", "xpath" };
+                CreateExceptions(storeIn, "storeIn", xpath, "xpath");
             }
             else
             {
-                exceptionVals = new string[] { storeIn, currPrefix, xpath, };
-                exceptionFields = new string[] { "storeIn", "currPrefix", "xpath" };
+                CreateExceptions(currPrefix, storeIn, xpath, "xpath");
             }
         }
 
