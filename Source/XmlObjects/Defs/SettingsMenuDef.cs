@@ -30,7 +30,6 @@ namespace XmlExtensions
                     SettingsManager.AddMod(modId);
                 else
                     SettingsManager.AddMod(modId, label);
-                Verse.Log.Message("t0");
                 if (tKey != null)
                     XmlMod.settingsPerMod[modId].tKey = tKey;
                 int c = 0;

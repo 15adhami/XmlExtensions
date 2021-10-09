@@ -69,10 +69,6 @@ namespace XmlExtensions
 
         public static void AddKeyedAction(string modId, string key, KeyedAction action)
         {
-            if (keyedActionListDict == null)
-            {
-                keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
-            }
             if (!keyedActionListDict.ContainsKey(modId))
             {
                 keyedActionListDict.Add(modId, new Dictionary<string, List<KeyedAction>>());
