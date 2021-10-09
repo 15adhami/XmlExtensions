@@ -18,6 +18,10 @@ namespace XmlExtensions
 
         public bool Init()
         {
+            if (label == null)
+            {
+                submenu = true;
+            }
             if (modId == null)
             {
                 ErrorManager.Add("XmlExtensions.SettingsMenuDef: <modId>=null");
@@ -25,7 +29,6 @@ namespace XmlExtensions
             }
             try
             {
-                // TODO: Replace with label is null
                 if(submenu)
                     SettingsManager.AddMod(modId);
                 else
