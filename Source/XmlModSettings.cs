@@ -30,6 +30,14 @@ namespace XmlExtensions
             this.modId = modId;
         }
 
+        public void PostOpen()
+        {
+            foreach (SettingsMenuDef menu in menus.Values)
+            {
+                menu.PreClose();
+            }
+        }
+
         public void PreClose()
         {
             foreach(SettingsMenuDef menu in menus.Values)

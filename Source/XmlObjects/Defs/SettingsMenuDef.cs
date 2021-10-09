@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using XmlExtensions.Action;
 using XmlExtensions.Setting;
 
 namespace XmlExtensions
@@ -23,10 +25,12 @@ namespace XmlExtensions
             }
             try
             {
+                // TODO: Replace with label is null
                 if(submenu)
                     SettingsManager.AddMod(modId);
                 else
                     SettingsManager.AddMod(modId, label);
+                Verse.Log.Message("t0");
                 if (tKey != null)
                     XmlMod.settingsPerMod[modId].tKey = tKey;
                 int c = 0;
@@ -51,14 +55,17 @@ namespace XmlExtensions
                 {
                     XmlMod.settingsPerMod[modId].homeMenu = defName;                    
                 }
-                foreach (KeyedAction action in keyedActions)
+                if (keyedActions != null)
                 {
-                    XmlMod.AddKeyedAction(modId, action);
+                    foreach (KeyedAction action in keyedActions)
+                    {
+                        XmlMod.AddKeyedAction(modId, action.key, action);
+                    }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): Error");
+                PatchManager.errors.Add("XmlExtensions.SettingsMenuDef(" + defName + "): " + e.Message);
                 return false;
             }
             return true;
@@ -66,10 +73,6 @@ namespace XmlExtensions
 
         public void PostOpen()
         {
-            foreach (KeyedAction action in keyedActions)
-            {
-
-            }
             PatchManager.ClearErrors();
             foreach (SettingContainer setting in settings)
             {
@@ -115,25 +118,6 @@ namespace XmlExtensions
                     PatchManager.PrintErrors();
                 }
             }
-            foreach (string key in SettingsManager.GetKeys(modId))
-            {
-
-            }
         }
-        /*
-        public void RunOnCloseAction()
-        {
-            if (onClose != null)
-            {
-                PatchManager.ClearErrors();
-                foreach (BaseAction action in onClose)
-                {
-                    if (!action.DoAction())
-                    {
-                        PatchManager.PrintErrors();
-                    }
-                }
-            }
-        }*/
     }
 }

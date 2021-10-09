@@ -4,27 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XmlExtensions.Setting
+namespace XmlExtensions.Action
 {
-    public class KeyedAction
+    public abstract class KeyedAction : Action
     {
         public string key;
-        public string modId;
 
-        public bool DoAction(string oldValue, string newValue)
+        public bool DoKeyedAction(string oldValue, string newValue)
         {
             try
             {
-                return Action(oldValue, newValue);
+                if (!ApplyKeyedAction(oldValue, newValue))
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {
                 PatchManager.AddError(GetType().ToString() + ": " + e.Message);
+                return false;
             }
             return true;
         }
 
-        protected virtual bool Action(string oldValue, string newValue)
+        protected sealed override bool ApplyAction()
+        {
+            return true;
+        }
+
+        protected virtual bool ApplyKeyedAction(string oldValue, string newValue)
         {
             return true;
         }

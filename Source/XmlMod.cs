@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using XmlExtensions.Action;
 using XmlExtensions.Setting;
 
 namespace XmlExtensions
@@ -23,13 +24,16 @@ namespace XmlExtensions
         public static string activeMenu = null; // defName
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;
-        public static Dictionary<string, List<KeyedAction>> keyedActionListDict;
+        public static Dictionary<string, Dictionary<string, List<KeyedAction>>> keyedActionListDict;
+
+        private static Dictionary<string, string> oldValuesCache;
 
         static XmlMod()
         {
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
             harmony.PatchAll();
-            keyedActionListDict = new Dictionary<string, List<KeyedAction>>();
+            oldValuesCache = new Dictionary<string, string>();
+            keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
@@ -63,13 +67,21 @@ namespace XmlExtensions
             }
         }
 
-        public static void AddKeyedAction(string modId, KeyedAction action)
+        public static void AddKeyedAction(string modId, string key, KeyedAction action)
         {
+            if (keyedActionListDict == null)
+            {
+                keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
+            }
             if (!keyedActionListDict.ContainsKey(modId))
             {
-                keyedActionListDict.Add(modId, new List<KeyedAction>());
+                keyedActionListDict.Add(modId, new Dictionary<string, List<KeyedAction>>());
             }
-            keyedActionListDict[modId].Add(action);
+            if (!keyedActionListDict[modId].ContainsKey(key))
+            {
+                keyedActionListDict[modId].Add(key, new List<KeyedAction>());
+            }
+            keyedActionListDict[modId][key].Add(action);
         }
 
         private static void drawXmlModList(Rect rect)
@@ -105,12 +117,6 @@ namespace XmlExtensions
             t1 = listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label"));
             if (t1)
             {
-                /*
-                PreClose();
-                selectedMod = null;
-                selectedExtraMod = null;
-                viewingSettings = false;
-                */
                 SetSelectedMod(null);
             }
             listingStandard.End();
@@ -271,9 +277,32 @@ namespace XmlExtensions
             }
         }
 
-        private static void SetSelectedMod(string modId)
+        public static void SetSelectedMod(string modId)
         {
             PreClose();
+            // Run KeyedActions
+            if (selectedMod != null && keyedActionListDict.ContainsKey(selectedMod))
+            {
+                foreach (string key in keyedActionListDict[selectedMod].Keys)
+                {
+                    foreach (KeyedAction action in keyedActionListDict[selectedMod][key])
+                    {
+                        if (!action.DoKeyedAction(oldValuesCache[key], SettingsManager.GetSetting(selectedMod, key)))
+                        {
+                            PatchManager.PrintErrors();
+                        }
+                    }
+                }
+            }
+            oldValuesCache.Clear();
+            // Cache values for next mod
+            if (modId != null && keyedActionListDict.ContainsKey(modId))
+            {
+                foreach (string key in keyedActionListDict[modId].Keys)
+                {
+                    oldValuesCache.Add(key, SettingsManager.GetSetting(modId, key));
+                }
+            }
             selectedMod = modId;
             selectedExtraMod = null;
             viewingSettings = false;

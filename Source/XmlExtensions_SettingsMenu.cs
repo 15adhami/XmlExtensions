@@ -3,6 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
+    // Window that appears when you press More Mod Settings
     public class XmlExtensions_SettingsMenu : Window
     {
         public override Vector2 InitialSize
@@ -40,6 +41,7 @@ namespace XmlExtensions
 
         public override void PreClose()
         {
+            XmlMod.SetSelectedMod(null);
             XmlMod.PreClose();
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
             base.PreClose();
