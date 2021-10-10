@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class UseSettings : PatchOperationData
+    public class UseSettings : PatchOperationValue
     {
         public string modId;
         public List<string> keys;

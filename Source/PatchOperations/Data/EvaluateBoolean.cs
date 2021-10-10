@@ -6,7 +6,7 @@ using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {
-    public class EvaluateBoolean : PatchOperationData
+    public class EvaluateBoolean : PatchOperationValue
     {
         public BooleanBase condition;
 

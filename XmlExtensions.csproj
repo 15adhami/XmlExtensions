@@ -78,7 +78,7 @@
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationDataPathed.cs" />
+    <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />
     <Compile Include="Source\PatchOperations\Base\BooleanBase.cs" />
     <Compile Include="Source\PatchOperations\Boolean\Comparision.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Source\PatchOperations\Data\GetAttribute.cs" />
     <Compile Include="Source\PatchOperations\Data\GetName.cs" />
     <Compile Include="Source\PatchOperations\Performance\Log.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationData.cs" />
+    <Compile Include="Source\PatchOperations\Base\PatchOperationValue.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\CreateSettings.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\OptionalPatchExternal.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\UseSetting.cs" />

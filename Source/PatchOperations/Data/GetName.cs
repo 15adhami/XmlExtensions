@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class GetName : PatchOperationDataPathed
+    public class GetName : PatchOperationValuePathed
     {
         protected override void SetException()
         {

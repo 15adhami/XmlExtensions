@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class FindNodeInherited : PatchOperationData
+    public class FindNodeInherited : PatchOperationValue
     {
         public string defaultValue;
         public string xpathDef;
