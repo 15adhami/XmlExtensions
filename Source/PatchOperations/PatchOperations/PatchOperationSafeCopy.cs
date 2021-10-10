@@ -3,10 +3,9 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class PatchOperationSafeCopy : PatchOperationExtendedPathed
+    public class PatchOperationSafeCopy : PatchOperationSafe
     {
         public string paste;
-        protected int safetyDepth = -1;
 
         protected override bool Patch(XmlDocument xml)
         {
@@ -28,7 +27,7 @@ namespace XmlExtensions
         }
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!Helpers.ContainsNode(parent, child.Name) || depth == safetyDepth)
+            if (!ContainsNode(parent, child) || depth == safetyDepth)
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }

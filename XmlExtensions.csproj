@@ -77,6 +77,7 @@
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
+    <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />
     <Compile Include="Source\PatchOperations\Base\BooleanBase.cs" />

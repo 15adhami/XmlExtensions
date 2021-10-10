@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationAddOrReplace : PatchOperationExtendedPathed
+    public class PatchOperationAddOrReplace : PatchOperationSafe
     {
         public XmlContainer value;
 
@@ -15,7 +15,7 @@ namespace XmlExtensions
             {
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
-                    if (!Helpers.ContainsNode(xmlNode, addNode.Name))
+                    if (!ContainsNode(xmlNode, addNode))
                     {
                         xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
                     }

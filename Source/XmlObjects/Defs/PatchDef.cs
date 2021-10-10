@@ -9,5 +9,6 @@ namespace XmlExtensions
         public List<string> parameters;
         public XmlContainer apply;
         public string brackets = "{}";
+        public bool valueOperation = false;
     }
 }

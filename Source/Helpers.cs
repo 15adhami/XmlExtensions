@@ -339,15 +339,6 @@ namespace XmlExtensions
             }
         }
 
-        public static bool ContainsNode(XmlNode node, string nodeName)
-        {
-            foreach (XmlNode childNode in node.ChildNodes)
-            {
-                if (childNode.Name == nodeName) { return true; }
-            }
-            return false;
-        }
-
         public static string TryTranslate(string str, string tKey)
         {
             if (tKey != null)

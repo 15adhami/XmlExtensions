@@ -4,10 +4,9 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationSafeAddOrReplace : PatchOperationExtendedPathed
+    public class PatchOperationSafeAddOrReplace : PatchOperationSafe
     {
         protected XmlContainer value;
-        protected int safetyDepth = -1;
 
         protected override bool Patch(XmlDocument xml)
         {
@@ -24,13 +23,13 @@ namespace XmlExtensions
         }
         private void tryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!Helpers.ContainsNode(parent, child.Name))
+            if (!ContainsNode(parent, child))
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
             else if (depth == safetyDepth)
             {
-                if (!Helpers.ContainsNode(parent, child.Name))
+                if (!ContainsNode(parent, child))
                 {
                     parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
                 }

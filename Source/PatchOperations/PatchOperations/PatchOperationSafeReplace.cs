@@ -3,10 +3,9 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationSafeReplace : PatchOperationExtendedPathed
+    public class PatchOperationSafeReplace : PatchOperationSafe
     {
         protected XmlContainer value;
-        protected int safetyDepth = -1;
 
         protected override bool Patch(XmlDocument xml)
         {
@@ -24,7 +23,7 @@ namespace XmlExtensions
 
         private void tryReplaceNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (Helpers.ContainsNode(parent, child.Name))
+            if (ContainsNode(parent, child))
             {
                 if (safetyDepth != depth)
                 {
