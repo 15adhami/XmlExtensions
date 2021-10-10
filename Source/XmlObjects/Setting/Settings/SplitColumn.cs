@@ -11,7 +11,7 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> leftCol;
         public List<SettingContainer> rightCol;
         public bool drawLine = false;
-        private Spacing gapSize = Spacing.Small;
+        private int gapSize = 6;
 
         protected override bool Init(string selectedMod)
         {
@@ -28,13 +28,13 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return Math.Max(CalculateHeightSettingsList(width * split - (float)gapSize, selectedMod, leftCol), CalculateHeightSettingsList(width * (1 - split) - (float)gapSize, selectedMod, rightCol));
+            return Math.Max(CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol), CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol));
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            Rect leftRect = inRect.LeftPartPixels(inRect.width * split - ((int)gapSize));
-            Rect rightRect = inRect.RightPartPixels(inRect.width * (1 - split) - ((int)gapSize));
+            Rect leftRect = inRect.LeftPartPixels(inRect.width * split - (gapSize / 2f));
+            Rect rightRect = inRect.RightPartPixels(inRect.width * (1 - split) - (gapSize / 2f));
             DrawSettingsList(leftRect, selectedMod, leftCol);
             if (drawLine)
             {
@@ -44,16 +44,6 @@ namespace XmlExtensions.Setting
                 GUI.color = color;
             }
             DrawSettingsList(rightRect, selectedMod, rightCol);
-        }
-
-        private enum Spacing : int
-        {
-            None = 0,
-            Tiny = 2,
-            Small = 3,
-            Medium = 5,
-            Large = 9,
-            Huge = 15
         }
     }
 }
