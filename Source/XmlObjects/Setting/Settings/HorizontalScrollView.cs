@@ -26,8 +26,7 @@ namespace XmlExtensions.Setting
             Rect scrollRect = new Rect(0, 0, innerWidth, inRect.height - 16f);
             Widgets.BeginScrollView(inRect, ref horPos, scrollRect);
             Widgets.ScrollHorizontal(inRect, ref horPos, scrollRect);
-            Rect rect2 = new Rect(0f, 0f, innerWidth, 99999f);
-            DrawSettingsList(rect2, selectedMod, settings);
+            DrawSettingsList(scrollRect, selectedMod, settings);
             Widgets.EndScrollView();
         }
     }
