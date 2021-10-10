@@ -9,28 +9,26 @@ namespace XmlExtensions.Setting
     {
         public string text;
         public GameFont font = GameFont.Small;
-        public string anchor = "Left";
+        public Anchor anchor = Anchor.Left;
         public string tooltip = null;
         public string tKey = null;
         public string tKeyTip = null;
         public List<string> keys;
         public string xpath;
 
+        public enum Anchor
+        {
+            Left = TextAnchor.UpperLeft,
+            Middle = TextAnchor.UpperCenter,
+            Right = TextAnchor.UpperRight
+        }
+
         protected override float CalculateHeight(float width, string selectedMod)
         {
             Verse.Text.Font = font;
-            TextAnchor t = TextAnchor.UpperLeft;
-            if (anchor == "Middle")
-            {
-                t = TextAnchor.UpperCenter;
-            }
-            else if (anchor == "Right")
-            {
-                t = TextAnchor.UpperRight;
-            }
-            Verse.Text.Anchor = t;
+            Verse.Text.Anchor = (TextAnchor)anchor;
             string str = Helpers.TryTranslate(text, tKey);
-            int h = (int)Math.Ceiling(Verse.Text.CalcHeight(str, width));
+            float h = (float)Math.Ceiling(Verse.Text.CalcHeight(str, width));
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
             return h + GetDefaultSpacing();
@@ -39,32 +37,13 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
-            TextAnchor t = TextAnchor.UpperLeft;
-            if (anchor == "Middle")
-            {
-                t = TextAnchor.UpperCenter;
-            }
-            else if (anchor == "Right")
-            {
-                t = TextAnchor.UpperRight;
-            }
-            Verse.Text.Anchor = t;
-            int h = 18;
-            if (font == GameFont.Small)
-            {
-                h = 22;
-            }
-            else if (font == GameFont.Medium)
-            {
-                h = 29;
-            }
-            h += 1;
+            Verse.Text.Anchor = (TextAnchor)anchor;
             string str = Helpers.TryTranslate(text, tKey);
             if (keys != null)
             {
                 foreach (string key in keys)
                 {
-                    str = Helpers.SubstituteVariable(str, key, XmlMod.allSettings.dataDict[selectedMod + ";" + key], "{}");
+                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(selectedMod, key), "{}");
                 }
             }
             if (!tooltip.NullOrEmpty())
