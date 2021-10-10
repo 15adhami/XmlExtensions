@@ -17,12 +17,12 @@ namespace XmlExtensions
         {
             if (modId == null)
             {
-                ErrorManager.Add("XmlExtensions.CreateSettings: <modId>=null");
+                ErrorManager.AddError("XmlExtensions.CreateSettings: <modId>=null");
                 return false;
             }
             if (label == null)
             {
-                ErrorManager.Add("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
+                ErrorManager.AddError("XmlExtensions.CreateSettings(" + modId + "): <label>=null");
                 return false;
             }
             try
@@ -40,7 +40,7 @@ namespace XmlExtensions
             }
             catch
             {
-                ErrorManager.Add("XmlExtensions.CreateSettings(" + modId + "): Error");
+                ErrorManager.AddError("XmlExtensions.CreateSettings(" + modId + "): Error");
                 return false;
             }
             return true;

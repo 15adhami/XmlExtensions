@@ -12,7 +12,7 @@ namespace XmlExtensions
         {
             if (__exception != null)
             {
-                ErrorManager.Add("Verse.PatchOperationConditional(xpath=" + ___xpath + "): " + __exception.Message);
+                ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): " + __exception.Message);
                 __result = false;
             }
             return null;
@@ -22,7 +22,7 @@ namespace XmlExtensions
         {
             if (!__result)
             {
-                ErrorManager.Add("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error");
+                ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error");
             }
         }
     }

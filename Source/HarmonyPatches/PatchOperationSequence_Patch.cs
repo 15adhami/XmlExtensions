@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             if (__exception != null)
             {
-                ErrorManager.Add("Verse.PatchOperationSequence: " + __exception.Message);
+                ErrorManager.AddError("Verse.PatchOperationSequence: " + __exception.Message);
                 __result = false;
             }
             return null;
@@ -34,7 +34,7 @@ namespace XmlExtensions
                     }
                 }
                 if (___operations != null && ___operations.Count > 0 && num != 0)
-                    ErrorManager.Add("Verse.PatchOperationSequence: Error in the operation at position=" + num.ToString());
+                    ErrorManager.AddError("Verse.PatchOperationSequence: Error in the operation at position=" + num.ToString());
             }
         }
     }

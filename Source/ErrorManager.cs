@@ -53,7 +53,7 @@ namespace XmlExtensions
             errors.Clear();
         }
 
-        public static void Add(string msg)
+        public static void AddError(string msg)
         {
             errors.Add(msg);
         }

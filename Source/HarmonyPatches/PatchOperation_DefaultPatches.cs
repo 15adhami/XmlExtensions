@@ -26,13 +26,13 @@ namespace XmlExtensions.Source.HarmonyPatches
         {
             if (__exception != null)
             {
-                ErrorManager.Add(__instance.GetType().ToString() + ": " + __exception.Message);
+                ErrorManager.AddError(__instance.GetType().ToString() + ": " + __exception.Message);
                 __result = false;
                 return null;
             }
             if (!__result)
             {
-                ErrorManager.Add(__instance.GetType().ToString() + ": Error");
+                ErrorManager.AddError(__instance.GetType().ToString() + ": Error");
             }
             return null;
         }

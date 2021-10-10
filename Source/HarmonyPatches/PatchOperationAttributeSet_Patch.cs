@@ -11,7 +11,7 @@ namespace XmlExtensions
         {
             if (__exception != null)
             {
-                ErrorManager.Add("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + ", attribute=" + ___attribute + ", value=" + ___value + "): " + __exception.Message);
+                ErrorManager.AddError("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + ", attribute=" + ___attribute + ", value=" + ___value + "): " + __exception.Message);
                 __result = false;
             }
             return null;
@@ -22,9 +22,9 @@ namespace XmlExtensions
             if (!__result)
             {
                 if (xml.SelectSingleNode(___xpath) == null)
-                    ErrorManager.Add("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + "): Failed to find a node with the given xpath");
+                    ErrorManager.AddError("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + "): Failed to find a node with the given xpath");
                 else
-                    ErrorManager.Add("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + ", attribute=" + ___attribute + ", value=" + ___value + "): Error");
+                    ErrorManager.AddError("Verse.PatchOperationAttributeSet(xpath=" + ___xpath + ", attribute=" + ___attribute + ", value=" + ___value + "): Error");
             }
         }
     }

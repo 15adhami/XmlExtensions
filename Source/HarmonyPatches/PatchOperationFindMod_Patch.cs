@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             if (__exception != null)
             {
-                ErrorManager.Add("Verse.PatchOperationFindMod: " + __exception.Message);
+                ErrorManager.AddError("Verse.PatchOperationFindMod: " + __exception.Message);
                 __result = false;
             }
             return null;
@@ -34,7 +34,7 @@ namespace XmlExtensions
                         break;
                     }
                 }
-                ErrorManager.Add("Verse.PatchOperationFindMod(" + ___mods[c] + "): Error in <" + str + ">");
+                ErrorManager.AddError("Verse.PatchOperationFindMod(" + ___mods[c] + "): Error in <" + str + ">");
             }
         }
     }

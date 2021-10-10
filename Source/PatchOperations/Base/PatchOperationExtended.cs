@@ -90,7 +90,7 @@ namespace XmlExtensions
                 }
                 str += ")";
             }
-            ErrorManager.Add(str + ": " + msg);
+            ErrorManager.AddError(str + ": " + msg);
         }
 
         protected void Error(string[] vals, string[] fields, string msg)
@@ -105,7 +105,7 @@ namespace XmlExtensions
                 }
                 str += ")";
             }
-            ErrorManager.Add(str + ": " + msg);
+            ErrorManager.AddError(str + ": " + msg);
         }
 
         protected void XPathError(string node = "xpath")
