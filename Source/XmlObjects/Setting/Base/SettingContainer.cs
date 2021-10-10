@@ -8,6 +8,7 @@ namespace XmlExtensions.Setting
     public abstract class SettingContainer : ErrorHandler
     {
         public string tag;
+        public bool showDimensions = false;
 
         private List<List<SettingContainer>> cachedLists = new List<List<SettingContainer>>();
         private Dictionary<List<SettingContainer>, string> listNameDict = new Dictionary<List<SettingContainer>, string>();
@@ -69,7 +70,15 @@ namespace XmlExtensions.Setting
         {
             try
             {
-                DrawSettingContents(inRect, selectedMod);
+                if (showDimensions)
+                {
+                    Widgets.DrawBox(inRect);
+                    Widgets.Label(inRect, " " + inRect.width.ToString() + "x" + ((int)GetHeight(inRect.width, selectedMod)).ToString());
+                }
+                else
+                {
+                    DrawSettingContents(inRect, selectedMod);
+                }
             }
             catch (Exception e)
             {

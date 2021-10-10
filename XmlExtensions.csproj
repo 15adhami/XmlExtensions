@@ -165,6 +165,7 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\Gap.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\GapLine.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Group.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\HeightTool.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\HorizontalScrollView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\IntEntry.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\KeyedSettingContainer.cs" />
@@ -186,7 +187,6 @@
     <Compile Include="Source\XmlModBaseSettings.cs" />
     <Compile Include="Source\XmlModSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\SettingContainer.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Settings\ShowWidth.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Slider.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumnPixels.cs" />
