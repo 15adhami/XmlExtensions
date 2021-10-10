@@ -1,7 +1,6 @@
 ﻿using System.Xml;
-using XmlExtensions.Boolean;
-using System;
 using Verse;
+using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {
@@ -18,7 +17,7 @@ namespace XmlExtensions
         }
 
         protected override bool Patch(XmlDocument xml)
-        {            
+        {
             if (condition == null)
             {
                 NullError("condition");
@@ -57,4 +56,3 @@ namespace XmlExtensions
         }
     }
 }
-

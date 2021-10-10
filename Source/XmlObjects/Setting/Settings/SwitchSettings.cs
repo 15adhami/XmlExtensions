@@ -3,8 +3,6 @@ using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
-    
-
     public class SwitchSettings : SettingContainer
     {
         public class SwitchSetting
@@ -37,7 +35,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetHeightSettingsList(width, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
+            return CalculateHeightSettingsList(width, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

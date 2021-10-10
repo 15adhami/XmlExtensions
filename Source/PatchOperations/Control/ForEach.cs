@@ -1,6 +1,5 @@
 ﻿using System.Xml;
 using Verse;
-using System;
 
 namespace XmlExtensions
 {
@@ -47,7 +46,5 @@ namespace XmlExtensions
             }
             return true;
         }
-
     }
 }
-

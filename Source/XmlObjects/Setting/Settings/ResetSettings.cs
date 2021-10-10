@@ -81,7 +81,6 @@ namespace XmlExtensions.Setting
                                 if (XmlMod.allSettings.dataDict.ContainsKey(selectedMod + ";" + key))
                                     SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
                             }
-
                         }, "No".Translate(), null, null, false, null, null));
                     }
                 }
@@ -100,7 +99,6 @@ namespace XmlExtensions.Setting
                                 if (SettingsManager.ContainsKey(selectedMod, key))
                                     SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
                             }
-
                         }, "No".Translate(), null, null, false, null, null));
                     }
                 }

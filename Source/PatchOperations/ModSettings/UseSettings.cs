@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
-using Verse;
 
 namespace XmlExtensions
 {
@@ -13,7 +11,7 @@ namespace XmlExtensions
 
         public override bool getVars(List<string> vars)
         {
-            foreach(string key in keys)
+            foreach (string key in keys)
             {
                 vars.Add(key);
             }
@@ -41,7 +39,7 @@ namespace XmlExtensions
             for (int i = 0; i < keys.Count; i++)
             {
                 SettingsManager.SetDefaultValue(modId, keys[i], defaultValues[i]);
-                bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out string value );
+                bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out string value);
                 if (!didContain)
                 {
                     value = defaultValues[i];
@@ -52,5 +50,4 @@ namespace XmlExtensions
             return true;
         }
     }
-
 }

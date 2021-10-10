@@ -16,12 +16,12 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetHeightSettingsList(width * split, selectedMod, settings);
+            return CalculateHeightSettingsList(width * split, selectedMod, settings);
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            Rect middleRect = inRect.LeftPart(split/2f+0.5f).RightPart(split/(split / 2f + 0.5f));
+            Rect middleRect = inRect.LeftPart(split / 2f + 0.5f).RightPart(split / (split / 2f + 0.5f));
             DrawSettingsList(middleRect, selectedMod, settings);
         }
     }

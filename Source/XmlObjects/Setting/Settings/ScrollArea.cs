@@ -25,7 +25,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            Rect scrollRect = new Rect(0, 0, innerWidth, GetHeightSettingsList(innerWidth, selectedMod, settings));
+            Rect scrollRect = new Rect(0, 0, innerWidth, CalculateHeightSettingsList(innerWidth, selectedMod, settings));
             Widgets.BeginScrollView(inRect, ref vertPos, scrollRect);
             Widgets.ScrollHorizontal(inRect, ref horPos, scrollRect);
             DrawSettingsList(scrollRect, selectedMod, settings);

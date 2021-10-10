@@ -28,12 +28,12 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return Math.Max(GetHeightSettingsList(width * split - (float)gapSize, selectedMod, leftCol), GetHeightSettingsList(width * (1 - split) - (float)gapSize, selectedMod, rightCol));
+            return Math.Max(CalculateHeightSettingsList(width * split - (float)gapSize, selectedMod, leftCol), CalculateHeightSettingsList(width * (1 - split) - (float)gapSize, selectedMod, rightCol));
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            Rect leftRect = inRect.LeftPartPixels(inRect.width*split - ((int)gapSize));
+            Rect leftRect = inRect.LeftPartPixels(inRect.width * split - ((int)gapSize));
             Rect rightRect = inRect.RightPartPixels(inRect.width * (1 - split) - ((int)gapSize));
             DrawSettingsList(leftRect, selectedMod, leftCol);
             if (drawLine)

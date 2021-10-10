@@ -11,7 +11,7 @@ namespace XmlExtensions
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
             XmlNodeList nodeList = xmlRoot.ChildNodes;
-            foreach(XmlNode node in nodeList)
+            foreach (XmlNode node in nodeList)
             {
                 patches.Add(Helpers.GetPatchFromString(node.OuterXml));
             }

@@ -170,7 +170,7 @@ namespace XmlExtensions.Setting
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <param name="settings">The list of settings</param>
         /// <returns>The total height of the settings</returns>
-        protected float GetHeightSettingsList(float width, string selectedMod, List<SettingContainer> settings)
+        protected float CalculateHeightSettingsList(float width, string selectedMod, List<SettingContainer> settings)
         {
             float h = 0;
             if (settings != null)

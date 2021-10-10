@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
-using Verse;
 
 namespace XmlExtensions
 {
     public class CreateVariable : PatchOperationValue
-    {        
+    {
         public string value = "";
         public string value2 = "";
         public string defaultValue;
@@ -71,5 +69,4 @@ namespace XmlExtensions
             return true;
         }
     }
-
 }

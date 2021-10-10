@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace XmlExtensions.Boolean
@@ -12,6 +8,7 @@ namespace XmlExtensions.Boolean
     {
         // I can't spell lol
         protected string value1;
+
         protected string value2;
         protected string relation = "eq";
         protected string logic = "and";

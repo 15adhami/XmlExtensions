@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using Verse;
-
-namespace XmlExtensions.Setting
+﻿namespace XmlExtensions.Setting
 {
     public abstract class KeyedSettingContainer : SettingContainer
     {
@@ -24,7 +21,7 @@ namespace XmlExtensions.Setting
             if (defaultValue != null)
             {
                 SettingsManager.SetDefaultValue(selectedMod, key, defaultValue);
-            }            
+            }
             return true;
         }
     }

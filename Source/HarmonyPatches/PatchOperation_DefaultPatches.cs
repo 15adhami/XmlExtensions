@@ -10,8 +10,7 @@ namespace XmlExtensions.Source.HarmonyPatches
     [HarmonyPatch]
     static class PatchOperation_DefaultPatches
     {
-
-        static IEnumerable<MethodBase> TargetMethods()
+        private static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(PatchOperation), "ApplyWorker");
             foreach (Type T in typeof(PatchOperation).AllSubclassesNonAbstract())
@@ -23,7 +22,7 @@ namespace XmlExtensions.Source.HarmonyPatches
             }
         }
 
-        static Exception Finalizer(PatchOperation __instance, Exception __exception, ref bool __result, XmlDocument xml)
+        private static Exception Finalizer(PatchOperation __instance, Exception __exception, ref bool __result, XmlDocument xml)
         {
             if (__exception != null)
             {
@@ -36,7 +35,6 @@ namespace XmlExtensions.Source.HarmonyPatches
                 ErrorManager.Add(__instance.GetType().ToString() + ": Error");
             }
             return null;
-
         }
     }
 }

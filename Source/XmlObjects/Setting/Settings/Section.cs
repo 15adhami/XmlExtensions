@@ -39,7 +39,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            if(settings.Count > 0)
+            if (settings.Count > 0)
             {
                 Color curColor = GUI.color;
                 GUI.color = Widgets.MenuSectionBGFillColor * curColor;
@@ -49,7 +49,7 @@ namespace XmlExtensions.Setting
                 GUI.color = curColor;
                 Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
                 DrawSettingsList(rect2, selectedMod, settings);
-            }            
+            }
         }
     }
 }

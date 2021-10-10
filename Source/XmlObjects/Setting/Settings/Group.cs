@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Verse;
 
 namespace XmlExtensions.Setting
 {
@@ -15,7 +14,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetHeightSettingsList(width, selectedMod, settings);
+            return CalculateHeightSettingsList(width, selectedMod, settings);
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

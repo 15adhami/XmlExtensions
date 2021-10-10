@@ -1,14 +1,13 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Xml;
-using HarmonyLib;
 
 namespace XmlExtensions
 {
-    [HarmonyPatch(typeof(Verse.PatchOperationAttributeAdd))]
-    [HarmonyPatch("ApplyWorker")]
+    [HarmonyPatch(typeof(Verse.PatchOperationAttributeAdd), "ApplyWorker")]
     static class PatchOperationAttributeAdd_Patch
     {
-        static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, ref string ___attribute, ref string ___value, XmlDocument xml)
+        private static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, ref string ___attribute, ref string ___value, XmlDocument xml)
         {
             if (__exception != null)
             {
@@ -18,7 +17,7 @@ namespace XmlExtensions
             return null;
         }
 
-        static void Postfix(ref bool __result, ref string ___xpath, ref string ___attribute, ref string ___value, XmlDocument xml)
+        private static void Postfix(ref bool __result, ref string ___xpath, ref string ___attribute, ref string ___value, XmlDocument xml)
         {
             if (!__result)
             {

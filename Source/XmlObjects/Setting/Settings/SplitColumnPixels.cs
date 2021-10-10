@@ -33,7 +33,7 @@ namespace XmlExtensions.Setting
                 pixels = width / 2 - (int)gapSize;
             }
             float leftSize = Math.Min(width - (int)gapSize, pixels);
-            return Math.Max(GetHeightSettingsList(leftSize, selectedMod, leftCol), GetHeightSettingsList(width - leftSize - (int)gapSize, selectedMod, leftCol));
+            return Math.Max(CalculateHeightSettingsList(leftSize, selectedMod, leftCol), CalculateHeightSettingsList(width - leftSize - (int)gapSize, selectedMod, leftCol));
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

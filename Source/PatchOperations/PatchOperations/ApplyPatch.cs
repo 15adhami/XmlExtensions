@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-
     public class ApplyPatch : PatchOperationExtended
     {
         public string patchName;

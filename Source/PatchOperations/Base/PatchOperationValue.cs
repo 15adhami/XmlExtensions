@@ -23,7 +23,7 @@ namespace XmlExtensions
                 }
                 else
                     doc = PatchManager.XmlDocs[xmlDoc];
-            }            
+            }
             try
             {
                 if (!PreCheck(doc)) { return false; }

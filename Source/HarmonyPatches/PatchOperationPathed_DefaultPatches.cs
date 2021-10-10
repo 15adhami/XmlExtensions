@@ -10,8 +10,7 @@ namespace XmlExtensions.Source.HarmonyPatches
     [HarmonyPatch]
     static class PatchOperationPathed_DefaultPatches
     {
-
-        static IEnumerable<MethodBase> TargetMethods()
+        private static IEnumerable<MethodBase> TargetMethods()
         {
             foreach (Type T in typeof(PatchOperationPathed).AllSubclassesNonAbstract())
             {
@@ -22,7 +21,7 @@ namespace XmlExtensions.Source.HarmonyPatches
             }
         }
 
-        static Exception Finalizer(PatchOperationPathed __instance, Exception __exception, ref bool __result, string ___xpath, XmlDocument xml)
+        private static Exception Finalizer(PatchOperationPathed __instance, Exception __exception, ref bool __result, string ___xpath, XmlDocument xml)
         {
             if (__exception != null)
             {

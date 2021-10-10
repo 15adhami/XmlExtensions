@@ -9,14 +9,13 @@ namespace XmlExtensions
     [StaticConstructorOnStartup]
     public static class XmlExtensions
     {
-
         static XmlExtensions()
         {
             // Initializing mod settings menus
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
             {
-                XmlMod.menus.Add(menuDef.defName, menuDef);                
+                XmlMod.menus.Add(menuDef.defName, menuDef);
                 if (!menuDef.Init())
                 {
                     ErrorManager.PrintErrors();

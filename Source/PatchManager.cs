@@ -13,8 +13,7 @@ namespace XmlExtensions
         public static XmlDocument defaultDoc;
         public static Stopwatch watch;
         public static Stopwatch watch2;
-        
-        
+
         public static bool loadingPatches = false;
         public static int rangeCount = 1;
         public static bool context = false;
@@ -23,6 +22,7 @@ namespace XmlExtensions
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
         public static ModContentPack ActiveMod;
         public static Dictionary<PatchOperation, ModContentPack> ModPatchDict;
+
         public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
              typeof(Verse.PatchOperationSetName),  };
 

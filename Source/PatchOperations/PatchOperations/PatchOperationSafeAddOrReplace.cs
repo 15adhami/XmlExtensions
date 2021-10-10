@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -21,6 +20,7 @@ namespace XmlExtensions
             }
             return true;
         }
+
         private void tryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
         {
             if (!ContainsNode(parent, child))

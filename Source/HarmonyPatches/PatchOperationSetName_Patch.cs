@@ -1,18 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using HarmonyLib;
+using System;
 using System.Xml;
-using System.Xml.XPath;
-using HarmonyLib;
 
 namespace XmlExtensions
 {
-
-    [HarmonyPatch(typeof(Verse.PatchOperationSetName))]
-    [HarmonyPatch("ApplyWorker")]
+    [HarmonyPatch(typeof(Verse.PatchOperationSetName), "ApplyWorker")]
     static class PatchOperationSetName_Patch
     {
-        static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
+        private static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
         {
             if (__exception != null)
             {
@@ -22,7 +17,7 @@ namespace XmlExtensions
             return null;
         }
 
-        static void Postfix(ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
+        private static void Postfix(ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
         {
             if (!__result)
             {

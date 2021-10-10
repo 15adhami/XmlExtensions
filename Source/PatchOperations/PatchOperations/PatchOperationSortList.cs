@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System;
+using System.Linq;
 using System.Xml;
 using Verse;
-using System.Linq;
 
 namespace XmlExtensions
 {
@@ -65,7 +64,6 @@ namespace XmlExtensions
                             return (val1 > val2 ? -1 : (val1 < val2 ? 1 : 0));
                         });
                     }
-
                 }
                 else
                 {

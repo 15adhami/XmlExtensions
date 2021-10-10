@@ -24,7 +24,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return bool.Parse(SettingsManager.GetSetting(selectedMod, key)) ? GetHeightSettingsList(width, selectedMod, caseTrue) : GetHeightSettingsList(width, selectedMod, caseFalse);
+            return bool.Parse(SettingsManager.GetSetting(selectedMod, key)) ? CalculateHeightSettingsList(width, selectedMod, caseTrue) : CalculateHeightSettingsList(width, selectedMod, caseFalse);
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

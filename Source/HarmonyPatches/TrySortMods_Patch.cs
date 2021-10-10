@@ -1,11 +1,10 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
+using System;
 using Verse;
 
 namespace XmlExtensions
 {
-    [HarmonyPatch(typeof(ModsConfig))]
-    [HarmonyPatch("TrySortMods")]
+    [HarmonyPatch(typeof(ModsConfig), "TrySortMods")]
     static class TrySortMods_Patch
     {
         static Exception Finalizer(Exception __exception)
@@ -16,6 +15,5 @@ namespace XmlExtensions
             }
             return null;
         }
-
     }
 }

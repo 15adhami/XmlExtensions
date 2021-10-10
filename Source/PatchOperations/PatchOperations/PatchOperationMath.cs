@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
 namespace XmlExtensions
 {
@@ -53,6 +52,7 @@ namespace XmlExtensions
             }
             return true;
         }
+
         protected override void SetException()
         {
             CreateExceptions(xpath, "xpath", value, "value");

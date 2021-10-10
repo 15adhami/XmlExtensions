@@ -7,7 +7,7 @@ namespace XmlExtensions.Setting
     {
         public string texPath;
         public string anchor = "Middle";
-        public Vector2 dimensions = new Vector2(-1,-1);
+        public Vector2 dimensions = new Vector2(-1, -1);
         public float scale = -1;
 
         private Texture2D img;
@@ -56,11 +56,11 @@ namespace XmlExtensions.Setting
             int height = img.height;
             int width = img.width;
             Rect drawRect = new Rect();
-            if((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
+            if ((dimensions.x < 0 || dimensions.y < 0) && scale < 0)
             {
                 if (width > inRect.width)
                 {
-                    height = (int)(height/(width/ inRect.width));
+                    height = (int)(height / (width / inRect.width));
                     width = (int)inRect.width;
                 }
                 Rect tempRect = inRect.TopPartPixels(height);
@@ -74,7 +74,7 @@ namespace XmlExtensions.Setting
                 else
                     drawRect = tempRect.LeftPartPixels(width);
             }
-            else if(scale < 0)
+            else if (scale < 0)
             {
                 float width2 = 0;
                 if (dimensions.x > inRect.width)
@@ -119,6 +119,5 @@ namespace XmlExtensions.Setting
             }
             GUI.DrawTexture(drawRect, img);
         }
-
     }
 }

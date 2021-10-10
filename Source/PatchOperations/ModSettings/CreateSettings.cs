@@ -15,7 +15,6 @@ namespace XmlExtensions
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            
             if (modId == null)
             {
                 ErrorManager.Add("XmlExtensions.CreateSettings: <modId>=null");
@@ -31,7 +30,7 @@ namespace XmlExtensions
                 string defStr = "";
                 defStr += "<defName>" + modId.Replace('.', '_') + "</defName>";
                 defStr += "<modId>" + modId + "</modId>";
-                defStr += "<tKey>" + (tKey==null?"":tKey) + "</tKey>";
+                defStr += "<tKey>" + (tKey == null ? "" : tKey) + "</tKey>";
                 defStr += "<defaultSpacing>" + defaultSpacing.ToString() + "</defaultSpacing>";
                 defStr += "<label>" + label + "</label>";
                 defStr += settings.node.OuterXml;
@@ -47,5 +46,4 @@ namespace XmlExtensions
             return true;
         }
     }
-
 }

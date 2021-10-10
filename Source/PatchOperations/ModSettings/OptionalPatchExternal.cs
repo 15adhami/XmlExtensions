@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Reflection;
 using System.Xml;
 using Verse;
-using System.Reflection;
 
 namespace XmlExtensions
 {

@@ -11,8 +11,8 @@ namespace XmlExtensions.Setting
             public string label;
             public string tKey;
             public List<SettingContainer> settings = new List<SettingContainer>();
-
         }
+
         public List<Tab> tabs;
 
         private List<TabRecord> tabRecords;
@@ -47,7 +47,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetHeightSettingsList(width, selectedMod, tabs[selectedTab].settings) + (int)tabHeight + 4;
+            return CalculateHeightSettingsList(width, selectedMod, tabs[selectedTab].settings) + (int)tabHeight + 4;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

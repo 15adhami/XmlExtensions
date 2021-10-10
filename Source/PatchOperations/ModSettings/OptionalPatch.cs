@@ -1,10 +1,8 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-
     public class OptionalPatch : PatchOperationExtended
     {
         public string key;
@@ -46,5 +44,4 @@ namespace XmlExtensions
             return RunPatchesConditional(bool.Parse(value), caseTrue, caseFalse, xml);
         }
     }
-
 }

@@ -15,10 +15,10 @@ namespace XmlExtensions.Setting
         {
             return InitializeSettingsList(selectedMod, settings);
         }
-        
+
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetHeightSettingsList(innerWidth, selectedMod, settings) + 16f;
+            return CalculateHeightSettingsList(innerWidth, selectedMod, settings) + 16f;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

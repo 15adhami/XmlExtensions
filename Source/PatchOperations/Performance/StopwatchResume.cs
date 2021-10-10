@@ -1,6 +1,4 @@
-﻿using System;
-using System.Xml;
-using Verse;
+﻿using System.Xml;
 
 namespace XmlExtensions
 {

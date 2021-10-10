@@ -30,6 +30,6 @@ namespace XmlExtensions.Setting
             newFloat = listingStandard.Slider(currFloat, min, max);
             listingStandard.End();
             SettingsManager.SetSetting(selectedMod, key, Math.Round(newFloat, decimals).ToString());
-        }        
+        }
     }
 }

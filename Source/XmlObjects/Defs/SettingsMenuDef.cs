@@ -29,7 +29,7 @@ namespace XmlExtensions
             }
             try
             {
-                if(submenu)
+                if (submenu)
                     SettingsManager.AddMod(modId);
                 else
                     SettingsManager.AddMod(modId, label);
@@ -53,9 +53,9 @@ namespace XmlExtensions
                         return false;
                     }
                 }
-                if(!submenu)
+                if (!submenu)
                 {
-                    XmlMod.settingsPerMod[modId].homeMenu = defName;                    
+                    XmlMod.settingsPerMod[modId].homeMenu = defName;
                 }
                 if (keyedActions != null)
                 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
 namespace XmlExtensions
 {
@@ -25,6 +24,7 @@ namespace XmlExtensions
             }
             return true;
         }
+
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
             if (!ContainsNode(parent, child) || depth == safetyDepth)

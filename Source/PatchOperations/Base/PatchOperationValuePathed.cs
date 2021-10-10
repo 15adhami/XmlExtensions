@@ -27,9 +27,8 @@ namespace XmlExtensions
                     XPathError();
                     return false;
                 }
-            }            
+            }
             return true;
         }
     }
-
 }

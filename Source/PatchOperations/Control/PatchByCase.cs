@@ -1,6 +1,5 @@
-﻿using System.Xml;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -57,7 +56,5 @@ namespace XmlExtensions
             }
             return true;
         }
-
     }
 }
-

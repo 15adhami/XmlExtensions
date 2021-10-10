@@ -26,7 +26,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));            
+            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));
             if (highlight && Mouse.IsOver(inRect))
             {
                 Widgets.DrawHighlight(inRect);

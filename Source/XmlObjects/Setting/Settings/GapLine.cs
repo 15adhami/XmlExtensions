@@ -20,6 +20,6 @@ namespace XmlExtensions.Setting
             GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
             GUI.DrawTexture(new Rect(inRect.x, y, inRect.width, thickness), BaseContent.WhiteTex);
             GUI.color = color;
-        }        
+        }
     }
 }

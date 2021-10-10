@@ -7,7 +7,9 @@ namespace XmlExtensions
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
 
-        protected virtual void SetException() { }
+        protected virtual void SetException()
+        {
+        }
 
         protected void CreateExceptions(params string[] values)
         {

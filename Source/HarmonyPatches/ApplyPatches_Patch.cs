@@ -1,26 +1,20 @@
-﻿using System;
+﻿using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
-using HarmonyLib;
 using System.Xml;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
+using Verse;
 
 namespace XmlExtensions
 {
-    [HarmonyPatch(typeof(LoadedModManager))]
-    [HarmonyPatch("ApplyPatches")]
+    [HarmonyPatch(typeof(LoadedModManager), "ApplyPatches")]
     static class ApplyPatches_Patch
     {
-        static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
+        private static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
         {
             PatchManager.context = false;
             PatchManager.xmlDoc = xmlDoc;
             PatchManager.defaultDoc = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
-            foreach(ModContentPack mod in ___runningMods)
+            foreach (ModContentPack mod in ___runningMods)
             {
                 foreach (PatchOperation patch in mod.Patches)
                 {
@@ -29,7 +23,7 @@ namespace XmlExtensions
             }
         }
 
-        static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
+        private static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
             PatchManager.XmlDocs.Clear();
             PatchManager.nodeMap.Clear();

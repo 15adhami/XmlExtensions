@@ -1,7 +1,6 @@
 ﻿using System.Xml;
 using Verse;
 using XmlExtensions.Boolean;
-using System;
 
 namespace XmlExtensions
 {
@@ -29,7 +28,5 @@ namespace XmlExtensions
             }
             return RunPatchesConditional(flag, caseTrue, caseFalse, xml);
         }
-
     }
 }
-

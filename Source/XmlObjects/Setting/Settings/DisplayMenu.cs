@@ -30,6 +30,6 @@ namespace XmlExtensions.Setting
             {
                 SetActiveMenu(menu);
             }
-        }        
+        }
     }
 }

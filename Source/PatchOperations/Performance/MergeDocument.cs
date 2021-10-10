@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-
     public class MergeDocument : PatchOperation
     {
         public string docName;
@@ -15,14 +12,14 @@ namespace XmlExtensions
         {
             try
             {
-                if(!PatchManager.XmlDocs.ContainsKey(docName))
+                if (!PatchManager.XmlDocs.ContainsKey(docName))
                 {
                     ErrorManager.Add("XmlExtensions.MergeDocument(docName=" + docName + "): No document exists with the given name");
                     return false;
                 }
                 XmlDocument doc = PatchManager.XmlDocs[docName];
-                foreach(XmlNode node in doc.DocumentElement.ChildNodes)
-                {                    
+                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
+                {
                     if (PatchManager.nodeMap[docName].ContainsKey(node))
                     {
                         // Replace the given node

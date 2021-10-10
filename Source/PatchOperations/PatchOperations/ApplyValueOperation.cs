@@ -31,7 +31,7 @@ namespace XmlExtensions
             }
             XmlDocument newDoc = new XmlDocument();
             newDoc.AppendChild(newDoc.CreateNode("element", "root", null));
-            if(!RunPatches(newContainer, newDoc))
+            if (!RunPatches(newContainer, newDoc))
             {
                 Error("Error while running PatchDef");
                 return false;

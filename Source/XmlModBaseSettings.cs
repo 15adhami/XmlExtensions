@@ -8,12 +8,13 @@ namespace XmlExtensions
     {
         public Dictionary<string, string> dataDict;
         public bool trace;
-        
+
         public XmlModBaseSettings()
         {
             dataDict = new Dictionary<string, string>();
             trace = true;
         }
+
         public override void ExposeData()
         {
             XmlMod.selectedExtraMod = null;

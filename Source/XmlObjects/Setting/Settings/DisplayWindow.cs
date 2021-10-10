@@ -14,7 +14,7 @@ namespace XmlExtensions.Setting
 
         public bool doCloseX = true;
         public bool doCloseButton = false;
-        public bool resizeable = false;        
+        public bool resizeable = false;
         public bool draggable = false;
         public bool absorbInputAroundWindow = true;
         public bool allowMultipleWindows = false;

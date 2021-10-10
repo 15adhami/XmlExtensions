@@ -17,7 +17,7 @@ namespace XmlExtensions
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {
-            XmlDocument doc = xml;            
+            XmlDocument doc = xml;
             if (xmlDoc != null)
             {
                 if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
@@ -29,14 +29,14 @@ namespace XmlExtensions
                 {
                     doc = PatchManager.XmlDocs[xmlDoc];
                 }
-            }            
+            }
             try
             {
                 if (!PreCheck(doc)) { return false; }
                 return Patch(doc);
             }
             catch (Exception e)
-            {                
+            {
                 Error(e.Message);
                 return false;
             }
@@ -52,7 +52,9 @@ namespace XmlExtensions
             return false;
         }
 
-        protected virtual void SetException() { }
+        protected virtual void SetException()
+        {
+        }
 
         protected void CreateExceptions(params string[] values)
         {
@@ -164,7 +166,7 @@ namespace XmlExtensions
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Error(e.Message);
                 return false;

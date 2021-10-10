@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Xml;
 using Verse;
-using System.Reflection;
-using System.Collections.Generic;
 
 namespace XmlExtensions
 {
@@ -50,5 +49,4 @@ namespace XmlExtensions
             return true;
         }
     }
-
 }

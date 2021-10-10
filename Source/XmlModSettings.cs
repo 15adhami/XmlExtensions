@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
-using XmlExtensions.Setting;
+﻿using System.Collections.Generic;
 
 namespace XmlExtensions
 {
@@ -24,6 +19,7 @@ namespace XmlExtensions
             defValues = new Dictionary<string, string>();
             menus = new Dictionary<string, SettingsMenuDef>();
         }
+
         public XmlModSettings(string modId)
         {
             keys = new List<string>();

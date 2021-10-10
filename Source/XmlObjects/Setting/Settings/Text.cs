@@ -40,7 +40,7 @@ namespace XmlExtensions.Setting
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
             TextAnchor t = TextAnchor.UpperLeft;
-            if(anchor == "Middle")
+            if (anchor == "Middle")
             {
                 t = TextAnchor.UpperCenter;
             }
@@ -71,7 +71,7 @@ namespace XmlExtensions.Setting
             {
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
-            Widgets.Label(inRect, str);                       
+            Widgets.Label(inRect, str);
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
         }

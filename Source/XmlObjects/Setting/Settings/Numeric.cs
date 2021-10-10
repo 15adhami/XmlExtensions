@@ -20,6 +20,6 @@ namespace XmlExtensions.Setting
             string buf = f.ToString();
             Widgets.TextFieldNumericLabeled(inRect, Helpers.TryTranslate(label, tKey), ref f, ref buf, min, max);
             SettingsManager.SetSetting(selectedMod, key, f.ToString());
-        }                
+        }
     }
 }

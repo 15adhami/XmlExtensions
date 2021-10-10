@@ -46,7 +46,7 @@ namespace XmlExtensions.Setting
                 {
                     tempWidth = width * splits[c] - gapSize / 2;
                 }
-                h = Math.Max(GetHeightSettingsList(tempWidth, selectedMod, list), h);
+                h = Math.Max(CalculateHeightSettingsList(tempWidth, selectedMod, list), h);
                 offset += tempWidth + gapSize;
                 c++;
             }
@@ -63,7 +63,7 @@ namespace XmlExtensions.Setting
             foreach (List<SettingContainer> list in settings)
             {
                 float tempWidth = 0;
-                
+
                 if (c == splits.Count)
                 {
                     tempWidth = width - offset - gapSize / 2;
@@ -87,7 +87,7 @@ namespace XmlExtensions.Setting
                     GUI.DrawTexture(new Rect(currRect.x + tempWidth + gapSize / 2, currRect.yMin, 1f, currRect.height), BaseContent.WhiteTex);
                     GUI.color = color;
                 }
-                currRect = currRect.RightPartPixels(currRect.width - (tempWidth +  gapSize));
+                currRect = currRect.RightPartPixels(currRect.width - (tempWidth + gapSize));
                 offset += tempWidth + gapSize;
                 c++;
             }

@@ -1,25 +1,21 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Verse;
-using RimWorld;
-using HarmonyLib;
-using System.Reflection;
 using System.Reflection.Emit;
+using Verse;
 
 namespace XmlExtensions
 {
-    [HarmonyPatch(typeof(Dialog_Options))]
-    [HarmonyPatch("DoWindowContents")]
+    [HarmonyPatch(typeof(Dialog_Options), "DoWindowContents")]
     static class Dialog_Options_patch
     {
-        
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator gen)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator gen)
         {
             var translate = AccessTools.Method(typeof(Helpers), "TryTranslate");
             var foundModSettings = false;
-            var startIndex = -1;            
+            var startIndex = -1;
             var codes = new List<CodeInstruction>(instructions);
             for (var i = 0; i < codes.Count; i++)
             {
