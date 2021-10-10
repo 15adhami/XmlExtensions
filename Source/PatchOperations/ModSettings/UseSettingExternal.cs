@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace XmlExtensions
 {
-    public class UseSettingExternal : PatchOperationValue
+    public class UseSettingExternal : PatchOperationData
     {
         public string ModSettingsClass;
         public string field;

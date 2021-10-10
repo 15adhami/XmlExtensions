@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class GetAttribute : PatchOperationValuePathed
+    public class GetAttribute : PatchOperationDataPathed
     {
         public string attribute;
 

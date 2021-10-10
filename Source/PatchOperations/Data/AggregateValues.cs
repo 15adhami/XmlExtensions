@@ -19,7 +19,7 @@ namespace XmlExtensions
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(Helpers.SubstituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
                 XmlNode newNode = doc.DocumentElement;
-                PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
+                PatchOperationData patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationData>(newNode, false);
                 if (!patchOperation.GetValue(values, xml))
                 {
                     Error("Error in getting a value in <valueOperations> at position=" + (i + 1).ToString());

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace XmlExtensions.Boolean
@@ -11,632 +15,110 @@ namespace XmlExtensions.Boolean
         protected string value2;
         protected string relation = "eq";
         protected string logic = "and";
-        protected string fromXml1 = "false";
-        protected string fromXml2 = "false";
-        protected string nonNumeric = "false";      
+        protected bool fromXml1 = false;
+        protected bool fromXml2 = false;
+        protected bool nonNumeric = false;
+
+        protected override void SetException()
+        {
+            CreateExceptions(value1, "value1", value2, "value2", relation, "relation");
+        }
 
         protected override bool Evaluation(ref bool b, XmlDocument xml)
         {
-            try
+            string str1 = value1;
+            string str2 = value2;
+            if (fromXml1)
             {
-                bool isOr = true;
-                if (logic == "and")
+                XmlNodeList nodes1 = xml.SelectNodes(value1);
+                if (nodes1 == null || nodes1.Count == 0)
                 {
-                    isOr = false;
+                    XPathError("value1");
+                    return false;
                 }
-                bool flag = !isOr;
-                if (bool.Parse(nonNumeric))
+                if (fromXml2)
                 {
-                    string val2 = "";
-                    if (fromXml2 == "true")
+                    XmlNodeList nodes2 = xml.SelectNodes(value2);
+                    if (nodes2 == null || nodes2.Count == 0)
                     {
-                        val2 = xml.SelectSingleNode(value2).InnerText;
+                        XPathError("value2");
+                        return false;
                     }
-                    else
+                    foreach (XmlNode node1 in nodes1)
                     {
-                        val2 = value2;
-                    }
-
-                    if (bool.Parse(fromXml1))
-                    {
-                        foreach (object obj in xml.SelectNodes(value1))
+                        foreach (XmlNode node2 in nodes2)
                         {
-                            XmlNode xmlNode = obj as XmlNode;
-                            string xval = xmlNode.InnerText;
-                            int compare = xval.CompareTo(val2);
-                            if (relation == "eq")
+                            str1 = node1.InnerText;
+                            str2 = node2.InnerText;
+                            if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
                             {
-                                if (isOr)
-                                {
-                                    if (compare == 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare == 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "sl")
-                            {
-                                if (isOr)
-                                {
-                                    if (compare < 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare < 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "leq")
-                            {
-                                if (isOr)
-                                {
-                                    if (compare <= 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare <= 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "sg")
-                            {
-                                if (isOr)
-                                {
-                                    if (compare > 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare > 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "geq")
-                            {
-                                if (isOr)
-                                {
-                                    if (compare >= 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare >= 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "neq")
-                            {
-                                if (isOr)
-                                {
-                                    if (compare != 0)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (compare != 0)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
+                                b = true;
+                                if (logic == "or")
+                                    return true;
                             }
                             else
                             {
                                 b = false;
-                                return true;
+                                if (logic == "and")
+                                    return true;
                             }
                         }
-                    }
-                    else
-                    {
-                        int compare = value1.CompareTo(val2);
-                        if (relation == "eq")
-                        {
-                            if (isOr)
-                            {
-                                if (compare == 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare == 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "sl")
-                        {
-                            if (isOr)
-                            {
-                                if (compare < 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare < 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "leq")
-                        {
-                            if (isOr)
-                            {
-                                if (compare <= 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare <= 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "sg")
-                        {
-                            if (isOr)
-                            {
-                                if (compare > 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare > 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "geq")
-                        {
-                            if (isOr)
-                            {
-                                if (compare >= 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare >= 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "neq")
-                        {
-                            if (isOr)
-                            {
-                                if (compare != 0)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (compare != 0)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            b = false;
-                            return true;
-                        }
-
                     }
                 }
-
                 else
                 {
-                    float val2 = 0;
-                    if (fromXml2 == "true")
+                    foreach (XmlNode node1 in nodes1)
                     {
-                        val2 = float.Parse(xml.SelectSingleNode(value2).InnerText);
-                    }
-                    else
-                    {
-                        val2 = float.Parse(value2);
-                    }
-                    if (bool.Parse(fromXml1))
-                    {
-                        foreach (object obj in xml.SelectNodes(value1))
+                        str1 = node1.InnerText;
+                        if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
                         {
-                            XmlNode xmlNode = obj as XmlNode;
-                            float xval = float.Parse(xmlNode.InnerText);
-                            if (relation == "eq")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval == val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval == val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "sl")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval < val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval < val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "leq")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval <= val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval <= val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "sg")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval > val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval > val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "geq")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval >= val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval >= val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else if (relation == "neq")
-                            {
-                                if (isOr)
-                                {
-                                    if (xval != val2)
-                                    {
-                                        b = true;
-                                        return true;
-                                    }
-                                }
-                                else
-                                {
-                                    if (xval != val2)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        b = false;
-                                        return true;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                b = false;
+                            b = true;
+                            if (logic == "or")
                                 return true;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        float xval = float.Parse(value1);
-                        if (relation == "eq")
-                        {
-                            if (isOr)
-                            {
-                                if (xval == val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval == val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "sl")
-                        {
-                            if (isOr)
-                            {
-                                if (xval < val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval < val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "leq")
-                        {
-                            if (isOr)
-                            {
-                                if (xval <= val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval <= val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "sg")
-                        {
-                            if (isOr)
-                            {
-                                if (xval > val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval > val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "geq")
-                        {
-                            if (isOr)
-                            {
-                                if (xval >= val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval >= val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
-                        }
-                        else if (relation == "neq")
-                        {
-                            if (isOr)
-                            {
-                                if (xval != val2)
-                                {
-                                    b = true;
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                if (xval != val2)
-                                {
-                                }
-                                else
-                                {
-                                    b = false;
-                                    return true;
-                                }
-                            }
                         }
                         else
                         {
                             b = false;
-                            return true;
+                            if (logic == "and")
+                                return true;
                         }
-
-
                     }
                 }
-                b = flag;
-                return true;
             }
-            catch(Exception e)
+            else
             {
-               ErrorManager.Add("XmlExtensions.Boolean.Comparision(value1=" + value1 + ", value2=" + value2 + "): " + e.Message);
-                return false;
+                if (fromXml2)
+                {
+                    XmlNodeList nodes2 = xml.SelectNodes(value2);
+                    if (nodes2 == null || nodes2.Count == 0)
+                    {
+                        XPathError("value2");
+                        return false;
+                    }
+                    foreach (XmlNode node2 in nodes2)
+                    {
+                        str2 = node2.InnerText;
+                        if (Helpers.RelationOnString(str1, str2, relation, nonNumeric))
+                        {
+                            b = true;
+                            if (logic == "or")
+                                return true;
+                        }
+                        else
+                        {
+                            b = false;
+                            if (logic == "and")
+                                return true;
+                        }
+                    }
+                }
+                else
+                {
+                    b = Helpers.RelationOnString(str1, str2, relation, nonNumeric);
+                    return true;
+                }
             }
+            return true;
         }
     }
-
 }

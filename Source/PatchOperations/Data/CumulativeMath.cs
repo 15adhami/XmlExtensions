@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class CumulativeMath : PatchOperationValue
+    public class CumulativeMath : PatchOperationData
     {
         protected string operation;
         protected string xpath;

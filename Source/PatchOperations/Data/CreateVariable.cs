@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class CreateVariable : PatchOperationValue
+    public class CreateVariable : PatchOperationData
     {        
         public string value = "";
         public string value2 = "";
