@@ -80,6 +80,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperation.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAdd.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationConditional.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationLog.cs" />
     <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
