@@ -119,6 +119,17 @@ namespace XmlExtensions
                 Widgets.BeginScrollView(rect, ref settingsPosition, scrollRect);
                 Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
                 menus[activeMenu].DrawSettings(rect2);
+                if (menus[activeMenu].onFrameActions != null)
+                {
+                    ErrorManager.ClearErrors();
+                    foreach (MenuAction action in menus[activeMenu].onFrameActions)
+                    {
+                        if (!action.DoAction())
+                        {
+                            ErrorManager.PrintErrors();
+                        }
+                    }
+                }
                 GUI.color = Color.white;
                 Widgets.EndScrollView();
             }
