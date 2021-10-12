@@ -325,6 +325,17 @@ namespace XmlExtensions
                     }
                 }
             }
+            if (defName != null && menus[defName].preOpenActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (MenuAction action in menus[activeMenu].preOpenActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
             activeMenu = defName;
         }
     }

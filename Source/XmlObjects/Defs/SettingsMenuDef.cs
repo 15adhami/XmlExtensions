@@ -14,6 +14,7 @@ namespace XmlExtensions
         public List<SettingContainer> settings;
         public List<KeyedAction> keyedActions;
         public List<MenuAction> postCloseActions;
+        public List<MenuAction> preOpenActions;
         public string modId;
         public bool submenu = false;
 
