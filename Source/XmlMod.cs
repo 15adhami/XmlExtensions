@@ -329,7 +329,7 @@ namespace XmlExtensions
             if (defName != null && menus[defName].preOpenActions != null)
             {
                 ErrorManager.ClearErrors();
-                foreach (MenuAction action in menus[activeMenu].preOpenActions)
+                foreach (MenuAction action in menus[defName].preOpenActions)
                 {
                     if (!action.DoAction())
                     {
