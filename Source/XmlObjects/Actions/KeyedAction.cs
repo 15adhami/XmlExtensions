@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Action
 {
-    public abstract class KeyedAction : Action
+    public abstract class KeyedAction : MenuAction
     {
         public string key;
 

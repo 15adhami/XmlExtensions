@@ -32,15 +32,7 @@ namespace XmlExtensions
             }
             foreach (ModContentPack mod in LoadedModManager.RunningMods)
             {
-                string str;
-                if (packageId)
-                {
-                    str = mod.PackageId;
-                }
-                else
-                {
-                    str = mod.Name;
-                }
+                string str = packageId ? mod.PackageId : mod.Name;
                 if (mods.Contains(str))
                 {
                     foundMod = str;

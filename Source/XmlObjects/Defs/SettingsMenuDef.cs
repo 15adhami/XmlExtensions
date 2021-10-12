@@ -13,6 +13,7 @@ namespace XmlExtensions
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
         public List<KeyedAction> keyedActions;
+        public List<MenuAction> postCloseActions;
         public string modId;
         public bool submenu = false;
 
@@ -61,6 +62,7 @@ namespace XmlExtensions
                 {
                     foreach (KeyedAction action in keyedActions)
                     {
+                        action.modId = modId;
                         XmlMod.AddKeyedAction(modId, action.key, action);
                     }
                 }

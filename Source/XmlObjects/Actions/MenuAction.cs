@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Action
 {
-    public abstract class Action : ErrorHandler
+    public abstract class MenuAction : ErrorHandler
     {
         public string modId;
 

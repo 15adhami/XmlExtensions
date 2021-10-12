@@ -21,10 +21,12 @@ namespace XmlExtensions
                     PatchManager.ModPatchDict.Add(patch, mod);
                 }
             }
+            PatchManager.applyingPatches = true;
         }
 
         private static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
+            PatchManager.applyingPatches = false;
             PatchManager.XmlDocs.Clear();
             PatchManager.nodeMap.Clear();
             PatchManager.watch.Reset();

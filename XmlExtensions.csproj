@@ -76,6 +76,11 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperation.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAdd.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationConditional.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationLog.cs" />
     <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
@@ -102,6 +107,8 @@
     <Compile Include="Source\PatchOperations\Data\AggregateValues.cs" />
     <Compile Include="Source\PatchOperations\Data\CreateVariable.cs" />
     <Compile Include="Source\PatchOperations\Data\CumulativeMath.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationRemove.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationReplace.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\ApplyValueOperation.cs" />
     <Compile Include="Source\PatchOperations\Performance\Test.cs" />
     <Compile Include="Source\HarmonyPatches\Dialog_Options_Patch.cs" />
@@ -146,8 +153,10 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
-    <Compile Include="Source\XmlObjects\Actions\Action.cs" />
+    <Compile Include="Source\XmlObjects\Actions\MenuAction.cs" />
+    <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
     <Compile Include="Source\XmlObjects\Actions\KeyedAction.cs" />
+    <Compile Include="Source\XmlObjects\Actions\PrintKey.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
     <Compile Include="Source\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />

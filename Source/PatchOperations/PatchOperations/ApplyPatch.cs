@@ -7,22 +7,51 @@ namespace XmlExtensions
     public class ApplyPatch : PatchOperationExtended
     {
         public string patchName;
+        public string defName;
         public List<string> arguments;
 
         protected override void SetException()
         {
-            CreateExceptions(patchName, "patchName");
+            if (patchName != null)
+            {
+                CreateExceptions(patchName, "patchName");
+            }
+            else
+            {
+                CreateExceptions(defName, "defName");
+            }
         }
 
         protected override bool Patch(XmlDocument xml)
         {
-            XmlNode node = xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[@Name=\"" + patchName + "\"]");
-            if (node == null)
+            PatchDef patchDef;
+            if (PatchManager.applyingPatches)
             {
-                Error("No PatchDef exists with the given patchName");
-                return false;
+                XmlNode node;
+                if (patchName != null)
+                {
+                    node = xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[@Name=\"" + patchName + "\"]");
+                }
+                else
+                {
+                    node = xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[defName=\"" + defName + "\"]");
+                }
+                if (node == null)
+                {
+                    Error("No such PatchDef exists");
+                    return false;
+                }
+                patchDef = DirectXmlToObject.ObjectFromXml<PatchDef>(node, false);
             }
-            PatchDef patchDef = DirectXmlToObject.ObjectFromXml<PatchDef>(node, false);
+            else
+            {
+                patchDef = DefDatabase<PatchDef>.GetNamed(defName);
+                if (patchDef == null)
+                {
+                    Error("No such PatchDef exists");
+                    return false;
+                }
+            }
             XmlContainer newContainer = patchDef.apply;
             if (arguments != null)
             {

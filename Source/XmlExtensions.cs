@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -72,6 +74,14 @@ namespace XmlExtensions
                 list.Sort();
             }
             Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
+            ErrorManager.ClearErrors();
+            foreach (DefDatabaseOperation op in PatchManager.delayedPatches)
+            {
+                if (!op.Apply(null))
+                {
+                    ErrorManager.PrintErrors();
+                }
+            }
         }
     }
 }

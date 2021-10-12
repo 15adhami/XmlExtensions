@@ -294,8 +294,38 @@ namespace XmlExtensions
             viewingSettings = false;
             if (modId != null)
             {
-                activeMenu = settingsPerMod[modId].homeMenu;
+                SetActiveMenu(settingsPerMod[modId].homeMenu);
             }
+            else
+            {
+                if (activeMenu != null && menus[activeMenu].postCloseActions != null)
+                {
+                    ErrorManager.ClearErrors();
+                    foreach (MenuAction action in menus[activeMenu].postCloseActions)
+                    {
+                        if (!action.DoAction())
+                        {
+                            ErrorManager.PrintErrors();
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SetActiveMenu(string defName)
+        {
+            if (activeMenu != null && menus[activeMenu].postCloseActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (MenuAction action in menus[activeMenu].postCloseActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+            activeMenu = defName;
         }
     }
 }
