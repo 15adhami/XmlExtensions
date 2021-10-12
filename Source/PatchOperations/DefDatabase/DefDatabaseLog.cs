@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationLog : DefDatabaseOperation
+    public class DefDatabaseLog : DefDatabaseOperation
     {
         public string defType;
         public string defName;
