@@ -17,6 +17,16 @@ namespace XmlExtensions
         private object parentObj;
         private int listIndex = 0;
 
+        protected override bool Patch(XmlDocument xml)
+        {
+            if (PatchManager.applyingPatches)
+            {
+                PatchManager.delayedPatches.Add(this);
+                return true;
+            }
+            return base.Patch(xml);
+        }
+
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
             Type tempType = GenTypes.GetTypeInAnyAssembly(defType, "Verse");

@@ -36,7 +36,7 @@ namespace XmlExtensions
             }
         }
 
-        protected sealed override bool Patch(XmlDocument xml)
+        protected override bool Patch(XmlDocument xml)
         {
             List<string> vals = new List<string>();
             List<string> vars = new List<string>();
