@@ -1,12 +1,16 @@
 ﻿using HarmonyLib;
+using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationLog : DefDatabaseOperation
+    public class DefDatabaseCreateVariable : DefDatabaseOperation
     {
         public string defType;
         public string defName;
         public string path;
+        public string storeIn;
+        public XmlContainer apply;
+        public string brackets = "{}";
 
         protected override bool DoPatch()
         {
@@ -17,8 +21,8 @@ namespace XmlExtensions
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            Verse.Log.Message((string)Traverse.Create(obj).Method("ToString", new object[] {  }).GetValue());
-            return true;
+            string str = (string)Traverse.Create(obj).Method("ToString", new object[] { }).GetValue();
+            return RunPatches(Helpers.SubstituteVariableXmlContainer(apply, storeIn, str, brackets), null);
         }
     }
 }

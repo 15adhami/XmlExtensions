@@ -76,10 +76,11 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperation.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAdd.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationConditional.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseConditional.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationLog.cs" />
     <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />

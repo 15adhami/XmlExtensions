@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationConditional : DefDatabaseOperation
+    public class DefDatabaseConditional : DefDatabaseOperation
     {
         public string defType;
         public string defName;
