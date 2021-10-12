@@ -153,7 +153,6 @@ namespace XmlExtensions
             return item;
         }
 
-        // TODO: Try only movespeed
         protected object FindObject(object parent, string path)
         {
             if (parent == null)
