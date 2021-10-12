@@ -158,8 +158,7 @@
     <Compile Include="Source\XmlObjects\Actions\MenuAction.cs" />
     <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
     <Compile Include="Source\XmlObjects\Actions\KeyedAction.cs" />
-    <Compile Include="Source\XmlObjects\Actions\PrintKey.cs" />
-    <Compile Include="Source\XmlObjects\Actions\SetKeyValue.cs" />
+    <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
     <Compile Include="Source\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />

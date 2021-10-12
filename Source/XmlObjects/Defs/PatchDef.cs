@@ -12,7 +12,7 @@ namespace XmlExtensions
         public string brackets = "{}";
         public bool valueOperation = false;
 
-        public bool ApplyPatch(List<string> arguments, XmlDocument xml)
+        public bool ApplyPatch(List<string> arguments, XmlDocument xml = null)
         {
             XmlContainer container = apply;
             try

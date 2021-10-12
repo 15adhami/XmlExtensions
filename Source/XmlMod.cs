@@ -71,6 +71,7 @@ namespace XmlExtensions
             keyedActionListDict[modId][key].Add(action);
         }
 
+        // TODO: Make all settings for all mods visible here (optional)
         private static void drawXmlModList(Rect rect)
         {
             int count = 0;
