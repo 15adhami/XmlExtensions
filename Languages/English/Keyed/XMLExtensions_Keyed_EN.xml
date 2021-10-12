@@ -15,5 +15,6 @@
     <XmlExtensions_DeleteAllUnusedKeys>Delete all {0} unused keys</XmlExtensions_DeleteAllUnusedKeys>
     <XmlExtensions_ConfirmResetAll>Are you sure you want to delete all unused keys from every mod?</XmlExtensions_ConfirmResetAll>
     <XmlExtensions_Open>Open</XmlExtensions_Open>
+    <XmlExtensions_Apply>Apply</XmlExtensions_Apply>
 
 </LanguageData>
