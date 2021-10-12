@@ -10,7 +10,6 @@ namespace XmlExtensions.Setting
     {
         public string label;
         public string tKey;
-        public string patchDef;
         public List<MenuAction> actions;
 
         protected override bool Init(string selectedMod)
