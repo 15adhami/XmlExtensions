@@ -9,9 +9,6 @@ namespace XmlExtensions
     {
         public string xmlDoc;
 
-        // TODO: Complete
-        public int priority = 0;
-
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
         protected bool isDefDatabaseOperation = false;
