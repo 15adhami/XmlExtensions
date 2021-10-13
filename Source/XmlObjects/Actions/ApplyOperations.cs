@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions.Action
@@ -14,9 +15,17 @@ namespace XmlExtensions.Action
             {
                 c++;
                 PatchOperationExtended operation = DirectXmlToObject.ObjectFromXml<PatchOperationExtended>(node, false);
-                if (!operation.Apply(null))
+                try
                 {
-                    Error("Failed to apply the operation at position=" + c.ToString());
+                    if (!operation.Apply(null))
+                    {
+                        Error("Failed to apply the operation at position=" + c.ToString());
+                        return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Error("Failed to apply the operation at position=" + c.ToString() + "\n" + e.Message);
                     return false;
                 }
             }

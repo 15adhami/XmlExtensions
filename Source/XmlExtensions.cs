@@ -77,10 +77,7 @@ namespace XmlExtensions
             ErrorManager.ClearErrors();
             foreach (PatchOperationExtended op in PatchManager.delayedPatches)
             {
-                if (!op.Apply(null))
-                {
-                    ErrorManager.PrintErrors();
-                }
+                op.Apply(null);
             }
         }
     }

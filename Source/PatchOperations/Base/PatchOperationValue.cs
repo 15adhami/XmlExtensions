@@ -46,7 +46,10 @@ namespace XmlExtensions
             return RunPatches(newContainer, xml);
         }
 
-        public abstract bool getValues(List<string> vals, XmlDocument xml);
+        public virtual bool getValues(List<string> vals, XmlDocument xml)
+        {
+            return true;
+        }
 
         public virtual bool getVars(List<string> vars)
         {
