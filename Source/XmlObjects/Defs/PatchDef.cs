@@ -10,7 +10,7 @@ namespace XmlExtensions
         public List<string> parameters;
         public XmlContainer apply;
         public string brackets = "{}";
-        public bool valueOperation = false;
+        protected bool valueOperation = false;
 
         public bool ApplyPatch(List<string> arguments, XmlDocument xml = null)
         {
@@ -36,7 +36,7 @@ namespace XmlExtensions
                     }
                     if (!patch.Apply(xml))
                     {
-                        ErrorManager.AddError("Error in the operation at position=" + (j + 1).ToString());
+                        ErrorManager.AddError("PatchDef(defName=\"" + defName + "\"): Error in the operation at position=" + (j + 1).ToString());
                         ErrorManager.PrintErrors();
                         return false;
                     }

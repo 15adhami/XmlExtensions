@@ -4,20 +4,10 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationRemove : DefDatabaseOperation
+    public class DefDatabaseOperationRemove : DefDatabaseOperationPathed
     {
-        public string defType;
-        public string defName;
-        public string objPath;
-
-        protected override void SetException()
-        {
-            CreateExceptions(defType, "defType", defName, "defName");
-        }
-
         protected override bool DoPatch()
         {
-            object def = GetDef(defType, defName);
             object obj = FindObject(def, objPath);
             if (obj == null)
             {

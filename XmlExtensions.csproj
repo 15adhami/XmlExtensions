@@ -78,7 +78,7 @@
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperation.cs" />
+    <Compile Include="Source\PatchOperations\Base\DefDatabaseOperation.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAdd.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseConditional.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
@@ -109,6 +109,7 @@
     <Compile Include="Source\PatchOperations\Data\AggregateValues.cs" />
     <Compile Include="Source\PatchOperations\Data\CreateVariable.cs" />
     <Compile Include="Source\PatchOperations\Data\CumulativeMath.cs" />
+    <Compile Include="Source\PatchOperations\Base\DefDatabaseOperationPathed.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationRemove.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationReplace.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\ApplyValueOperation.cs" />

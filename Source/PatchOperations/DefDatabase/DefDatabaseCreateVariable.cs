@@ -8,20 +8,11 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseCreateVariable : DefDatabaseOperation
+    public class DefDatabaseCreateVariable : DefDatabaseOperationPathed
     {
-        public string defType;
-        public string defName;
-        public string objPath;
-
         public DefDatabaseCreateVariable()
         {
             isValue = true;
-        }
-
-        protected override void SetException()
-        {
-            CreateExceptions(defType, "defType", defName, "defName", objPath, "path");
         }
 
         public override bool getValues(List<string> vals, XmlDocument xml)

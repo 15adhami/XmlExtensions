@@ -5,21 +5,12 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationReplace : DefDatabaseOperation
+    public class DefDatabaseOperationReplace : DefDatabaseOperationPathed
     {
-        public string defType;
-        public string defName;
-        public string objPath;
         public XmlContainer value;
-
-        protected override void SetException()
-        {
-            CreateExceptions(defType, "defType", defName, "defName");
-        }
 
         protected override bool DoPatch()
         {
-            object def = GetDef(defType, defName);
             object obj = FindObject(def, objPath);
             if (obj == null)
             {

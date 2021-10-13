@@ -15,6 +15,16 @@ namespace XmlExtensions
 
         protected bool isValue = false;
 
+        public DefDatabaseOperation()
+        {
+            isDefDatabaseOperation = true;
+        }
+
+        protected override bool PreCheck(XmlDocument xml)
+        {
+            return true;
+        }
+
         protected object GetDef(string defType, string defName)
         {
             return GetDefType(defType).GetMethod("GetNamed").Invoke(null, new object[] { defName, false });
@@ -33,6 +43,10 @@ namespace XmlExtensions
                 {
                     try
                     {
+                        if (!PreCheck(xml))
+                        {
+                            return false;
+                        }
                         return DoPatch();
                     }
                     catch (Exception e)

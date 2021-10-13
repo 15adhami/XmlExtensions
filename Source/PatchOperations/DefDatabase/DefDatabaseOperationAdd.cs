@@ -5,11 +5,8 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationAdd : DefDatabaseOperation
+    public class DefDatabaseOperationAdd : DefDatabaseOperationPathed
     {
-        public string defType;
-        public string defName;
-        public string objPath;
         public XmlContainer value;
         private Order order = Order.Append;
 
@@ -19,14 +16,8 @@ namespace XmlExtensions
             Prepend
         }
 
-        protected override void SetException()
-        {
-            CreateExceptions(defType, "defType", defName, "defName");
-        }
-
         protected override bool DoPatch()
         {
-            object def = GetDef(defType, defName);
             object obj = FindObject(def, objPath);
             if (obj == null)
             {

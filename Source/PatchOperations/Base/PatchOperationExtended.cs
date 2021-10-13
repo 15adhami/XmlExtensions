@@ -14,6 +14,7 @@ namespace XmlExtensions
 
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
+        protected bool isDefDatabaseOperation = false;
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {
@@ -32,7 +33,10 @@ namespace XmlExtensions
             }
             try
             {
-                if (!PreCheck(doc)) { return false; }
+                if (!isDefDatabaseOperation && !PreCheck(doc))
+                {
+                    return false;
+                }
                 return Patch(doc);
             }
             catch (Exception e)
