@@ -102,24 +102,6 @@ namespace XmlExtensions
             return result;
         }
 
-        private string GetClass(string component)
-        {
-            string str = "";
-            int count = 0;
-            foreach (char c in component)
-            {
-                if (c == '\"')
-                {
-                    count++;
-                }
-                if (c != '\"' && count == 1)
-                {
-                    str += c;
-                }
-            }
-            return str;
-        }
-
         private string RemoveBrackets(string str)
         {
             string temp = str.Substring(1);

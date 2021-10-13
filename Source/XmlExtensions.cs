@@ -79,6 +79,7 @@ namespace XmlExtensions
             {
                 op.Apply(null);
             }
+            PatchManager.ModPatchDict.Clear();
         }
     }
 }

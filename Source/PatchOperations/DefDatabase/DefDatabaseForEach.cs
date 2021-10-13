@@ -9,9 +9,6 @@ namespace XmlExtensions
     public class DefDatabaseForEach : DefDatabaseOperation
     {
         public string defType;
-        public string brackets = "{}";
-        public string storeIn;
-        public XmlContainer apply;
 
         protected override bool DoPatch()
         {

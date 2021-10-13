@@ -9,7 +9,7 @@ namespace XmlExtensions
     {
         public string defType;
         public string defName;
-        public string path;
+        public string objPath;
         public XmlContainer value;
         private Order order = Order.Append;
 
@@ -27,7 +27,7 @@ namespace XmlExtensions
         protected override bool DoPatch()
         {
             object def = GetDef(defType, defName);
-            object obj = FindObject(def, path);
+            object obj = FindObject(def, objPath);
             if (obj == null)
             {
                 Error("Failed to find an object with the given path");

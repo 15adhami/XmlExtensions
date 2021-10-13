@@ -6,7 +6,7 @@ namespace XmlExtensions
     {
         public string defType;
         public string defName;
-        public string path;
+        public string objPath;
         XmlContainer caseFalse;
         XmlContainer caseTrue;
 
@@ -18,7 +18,7 @@ namespace XmlExtensions
                 Error("null def");
                 return false;
             }
-            object obj = FindObject(def, path);
+            object obj = FindObject(def, objPath);
             return RunPatchesConditional(obj != null, caseTrue, caseFalse, null);
         }
     }

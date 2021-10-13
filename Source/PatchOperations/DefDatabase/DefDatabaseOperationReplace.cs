@@ -9,7 +9,7 @@ namespace XmlExtensions
     {
         public string defType;
         public string defName;
-        public string path;
+        public string objPath;
         public XmlContainer value;
 
         protected override void SetException()
@@ -20,7 +20,7 @@ namespace XmlExtensions
         protected override bool DoPatch()
         {
             object def = GetDef(defType, defName);
-            object obj = FindObject(def, path);
+            object obj = FindObject(def, objPath);
             if (obj == null)
             {
                 Error("Failed to find an object with the given path");
@@ -33,7 +33,7 @@ namespace XmlExtensions
             }
             else
             {
-                List<string> list = CreateComponents(path);
+                List<string> list = CreateComponents(objPath);
                 AccessTools.Field(parentObj.GetType(), list[list.Count - 1]).SetValue(parentObj, NodeToObject(value.node.FirstChild, obj.GetType()));
             }
             return true;

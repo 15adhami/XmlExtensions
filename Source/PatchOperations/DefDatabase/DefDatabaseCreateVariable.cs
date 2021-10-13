@@ -12,7 +12,7 @@ namespace XmlExtensions
     {
         public string defType;
         public string defName;
-        public string path;
+        public string objPath;
 
         public DefDatabaseCreateVariable()
         {
@@ -21,7 +21,7 @@ namespace XmlExtensions
 
         protected override void SetException()
         {
-            CreateExceptions(defType, "defType", defName, "defName", path, "path");
+            CreateExceptions(defType, "defType", defName, "defName", objPath, "path");
         }
 
         public override bool getValues(List<string> vals, XmlDocument xml)
@@ -32,7 +32,7 @@ namespace XmlExtensions
                 Error("Failed to find the given Def");
                 return false;
             }
-            object obj = FindObject(def, RemoveSpaces(path));
+            object obj = FindObject(def, RemoveSpaces(objPath));
             if (obj == null)
             {
                 Error("Failed to find an object with the given path");
