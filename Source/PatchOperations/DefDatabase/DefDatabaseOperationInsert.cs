@@ -8,7 +8,7 @@ namespace XmlExtensions
     public class DefDatabaseOperationInsert : DefDatabaseOperationPathed
     {
         public XmlContainer value;
-        private Order order = Order.Append;
+        private Order order = Order.Prepend;
 
         private enum Order
         {

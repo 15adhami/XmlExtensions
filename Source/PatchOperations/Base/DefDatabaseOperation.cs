@@ -156,7 +156,7 @@ namespace XmlExtensions
             {
                 return null;
             }
-            if (noBrackets.StartsWith("Class"))
+            if (noBrackets.StartsWith("@Class"))
             {
                 Type classType = GenTypes.GetTypeInAnyAssembly(classTemp, "RimWorld");
                 if (classType == null)
