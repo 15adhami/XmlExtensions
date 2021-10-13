@@ -44,7 +44,7 @@ namespace XmlExtensions
             }
             else
             {
-                Error("You can only Add to lists");
+                Error("You can only Insert to lists");
                 return false;
             }
             return true;
