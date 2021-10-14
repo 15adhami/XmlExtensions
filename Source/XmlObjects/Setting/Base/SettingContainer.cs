@@ -54,11 +54,24 @@ namespace XmlExtensions.Setting
         /// <returns>The height of the setting, in pixels</returns>
         public float GetHeight(float width, string selectedMod)
         {
-            if (cachedHeight < 0)
+            try
             {
-                cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
+                if (errHeight > 0)
+                {
+                    return errHeight;
+                }
+                if (cachedHeight < 0)
+                {
+                    cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
+                }
+                return cachedHeight;
             }
-            return cachedHeight;
+            catch
+            {
+                errHeight = 22;
+                cachedHeight = errHeight;
+                return errHeight;
+            }
         }
 
         /// <summary>
@@ -70,21 +83,30 @@ namespace XmlExtensions.Setting
         {
             try
             {
-                if (showDimensions)
+                if (errHeight > 0)
                 {
-                    Widgets.DrawBox(inRect);
-                    Widgets.Label(inRect, " " + inRect.width.ToString() + "x" + ((int)GetHeight(inRect.width, selectedMod)).ToString());
+                    GUI.color = Color.red;
+                    Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
+                    errHeight = 22;
+                    GUI.color = Color.white;
                 }
                 else
                 {
-                    DrawSettingContents(inRect, selectedMod);
+                    if (showDimensions)
+                    {
+                        Widgets.DrawBox(inRect);
+                        Widgets.Label(inRect, " " + inRect.width.ToString() + "x" + ((int)GetHeight(inRect.width, selectedMod)).ToString());
+                    }
+                    else
+                    {
+                        DrawSettingContents(inRect, selectedMod);
+                    }
                 }
             }
             catch (Exception e)
             {
                 GUI.color = Color.red;
                 Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
-                Verse.Log.Error(e.Message);
                 errHeight = 22;
                 GUI.color = Color.white;
             }

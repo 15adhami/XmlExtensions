@@ -27,11 +27,6 @@ namespace XmlExtensions
                 NullError("key");
                 return false;
             }
-            if (defaultValue == null)
-            {
-                NullError("defaultValue");
-                return false;
-            }
             if (modId == null)
             {
                 NullError("modId");
@@ -42,6 +37,11 @@ namespace XmlExtensions
             bool didContain = SettingsManager.TryGetSetting(modId, key, out string value);
             if (!didContain)
             {
+                if (!PatchManager.applyingPatches)
+                {
+                    Error("No such key exists");
+                    return false;
+                }
                 value = defaultValue;
                 SettingsManager.SetSetting(modId, key, defaultValue);
             }

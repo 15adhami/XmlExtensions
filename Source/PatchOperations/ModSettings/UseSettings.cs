@@ -25,15 +25,18 @@ namespace XmlExtensions
                 NullError("modId");
                 return false;
             }
-            if (keys.Count > defaultValues.Count)
+            if (PatchManager.applyingPatches)
             {
-                Error("There are more keys than defaultValues");
-                return false;
-            }
-            else if (keys.Count < defaultValues.Count)
-            {
-                Error("There are more defaultValues than keys");
-                return false;
+                if (keys.Count > defaultValues.Count)
+                {
+                    Error("There are more keys than defaultValues");
+                    return false;
+                }
+                else if (keys.Count < defaultValues.Count)
+                {
+                    Error("There are more defaultValues than keys");
+                    return false;
+                }
             }
             SettingsManager.AddMod(modId);
             for (int i = 0; i < keys.Count; i++)
@@ -42,6 +45,11 @@ namespace XmlExtensions
                 bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out string value);
                 if (!didContain)
                 {
+                    if (!PatchManager.applyingPatches)
+                    {
+                        Error("No such key exists");
+                        return false;
+                    }
                     value = defaultValues[i];
                     SettingsManager.SetSetting(modId, keys[i], defaultValues[i]);
                 }
