@@ -8,7 +8,9 @@ namespace XmlExtensions
     {
         public Dictionary<string, string> dataDict;
         public bool trace;
-        public bool vanillaMods = true;
+
+        // TODO: Decide default value
+        public bool vanillaMods = false;
 
         public XmlModBaseSettings()
         {

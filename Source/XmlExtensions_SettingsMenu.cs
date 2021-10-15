@@ -25,6 +25,7 @@ namespace XmlExtensions
         private static ModContainer prevMod = null;
         private string searchText = "";
         private static Dictionary<string, string> oldValuesCache;
+        private bool focusSearchBox = false;
 
         public override Vector2 InitialSize
         {
@@ -49,6 +50,7 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
+            focusSearchBox = true;
             foreach (string id in XmlMod.loadedXmlMods)
             {
                 loadedMods.Add(new ModContainer(id));
@@ -100,6 +102,7 @@ namespace XmlExtensions
 
             string temp = searchText;
             Rect rectMods = inRect.LeftPartPixels(256f).TopPartPixels(inRect.height - 40); //.285f
+            GUI.SetNextControlName("searchbox");
             searchText = Widgets.TextField(rectMods.TopPartPixels(22).LeftPartPixels(rectMods.width - 22), temp);
             GUI.color *= new Color(0.33f, 0.33f, 0.33f);
             if (searchText == null || searchText == "")
@@ -119,6 +122,11 @@ namespace XmlExtensions
                 CacheFilter();
             }
             GUI.color = Color.white;
+            if (focusSearchBox)
+            {
+                GUI.FocusControl("searchbox");
+                focusSearchBox = false;
+            }
             drawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
         }
 
@@ -254,9 +262,9 @@ namespace XmlExtensions
             {
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.Begin(rect);
-                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref XmlMod.allSettings.trace);
+                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref XmlMod.allSettings.trace, Helpers.TryTranslate("Improves error reporting when enabled", "XmlExtensions_StackTraceTip"));
                 bool b = XmlMod.allSettings.vanillaMods;
-                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Include vanilla mod settings in list", "XmlExtensions_IncludeVanilla"), ref b);
+                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Include standard Mod Settings", "XmlExtensions_IncludeStandardMods"), ref b, Helpers.TryTranslate("Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)", "XmlExtensions_IncludeStandardModsTip"));
                 if (b != XmlMod.allSettings.vanillaMods)
                 {
                     loadedMods.Clear();
