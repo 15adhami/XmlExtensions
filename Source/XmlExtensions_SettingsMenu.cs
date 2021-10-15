@@ -48,16 +48,18 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
-            
             foreach (string id in XmlMod.loadedXmlMods)
             {
                 loadedMods.Add(new ModContainer(id));
             }
-            foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                 where !mod.SettingsCategory().NullOrEmpty()
-                                 select mod)
+            if (XmlMod.allSettings.vanillaMods)
             {
-                loadedMods.Add(new ModContainer(item));
+                foreach (Mod item in from mod in LoadedModManager.ModHandles
+                                     where !mod.SettingsCategory().NullOrEmpty()
+                                     select mod)
+                {
+                    loadedMods.Add(new ModContainer(item));
+                }
             }
             loadedMods.Sort();
             CacheFilter();
@@ -86,7 +88,7 @@ namespace XmlExtensions
             searchText = Widgets.TextField(rectMods.TopPartPixels(22).LeftPartPixels(rectMods.width - 22), temp);
             GUI.color *= new Color(0.33f, 0.33f, 0.33f);
             if (searchText == null || searchText == "")
-            { 
+            {
                 GUI.color = new Color(0.5f, 0.5f, 0.5f);
                 GUI.DrawTexture(rectMods.TopPartPixels(22).RightPartPixels(22), TexButton.Search);
             }
@@ -222,7 +224,7 @@ namespace XmlExtensions
             }
         }
 
-        private static void drawXmlExtensionsSettings(Rect rect)
+        private void drawXmlExtensionsSettings(Rect rect)
         {
             if (viewingSettings)
             {
@@ -233,6 +235,28 @@ namespace XmlExtensions
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.Begin(rect);
                 listingStandard.CheckboxLabeled(Helpers.TryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref XmlMod.allSettings.trace);
+                bool b = XmlMod.allSettings.vanillaMods;
+                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Include vanilla mod settings in list", "XmlExtensions_IncludeVanilla"), ref b);
+                if (b != XmlMod.allSettings.vanillaMods)
+                {
+                    loadedMods.Clear();
+                    foreach (string id in XmlMod.loadedXmlMods)
+                    {
+                        loadedMods.Add(new ModContainer(id));
+                    }
+                    if (b)
+                    {
+                        foreach (Mod item in from mod in LoadedModManager.ModHandles
+                                     where !mod.SettingsCategory().NullOrEmpty()
+                                     select mod)
+                        {
+                            loadedMods.Add(new ModContainer(item));
+                        }
+                    }
+                    loadedMods.Sort();
+                    CacheFilter();
+                }
+                XmlMod.allSettings.vanillaMods = b;
                 if (listingStandard.ButtonText(Helpers.TryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
                     viewingSettings = true;
                 listingStandard.End();
