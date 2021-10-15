@@ -99,5 +99,35 @@ namespace XmlExtensions
             }
             listingStandard.End();
         }
+
+        public void RunPostCloseActions()
+        {
+            if (postCloseActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (MenuAction action in postCloseActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+        }
+
+        public void RunPreOpenActions()
+        {
+            if (preOpenActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (MenuAction action in preOpenActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+        }
     }
 }

@@ -17,9 +17,6 @@ namespace XmlExtensions
 
         public override void ExposeData()
         {
-            XmlMod.selectedExtraMod = null;
-            XmlMod.selectedMod = null;
-            XmlMod.viewingSettings = false;
             Scribe_Collections.Look(ref dataDict, "dataDict", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref trace, "trace");
             base.ExposeData();

@@ -76,6 +76,7 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
+    <Compile Include="Source\ModContainer.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
     <Compile Include="Source\PatchOperations\Base\DefDatabaseOperation.cs" />
