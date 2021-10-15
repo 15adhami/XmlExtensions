@@ -22,7 +22,8 @@ namespace XmlExtensions
         private List<ModContainer> loadedMods;
         private List<ModContainer> cachedFilteredList;
 
-        private static string searchText = "";
+        private static ModContainer prevMod = null;
+        private string searchText = "";
         private static Dictionary<string, string> oldValuesCache;
 
         public override Vector2 InitialSize
@@ -63,6 +64,20 @@ namespace XmlExtensions
             }
             loadedMods.Sort();
             CacheFilter();
+            if (prevMod != null)
+            {
+                foreach (ModContainer mod in loadedMods)
+                {
+                    if (mod.ToString() == prevMod.ToString())
+                    {
+                        SetSelectedMod(mod);
+                    }
+                }
+            }
+            else
+            {
+                SelectedMod = null;
+            }
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -137,10 +152,15 @@ namespace XmlExtensions
 
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
+            if (SelectedMod == null)
+            {
+                GUI.color = new Color(0.7f, 0.7f, 0.7f);
+            }
             if (listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label")))
             {
                 SetSelectedMod(null);
             }
+            GUI.color = Color.white;
             listingStandard.End();
             Widgets.EndScrollView();
         }
@@ -385,6 +405,7 @@ namespace XmlExtensions
 
         public override void PreClose()
         {
+            prevMod = SelectedMod;
             SetSelectedMod(null);
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
             base.PreClose();
