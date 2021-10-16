@@ -7,13 +7,12 @@ namespace XmlExtensions
     public class XmlModBaseSettings : ModSettings
     {
         public Dictionary<string, string> dataDict;
-        public bool trace;
+        public bool trace = true;
         public bool standardMods = false;
 
         public XmlModBaseSettings()
         {
             dataDict = new Dictionary<string, string>();
-            trace = true;
         }
 
         public override void ExposeData()

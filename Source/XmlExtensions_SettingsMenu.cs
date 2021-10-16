@@ -143,19 +143,28 @@ namespace XmlExtensions
             Listing_Standard listingStandard = new Listing_Standard();
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
             listingStandard.Begin(rect2);
-
+            int currMod = 0;
             // Draw the button list
             foreach (ModContainer mod in cachedFilteredList)
             {
-                if (mod == SelectedMod)
+                // Only draw the button if it is within the viewing window
+                if (currMod * 32 + 32 >= modListPosition.y && currMod * 32 <= modListPosition.y + rect.height)
                 {
-                    GUI.color = new Color(0.7f, 0.7f, 0.7f);
+                    if (mod == SelectedMod)
+                    {
+                        GUI.color = new Color(0.7f, 0.7f, 0.7f);
+                    }
+                    if (listingStandard.ButtonText(mod.ToString()))
+                    {
+                        SetSelectedMod(mod);
+                    }
+                    GUI.color = Color.white;
                 }
-                if (listingStandard.ButtonText(mod.ToString()))
+                else
                 {
-                    SetSelectedMod(mod);
+                    listingStandard.GetRect(32);
                 }
-                GUI.color = Color.white;
+                currMod++;
             }
 
             listingStandard.GapLine(4);
