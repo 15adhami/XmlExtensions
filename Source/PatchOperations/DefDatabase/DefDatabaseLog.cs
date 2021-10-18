@@ -12,7 +12,7 @@ namespace XmlExtensions
                 Error("Failed to find an object with the given objPath");
                 return false;
             }
-            Verse.Log.Message((string)Traverse.Create(obj).Method("ToString", new object[] {  }).GetValue());
+            Verse.Log.Message(obj.ToString());
             return true;
         }
     }

@@ -37,9 +37,9 @@ namespace XmlExtensions
 
         public XmlExtensions_SettingsMenu()
         {
-            loadedMods = new List<ModContainer>();
-            cachedFilteredList = new List<ModContainer>();
-            oldValuesCache = new Dictionary<string, string>();
+            loadedMods = new();
+            cachedFilteredList = new();
+            oldValuesCache = new();
             doCloseButton = true;
             forcePause = true;
             absorbInputAroundWindow = true;
@@ -140,7 +140,7 @@ namespace XmlExtensions
             }
             Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(cachedFilteredList.Count * (30 + 2) + 38, rect.height + 1));
             Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
-            Listing_Standard listingStandard = new Listing_Standard();
+            Listing_Standard listingStandard = new();
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
             listingStandard.Begin(rect2);
             int currMod = 0;

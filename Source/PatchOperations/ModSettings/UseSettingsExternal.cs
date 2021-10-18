@@ -45,8 +45,7 @@ namespace XmlExtensions
                     Error("Failed to find the field \"" + fields[i] + "\"");
                     return false;
                 }
-                object value = fieldInfo.GetValue(null);
-                vals.Add((string)value);
+                vals.Add(fieldInfo.GetValue(null).ToString());
             }
             return true;
         }
