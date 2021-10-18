@@ -13,6 +13,12 @@ namespace XmlExtensions
     {
         static XmlExtensions()
         {
+            ErrorManager.ClearErrors();
+            foreach (PatchOperationExtended op in PatchManager.delayedPatches)
+            {
+                op.Apply(null);
+            }
+
             // Initializing mod settings menus
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
@@ -74,11 +80,6 @@ namespace XmlExtensions
                 list.Sort();
             }
             Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
-            ErrorManager.ClearErrors();
-            foreach (PatchOperationExtended op in PatchManager.delayedPatches)
-            {
-                op.Apply(null);
-            }
             PatchManager.ModPatchDict.Clear();
         }
     }

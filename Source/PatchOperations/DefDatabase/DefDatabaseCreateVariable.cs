@@ -29,8 +29,7 @@ namespace XmlExtensions
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            string str = (string)Traverse.Create(obj).Method("ToString", new object[] { }).GetValue();
-            vals.Add(str);
+            vals.Add(obj.ToString());
             return true;
         }
     }
