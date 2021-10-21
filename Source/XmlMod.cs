@@ -22,23 +22,20 @@ namespace XmlExtensions
         public static List<string> unusedMods;
         public static Dictionary<string, Dictionary<string, List<KeyedAction>>> keyedActionListDict;
 
-        
-
-        static XmlMod()
+        public XmlMod(ModContentPack content) : base(content)
         {
+            allSettings = GetSettings<XmlModBaseSettings>();
+            if (allSettings.PinnedMods == null)
+            {
+                allSettings.PinnedMods = new HashSet<string>();
+            }
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
             harmony.PatchAll();
             keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
-            allSettings = new XmlModBaseSettings();
             loadedXmlMods = new List<string>();
-        }
-
-        public XmlMod(ModContentPack content) : base(content)
-        {
-            allSettings = GetSettings<XmlModBaseSettings>();
         }
 
         public static void AddKeyedAction(string modId, string key, KeyedAction action)

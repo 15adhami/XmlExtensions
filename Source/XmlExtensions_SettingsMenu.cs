@@ -13,6 +13,8 @@ namespace XmlExtensions
         public static string selectedExtraMod;
         public static string activeMenu = null; // defName
 
+        public readonly float ListWidth = 256f;
+
         public static Vector2 settingsPosition;
         public static Vector2 modListPosition;
         public static Vector2 keyPosition;
@@ -21,17 +23,21 @@ namespace XmlExtensions
 
         private List<ModContainer> loadedMods;
         private List<ModContainer> cachedFilteredList;
+        private bool pinned = false;
 
         private static ModContainer prevMod = null;
         private string searchText = "";
         private static Dictionary<string, string> oldValuesCache;
         private bool focusSearchBox = false;
 
+        private Texture2D pinFalseTex;
+        private Texture2D pinTrueTex;
+
         public override Vector2 InitialSize
         {
             get
             {
-                return new Vector2(900f + 256f + 6f, 700f);
+                return new Vector2(900f + ListWidth + 6f, 700f);
             }
         }
 
@@ -50,6 +56,8 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
+            pinFalseTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
+            pinTrueTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin", false);
             focusSearchBox = true;
             foreach (string id in XmlMod.loadedXmlMods)
             {
@@ -65,7 +73,7 @@ namespace XmlExtensions
                 }
             }
             loadedMods.Sort();
-            CacheFilter();
+            FilterMods();
             if (prevMod != null)
             {
                 foreach (ModContainer mod in loadedMods)
@@ -84,7 +92,7 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
-            Rect rectSettings = inRect.RightPartPixels(inRect.width - 256 - 6).TopPartPixels(inRect.height - 40);
+            Rect rectSettings = inRect.RightPartPixels(864f).TopPartPixels(inRect.height - 40);
             Rect headerRect = rectSettings.TopPartPixels(40f);
             Listing_Standard listing = new Listing_Standard();
             listing.Begin(headerRect);
@@ -101,25 +109,30 @@ namespace XmlExtensions
             GUI.EndGroup();
 
             string temp = searchText;
-            Rect rectMods = inRect.LeftPartPixels(256f).TopPartPixels(inRect.height - 40); //.285f
+            Rect rectMods = inRect.LeftPartPixels(ListWidth).TopPartPixels(inRect.height - 40); //.285f
             GUI.SetNextControlName("searchbox");
-            searchText = Widgets.TextField(rectMods.TopPartPixels(22).LeftPartPixels(rectMods.width - 22), temp);
+            searchText = Widgets.TextField(rectMods.TopPartPixels(22).LeftPartPixels(rectMods.width - 22 - 22), temp);
             GUI.color *= new Color(0.33f, 0.33f, 0.33f);
             if (searchText == null || searchText == "")
             {
                 GUI.color = new Color(0.5f, 0.5f, 0.5f);
-                GUI.DrawTexture(rectMods.TopPartPixels(22).RightPartPixels(22), TexButton.Search);
+                GUI.DrawTexture(rectMods.TopPartPixels(22).RightPartPixels(44).LeftPartPixels(22), TexButton.Search);
             }
             else
             {
-                if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), TexButton.CloseXSmall))
+                if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(44).LeftPartPixels(22).ContractedBy(2f), TexButton.CloseXSmall))
                 {
                     searchText = "";
                 }
             }
             if (searchText != temp)
             {
-                CacheFilter();
+                FilterMods();
+            }
+            if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), pinned ? pinTrueTex : pinFalseTex, new Color(0.5f, 0.5f, 0.5f)))
+            {
+                pinned = !pinned;
+                FilterMods();
             }
             GUI.color = Color.white;
             if (focusSearchBox)
@@ -154,10 +167,40 @@ namespace XmlExtensions
                     {
                         GUI.color = new Color(0.7f, 0.7f, 0.7f);
                     }
-                    if (listingStandard.ButtonText(mod.ToString()))
+                    Rect buttonRect = listingStandard.GetRect(30);
+                    if (Widgets.ButtonText(buttonRect, mod.ToString()))
                     {
-                        SetSelectedMod(mod);
+                        if (Event.current.button == 1)
+                        {
+                            var newOptions = new List<FloatMenuOption>();
+                            if (XmlMod.allSettings.PinnedMods.Contains(mod.ToString()))
+                            {
+                                newOptions.Add(new FloatMenuOption(Helpers.TryTranslate("Unpin mod", "XmlExtensions_Unpin"), delegate ()
+                                {
+                                    XmlMod.allSettings.PinnedMods.Remove(mod.ToString());
+                                    FilterMods();
+                                    if (cachedFilteredList.Count == 0)
+                                    {
+                                        pinned = false;
+                                        FilterMods();
+                                    }
+                                }));
+                            }
+                            else
+                            {
+                                newOptions.Add(new FloatMenuOption(Helpers.TryTranslate("Pin mod", "XmlExtensions_Pin"), delegate ()
+                                {
+                                    XmlMod.allSettings.PinnedMods.Add(mod.ToString());
+                                }));
+                            }
+                            Find.WindowStack.Add(new FloatMenu(newOptions));
+                        }
+                        else
+                        {
+                            SetSelectedMod(mod);
+                        }
                     }
+                    listingStandard.GetRect(2);
                     GUI.color = Color.white;
                 }
                 else
@@ -166,7 +209,10 @@ namespace XmlExtensions
                 }
                 currMod++;
             }
-
+            if (pinned && cachedFilteredList.Count == 0)
+            {
+                listingStandard.Label(Helpers.TryTranslate("Right-click a mod to pin it", "XmlExtensions_HowToPin"));
+            }
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
             if (SelectedMod == null)
@@ -284,14 +330,14 @@ namespace XmlExtensions
                     if (b)
                     {
                         foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                     where !mod.SettingsCategory().NullOrEmpty()
-                                     select mod)
+                                             where !mod.SettingsCategory().NullOrEmpty()
+                                             select mod)
                         {
                             loadedMods.Add(new ModContainer(item));
                         }
                     }
                     loadedMods.Sort();
-                    CacheFilter();
+                    FilterMods();
                 }
                 XmlMod.allSettings.standardMods = b;
                 if (listingStandard.ButtonText(Helpers.TryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
@@ -428,14 +474,17 @@ namespace XmlExtensions
             base.PreClose();
         }
 
-        private void CacheFilter()
+        private void FilterMods()
         {
             cachedFilteredList.Clear();
             foreach (ModContainer mod in loadedMods)
             {
                 if (searchText == null || searchText == "" || mod.ToString().ToLower().Contains(searchText.ToLower()))
                 {
-                    cachedFilteredList.Add(mod);
+                    if (!pinned || (pinned && XmlMod.allSettings.PinnedMods.Contains(mod.ToString())))
+                    {
+                        cachedFilteredList.Add(mod);
+                    }
                 }
             }
         }

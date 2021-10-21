@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
+    <XmlExtensions_Label>XML Extensions</XmlExtensions_Label>
     <XmlExtensions_MoreModSettings>More Mod Settings</XmlExtensions_MoreModSettings>
 	<XmlExtensions_Confirmation>Are you sure?</XmlExtensions_Confirmation>
     <XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
@@ -20,6 +21,8 @@
     <XmlExtensions_Open>Open</XmlExtensions_Open>
     <XmlExtensions_Apply>Apply</XmlExtensions_Apply>
     <XmlExtensions_ModSettingsFor>Mod settings for </XmlExtensions_ModSettingsFor>
-    
+    <XmlExtensions_Unpin>Unpin mod</XmlExtensions_Unpin>
+    <XmlExtensions_Pin>Pin mod</XmlExtensions_Pin>
+    <XmlExtensions_HowToPin>Right-click a mod to pin it</XmlExtensions_HowToPin>
 
 </LanguageData>

@@ -36,26 +36,6 @@ namespace XmlExtensions.Setting
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
             Widgets.CheckboxLabeled(inRect, Helpers.TryTranslate(label, tKey), ref currBool);
-
-            /*
-            TextAnchor anchor = Verse.Text.Anchor;
-            Verse.Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(inRect, label);
-            if (!disabled && Widgets.ButtonInvisible(inRect))
-            {
-                currBool = !currBool;
-                if (currBool)
-                {
-                    SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera();
-                }
-                else
-                {
-                    SoundDefOf.Checkbox_TurnedOff.PlayOneShotOnCamera();
-                }
-            }
-            Widgets.CheckboxDraw(inRect.x + inRect.width - 24f, inRect.y, currBool, disabled);
-            Verse.Text.Anchor = anchor;
-            */
             SettingsManager.SetSetting(selectedMod, key, currBool.ToString());
         }
     }

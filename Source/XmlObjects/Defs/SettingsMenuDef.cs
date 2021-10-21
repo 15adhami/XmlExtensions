@@ -38,6 +38,10 @@ namespace XmlExtensions
                     SettingsManager.AddMod(modId, label);
                 if (tKey != null)
                     XmlMod.settingsPerMod[modId].tKey = tKey;
+                if (!submenu)
+                {
+                    XmlMod.settingsPerMod[modId].homeMenu = defName;
+                }
                 int c = 0;
                 foreach (SettingContainer setting in settings)
                 {
@@ -55,10 +59,6 @@ namespace XmlExtensions
                         ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                         return false;
                     }
-                }
-                if (!submenu)
-                {
-                    XmlMod.settingsPerMod[modId].homeMenu = defName;
                 }
                 if (keyedActions != null)
                 {
