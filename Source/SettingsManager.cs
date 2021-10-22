@@ -35,7 +35,14 @@ namespace XmlExtensions
         /// <returns>The current value associated with the given key.</returns>
         public static string GetSetting(string modId, string key)
         {
-            return XmlMod.allSettings.dataDict[modId + ";" + key];
+            try
+            {
+                return XmlMod.allSettings.dataDict[modId + ";" + key];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
