@@ -30,8 +30,7 @@ namespace XmlExtensions
         private static Dictionary<string, string> oldValuesCache;
         private bool focusSearchBox = false;
 
-        private Texture2D pinFalseTex;
-        private Texture2D pinTrueTex;
+        private Texture2D pinTex;
 
         public override Vector2 InitialSize
         {
@@ -56,8 +55,7 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
-            pinFalseTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
-            pinTrueTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin", false);
+            pinTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
             focusSearchBox = true;
             foreach (string id in XmlMod.loadedXmlMods)
             {
@@ -129,7 +127,7 @@ namespace XmlExtensions
             {
                 FilterMods();
             }
-            if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), pinned ? pinTrueTex : pinFalseTex, new Color(0.5f, 0.5f, 0.5f)))
+            if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), pinTex, pinned ? new Color(0.75f, 0.75f, 0.75f) : new Color(0.5f, 0.5f, 0.5f)))
             {
                 pinned = !pinned;
                 FilterMods();
