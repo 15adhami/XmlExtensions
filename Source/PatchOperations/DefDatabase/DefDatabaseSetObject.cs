@@ -7,7 +7,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseSetObject : DefDatabaseOperationPathed
+    public class DefDatabaseOperationSetObject : DefDatabaseOperationPathed
     {
         public string defType2;
         public string defName2;

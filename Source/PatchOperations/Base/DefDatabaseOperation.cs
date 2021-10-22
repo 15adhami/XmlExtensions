@@ -263,6 +263,10 @@ namespace XmlExtensions
         {
             try
             {
+                if (path == null)
+                {
+                    return parent;
+                }
                 if (parent == null)
                 {
                     return null;
