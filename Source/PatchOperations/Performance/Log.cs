@@ -5,6 +5,7 @@ namespace XmlExtensions
     public class Log : PatchOperationExtended
     {
         protected string text;
+        protected string warning;
         protected string error;
         protected string xpath;
 
@@ -18,12 +19,14 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            if (text == null && xpath == null && error == null)
+            if (text == null && xpath == null && error == null && warning == null)
             {
                 Verse.Log.Message("XmlExtensions.Log");
             }
             if (text != null)
                 Verse.Log.Message(text);
+            if (warning != null)
+                Verse.Log.Warning(warning);
             if (error != null)
                 Verse.Log.Error(error);
             if (xpath != null)
