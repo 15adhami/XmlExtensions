@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 using Verse;
@@ -7,45 +9,35 @@ namespace XmlExtensions
 {
     public class UseSettingsExternal : PatchOperationValue
     {
-        public string ModSettingsClass;
+        public string ModClass;
         public List<string> fields;
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            if (ModSettingsClass == null)
+            Type modType = GenTypes.GetTypeInAnyAssembly(ModClass);
+            if (modType == null)
             {
-                NullError("ModSettingsClass");
+                Error("Mod could not be found");
                 return false;
             }
-            if (fields == null)
-            {
-                NullError("fields");
-                return false;
-            }
-            if (apply == null)
-            {
-                NullError("apply");
-                return false;
-            }
-            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            FieldInfo fieldInfo;
+            Traverse settingsTraverse = Traverse.Create(Traverse.Create(LoadedModManager.GetMod(modType)).Field("modSettings").GetValue());
             for (int i = 0; i < fields.Count; i++)
             {
-                try
-                {
-                    fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(fields[i], bindings);
-                }
-                catch
-                {
-                    Error(new string[] { ModSettingsClass }, new string[] { "ModSettingsClass" }, "Failed to find ModSettingsClass");
-                    return false;
-                }
-                if (fieldInfo == null)
+                object value = settingsTraverse.Field(fields[i]).GetValue();
+                if (value == null)
                 {
                     Error("Failed to find the field \"" + fields[i] + "\"");
                     return false;
                 }
-                vals.Add(fieldInfo.GetValue(null).ToString());
+                try
+                {
+                    vals.Add(value.ToString());
+                }
+                catch
+                {
+                    Error("The field \"" + fields[i] + "\" cannot be converted to a string");
+                    return false;
+                }
             }
             return true;
         }

@@ -40,8 +40,8 @@ namespace XmlExtensions
         {
             List<string> vals = new List<string>();
             List<string> vars = new List<string>();
-            if (!getValues(vals, xml)) { return false; }
             if (!getVars(vars)) { return false; }
+            if (!getValues(vals, xml)) { return false; }
             XmlContainer newContainer = Helpers.SubstituteVariablesXmlContainer(apply, vars, vals, brackets);
             return RunPatches(newContainer, xml);
         }

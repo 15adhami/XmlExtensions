@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using Verse;
 
@@ -7,7 +8,7 @@ namespace XmlExtensions
 {
     public class UseSettingExternal : PatchOperationValue
     {
-        public string ModSettingsClass;
+        public string ModClass;
         public string field;
 
         protected override void SetException()
@@ -17,36 +18,40 @@ namespace XmlExtensions
 
         public override bool getVars(List<string> vars)
         {
+            if (field == null)
+            {
+                NullError("field");
+                return false;
+            }
             vars.Add(field);
             return true;
         }
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            if (field == null)
+            Type modType = GenTypes.GetTypeInAnyAssembly(ModClass);
+            if (modType == null)
             {
-                NullError("field");
+                Error("Mod could not be found");
                 return false;
             }
-            if (ModSettingsClass == null)
+            Traverse settingsTraverse = Traverse.Create(Traverse.Create(LoadedModManager.GetMod(modType)).Field("modSettings").GetValue());
+            object value = settingsTraverse.Field(field).GetValue();
+            if (value == null)
             {
-                NullError("ModSettingsClass");
+                Error("Failed to find field");
                 return false;
             }
-            if (apply == null)
+            try
             {
-                NullError("apply");
+                vals.Add(value.ToString());
+                return true;
+            }
+            catch
+            {
+                Error("The given field cannot be converted to a string");
                 return false;
             }
-            var bindings = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            FieldInfo fieldInfo = GenTypes.GetTypeInAnyAssembly(ModSettingsClass).GetField(field, bindings);
-            if (fieldInfo == null)
-            {
-                Error("Failed to get field");
-                return false;
-            }
-            vals.Add(fieldInfo.GetValue(null).ToString());
-            return true;
         }
     }
 }
