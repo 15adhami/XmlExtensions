@@ -109,6 +109,16 @@ namespace XmlExtensions
             ErrorManager.AddError(str + ": " + msg);
         }
 
+        protected bool ErrorIfFalse(bool condition, string message)
+        {
+            if (!condition)
+            {
+                Error(message);
+                return false;
+            }
+            return true;
+        }
+
         protected void XPathError(string node = "xpath")
         {
             Error("Failed to find a node referenced by <" + node + ">");

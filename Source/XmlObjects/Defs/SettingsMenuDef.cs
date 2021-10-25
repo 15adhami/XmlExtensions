@@ -13,9 +13,9 @@ namespace XmlExtensions
         public int defaultSpacing = 2;
         public List<SettingContainer> settings;
         public List<KeyedAction> keyedActions;
-        public List<MenuAction> preOpenActions;
-        public List<MenuAction> onFrameActions;
-        public List<MenuAction> postCloseActions;
+        public List<ActionContainer> preOpenActions;
+        public List<ActionContainer> onFrameActions;
+        public List<ActionContainer> postCloseActions;
         public string modId;
         public bool submenu = false;
 
@@ -105,7 +105,7 @@ namespace XmlExtensions
             if (postCloseActions != null)
             {
                 ErrorManager.ClearErrors();
-                foreach (MenuAction action in postCloseActions)
+                foreach (ActionContainer action in postCloseActions)
                 {
                     if (!action.DoAction())
                     {
@@ -120,7 +120,7 @@ namespace XmlExtensions
             if (preOpenActions != null)
             {
                 ErrorManager.ClearErrors();
-                foreach (MenuAction action in preOpenActions)
+                foreach (ActionContainer action in preOpenActions)
                 {
                     if (!action.DoAction())
                     {

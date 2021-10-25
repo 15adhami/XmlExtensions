@@ -283,7 +283,7 @@ namespace XmlExtensions
                     if (XmlMod.menus[activeMenu].onFrameActions != null)
                     {
                         ErrorManager.ClearErrors();
-                        foreach (MenuAction action in XmlMod.menus[activeMenu].onFrameActions)
+                        foreach (ActionContainer action in XmlMod.menus[activeMenu].onFrameActions)
                         {
                             if (!action.DoAction())
                             {

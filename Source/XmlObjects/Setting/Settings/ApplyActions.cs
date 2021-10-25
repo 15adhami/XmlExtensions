@@ -10,7 +10,7 @@ namespace XmlExtensions.Setting
     {
         public string label;
         public string tKey;
-        public List<MenuAction> actions;
+        public List<ActionContainer> actions;
 
         protected override bool Init(string selectedMod)
         {
@@ -34,7 +34,7 @@ namespace XmlExtensions.Setting
                 if (actions != null)
                 {
                     int c = 0;
-                    foreach (MenuAction action in actions)
+                    foreach (ActionContainer action in actions)
                     {
                         c++;
                         if (!action.DoAction())

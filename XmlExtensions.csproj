@@ -80,6 +80,7 @@
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\ModContainer.cs" />
+    <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
     <Compile Include="Source\PatchOperations\Base\DefDatabaseOperation.cs" />
@@ -162,7 +163,7 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
-    <Compile Include="Source\XmlObjects\Actions\MenuAction.cs" />
+    <Compile Include="Source\XmlObjects\Actions\ActionContainer.cs" />
     <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
     <Compile Include="Source\XmlObjects\Actions\KeyedAction.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />

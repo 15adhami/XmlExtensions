@@ -2,9 +2,12 @@
 
 namespace XmlExtensions.Action
 {
-    public abstract class MenuAction : ErrorHandler
+    public abstract class ActionContainer : ErrorHandler
     {
         public string modId;
+        public object output = null;
+
+        protected sealed override void SetException() { }
 
         public bool DoAction()
         {
