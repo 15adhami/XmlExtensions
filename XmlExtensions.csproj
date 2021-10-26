@@ -79,6 +79,7 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
+    <Compile Include="Source\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\ModContainer.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
@@ -219,10 +220,13 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\ToggleableSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="1.2\Assemblies\XmlExtensions.dll" />
+    <Content Include="1.3\Assemblies\XmlExtensions.dll" />
     <Content Include="About\About.xml" />
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
     <Content Include="Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
+    <Content Include="LoadFolders.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About\Untitled.xcf" />
