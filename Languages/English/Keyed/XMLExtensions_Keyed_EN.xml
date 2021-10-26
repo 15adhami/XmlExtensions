@@ -24,5 +24,6 @@
     <XmlExtensions_Unpin>Unpin mod</XmlExtensions_Unpin>
     <XmlExtensions_Pin>Pin mod</XmlExtensions_Pin>
     <XmlExtensions_HowToPin>Right-click a mod to pin it</XmlExtensions_HowToPin>
+	<XmlExtensions_AddMainButton>Add a main button for opening the More Mod Settings menu</XmlExtensions_AddMainButton>
 
 </LanguageData>

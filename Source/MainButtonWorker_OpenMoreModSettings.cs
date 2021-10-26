@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Verse;
 using RimWorld;
 
-namespace XmlExtensions.Source
+namespace XmlExtensions
 {
     class MainButtonWorker_OpenMoreModSettings : MainButtonWorker
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -338,6 +339,12 @@ namespace XmlExtensions
                     FilterMods();
                 }
                 XmlMod.allSettings.standardMods = b;
+                b = XmlMod.allSettings.mainButton;
+                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Add a main button for opening the More Mod Settings menu", "XmlExtensions_AddMainButton"), ref XmlMod.allSettings.mainButton);
+                if (b!= XmlMod.allSettings.mainButton)
+                {
+                    DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
+                }
                 if (listingStandard.ButtonText(Helpers.TryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
                     viewingSettings = true;
                 listingStandard.End();

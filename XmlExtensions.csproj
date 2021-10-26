@@ -222,6 +222,7 @@
   <ItemGroup>
     <Content Include="1.2\Assemblies\XmlExtensions.dll" />
     <Content Include="1.3\Assemblies\XmlExtensions.dll" />
+    <Content Include="1.3\Defs\MainButtonDefs.xml" />
     <Content Include="About\About.xml" />
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
