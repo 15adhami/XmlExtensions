@@ -22,14 +22,15 @@ namespace XmlExtensions
         public static void PrintErrors(string source, ModContentPack mod)
         {
             string trace = "";
+            trace += "[" + mod.Name + " - Start of stack trace]\n";
             foreach (string error in errors)
             {
                 trace += error + "\n";
             }
             trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\nSource file: " + source + "\n";
             if (XmlMod.allSettings.trace)
-                Verse.Log.Error("[" + mod.Name + " - Start of stack trace]\n" + trace);
-            errors.Clear();
+                Verse.Log.Error(trace);
+            ClearErrors();
         }
 
         /// <summary>
@@ -38,14 +39,15 @@ namespace XmlExtensions
         public static void PrintErrors()
         {
             string trace = "";
+            trace += "[Start of stack trace]\n";
             foreach (string error in errors)
             {
                 trace += error + "\n";
             }
             trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\n";
             if (XmlMod.allSettings.trace)
-                Verse.Log.Error("[Start of stack trace]\n" + trace);
-            errors.Clear();
+                Verse.Log.Error(trace);
+            ClearErrors();
         }
 
         public static void ClearErrors()

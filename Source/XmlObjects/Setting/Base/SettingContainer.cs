@@ -9,6 +9,7 @@ namespace XmlExtensions.Setting
     {
         public string tag;
         public bool showDimensions = false;
+        public SettingContainer parentContainer = null;
 
         private List<List<SettingContainer>> cachedLists = new List<List<SettingContainer>>();
         private Dictionary<List<SettingContainer>, string> listNameDict = new Dictionary<List<SettingContainer>, string>();
@@ -21,8 +22,9 @@ namespace XmlExtensions.Setting
         /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool Initialize(string selectedMod)
+        public bool Initialize(string selectedMod, SettingContainer parent = null)
         {
+            parentContainer = parent;
             try
             {
                 if (!SetDefaultValue(selectedMod))
@@ -231,7 +233,7 @@ namespace XmlExtensions.Setting
                 foreach (SettingContainer setting in settings)
                 {
                     c++;
-                    if (!setting.Initialize(selectedMod))
+                    if (!setting.Initialize(selectedMod, this))
                     {
                         if (name != null)
                         {
