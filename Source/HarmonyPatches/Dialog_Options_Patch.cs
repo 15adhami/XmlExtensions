@@ -43,7 +43,7 @@ namespace XmlExtensions
                 codes.Insert(startIndex + 5, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Listing_Standard), "ButtonText", new Type[] { typeof(string), typeof(string) })));
                 codes.Insert(startIndex + 6, new CodeInstruction(OpCodes.Brfalse_S, label));
                 codes.Insert(startIndex + 7, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Find), "get_WindowStack")));
-                codes.Insert(startIndex + 8, new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(XmlExtensions_SettingsMenu))));
+                codes.Insert(startIndex + 8, new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(XmlExtensions_MenuModSettings))));
                 codes.Insert(startIndex + 9, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(WindowStack), "Add", new[] { typeof(Window) })));
             }
 

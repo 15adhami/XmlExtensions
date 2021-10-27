@@ -12,7 +12,7 @@ namespace XmlExtensions
     {
         public override void Activate()
         {
-            Find.WindowStack.Add(new XmlExtensions_SettingsMenu());
+            Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
         }
     }
 }

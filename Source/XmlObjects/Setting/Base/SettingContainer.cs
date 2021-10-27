@@ -164,7 +164,7 @@ namespace XmlExtensions.Setting
         /// <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
         protected int GetDefaultSpacing()
         {
-            return XmlMod.menus[XmlExtensions_SettingsMenu.activeMenu].defaultSpacing;
+            return XmlMod.menus[XmlExtensions_MenuModSettings.activeMenu].defaultSpacing;
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace XmlExtensions.Setting
         /// <param name="defName">the defName of the SettingsMenuDef you want to display</param>
         protected void SetActiveMenu(string defName)
         {
-            XmlExtensions_SettingsMenu.SetActiveMenu(defName);
+            XmlExtensions_MenuModSettings.SetActiveMenu(defName);
         }
 
         /// <summary>

@@ -204,7 +204,7 @@
     <Compile Include="Source\XmlObjects\Defs\SettingsMenuDef.cs" />
     <Compile Include="Source\XmlObjects\Defs\SlateDef.cs" />
     <Compile Include="Source\XmlExtensions.cs" />
-    <Compile Include="Source\XmlExtensions_SettingsMenu.cs" />
+    <Compile Include="Source\XmlExtensions_MenuModSettings.cs" />
     <Compile Include="Source\XmlMod.cs" />
     <Compile Include="Source\XmlModBaseSettings.cs" />
     <Compile Include="Source\XmlModSettings.cs" />

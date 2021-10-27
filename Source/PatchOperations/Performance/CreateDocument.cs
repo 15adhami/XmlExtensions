@@ -36,7 +36,6 @@ namespace XmlExtensions
                     doc.DocumentElement.AppendChild(newNode);
                     PatchManager.nodeMap[docName].Add(newNode, node);
                 }
-                PatchManager.XmlDocs.Add(docName, doc);
             }
             return true;
         }

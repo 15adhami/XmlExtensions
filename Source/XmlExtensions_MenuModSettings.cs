@@ -9,7 +9,7 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     // Window that appears when you press More Mod Settings
-    public class XmlExtensions_SettingsMenu : Window
+    public class XmlExtensions_MenuModSettings : Window
     {
         public static string selectedExtraMod;
         public static string activeMenu = null; // defName
@@ -41,7 +41,7 @@ namespace XmlExtensions
             }
         }
 
-        public XmlExtensions_SettingsMenu()
+        public XmlExtensions_MenuModSettings()
         {
             loadedMods = new();
             cachedFilteredList = new();
@@ -49,6 +49,7 @@ namespace XmlExtensions
             doCloseButton = true;
             forcePause = true;
             absorbInputAroundWindow = true;
+            closeOnClickedOutside = true;
             doCloseX = true;
             closeOnAccept = false;
         }
@@ -73,7 +74,7 @@ namespace XmlExtensions
             }
             loadedMods.Sort();
             FilterMods();
-            if (prevMod != null)
+            if (prevMod != null && prevMod.ToString() != "CharacterEditor")
             {
                 foreach (ModContainer mod in loadedMods)
                 {
