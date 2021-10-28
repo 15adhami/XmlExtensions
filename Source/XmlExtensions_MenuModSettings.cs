@@ -342,7 +342,7 @@ namespace XmlExtensions
                 XmlMod.allSettings.standardMods = b;
                 b = XmlMod.allSettings.mainButton;
                 listingStandard.CheckboxLabeled(Helpers.TryTranslate("Add a main button for opening the More Mod Settings menu", "XmlExtensions_AddMainButton"), ref XmlMod.allSettings.mainButton);
-                if (b!= XmlMod.allSettings.mainButton)
+                if (b != XmlMod.allSettings.mainButton)
                 {
                     DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
                 }

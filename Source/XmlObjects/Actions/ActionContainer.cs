@@ -7,7 +7,9 @@ namespace XmlExtensions.Action
         public string modId;
         public object output = null;
 
-        protected sealed override void SetException() { }
+        protected sealed override void SetException()
+        {
+        }
 
         public bool DoAction()
         {

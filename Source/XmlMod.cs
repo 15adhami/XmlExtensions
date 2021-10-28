@@ -1,8 +1,5 @@
 ﻿using HarmonyLib;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
 
@@ -11,12 +8,11 @@ namespace XmlExtensions
     public class XmlMod : Mod
     {
         public static XmlModBaseSettings allSettings;
-        
+
         public static string loadedMod;
         public static List<string> loadedXmlMods;
         public static Dictionary<string, XmlModSettings> settingsPerMod;
-        
-        
+
         public static Dictionary<string, SettingsMenuDef> menus;
         public static Dictionary<string, List<string>> unusedSettings;
         public static List<string> unusedMods;

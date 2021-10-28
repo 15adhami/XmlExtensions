@@ -12,7 +12,6 @@ namespace XmlExtensions
         public bool mainButton = false;
         public HashSet<string> PinnedMods;
 
-
         public XmlModBaseSettings()
         {
             dataDict = new Dictionary<string, string>();
