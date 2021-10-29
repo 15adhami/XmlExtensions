@@ -25,5 +25,6 @@
     <XmlExtensions_Pin>Pin mod</XmlExtensions_Pin>
     <XmlExtensions_HowToPin>Right-click a mod to pin it</XmlExtensions_HowToPin>
 	<XmlExtensions_AddMainButton>Add a main button for opening the More Mod Settings menu</XmlExtensions_AddMainButton>
+	<XmlExtensions_AddMainButtonTip>Adds a main button that opens the More Mod Settings menu when clicked</XmlExtensions_AddMainButtonTip>
 
 </LanguageData>

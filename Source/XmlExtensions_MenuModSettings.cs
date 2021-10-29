@@ -317,9 +317,9 @@ namespace XmlExtensions
             {
                 Listing_Standard listingStandard = new Listing_Standard();
                 listingStandard.Begin(rect);
-                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Enable stack trace for XML patch errors", "XmlExtensions_EnableStackTrace"), ref XmlMod.allSettings.trace, Helpers.TryTranslate("Improves error reporting when enabled", "XmlExtensions_StackTraceTip"));
+                listingStandard.CheckboxLabeled("XmlExtensions_EnableStackTrace".Translate(), ref XmlMod.allSettings.trace, "XmlExtensions_StackTraceTip".Translate());
                 bool b = XmlMod.allSettings.standardMods;
-                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Include standard Mod Settings", "XmlExtensions_IncludeStandardMods"), ref b, Helpers.TryTranslate("Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)", "XmlExtensions_IncludeStandardModsTip"));
+                listingStandard.CheckboxLabeled("XmlExtensions_IncludeStandardMods".Translate(), ref b, "XmlExtensions_IncludeStandardModsTip".Translate());
                 if (b != XmlMod.allSettings.standardMods)
                 {
                     loadedMods.Clear();
@@ -341,12 +341,12 @@ namespace XmlExtensions
                 }
                 XmlMod.allSettings.standardMods = b;
                 b = XmlMod.allSettings.mainButton;
-                listingStandard.CheckboxLabeled(Helpers.TryTranslate("Add a main button for opening the More Mod Settings menu", "XmlExtensions_AddMainButton"), ref XmlMod.allSettings.mainButton);
+                listingStandard.CheckboxLabeled("XmlExtensions_AddMainButton".Translate(), ref XmlMod.allSettings.mainButton, "XmlExtensions_AddMainButtonTip".Translate());
                 if (b != XmlMod.allSettings.mainButton)
                 {
                     DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
                 }
-                if (listingStandard.ButtonText(Helpers.TryTranslate("View unused settings", "XmlExtensions_ViewUnusedSettings")))
+                if (listingStandard.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
                     viewingSettings = true;
                 listingStandard.End();
             }
