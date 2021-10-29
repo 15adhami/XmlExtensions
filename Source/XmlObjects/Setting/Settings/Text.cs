@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Text : SettingContainer
+    internal class Text : SettingContainer
     {
         public string text;
         public GameFont font = GameFont.Small;

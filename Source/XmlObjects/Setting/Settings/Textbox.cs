@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Textbox : KeyedSettingContainer
+    internal class Textbox : KeyedSettingContainer
     {
         public string tKey;
         public int lines = 1;

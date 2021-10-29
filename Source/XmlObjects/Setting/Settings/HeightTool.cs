@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class HeightTool : SettingContainer
+    internal class HeightTool : SettingContainer
     {
         private int h = 22;
 

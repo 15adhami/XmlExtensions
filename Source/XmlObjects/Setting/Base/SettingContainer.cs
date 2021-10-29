@@ -5,16 +5,23 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
+    /// <summary>
+    /// Inherit from this class in order to create a new setting.
+    /// </summary>
     public abstract class SettingContainer : ErrorHandler
     {
-        public string tag;
-        public bool showDimensions = false;
-        public SettingContainer parentContainer = null;
+        /// <summary>
+        /// The SettingContainer that this SettingContainer is contained in.<br/>
+        /// If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
+        /// </summary>
+        public SettingContainer ParentContainer = null;
 
         private List<List<SettingContainer>> cachedLists = new List<List<SettingContainer>>();
         private Dictionary<List<SettingContainer>, string> listNameDict = new Dictionary<List<SettingContainer>, string>();
         private float cachedHeight = -1f;
         private int errHeight = -1;
+        private string tag;
+        private bool showDimensions = false;
 
         // Public methods
 
@@ -24,7 +31,7 @@ namespace XmlExtensions.Setting
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool Initialize(string selectedMod, SettingContainer parent = null)
         {
-            parentContainer = parent;
+            ParentContainer = parent;
             try
             {
                 if (!SetDefaultValue(selectedMod))

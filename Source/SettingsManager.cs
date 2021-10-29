@@ -2,6 +2,9 @@
 
 namespace XmlExtensions
 {
+    /// <summary>
+    /// This class contains methods to access settings that XML Extensions manages
+    /// </summary>
     public static class SettingsManager
     {
         /// <summary>

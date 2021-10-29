@@ -8,7 +8,7 @@ using Verse;
 namespace XmlExtensions
 {
     [StaticConstructorOnStartup]
-    public static class XmlExtensions
+    internal static class XmlExtensions
     {
         static XmlExtensions()
         {

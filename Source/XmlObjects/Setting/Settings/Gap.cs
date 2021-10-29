@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Setting
 {
-    public class Gap : SettingContainer
+    internal class Gap : SettingContainer
     {
         public int spacing = 24;
 

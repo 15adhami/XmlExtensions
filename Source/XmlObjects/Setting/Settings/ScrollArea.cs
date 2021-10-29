@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class ScrollArea : SettingContainer
+    internal class ScrollArea : SettingContainer
     {
         public float height = 144;
         public float innerWidth = 1000;

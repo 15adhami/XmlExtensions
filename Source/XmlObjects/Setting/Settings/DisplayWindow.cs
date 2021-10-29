@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class DisplayWindow : SettingContainer
+    internal class DisplayWindow : SettingContainer
     {
         public string label;
         public string tKey;

@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Slider : KeyedSettingContainer
+    internal class Slider : KeyedSettingContainer
     {
         public float min;
         public float max;

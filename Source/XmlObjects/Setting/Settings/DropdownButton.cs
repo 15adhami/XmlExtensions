@@ -4,13 +4,13 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class DropdownOption
+    internal class DropdownOption
     {
         public string label;
         public string value;
     }
 
-    public class DropdownButton : KeyedSettingContainer
+    internal class DropdownButton : KeyedSettingContainer
     {
         public List<DropdownOption> options;
         public string tKey;

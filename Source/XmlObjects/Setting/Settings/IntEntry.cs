@@ -5,7 +5,7 @@ using Verse.Sound;
 
 namespace XmlExtensions.Setting
 {
-    public class IntEntry : KeyedSettingContainer
+    internal class IntEntry : KeyedSettingContainer
     {
         public int multiplier = 1;
         public string min;

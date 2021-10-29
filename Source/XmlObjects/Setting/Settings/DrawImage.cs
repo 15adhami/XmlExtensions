@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class DrawImage : SettingContainer
+    internal class DrawImage : SettingContainer
     {
         public string texPath;
         public string anchor = "Middle";

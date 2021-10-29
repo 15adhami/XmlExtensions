@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class SplitColumnPixels : SettingContainer
+    internal class SplitColumnPixels : SettingContainer
     {
         public float pixels = -1f;
         public List<SettingContainer> leftCol;

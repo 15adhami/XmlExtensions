@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    class MainButtonWorker_OpenMoreModSettings : MainButtonWorker
+    internal class MainButtonWorker_OpenMoreModSettings : MainButtonWorker
     {
         public override void Activate()
         {

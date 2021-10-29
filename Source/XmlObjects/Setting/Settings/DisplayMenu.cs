@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class DisplayMenu : SettingContainer
+    internal class DisplayMenu : SettingContainer
     {
         public string label;
         public string menu;

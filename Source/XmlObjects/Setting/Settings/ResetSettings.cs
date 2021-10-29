@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class ResetSettings : SettingContainer
+    internal class ResetSettings : SettingContainer
     {
         protected string label;
         protected List<string> keys = null;

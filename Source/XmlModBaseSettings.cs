@@ -4,7 +4,7 @@ using Verse;
 namespace XmlExtensions
 {
     // The "Real" ModSettings Class
-    public class XmlModBaseSettings : ModSettings
+    internal class XmlModBaseSettings : ModSettings
     {
         public Dictionary<string, string> dataDict;
         public bool trace = true;

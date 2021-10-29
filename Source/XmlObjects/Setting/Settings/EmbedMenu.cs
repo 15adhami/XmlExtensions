@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class EmbedMenu : SettingContainer
+    internal class EmbedMenu : SettingContainer
     {
         public string menu;
 

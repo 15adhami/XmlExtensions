@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Section : SettingContainer
+    internal class Section : SettingContainer
     {
         public float height = -1f;
         public List<SettingContainer> settings;

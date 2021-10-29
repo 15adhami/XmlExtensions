@@ -6,7 +6,7 @@ using Verse.Sound;
 
 namespace XmlExtensions.Setting
 {
-    public class Range : KeyedSettingContainer
+    internal class Range : KeyedSettingContainer
     {
         public int min;
         public int max;

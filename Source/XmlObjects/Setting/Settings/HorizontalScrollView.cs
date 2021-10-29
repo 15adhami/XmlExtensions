@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class HorizontalScrollView : SettingContainer
+    internal class HorizontalScrollView : SettingContainer
     {
         public float innerWidth = 1000;
         public List<SettingContainer> settings;

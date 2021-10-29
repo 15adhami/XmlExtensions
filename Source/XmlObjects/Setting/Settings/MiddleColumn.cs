@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class MiddleColumn : SettingContainer
+    internal class MiddleColumn : SettingContainer
     {
         public float split = 0.50f;
         public List<SettingContainer> settings;

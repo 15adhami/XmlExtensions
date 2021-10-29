@@ -4,7 +4,7 @@ namespace XmlExtensions
 {
     // "Virtual" mod settings. Settings each mod has.
     // TODO: Every mod gets their own XML file
-    public class XmlModSettings
+    internal class XmlModSettings
     {
         public List<string> keys;
         public string label;

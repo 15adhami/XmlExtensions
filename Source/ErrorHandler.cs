@@ -2,16 +2,16 @@
 
 namespace XmlExtensions
 {
-    public abstract class ErrorHandler
+    internal abstract class ErrorHandler
     {
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
 
-        protected virtual void SetException()
+        protected internal virtual void SetException()
         {
         }
 
-        protected void CreateExceptions(params string[] values)
+        protected internal void CreateExceptions(params string[] values)
         {
             exceptionFields = new List<string>();
             exceptionVals = new List<string>();
@@ -28,6 +28,10 @@ namespace XmlExtensions
             }
         }
 
+        /// <summary>
+        /// Throw an error message.
+        /// </summary>
+        /// <param name="msg">The message</param>
         protected void Error(string msg)
         {
             SetException();
@@ -44,7 +48,7 @@ namespace XmlExtensions
             ErrorManager.AddError(str + ": " + msg);
         }
 
-        protected void Error(string[] vals, string[] fields, string msg)
+        protected internal void Error(string[] vals, string[] fields, string msg)
         {
             string str = GetType().ToString();
             if (vals != null)
@@ -59,12 +63,12 @@ namespace XmlExtensions
             ErrorManager.AddError(str + ": " + msg);
         }
 
-        protected void NullError(string node)
+        protected internal void NullError(string node)
         {
             Error("<" + node + "> is null");
         }
 
-        protected void XPathError(string node = "xpath")
+        protected internal void XPathError(string node = "xpath")
         {
             Error("Failed to find a node referenced by <" + node + ">");
         }

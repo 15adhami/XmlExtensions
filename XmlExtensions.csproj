@@ -92,7 +92,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAddDef.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseLog.cs" />
-    <Compile Include="Source\PatchOperations\Base\ErrorHandler.cs" />
+    <Compile Include="Source\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />

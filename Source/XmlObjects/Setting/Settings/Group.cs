@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
-    public class Group : SettingContainer
+    internal class Group : SettingContainer
     {
         public List<SettingContainer> settings;
 

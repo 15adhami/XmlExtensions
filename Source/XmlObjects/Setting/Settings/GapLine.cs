@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class GapLine : SettingContainer
+    internal class GapLine : SettingContainer
     {
         public int spacing = 24;
         protected int thickness = 1;

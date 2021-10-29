@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
-    public class SwitchSettings : SettingContainer
+    internal class SwitchSettings : SettingContainer
     {
         public class SwitchSetting
         {

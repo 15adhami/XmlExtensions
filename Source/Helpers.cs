@@ -6,7 +6,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public static class Helpers
+    internal static class Helpers
     {
         /// <summary>
         /// Calculates the prefix the given length.

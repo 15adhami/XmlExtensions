@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Checkbox : KeyedSettingContainer
+    internal class Checkbox : KeyedSettingContainer
     {
         public string tooltip;
         public string tKey;

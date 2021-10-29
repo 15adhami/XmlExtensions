@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class TabView : SettingContainer
+    internal class TabView : SettingContainer
     {
         public class Tab
         {

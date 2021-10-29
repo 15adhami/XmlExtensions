@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace XmlExtensions.Setting
 {
-    public class ToggleableSettings : SettingContainer
+    internal class ToggleableSettings : SettingContainer
     {
         public string key;
         public List<SettingContainer> caseTrue;

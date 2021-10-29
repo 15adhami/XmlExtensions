@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public static class ErrorManager
+    internal static class ErrorManager
     {
         public static int depth = 0;
 

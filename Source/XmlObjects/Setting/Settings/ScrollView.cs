@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class ScrollView : SettingContainer
+    internal class ScrollView : SettingContainer
     {
         public float height = 72;
         public List<SettingContainer> settings;

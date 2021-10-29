@@ -9,7 +9,7 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     // Window that appears when you press More Mod Settings
-    public class XmlExtensions_MenuModSettings : Window
+    internal class XmlExtensions_MenuModSettings : Window
     {
         public static string selectedExtraMod;
         public static string activeMenu = null; // defName

@@ -5,7 +5,7 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions
 {
-    public class XmlMod : Mod
+    internal class XmlMod : Mod
     {
         public static XmlModBaseSettings allSettings;
 

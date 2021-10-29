@@ -179,6 +179,11 @@
             <param name="name">The name of the list (for error reporting purposes)</param>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
+        <member name="T:XmlExtensions.SettingsManager">
+            <summary>
+            This class contains methods to access settings that XML Extensions manages
+            </summary>
+        </member>
         <member name="M:XmlExtensions.SettingsManager.GetDefaultValue(System.String,System.String)">
             <summary>
             Gets the defaultValue of a given setting.

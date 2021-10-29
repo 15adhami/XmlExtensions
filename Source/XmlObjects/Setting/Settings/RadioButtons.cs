@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class RadioButtons : KeyedSettingContainer
+    internal class RadioButtons : KeyedSettingContainer
     {
         public List<RadioButton> buttons;
         public bool highlight = true;

@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class SplitColumn : SettingContainer
+    internal class SplitColumn : SettingContainer
     {
         public float split = 0.50f;
         public List<SettingContainer> leftCol;

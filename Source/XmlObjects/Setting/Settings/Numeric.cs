@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    public class Numeric : KeyedSettingContainer
+    internal class Numeric : KeyedSettingContainer
     {
         public float min;
         public float max;

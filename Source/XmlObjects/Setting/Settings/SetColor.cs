@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Setting
 {
-    public class SetColor : SettingContainer
+    internal class SetColor : SettingContainer
     {
         protected Color color = Color.white;
 

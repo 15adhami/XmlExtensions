@@ -5,7 +5,7 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
 {
-    public class ApplyActions : SettingContainer
+    internal class ApplyActions : SettingContainer
     {
         public string label;
         public string tKey;
