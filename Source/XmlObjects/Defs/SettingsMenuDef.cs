@@ -7,19 +7,57 @@ using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
+    /// <summary>
+    /// A Def that defines a settings menu
+    /// </summary>
     public class SettingsMenuDef : Def
     {
+        /// <summary>
+        /// Translation key for the label
+        /// </summary>
         public string tKey;
+
+        /// <summary>
+        /// The spacing between each setting, in pixels
+        /// </summary>
         public int defaultSpacing = 2;
+
+        /// <summary>
+        /// The list of settings to be displayed
+        /// </summary>
         public List<SettingContainer> settings;
+
+        /// <summary>
+        /// The list of KeyedActions to run
+        /// </summary>
         public List<KeyedAction> keyedActions;
+
+        /// <summary>
+        /// The list of ActionContainers that will be run when the menu is opened
+        /// </summary>
         public List<ActionContainer> preOpenActions;
+
+        /// <summary>
+        /// The list of ActionContainers that will be run every frame
+        /// </summary>
         public List<ActionContainer> onFrameActions;
+
+        /// <summary>
+        /// The list of ActionContainers that will be run when the menu is closed
+        /// </summary>
         public List<ActionContainer> postCloseActions;
+
+        /// <summary>
+        /// The modId of the that defined this menu
+        /// </summary>
         public string modId;
+
+        /// <summary>
+        /// Whether or not the menu is a submenu
+        /// </summary>
         public bool submenu = false;
 
-        public bool Init()
+        internal bool Init()
         {
             if (label == null)
             {
@@ -77,7 +115,7 @@ namespace XmlExtensions
             return true;
         }
 
-        public float CalculateHeight(float width, string selectedMod)
+        internal float CalculateHeight(float width, string selectedMod)
         {
             float h = 0;
             foreach (SettingContainer setting in settings)
@@ -87,7 +125,7 @@ namespace XmlExtensions
             return h;
         }
 
-        public void DrawSettings(Rect rect)
+        internal void DrawSettings(Rect rect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
@@ -100,7 +138,7 @@ namespace XmlExtensions
             listingStandard.End();
         }
 
-        public void RunPostCloseActions()
+        internal void RunPostCloseActions()
         {
             if (postCloseActions != null)
             {
@@ -115,7 +153,7 @@ namespace XmlExtensions
             }
         }
 
-        public void RunPreOpenActions()
+        internal void RunPreOpenActions()
         {
             if (preOpenActions != null)
             {

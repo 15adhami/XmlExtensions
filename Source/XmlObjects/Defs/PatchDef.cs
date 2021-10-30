@@ -5,13 +5,37 @@ using Verse;
 
 namespace XmlExtensions
 {
+    /// <summary>
+    /// A Def that contains a patch
+    /// </summary>
     public class PatchDef : Def
     {
+        /// <summary>
+        /// The list of parameters
+        /// </summary>
         public List<string> parameters;
+
+        /// <summary>
+        /// The patch operations to apply
+        /// </summary>
         public XmlContainer apply;
+
+        /// <summary>
+        /// Brackets used in variable substitution
+        /// </summary>
         public string brackets = "{}";
+
+        /// <summary>
+        /// Whether or not the PatchDef returns a value
+        /// </summary>
         protected bool valueOperation = false;
 
+        /// <summary>
+        /// Run the patches in the PatchDef. Error handling is done automatically
+        /// </summary>
+        /// <param name="arguments">The input arguments</param>
+        /// <param name="xml">The XML document to run the patches on. Set to null if applying in-game</param>
+        /// <returns>Reeturns false if there was an error, true otherwise</returns>
         public bool ApplyPatch(List<string> arguments, XmlDocument xml = null)
         {
             XmlContainer container = apply;

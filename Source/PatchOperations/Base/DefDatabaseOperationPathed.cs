@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public abstract class DefDatabaseOperationPathed : DefDatabaseOperation
+    internal abstract class DefDatabaseOperationPathed : DefDatabaseOperation
     {
         public string defType;
         public string defName;

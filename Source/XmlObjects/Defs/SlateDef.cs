@@ -2,6 +2,8 @@
 
 namespace XmlExtensions
 {
-    // Doesn't need anything, just needs to exist
+    /// <summary>
+    /// A Def that does not do anything, exists only as a way to store information
+    /// </summary>
     public class SlateDef : Def { }
 }

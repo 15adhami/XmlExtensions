@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
-    public abstract class BooleanBase : ErrorHandler
+    internal abstract class BooleanBase : ErrorHandler
     {
         public string xmlDoc;
 

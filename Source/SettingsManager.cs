@@ -110,13 +110,9 @@ namespace XmlExtensions
             }
         }
 
-        /// <summary>
-        /// Registers the key-value pair into XML Extensions settings database
-        /// </summary>
-        /// <param name="modId">The modId of the mod</param>
-        /// <param name="key">The key you want to delete</param>
-        /// <param name="value">The potential value to register</param>
-        public static void RegisterKey(string modId, string key, string value)
+        // Internal methods
+
+        internal static void RegisterKey(string modId, string key, string value)
         {
             if (!XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
             {
@@ -132,22 +128,13 @@ namespace XmlExtensions
             }
         }
 
-        /// <summary>
-        /// Register a new mod into XML Extensions, only use if you know what you are doing
-        /// </summary>
-        /// <param name="modId">The modId of the new mod</param>
-        /// <param name="label">The label of the new mod</param>
-        public static void AddMod(string modId, string label)
+        internal static void AddMod(string modId, string label)
         {
             AddMod(modId);
             XmlMod.settingsPerMod[modId].label = label;
         }
 
-        /// <summary>
-        /// Register a new mod into XML Extensions, only use if you know what you are doing
-        /// </summary>
-        /// <param name="modId">The modId of the new mod</param>
-        public static void AddMod(string modId)
+        internal static void AddMod(string modId)
         {
             if (XmlMod.loadedXmlMods == null)
             {

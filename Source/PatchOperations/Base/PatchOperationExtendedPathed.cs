@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public abstract class PatchOperationExtendedPathed : PatchOperationExtended
+    internal abstract class PatchOperationExtendedPathed : PatchOperationExtended
     {
         public string xpath;
         protected XmlNodeList nodes;

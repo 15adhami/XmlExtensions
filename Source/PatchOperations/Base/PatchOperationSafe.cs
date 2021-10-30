@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public abstract class PatchOperationSafe : PatchOperationExtendedPathed
+    internal abstract class PatchOperationSafe : PatchOperationExtendedPathed
     {
         public int safetyDepth = -1;
         public bool checkAttributes = false;

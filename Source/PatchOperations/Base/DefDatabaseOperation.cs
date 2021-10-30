@@ -8,7 +8,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public abstract class DefDatabaseOperation : PatchOperationValue
+    internal abstract class DefDatabaseOperation : PatchOperationValue
     {
         public object parentObj;
         protected int listIndex = -1;

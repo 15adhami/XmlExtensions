@@ -19,13 +19,10 @@
         /// The default value of the key
         /// </summary>
         public string defaultValue = null;
-
-        #pragma warning disable 1591
-        protected internal override void SetException()
+        private protected override void SetException()
         {
             CreateExceptions(key, "key", defaultValue, "defaultValue");
         }
-        #pragma warning restore 1591
 
         /// <summary>
         /// Automatically sets the default value of the key.

@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public abstract class PatchOperationExtendedAttribute : PatchOperationExtendedPathed
+    internal abstract class PatchOperationExtendedAttribute : PatchOperationExtendedPathed
     {
         public string attribute;
 

@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public abstract class PatchOperationValue : PatchOperationExtended
+    internal abstract class PatchOperationValue : PatchOperationExtended
     {
         public XmlContainer apply;
         public string storeIn;

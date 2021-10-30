@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions.Action
 {
-    public class ApplyOperations : ActionContainer
+    internal class ApplyOperations : ActionContainer
     {
         public XmlContainer apply;
 

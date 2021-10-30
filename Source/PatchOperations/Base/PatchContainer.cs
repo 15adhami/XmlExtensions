@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchContainer
+    internal class PatchContainer
     {
         public List<PatchOperation> patches = new List<PatchOperation>();
 
