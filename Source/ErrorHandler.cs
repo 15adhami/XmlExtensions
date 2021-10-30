@@ -7,28 +7,14 @@ namespace XmlExtensions
     /// </summary>
     public abstract class ErrorHandler
     {
-        /// <summary>
-        /// The list of values of the relevant fields
-        /// </summary>
-        protected List<string> exceptionVals;
+        private List<string> exceptionVals;
+        private List<string> exceptionFields;
 
-        /// <summary>
-        /// The names of the fields that should be displayed in parenthesis
-        /// </summary>
-        protected List<string> exceptionFields;
-
-        /// <summary>
-        /// Override this method to set the relevaant fields for error handling
-        /// </summary>
-        protected internal virtual void SetException()
+        private protected virtual void SetException()
         {
         }
 
-        /// <summary>
-        /// Helper method to set the exceptions
-        /// </summary>
-        /// <param name="values">Formatted as: fieldVal1, "fieldName1", ...</param>
-        protected internal void CreateExceptions(params string[] values)
+        private protected void CreateExceptions(params string[] values)
         {
             exceptionFields = new List<string>();
             exceptionVals = new List<string>();
@@ -65,13 +51,7 @@ namespace XmlExtensions
             ErrorManager.AddError(str + ": " + msg);
         }
 
-        /// <summary>
-        /// Throw an error message using the given fields
-        /// </summary>
-        /// <param name="vals">An array containing the values of the fields</param>
-        /// <param name="fields">An array containing the names of the fields</param>
-        /// <param name="msg">The error message</param>
-        protected internal void Error(string[] vals, string[] fields, string msg)
+        private protected void Error(string[] vals, string[] fields, string msg)
         {
             string str = GetType().ToString();
             if (vals != null)
@@ -86,20 +66,12 @@ namespace XmlExtensions
             ErrorManager.AddError(str + ": " + msg);
         }
 
-        /// <summary>
-        /// Throw this error if a tag is null
-        /// </summary>
-        /// <param name="node">The name of the node</param>
-        protected internal void NullError(string node)
+        private protected void NullError(string node)
         {
             Error("<" + node + "> is null");
         }
 
-        /// <summary>
-        /// Throw this error if the xpath failed to return a node
-        /// </summary>
-        /// <param name="node">The name of the node containing the xpath</param>
-        protected internal void XPathError(string node = "xpath")
+        private protected void XPathError(string node = "xpath")
         {
             Error("Failed to find a node referenced by <" + node + ">");
         }
