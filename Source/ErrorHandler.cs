@@ -3,7 +3,7 @@
 namespace XmlExtensions
 {
     /// <summary>
-    /// The base type to inherit from in order to access imoroved error handlingssS
+    /// The base type to inherit from in order to access improved error handling
     /// </summary>
     public abstract class ErrorHandler
     {

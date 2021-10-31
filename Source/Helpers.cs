@@ -9,7 +9,7 @@ namespace XmlExtensions
     internal static class Helpers
     {
         /// <summary>
-        /// Calculates the prefix the given length.
+        /// Calculates the prefix of the given length.
         /// </summary>
         /// <param name="path">The xpath you want to get the prefix of.</param>
         /// <param name="length">The number of nodes that appear in the xpath.</param>

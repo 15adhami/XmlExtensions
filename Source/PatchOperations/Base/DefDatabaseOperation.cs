@@ -137,7 +137,6 @@ namespace XmlExtensions
         }
 
         // TODO: Add SearchDict
-
         protected List<object> SearchList(object list, string component)
         {
             List<object> listObjects = new List<object>();
