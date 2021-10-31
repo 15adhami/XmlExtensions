@@ -5,8 +5,11 @@ using Verse;
 
 namespace XmlExtensions
 {
-    internal class DefDatabaseOperationAdd : DefDatabaseOperationPathed
+    internal class DefDatabaseOperationAdd : DefDatabaseOperation
     {
+        public string defType;
+        public string defName;
+        public string objPath;
         public XmlContainer value;
         private Order order = Order.Append;
 
@@ -18,34 +21,37 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            object obj = FindObject(def, objPath);
-            if (obj == null)
+            List<object> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
+            if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            if (obj.GetType().HasGenericDefinition(typeof(List<>)))
+            foreach (object obj in objects)
             {
-                XmlNodeList nodes = value.node.ChildNodes;
-                if (order == Order.Append)
+                if (obj.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    foreach (XmlNode node in nodes)
+                    XmlNodeList nodes = value.node.ChildNodes;
+                    if (order == Order.Append)
                     {
-                        AccessTools.Method(obj.GetType(), "Add").Invoke(obj, new object[] { NodeToObject(node, obj.GetType().GetGenericArguments()[0]) });
+                        foreach (XmlNode node in nodes)
+                        {
+                            AccessTools.Method(obj.GetType(), "Add").Invoke(obj, new object[] { NodeToObject(node, obj.GetType().GetGenericArguments()[0]) });
+                        }
+                    }
+                    else
+                    {
+                        for (int i = nodes.Count - 1; i >= 0; i--)
+                        {
+                            AccessTools.Method(obj.GetType(), "Insert").Invoke(obj, new object[] { 0, NodeToObject(nodes[i], obj.GetType().GetGenericArguments()[0]) });
+                        }
                     }
                 }
                 else
                 {
-                    for (int i = nodes.Count - 1; i >= 0; i--)
-                    {
-                        AccessTools.Method(obj.GetType(), "Insert").Invoke(obj, new object[] { 0, NodeToObject(nodes[i], obj.GetType().GetGenericArguments()[0]) });
-                    }
+                    Error("You can only Add to lists");
+                    return false;
                 }
-            }
-            else
-            {
-                Error("You can only Add to lists");
-                return false;
             }
             return true;
         }

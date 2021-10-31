@@ -10,10 +10,8 @@ namespace XmlExtensions
 {
     internal abstract class DefDatabaseOperation : PatchOperationValue
     {
-        public object parentObj;
-        protected int listIndex = -1;
-
         protected bool isValue = false;
+        protected Dictionary<object, object> parentObjDict = new Dictionary<object, object>();
 
         public DefDatabaseOperation()
         {
@@ -140,38 +138,50 @@ namespace XmlExtensions
 
         // TODO: Add SearchDict
 
-        protected object SearchList(object list, string component)
+        protected List<object> SearchList(object list, string component)
         {
+            List<object> listObjects = new List<object>();
             ICollection col = list as ICollection;
             int count = col.Count;
             string classTemp = StripQuotes(component);
             PropertyInfo indexer = AccessTools.Property(list.GetType(), "Item");
-            string noBrackets = RemoveBrackets(component);
             int index = 0;
+            if (component == "*")
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    object tempItem = indexer.GetValue(list, new object[] { i });
+
+                    listObjects.Add(tempItem);
+                }
+                return listObjects;
+            }
+            string noBrackets = RemoveBrackets(component);
             if (int.TryParse(noBrackets, out index))
             {
-                return indexer.GetValue(list, new object[] { index - 1 });
+                listObjects.Add(indexer.GetValue(list, new object[] { index - 1 }));
+                return listObjects;
             }
             if (indexer == null)
             {
-                return null;
+                return listObjects;
             }
             if (noBrackets.StartsWith("@Class"))
             {
                 Type classType = GenTypes.GetTypeInAnyAssembly(classTemp, "RimWorld");
                 if (classType == null)
                 {
-                    return null;
+                    return listObjects;
                 }
                 for (int i = 0; i < count; i++)
                 {
                     object tempItem = indexer.GetValue(list, new object[] { i });
                     if (tempItem.GetType() == classType)
                     {
-                        listIndex = i;
-                        return tempItem;
+                        listObjects.Add(tempItem);
                     }
                 }
+                return listObjects;
             }
             else
             {
@@ -188,7 +198,7 @@ namespace XmlExtensions
                             object right = AccessTools.Method(typeof(ParseHelper), "FromString", new Type[] { typeof(string) }).MakeGenericMethod(new Type[] { left.GetType() }).Invoke(null, new object[] { StripQuotes(pair[1]) });
                             if (left.Equals(right))
                             {
-                                return tempItem;
+                                listObjects.Add(tempItem);
                             }
                         }
                     }
@@ -197,12 +207,12 @@ namespace XmlExtensions
                         object obj = FindObject(tempItem, pair[0]);
                         if (obj != null)
                         {
-                            return tempItem;
+                            listObjects.Add(tempItem);
                         }
                     }
                 }
+                return listObjects;
             }
-            return null;
         }
 
         private List<string> SplitEquals(string str)
@@ -259,6 +269,99 @@ namespace XmlExtensions
             return str;
         }
 
+        protected List<object> SelectObjects(string objPath)
+        {
+            parentObjDict.Clear();
+            List<object> list = new List<object>();
+            try
+            {
+                if (objPath == null)
+                {
+                    return list;
+                }
+                List<string> components = CreateComponents(objPath);
+                Type genericType = null;
+                genericType = GetDefType(components[0]);
+                if (genericType == null)
+                {
+                    return list;
+                }
+                if (components.Count == 1)
+                {
+                    return list;
+                }
+                int startIndex = 1;
+                if (components[1].StartsWith("[defName="))
+                {
+                    startIndex = 2;
+                    list = new List<object>() { GetDef(components[0], StripQuotes(components[1])) };
+                }
+                else
+                {
+                    List<object> tempList = new List<object>();
+                    object listObj = genericType.GetProperty("AllDefsListForReading").GetValue(null);
+                    int listLength = (int)listObj.GetType().GetProperty("Count").GetValue(listObj);
+                    PropertyInfo indexer = AccessTools.Property(listObj.GetType(), "Item");
+                    for (int i = 0; i < listLength; i++)
+                    {
+                        tempList.Add(indexer.GetValue(listObj, new object[] { i }));
+                    }
+                    if (tempList.Count > 0)
+                    {
+                        list.Add(tempList);
+                    }
+                    else
+                    {
+                        return list;
+                    }
+                }
+                FieldInfo fieldInfo = null;
+                for (int i = startIndex; i < components.Count; i++)
+                {
+                    List<object> list2 = new List<object>();
+                    string component = components[i];
+                    foreach (object obj in list)
+                    {
+                        Type tempType = obj.GetType();
+                        List<object> objectsToAdd = new List<object>();
+                        if (tempType.HasGenericDefinition(typeof(List<>)))
+                        {
+                            List<object> objects = SearchList(obj, component);
+                            foreach (object tempObj in objects)
+                            {
+                                objectsToAdd.Add(tempObj);
+                            }
+                        }
+                        else
+                        {
+                            fieldInfo = AccessTools.Field(tempType, component);
+                            if (fieldInfo == null)
+                            {
+                                continue;
+                            }
+                            objectsToAdd.Add(fieldInfo.GetValue(obj));
+                        }
+                        foreach (object objToAdd in objectsToAdd)
+                        {
+                            if (i == components.Count - 1)
+                            {
+                                parentObjDict.Add(objToAdd, obj);
+                            }
+                            list2.Add(objToAdd);
+                        }
+                    }
+                    list = list2;
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                Error(e.Message);
+                return list;
+            }
+        }
+
+        [Obsolete]
         protected object FindObject(object parent, string path)
         {
             try
@@ -278,10 +381,6 @@ namespace XmlExtensions
                 int count = 0;
                 foreach (string component in components)
                 {
-                    if (count == components.Count - 1)
-                    {
-                        parentObj = obj;
-                    }
                     count++;
                     if (tempType.HasGenericDefinition(typeof(List<>)))
                     {

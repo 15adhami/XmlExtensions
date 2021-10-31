@@ -3,8 +3,10 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    internal class DefDatabaseCreateVariable : DefDatabaseOperationPathed
+    internal class DefDatabaseCreateVariable : DefDatabaseOperation
     {
+        public string objPath;
+
         public DefDatabaseCreateVariable()
         {
             isValue = true;
@@ -12,19 +14,13 @@ namespace XmlExtensions
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            object def = GetDef(defType, defName);
-            if (def == null)
-            {
-                Error("Failed to find the given Def");
-                return false;
-            }
-            object obj = FindObject(def, RemoveSpaces(objPath));
-            if (obj == null)
+            List<object> objects = SelectObjects(objPath);
+            if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            vals.Add(obj.ToString());
+            vals.Add(objects[0].ToString());
             return true;
         }
     }

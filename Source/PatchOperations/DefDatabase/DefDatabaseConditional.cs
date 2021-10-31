@@ -2,15 +2,21 @@
 
 namespace XmlExtensions
 {
-    internal class DefDatabaseConditional : DefDatabaseOperationPathed
+    internal class DefDatabaseConditional : DefDatabaseOperation
     {
+        public string defType;
+        public string defName;
+        public string objPath;
         XmlContainer caseFalse;
         XmlContainer caseTrue;
 
         protected override bool DoPatch()
         {
-            object obj = FindObject(def, objPath);
-            return RunPatchesConditional(obj != null, caseTrue, caseFalse, null);
+            if (defType != null)
+            {
+                return RunPatchesConditional(SelectObjects(defType + "/[defName=\"" + defName + "\"]/" + objPath).Count > 0, caseTrue, caseFalse, null);
+            }
+            return RunPatchesConditional(SelectObjects(objPath).Count > 0, caseTrue, caseFalse, null);
         }
     }
 }
