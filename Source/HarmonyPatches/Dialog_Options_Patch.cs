@@ -9,7 +9,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(Dialog_Options), "DoWindowContents")]
-    static class Dialog_Options_patch
+    internal static class Dialog_Options_patch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator gen)
         {

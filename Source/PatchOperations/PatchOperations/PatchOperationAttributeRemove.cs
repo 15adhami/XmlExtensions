@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class PatchOperationAttributeRemove : PatchOperationExtendedAttribute
+    internal class PatchOperationAttributeRemove : PatchOperationExtendedAttribute
     {
         protected override bool Patch(XmlDocument xml)
         {

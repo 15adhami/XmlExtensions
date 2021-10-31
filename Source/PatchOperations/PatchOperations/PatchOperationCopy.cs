@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class PatchOperationCopy : PatchOperationExtendedPathed
+    internal class PatchOperationCopy : PatchOperationExtendedPathed
     {
         public string paste;
 

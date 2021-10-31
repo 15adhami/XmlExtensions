@@ -4,13 +4,13 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class Case
+    internal class Case
     {
         public string value;
         public XmlContainer apply;
     }
 
-    public class PatchByCase : PatchOperationExtended
+    internal class PatchByCase : PatchOperationExtended
     {
         public string value;
         public List<Case> cases;

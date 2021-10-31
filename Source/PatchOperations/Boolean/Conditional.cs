@@ -2,11 +2,11 @@
 
 namespace XmlExtensions.Boolean
 {
-    public class Conditional : BooleanBase
+    internal class Conditional : BooleanBase
     {
         public string xpath;
 
-        protected override void SetException()
+        private protected override void SetException()
         {
             CreateExceptions(xpath, "xpath");
         }

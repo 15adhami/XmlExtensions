@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationReplace : DefDatabaseOperationPathed
+    internal class DefDatabaseOperationReplace : DefDatabaseOperationPathed
     {
         public XmlContainer value;
 

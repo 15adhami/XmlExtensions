@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ApplyInDocument : PatchOperation
+    internal class ApplyInDocument : PatchOperation
     {
         public string docName = "Defs";
         public PatchContainer apply;

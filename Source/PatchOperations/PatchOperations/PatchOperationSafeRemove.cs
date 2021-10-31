@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class PatchOperationSafeRemove : PatchOperationExtended
+    internal class PatchOperationSafeRemove : PatchOperationExtended
     {
         public string xpath;
 

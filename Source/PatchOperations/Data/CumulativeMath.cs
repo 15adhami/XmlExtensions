@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class CumulativeMath : PatchOperationValue
+    internal class CumulativeMath : PatchOperationValue
     {
         protected string operation;
         protected string xpath;

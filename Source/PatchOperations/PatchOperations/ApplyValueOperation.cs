@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions
 {
     // TODO: Complete return types
-    public class ApplyValueOperation : PatchOperationValue
+    internal class ApplyValueOperation : PatchOperationValue
     {
         public string patchName;
         public List<string> arguments;

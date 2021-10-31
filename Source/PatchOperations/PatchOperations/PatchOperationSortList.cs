@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationSortList : PatchOperationExtendedPathed
+    internal class PatchOperationSortList : PatchOperationExtendedPathed
     {
         public string xpathLocal = "li";
         public bool reverse = false;

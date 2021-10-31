@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ForLoop : PatchOperationExtended
+    internal class ForLoop : PatchOperationExtended
     {
         protected XmlContainer apply;
         protected string storeIn = "i";

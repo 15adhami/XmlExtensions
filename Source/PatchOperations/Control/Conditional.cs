@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class Conditional : PatchOperationExtended
+    internal class Conditional : PatchOperationExtended
     {
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;

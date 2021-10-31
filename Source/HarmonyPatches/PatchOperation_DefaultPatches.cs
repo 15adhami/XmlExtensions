@@ -8,7 +8,7 @@ using Verse;
 namespace XmlExtensions.Source.HarmonyPatches
 {
     [HarmonyPatch]
-    static class PatchOperation_DefaultPatches
+    internal static class PatchOperation_DefaultPatches
     {
         private static IEnumerable<MethodBase> TargetMethods()
         {

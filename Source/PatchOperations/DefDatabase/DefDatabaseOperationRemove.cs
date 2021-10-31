@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationRemove : DefDatabaseOperationPathed
+    internal class DefDatabaseOperationRemove : DefDatabaseOperationPathed
     {
         protected override bool DoPatch()
         {

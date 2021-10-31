@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class MergeDocument : PatchOperation
+    internal class MergeDocument : PatchOperation
     {
         public string docName;
 

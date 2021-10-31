@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ConditionalInherited : PatchOperationExtended
+    internal class ConditionalInherited : PatchOperationExtended
     {
         public string xpathDef;
         public string xpathLocal;

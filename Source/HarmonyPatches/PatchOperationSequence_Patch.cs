@@ -7,7 +7,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(PatchOperationSequence), "ApplyWorker")]
-    static class PatchOperationSequence_Patch
+    internal static class PatchOperationSequence_Patch
     {
         private static Exception Finalizer(Exception __exception, ref bool __result, XmlDocument xml)
         {

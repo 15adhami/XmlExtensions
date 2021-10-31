@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ForEach : PatchOperationExtendedPathed
+    internal class ForEach : PatchOperationExtendedPathed
     {
         protected XmlContainer apply;
         protected string storeIn = "DEF";

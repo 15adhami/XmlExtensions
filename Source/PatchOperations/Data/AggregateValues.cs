@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class AggregateValues : PatchOperationExtended
+    internal class AggregateValues : PatchOperationExtended
     {
         public XmlContainer valueOperations;
         public XmlContainer apply;

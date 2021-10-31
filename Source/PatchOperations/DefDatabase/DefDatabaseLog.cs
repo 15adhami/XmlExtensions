@@ -1,8 +1,6 @@
-﻿using HarmonyLib;
-
-namespace XmlExtensions
+﻿namespace XmlExtensions
 {
-    public class DefDatabaseLog : DefDatabaseOperationPathed
+    internal class DefDatabaseLog : DefDatabaseOperationPathed
     {
         protected override bool DoPatch()
         {

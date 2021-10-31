@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class StopwatchStop : PatchOperationExtended
+    internal class StopwatchStop : PatchOperationExtended
     {
         protected override bool Patch(XmlDocument xml)
         {

@@ -1,13 +1,10 @@
 ﻿using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml;
-using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationReplaceObject : DefDatabaseOperationPathed
+    internal class DefDatabaseOperationReplaceObject : DefDatabaseOperationPathed
     {
         public string defType2;
         public string defName2;

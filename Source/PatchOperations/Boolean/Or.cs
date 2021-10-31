@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions.Boolean
 {
-    public class Or : BooleanBase
+    internal class Or : BooleanBase
     {
         protected BooleanBase condition1 = null;
         protected BooleanBase condition2 = null;

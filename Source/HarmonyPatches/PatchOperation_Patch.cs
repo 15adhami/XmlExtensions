@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(PatchOperation), "Apply")]
-    static class PatchOperation_Patch
+    internal static class PatchOperation_Patch
     {
         private static void Prefix(ref XmlDocument xml)
         {

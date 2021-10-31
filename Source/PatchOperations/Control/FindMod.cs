@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class FindMod : PatchOperationExtended
+    internal class FindMod : PatchOperationExtended
     {
         public List<string> mods;
         public bool packageId = false;

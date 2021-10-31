@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class TryCatch : PatchOperationExtended
+    internal class TryCatch : PatchOperationExtended
     {
         public XmlContainer tryApply;
         public XmlContainer catchApply;

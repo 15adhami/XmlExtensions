@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationAdd : DefDatabaseOperationPathed
+    internal class DefDatabaseOperationAdd : DefDatabaseOperationPathed
     {
         public XmlContainer value;
         private Order order = Order.Append;

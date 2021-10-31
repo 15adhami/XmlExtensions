@@ -52,7 +52,7 @@ namespace XmlExtensions
                     {
                         patch = Helpers.GetPatchFromString(container.node.ChildNodes[j].OuterXml);
                     }
-                    catch (Exception e)
+                    catch
                     {
                         ErrorManager.AddError("PatchDef(defName=\"" + defName + "\"): Failed to create patch from XML for the operation at position=" + (j + 1).ToString());
                         ErrorManager.PrintErrors();
@@ -67,9 +67,9 @@ namespace XmlExtensions
                 }
                 return true;
             }
-            catch (Exception e)
+            catch
             {
-                ErrorManager.AddError("PatchDef(defName=\"" + defName + "\"): " + e.Message);
+                ErrorManager.AddError("PatchDef(defName=\"" + defName + "\"): Error");
                 ErrorManager.PrintErrors();
                 return false;
             }

@@ -16,6 +16,17 @@
             Prints the stack of errors, then clears them.
             </summary>
         </member>
+        <member name="T:XmlExtensions.ErrorHandler">
+            <summary>
+            The base type to inherit from in order to access imoroved error handlingssS
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.ErrorHandler.Error(System.String)">
+            <summary>
+            Throw an error message.
+            </summary>
+            <param name="msg">The message</param>
+        </member>
         <member name="M:XmlExtensions.PatchOperationSafe.ContainsNode(System.Xml.XmlNode,System.Xml.XmlNode)">
             <summary>
             Checks if a node somtains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
@@ -104,13 +115,150 @@
             </summary>
             <param name="msg">The message to be displayed</param>
         </member>
+        <member name="T:XmlExtensions.Action.ActionContainer">
+            <summary>
+            Inherit from this class in order to embed C# code into XML
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.ActionContainer.modId">
+            <summary>
+            If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.ActionContainer.output">
+            <summary>
+            If you want to return a value to be used by the XML, set this field to that value
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Action.ActionContainer.DoAction">
+            <summary>
+            Runs the ApplyAction() method of the ActionContainer
+            </summary>
+            <returns>true if it succeeded, false if there was an error</returns>
+        </member>
+        <member name="M:XmlExtensions.Action.ActionContainer.ApplyAction">
+            <summary>
+            The method you should implement
+            </summary>
+            <returns>Return false if there was an error, true otherwise</returns>
+        </member>
+        <member name="T:XmlExtensions.Action.KeyedAction">
+            <summary>
+            Inherit from this class to embed C# code that gets called everytime a specified key is changed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.KeyedAction.key">
+            <summary>
+            The key that is tied to this KeyedAction
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.DoKeyedAction(System.String,System.String)">
+            <summary>
+            Applies the keyed action
+            </summary>
+            <param name="oldValue">The previous value of the key</param>
+            <param name="newValue">The new value of the key</param>
+            <returns>false if there was an error, true otherwise</returns>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.ApplyAction">
+            <summary>
+            This method should not be called
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.ApplyKeyedAction(System.String,System.String)">
+            <summary>
+            Implement a method that will be called when the associated key is changed
+            </summary>
+            <param name="oldValue">The previous value of the key</param>
+            <param name="newValue">The current value of the key</param>
+            <returns>Return true if successful, false is there was an error</returns>
+        </member>
+        <member name="T:XmlExtensions.PatchDef">
+            <summary>
+            A Def that contains a patch
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.parameters">
+            <summary>
+            The list of parameters
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.apply">
+            <summary>
+            The patch operations to apply
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.brackets">
+            <summary>
+            Brackets used in variable substitution
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.valueOperation">
+            <summary>
+            Whether or not the PatchDef returns a value
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.PatchDef.ApplyPatch(System.Collections.Generic.List{System.String},System.Xml.XmlDocument)">
+            <summary>
+            Run the patches in the PatchDef. Error handling is done automatically
+            </summary>
+            <param name="arguments">The input arguments</param>
+            <param name="xml">The XML document to run the patches on. Set to null if applying in-game</param>
+            <returns>Reeturns false if there was an error, true otherwise</returns>
+        </member>
+        <member name="T:XmlExtensions.Setting.KeyedSettingContainer">
+            <summary>
+            Inherit from this class in order to create a new setting that manages a key.
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.key">
+            <summary>
+            They key that this setting manages
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.label">
+            <summary>
+            The label to print (optional)
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.defaultValue">
+            <summary>
+            The default value of the key
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Setting.KeyedSettingContainer.SetDefaultValue(System.String)">
+            <summary>
+            Automatically sets the default value of the key.
+            </summary>
+            <param name="selectedMod">The modId</param>
+            <returns></returns>
+        </member>
+        <member name="T:XmlExtensions.Setting.SettingContainer">
+            <summary>
+            Inherit from this class in order to create a new setting.
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.ParentContainer">
+            <summary>
+            The SettingContainer that this SettingContainer is contained in.<br/>
+            If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
             </summary>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single,System.String)" -->
+        <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single,System.String)">
+            <summary>
+            Returns the height of the setting for the current frame
+            </summary>
+            <param name="width">The width of the column the setting is contaiend in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <returns>The height of the setting, in pixels</returns>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect,System.String)">
             <summary>
             Draw the setting in the given <c>Rect</c>
@@ -133,7 +281,14 @@
             </summary>
             <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:XmlExtensions.Setting.SettingContainer.CalculateHeight(System.Single,System.String)" -->
+        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeight(System.Single,System.String)">
+            <summary>
+            Returns the height of the setting for the current frame
+            </summary>
+            <param name="width">The width of the column the setting is contaiend in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <returns>The height of the setting, in pixels</returns>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingContents(UnityEngine.Rect,System.String)">
             <summary>
             Draw the setting in the given <c>Rect</c>
@@ -247,26 +402,60 @@
             <param name="modId">The modId of the mod</param>
             <param name="key">The key you want to delete</param>
         </member>
-        <member name="M:XmlExtensions.SettingsManager.RegisterKey(System.String,System.String,System.String)">
+        <member name="T:XmlExtensions.SettingsMenuDef">
             <summary>
-            Registers the key-value pair into XML Extensions settings database
+            A Def that defines a settings menu
             </summary>
-            <param name="modId">The modId of the mod</param>
-            <param name="key">The key you want to delete</param>
-            <param name="value">The potential value to register</param>
         </member>
-        <member name="M:XmlExtensions.SettingsManager.AddMod(System.String,System.String)">
+        <member name="F:XmlExtensions.SettingsMenuDef.tKey">
             <summary>
-            Register a new mod into XML Extensions, only use if you know what you are doing
+            Translation key for the label
             </summary>
-            <param name="modId">The modId of the new mod</param>
-            <param name="label">The label of the new mod</param>
         </member>
-        <member name="M:XmlExtensions.SettingsManager.AddMod(System.String)">
+        <member name="F:XmlExtensions.SettingsMenuDef.defaultSpacing">
             <summary>
-            Register a new mod into XML Extensions, only use if you know what you are doing
+            The spacing between each setting, in pixels
             </summary>
-            <param name="modId">The modId of the new mod</param>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.settings">
+            <summary>
+            The list of settings to be displayed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.keyedActions">
+            <summary>
+            The list of KeyedActions to run
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.preOpenActions">
+            <summary>
+            The list of ActionContainers that will be run when the menu is opened
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.onFrameActions">
+            <summary>
+            The list of ActionContainers that will be run every frame
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.postCloseActions">
+            <summary>
+            The list of ActionContainers that will be run when the menu is closed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.modId">
+            <summary>
+            The modId of the that defined this menu
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.submenu">
+            <summary>
+            Whether or not the menu is a submenu
+            </summary>
+        </member>
+        <member name="T:XmlExtensions.SlateDef">
+            <summary>
+            A Def that does not do anything, exists only as a way to store information
+            </summary>
         </member>
     </members>
 </doc>

@@ -1,13 +1,12 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-    public class UseSettingsExternal : PatchOperationValue
+    internal class UseSettingsExternal : PatchOperationValue
     {
         public string ModClass;
         public List<string> fields;

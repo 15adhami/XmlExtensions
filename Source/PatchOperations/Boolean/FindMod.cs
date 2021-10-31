@@ -5,7 +5,7 @@ using Verse;
 
 namespace XmlExtensions.Boolean
 {
-    public class FindMod : BooleanBase
+    internal class FindMod : BooleanBase
     {
         public List<string> mods;
         public bool packageId = false;

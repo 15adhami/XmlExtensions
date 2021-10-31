@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class FindNodeInherited : PatchOperationValue
+    internal class FindNodeInherited : PatchOperationValue
     {
         public string defaultValue;
         public string xpathDef;

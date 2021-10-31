@@ -5,7 +5,7 @@ using System.Xml;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(Verse.PatchOperationAttributeSet), "ApplyWorker")]
-    static class PatchOperationAttributeSet_Patch
+    internal static class PatchOperationAttributeSet_Patch
     {
         private static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, ref string ___value, ref string ___attribute, XmlDocument xml)
         {

@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class GetAttribute : PatchOperationValuePathed
+    internal class GetAttribute : PatchOperationValuePathed
     {
         public string attribute;
 

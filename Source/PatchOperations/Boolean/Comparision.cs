@@ -4,7 +4,7 @@ using System.Xml;
 namespace XmlExtensions.Boolean
 {
     [Obsolete]
-    public class Comparision : BooleanBase
+    internal class Comparision : BooleanBase
     {
         // I can't spell lol
         protected string value1;
@@ -16,7 +16,7 @@ namespace XmlExtensions.Boolean
         protected bool fromXml2 = false;
         protected bool nonNumeric = false;
 
-        protected override void SetException()
+        private protected override void SetException()
         {
             CreateExceptions(value1, "value1", value2, "value2", relation, "relation");
         }

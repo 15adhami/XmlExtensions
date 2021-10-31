@@ -1,12 +1,11 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseOperationAddDef : DefDatabaseOperation
+    internal class DefDatabaseOperationAddDef : DefDatabaseOperation
     {
         public XmlContainer value;
 

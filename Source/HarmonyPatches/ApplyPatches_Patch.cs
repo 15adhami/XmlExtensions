@@ -6,7 +6,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(LoadedModManager), "ApplyPatches")]
-    static class ApplyPatches_Patch
+    internal static class ApplyPatches_Patch
     {
         private static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
         {

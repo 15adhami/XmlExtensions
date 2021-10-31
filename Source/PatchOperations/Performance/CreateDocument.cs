@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class CreateDocument : PatchOperationExtendedPathed
+    internal class CreateDocument : PatchOperationExtendedPathed
     {
         public string docName;
 

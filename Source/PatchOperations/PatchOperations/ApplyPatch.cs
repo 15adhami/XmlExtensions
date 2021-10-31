@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ApplyPatch : PatchOperationExtended
+    internal class ApplyPatch : PatchOperationExtended
     {
         public string patchName;
         public string defName;

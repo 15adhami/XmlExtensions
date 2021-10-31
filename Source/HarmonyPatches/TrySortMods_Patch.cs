@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(ModsConfig), "TrySortMods")]
-    static class TrySortMods_Patch
+    internal static class TrySortMods_Patch
     {
         static Exception Finalizer(Exception __exception)
         {

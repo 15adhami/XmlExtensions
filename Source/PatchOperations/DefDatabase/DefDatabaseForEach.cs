@@ -1,12 +1,11 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseForEach : DefDatabaseOperation
+    internal class DefDatabaseForEach : DefDatabaseOperation
     {
         public string defType;
 

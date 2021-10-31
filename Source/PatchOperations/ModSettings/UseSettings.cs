@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class UseSettings : PatchOperationValue
+    internal class UseSettings : PatchOperationValue
     {
         public string modId;
         public List<string> keys;

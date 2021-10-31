@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class PatchOperationSetName : PatchOperationExtendedPathed
+    internal class PatchOperationSetName : PatchOperationExtendedPathed
     {
         protected string name;
 

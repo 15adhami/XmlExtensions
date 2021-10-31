@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class Log : PatchOperationExtended
+    internal class Log : PatchOperationExtended
     {
         protected string text;
         protected string warning;

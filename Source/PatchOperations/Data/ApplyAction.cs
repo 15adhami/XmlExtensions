@@ -4,7 +4,7 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions
 {
-    public class ApplyAction : PatchOperationValue
+    internal class ApplyAction : PatchOperationValue
     {
         public ActionContainer action;
 

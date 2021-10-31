@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class OptionalPatch : PatchOperationExtended
+    internal class OptionalPatch : PatchOperationExtended
     {
         public string key;
         public string modId;

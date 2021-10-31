@@ -4,7 +4,7 @@ using XmlExtensions.Boolean;
 
 namespace XmlExtensions
 {
-    public class WhileLoop : PatchOperationExtended
+    internal class WhileLoop : PatchOperationExtended
     {
         public BooleanBase condition;
         public XmlContainer apply;

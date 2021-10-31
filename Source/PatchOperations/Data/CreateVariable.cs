@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class CreateVariable : PatchOperationValue
+    internal class CreateVariable : PatchOperationValue
     {
         public string value = "";
         public string value2 = "";

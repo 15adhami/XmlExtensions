@@ -4,7 +4,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class ForEachDescendant : PatchOperationExtended
+    internal class ForEachDescendant : PatchOperationExtended
     {
         public bool concreteOnly = false;
         public string xpathParent;

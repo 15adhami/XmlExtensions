@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class PatchOperationMath : PatchOperationExtendedPathed
+    internal class PatchOperationMath : PatchOperationExtendedPathed
     {
         protected string value;
         protected bool fromXml = false;

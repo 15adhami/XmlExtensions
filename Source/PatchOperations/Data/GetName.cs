@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace XmlExtensions
 {
-    public class GetName : PatchOperationValuePathed
+    internal class GetName : PatchOperationValuePathed
     {
         protected override void SetException()
         {

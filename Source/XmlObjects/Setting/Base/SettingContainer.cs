@@ -57,7 +57,7 @@ namespace XmlExtensions.Setting
 
         /// <summary>
         /// Returns the height of the setting for the current frame
-        /// </sumary>
+        /// </summary>
         /// <param name="width">The width of the column the setting is contaiend in</param>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <returns>The height of the setting, in pixels</returns>
@@ -112,7 +112,7 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
                 GUI.color = Color.red;
                 Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
@@ -147,7 +147,7 @@ namespace XmlExtensions.Setting
 
         /// <summary>
         /// Returns the height of the setting for the current frame
-        /// </sumary>
+        /// </summary>
         /// <param name="width">The width of the column the setting is contaiend in</param>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <returns>The height of the setting, in pixels</returns>

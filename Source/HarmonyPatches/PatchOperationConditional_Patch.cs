@@ -6,7 +6,7 @@ using Verse;
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(PatchOperationConditional), "ApplyWorker")]
-    static class PatchOperationConditional_Patch
+    internal static class PatchOperationConditional_Patch
     {
         static Exception Finalizer(Exception __exception, ref bool __result, ref string ___xpath, XmlDocument xml)
         {

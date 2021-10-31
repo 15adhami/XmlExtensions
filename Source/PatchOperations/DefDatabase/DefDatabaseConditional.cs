@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class DefDatabaseConditional : DefDatabaseOperationPathed
+    internal class DefDatabaseConditional : DefDatabaseOperationPathed
     {
         XmlContainer caseFalse;
         XmlContainer caseTrue;

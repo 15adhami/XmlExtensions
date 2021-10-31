@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Boolean
 {
-    public class Not : BooleanBase
+    internal class Not : BooleanBase
     {
         protected BooleanBase condition = null;
 

@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationInsert : PatchOperationExtendedPathed
+    internal class PatchOperationInsert : PatchOperationExtendedPathed
     {
         private enum Order
         {

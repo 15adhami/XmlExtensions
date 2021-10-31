@@ -2,12 +2,12 @@
 
 namespace XmlExtensions.Boolean
 {
-    public class ConditionalInherited : BooleanBase
+    internal class ConditionalInherited : BooleanBase
     {
         public string xpathDef;
         public string xpathLocal;
 
-        protected override void SetException()
+        private protected override void SetException()
         {
             CreateExceptions(xpathDef, "xpathDef", xpathLocal, "xpathLocal");
         }

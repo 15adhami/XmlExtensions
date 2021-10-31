@@ -1,14 +1,9 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Xml;
-using Verse;
 
 namespace XmlExtensions
 {
-    public class DefDatabaseCreateVariable : DefDatabaseOperationPathed
+    internal class DefDatabaseCreateVariable : DefDatabaseOperationPathed
     {
         public DefDatabaseCreateVariable()
         {

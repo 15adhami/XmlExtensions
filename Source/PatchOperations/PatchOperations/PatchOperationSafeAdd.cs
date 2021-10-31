@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class PatchOperationSafeAdd : PatchOperationSafe
+    internal class PatchOperationSafeAdd : PatchOperationSafe
     {
         public XmlContainer value;
 

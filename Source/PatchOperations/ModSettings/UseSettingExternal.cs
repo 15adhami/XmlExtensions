@@ -6,7 +6,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    public class UseSettingExternal : PatchOperationValue
+    internal class UseSettingExternal : PatchOperationValue
     {
         public string ModClass;
         public string field;

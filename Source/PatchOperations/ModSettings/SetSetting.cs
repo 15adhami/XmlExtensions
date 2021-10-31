@@ -2,7 +2,7 @@
 
 namespace XmlExtensions
 {
-    public class SetSetting : PatchOperationExtended
+    internal class SetSetting : PatchOperationExtended
     {
         public string modId;
         public string key;
