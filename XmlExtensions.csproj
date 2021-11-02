@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Source\ErrorManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\ObjectFromXml_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeSet_Patch.cs" />
