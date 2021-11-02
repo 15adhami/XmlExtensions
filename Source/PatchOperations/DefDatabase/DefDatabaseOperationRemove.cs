@@ -12,17 +12,17 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<object> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
+            List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            foreach (object obj in objects)
+            foreach (ObjectContainer obj in objects)
             {
-                if (parentObjDict[obj].GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.parent.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    AccessTools.Method(parentObjDict[obj].GetType(), "Remove").Invoke(parentObjDict[obj], new object[] { obj });
+                    AccessTools.Method(obj.parent.GetType(), "Remove").Invoke(obj.parent, new object[] { obj.child });
                 }
                 else
                 {

@@ -14,24 +14,24 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<object> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
+            List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            foreach (object obj in objects)
+            foreach (ObjectContainer obj in objects)
             {
-                if (parentObjDict[obj].GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.parent.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    int index = (int)AccessTools.Method(parentObjDict[obj].GetType(), "IndexOf").Invoke(parentObjDict[obj], new object[] { obj });
-                    PropertyInfo indexer = AccessTools.Property(parentObjDict[obj].GetType(), "Item");
-                    indexer.SetValue(parentObjDict[obj], NodeToObject(value.node.FirstChild, obj.GetType()), new object[] { index });
+                    int index = (int)AccessTools.Method(obj.parent.GetType(), "IndexOf").Invoke(obj.parent, new object[] { obj.child });
+                    PropertyInfo indexer = AccessTools.Property(obj.parent.GetType(), "Item");
+                    indexer.SetValue(obj.parent, NodeToObject(value.node.FirstChild, obj.child.GetType()), new object[] { index });
                 }
                 else
                 {
                     List<string> list = CreateComponents(objPath);
-                    AccessTools.Field(parentObjDict[obj].GetType(), list[list.Count - 1]).SetValue(parentObjDict[obj], NodeToObject(value.node.FirstChild, obj.GetType()));
+                    AccessTools.Field(obj.parent.GetType(), list[list.Count - 1]).SetValue(obj.parent, NodeToObject(value.node.FirstChild, obj.child.GetType()));
                 }
             }
             return true;

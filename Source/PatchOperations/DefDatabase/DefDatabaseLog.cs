@@ -8,15 +8,15 @@ namespace XmlExtensions
         string objPath;
         protected override bool DoPatch()
         {
-            List<object> list = SelectObjects(objPath);
+            List<ObjectContainer> list = SelectObjects(objPath);
             if (list.Count == 0)
             {
                 Error("Failed to find an object with the given objPath2");
                 return false;
             }
-            foreach (object obj in list)
+            foreach (ObjectContainer obj in list)
             {
-                Verse.Log.Message(obj.ToString());
+                Verse.Log.Message(obj.child.ToString());
             }
             return true;
         }

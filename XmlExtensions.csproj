@@ -84,6 +84,7 @@
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\ModContainer.cs" />
+    <Compile Include="Source\ObjectContainer.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />

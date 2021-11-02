@@ -19,15 +19,15 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<object> objects = SelectObjects(objPath);
+            List<ObjectContainer> objects = SelectObjects(objPath);
             if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            foreach (object obj in objects)
+            foreach (ObjectContainer obj in objects)
             {
-                object parentObj = parentObjDict[obj];
+                object parentObj = obj.parent;
                 if (parentObj.GetType().HasGenericDefinition(typeof(List<>)))
                 {
                     XmlNodeList nodes = value.node.ChildNodes;
@@ -35,7 +35,7 @@ namespace XmlExtensions
                     {
                         for (int i = 0; i < nodes.Count; i++)
                         {
-                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj });
+                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.child });
                             AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index + 1, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
                         }
                     }
@@ -43,7 +43,7 @@ namespace XmlExtensions
                     {
                         for (int i = nodes.Count - 1; i >= 0; i--)
                         {
-                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj });
+                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.child });
                             AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
                         }
                     }

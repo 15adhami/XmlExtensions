@@ -14,13 +14,13 @@ namespace XmlExtensions
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            List<object> objects = SelectObjects(objPath);
+            List<ObjectContainer> objects = SelectObjects(objPath);
             if (objects.Count == 0)
             {
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            vals.Add(objects[0].ToString());
+            vals.Add(objects[0].child.ToString());
             return true;
         }
     }

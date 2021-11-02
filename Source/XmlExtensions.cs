@@ -17,6 +17,7 @@ namespace XmlExtensions
             {
                 op.Apply(null);
             }
+            PatchManager.delayedPatches.Clear();
 
             // Initializing mod settings menus
             int i = 0;

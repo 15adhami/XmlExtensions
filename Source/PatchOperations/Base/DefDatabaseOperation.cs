@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -268,10 +269,10 @@ namespace XmlExtensions
             return str;
         }
 
-        protected List<object> SelectObjects(string objPath)
+        protected List<ObjectContainer> SelectObjects(string objPath)
         {
             parentObjDict.Clear();
-            List<object> list = new List<object>();
+            List<ObjectContainer> list = new List<ObjectContainer>();
             try
             {
                 if (objPath == null)
@@ -293,7 +294,7 @@ namespace XmlExtensions
                 if (components[1].StartsWith("[defName="))
                 {
                     startIndex = 2;
-                    list = new List<object>() { GetDef(components[0], StripQuotes(components[1])) };
+                    list = new List<ObjectContainer>() { new ObjectContainer(GetDef(components[0], StripQuotes(components[1]))) };
                 }
                 else
                 {
@@ -307,7 +308,7 @@ namespace XmlExtensions
                     }
                     if (tempList.Count > 0)
                     {
-                        list.Add(tempList);
+                        list.Add(new ObjectContainer(tempList));
                     }
                     else
                     {
@@ -317,18 +318,19 @@ namespace XmlExtensions
                 FieldInfo fieldInfo = null;
                 for (int i = startIndex; i < components.Count; i++)
                 {
-                    List<object> list2 = new List<object>();
+                    List<ObjectContainer> list2 = new List<ObjectContainer>();
                     string component = components[i];
-                    foreach (object obj in list)
+                    foreach (ObjectContainer objC in list)
                     {
+                        object obj = objC.child;
                         Type tempType = obj.GetType();
-                        List<object> objectsToAdd = new List<object>();
+                        List<ObjectContainer> objectsToAdd = new List<ObjectContainer>();
                         if (tempType.HasGenericDefinition(typeof(List<>)))
                         {
                             List<object> objects = SearchList(obj, component);
                             foreach (object tempObj in objects)
                             {
-                                objectsToAdd.Add(tempObj);
+                                objectsToAdd.Add(new ObjectContainer(tempObj, obj));
                             }
                         }
                         else
@@ -338,14 +340,10 @@ namespace XmlExtensions
                             {
                                 continue;
                             }
-                            objectsToAdd.Add(fieldInfo.GetValue(obj));
+                            objectsToAdd.Add(new ObjectContainer(fieldInfo.GetValue(obj), obj));
                         }
-                        foreach (object objToAdd in objectsToAdd)
+                        foreach (ObjectContainer objToAdd in objectsToAdd)
                         {
-                            if (i == components.Count - 1)
-                            {
-                                parentObjDict.Add(objToAdd, obj);
-                            }
                             list2.Add(objToAdd);
                         }
                     }
@@ -356,7 +354,7 @@ namespace XmlExtensions
             catch (Exception e)
             {
                 Error(e.Message);
-                return list;
+                return new List<ObjectContainer>();
             }
         }
 
