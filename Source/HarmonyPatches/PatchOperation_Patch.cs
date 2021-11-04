@@ -10,6 +10,7 @@ namespace XmlExtensions
         private static void Prefix(ref XmlDocument xml)
         {
             ErrorManager.depth += 1;
+            PatchManager.PatchCount++;
         }
 
         private static void Postfix(PatchOperation __instance, ref bool __result, XmlDocument xml)

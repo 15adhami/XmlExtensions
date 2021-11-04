@@ -71,9 +71,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\CustomXmlLoader.cs" />
     <Compile Include="Source\ErrorManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\ObjectFromXml_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\LoadPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeSet_Patch.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationReplace.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationSetReference.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\ApplyValueOperation.cs" />
+    <Compile Include="Source\PatchOperations\PatchOperations\Nop.cs" />
     <Compile Include="Source\PatchOperations\Performance\Test.cs" />
     <Compile Include="Source\HarmonyPatches\Dialog_Options_Patch.cs" />
     <Compile Include="Source\Helpers.cs" />

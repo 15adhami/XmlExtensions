@@ -108,7 +108,7 @@ namespace XmlExtensions
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(OuterXml);
             XmlNode newNode = doc.DocumentElement;
-            return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
+            return CustomXmlLoader.ObjectFromXml<PatchOperation>(newNode, false);
         }
 
         public static XmlNode GetNodeFromString(string str)

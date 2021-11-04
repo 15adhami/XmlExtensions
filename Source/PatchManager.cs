@@ -13,6 +13,7 @@ namespace XmlExtensions
         public static XmlDocument defaultDoc;
         public static Stopwatch watch;
         public static Stopwatch watch2;
+        public static int PatchCount = 0;
 
         public static bool applyingPatches = false;
         public static bool loadingPatches = false;
