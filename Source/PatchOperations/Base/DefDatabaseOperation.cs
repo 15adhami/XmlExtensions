@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,11 +11,10 @@ namespace XmlExtensions
     internal abstract class DefDatabaseOperation : PatchOperationValue
     {
         protected bool isValue = false;
-        protected Dictionary<object, object> parentObjDict = new Dictionary<object, object>();
 
-        public DefDatabaseOperation()
+        protected override void Initialize()
         {
-            isDefDatabaseOperation = true;
+            requiresDelay = true;
         }
 
         protected override bool PreCheck(XmlDocument xml)
@@ -31,33 +29,25 @@ namespace XmlExtensions
 
         protected sealed override bool Patch(XmlDocument xml)
         {
-            if (PatchManager.applyingPatches)
+            if (!isValue)
             {
-                PatchManager.delayedPatches.Add(this);
-                return true;
+                try
+                {
+                    if (!PreCheck(xml))
+                    {
+                        return false;
+                    }
+                    return DoPatch();
+                }
+                catch (Exception e)
+                {
+                    Error(e.Message);
+                    return false;
+                }
             }
             else
             {
-                if (!isValue)
-                {
-                    try
-                    {
-                        if (!PreCheck(xml))
-                        {
-                            return false;
-                        }
-                        return DoPatch();
-                    }
-                    catch (Exception e)
-                    {
-                        Error(e.Message);
-                        return false;
-                    }
-                }
-                else
-                {
-                    return base.Patch(xml);
-                }
+                return base.Patch(xml);
             }
         }
 
@@ -138,47 +128,80 @@ namespace XmlExtensions
         }
 
         // TODO: Add SearchDict
-        protected List<object> SearchList(object list, string component)
+        protected List<ObjectContainer> SearchList(ObjectContainer list, string component)
         {
-            List<object> listObjects = new List<object>();
-            ICollection col = list as ICollection;
+            List<ObjectContainer> listObjects = new();
+            ICollection col = list.value as ICollection;
             int count = col.Count;
             string classTemp = StripQuotes(component);
-            PropertyInfo indexer = AccessTools.Property(list.GetType(), "Item");
+            PropertyInfo indexer = AccessTools.Property(list.value.GetType(), "Item");
             int index = 0;
             if (component == "*")
             {
                 for (int i = 0; i < count; i++)
                 {
-                    object tempItem = indexer.GetValue(list, new object[] { i });
-
-                    listObjects.Add(tempItem);
+                    object tempItem = indexer.GetValue(list.value, new object[] { i });
+                    ObjectContainer tempContainer = new(tempItem, list);
+                    tempContainer.objPath = tempContainer.parent.objPath + "/[" + (i + 1).ToString() + "]";
+                    listObjects.Add(tempContainer);
                 }
                 return listObjects;
             }
             string noBrackets = RemoveBrackets(component);
             if (int.TryParse(noBrackets, out index))
             {
-                listObjects.Add(indexer.GetValue(list, new object[] { index - 1 }));
+                object tempItem = indexer.GetValue(list.value, new object[] { index - 1 });
+                ObjectContainer tempContainer = new(tempItem, list);
+                tempContainer.objPath = tempContainer.parent.objPath + "/[" + index.ToString() + "]";
+                listObjects.Add(tempContainer);
                 return listObjects;
             }
-            if (indexer == null)
+            else if (indexer == null)
             {
                 return listObjects;
             }
-            if (noBrackets.StartsWith("@Class"))
+            else if (noBrackets.StartsWith("@Class"))
             {
                 Type classType = GenTypes.GetTypeInAnyAssembly(classTemp, "RimWorld");
                 if (classType == null)
                 {
-                    return listObjects;
+                    classType = GenTypes.GetTypeInAnyAssembly(classTemp, "Verse");
+                    if (classType == null)
+                    {
+                        return listObjects;
+                    }
                 }
                 for (int i = 0; i < count; i++)
                 {
-                    object tempItem = indexer.GetValue(list, new object[] { i });
+                    object tempItem = indexer.GetValue(list.value, new object[] { i });
                     if (tempItem.GetType() == classType)
                     {
-                        listObjects.Add(tempItem);
+                        ObjectContainer tempContainer = new(tempItem, list);
+                        tempContainer.objPath = tempContainer.parent.objPath + "/[" + (i + 1).ToString() + "]";
+                        listObjects.Add(tempContainer);
+                    }
+                }
+                return listObjects;
+            }
+            else if (noBrackets.StartsWith("@InheritsFrom"))
+            {
+                Type classType = GenTypes.GetTypeInAnyAssembly(classTemp, "RimWorld");
+                if (classType == null)
+                {
+                    classType = GenTypes.GetTypeInAnyAssembly(classTemp, "Verse");
+                    if (classType == null)
+                    {
+                        return listObjects;
+                    }
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    object tempItem = indexer.GetValue(list.value, new object[] { i });
+                    if (classType.IsAssignableFrom(tempItem.GetType()))
+                    {
+                        ObjectContainer tempContainer = new(tempItem, list);
+                        tempContainer.objPath = tempContainer.parent.objPath + "/[" + (i + 1).ToString() + "]";
+                        listObjects.Add(tempContainer);
                     }
                 }
                 return listObjects;
@@ -189,25 +212,27 @@ namespace XmlExtensions
 
                 for (int i = 0; i < count; i++)
                 {
-                    object tempItem = indexer.GetValue(list, new object[] { i });
+                    object tempItem = indexer.GetValue(list.value, new object[] { i });
+                    ObjectContainer tempContainer = new(tempItem, list);
+                    tempContainer.objPath = tempContainer.parent.objPath + "/[" + (i + 1).ToString() + "]";
                     if (pair.Count > 1)
                     {
-                        object left = FindObject(tempItem, pair[0]);
-                        if (left != null)
+                        List<ObjectContainer> left = SelectObjects(tempContainer, pair[0]);
+                        if (left.Count > 0)
                         {
-                            object right = AccessTools.Method(typeof(ParseHelper), "FromString", new Type[] { typeof(string) }).MakeGenericMethod(new Type[] { left.GetType() }).Invoke(null, new object[] { StripQuotes(pair[1]) });
-                            if (left.Equals(right))
+                            object right = AccessTools.Method(typeof(ParseHelper), "FromString", new Type[] { typeof(string) }).MakeGenericMethod(new Type[] { left[0].value.GetType() }).Invoke(null, new object[] { StripQuotes(pair[1]) });
+                            if (left[0].value.Equals(right))
                             {
-                                listObjects.Add(tempItem);
+                                listObjects.Add(tempContainer);
                             }
                         }
                     }
                     else
                     {
-                        object obj = FindObject(tempItem, pair[0]);
-                        if (obj != null)
+                        List<ObjectContainer> left = SelectObjects(tempContainer, pair[0]);
+                        if (left.Count > 0)
                         {
-                            listObjects.Add(tempItem);
+                            listObjects.Add(tempContainer);
                         }
                     }
                 }
@@ -271,7 +296,6 @@ namespace XmlExtensions
 
         protected List<ObjectContainer> SelectObjects(string objPath)
         {
-            parentObjDict.Clear();
             List<ObjectContainer> list = new List<ObjectContainer>();
             try
             {
@@ -294,11 +318,13 @@ namespace XmlExtensions
                 if (components[1].StartsWith("[defName="))
                 {
                     startIndex = 2;
-                    list = new List<ObjectContainer>() { new ObjectContainer(GetDef(components[0], StripQuotes(components[1]))) };
+                    ObjectContainer tempContainer = new ObjectContainer(GetDef(components[0], StripQuotes(components[1])));
+                    tempContainer.objPath = components[0] + "/" + components[1];
+                    list.Add(tempContainer);
                 }
                 else
                 {
-                    List<object> tempList = new List<object>();
+                    List<object> tempList = new();
                     object listObj = genericType.GetProperty("AllDefsListForReading").GetValue(null);
                     int listLength = (int)listObj.GetType().GetProperty("Count").GetValue(listObj);
                     PropertyInfo indexer = AccessTools.Property(listObj.GetType(), "Item");
@@ -308,7 +334,9 @@ namespace XmlExtensions
                     }
                     if (tempList.Count > 0)
                     {
-                        list.Add(new ObjectContainer(tempList));
+                        ObjectContainer tempContainer = new ObjectContainer(tempList);
+                        tempContainer.objPath = components[0];
+                        list.Add(tempContainer);
                     }
                     else
                     {
@@ -318,19 +346,19 @@ namespace XmlExtensions
                 FieldInfo fieldInfo = null;
                 for (int i = startIndex; i < components.Count; i++)
                 {
-                    List<ObjectContainer> list2 = new List<ObjectContainer>();
+                    List<ObjectContainer> list2 = new();
                     string component = components[i];
                     foreach (ObjectContainer objC in list)
                     {
-                        object obj = objC.child;
+                        object obj = objC.value;
                         Type tempType = obj.GetType();
-                        List<ObjectContainer> objectsToAdd = new List<ObjectContainer>();
+                        List<ObjectContainer> objectsToAdd = new();
                         if (tempType.HasGenericDefinition(typeof(List<>)))
                         {
-                            List<object> objects = SearchList(obj, component);
-                            foreach (object tempObj in objects)
+                            List<ObjectContainer> objects = SearchList(objC, component);
+                            foreach (ObjectContainer tempObj in objects)
                             {
-                                objectsToAdd.Add(new ObjectContainer(tempObj, obj));
+                                objectsToAdd.Add(tempObj);
                             }
                         }
                         else
@@ -340,7 +368,9 @@ namespace XmlExtensions
                             {
                                 continue;
                             }
-                            objectsToAdd.Add(new ObjectContainer(fieldInfo.GetValue(obj), obj));
+                            ObjectContainer tempContainer = new ObjectContainer(fieldInfo.GetValue(obj), objC);
+                            tempContainer.objPath = tempContainer.parent.objPath + "/" + fieldInfo.Name;
+                            objectsToAdd.Add(tempContainer);
                         }
                         foreach (ObjectContainer objToAdd in objectsToAdd)
                         {
@@ -353,65 +383,69 @@ namespace XmlExtensions
             }
             catch (Exception e)
             {
-                Error(e.Message);
+                Verse.Log.Error(e.Message);
                 return new List<ObjectContainer>();
             }
         }
 
-        [Obsolete]
-        protected object FindObject(object parent, string path)
+        protected List<ObjectContainer> SelectObjects(ObjectContainer objContainer, string objPath)
         {
+            List<ObjectContainer> list = new();
             try
             {
-                if (path == null)
+                // Verse.Log.Message("t1");
+                if (objPath == null)
                 {
-                    return parent;
+                    return list;
                 }
-                if (parent == null)
-                {
-                    return null;
-                }
-                List<string> components = CreateComponents(path);
+                List<string> components = CreateComponents(objPath);
+                list.Add(objContainer);
                 FieldInfo fieldInfo = null;
-                object obj = parent;
-                Type tempType = obj.GetType();
-                int count = 0;
-                foreach (string component in components)
+                for (int i = 0; i < components.Count; i++)
                 {
-                    count++;
-                    if (tempType.HasGenericDefinition(typeof(List<>)))
+                    List<ObjectContainer> list2 = new();
+                    string component = components[i];
+                    foreach (ObjectContainer objC in list)
                     {
-                        obj = SearchList(obj, component);
-                        if (obj == null)
+                        object obj = objC.value;
+                        Type tempType = obj.GetType();
+                        List<ObjectContainer> objectsToAdd = new();
+                        if (tempType.HasGenericDefinition(typeof(List<>)))
                         {
-                            return null;
+                            List<ObjectContainer> objects = SearchList(objC, component);
+                            foreach (ObjectContainer tempObj in objects)
+                            {
+                                objectsToAdd.Add(tempObj);
+                            }
                         }
-                        tempType = obj.GetType();
+                        else
+                        {
+                            fieldInfo = AccessTools.Field(tempType, component);
+                            if (fieldInfo == null)
+                            {
+                                continue;
+                            }
+                            if (fieldInfo.GetValue(obj) == null && i + 1 < components.Count)
+                            {
+                                continue;
+                            }
+                            ObjectContainer tempContainer = new(fieldInfo.GetValue(obj), objC);
+                            tempContainer.objPath = tempContainer.parent.objPath + "/" + fieldInfo.Name;
+                            objectsToAdd.Add(tempContainer);
+                        }
+                        foreach (ObjectContainer objToAdd in objectsToAdd)
+                        {
+                            list2.Add(objToAdd);
+                        }
                     }
-                    else
-                    {
-                        fieldInfo = AccessTools.Field(tempType, component);
-                        if (fieldInfo == null)
-                        {
-                            return null;
-                        }
-                        obj = fieldInfo.GetValue(obj);
-                        if (obj == null)
-                        {
-                            return null;
-                        }
-                        tempType = obj.GetType();
-                        if (tempType == null)
-                        {
-                            return null;
-                        }
-                    }
+                    list = list2;
                 }
-                return obj;
+                return list;
             }
             catch
             {
-                return null;
+                Verse.Log.Error("exc2");
+                return new List<ObjectContainer>();
             }
         }
 

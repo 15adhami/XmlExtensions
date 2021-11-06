@@ -35,7 +35,7 @@ namespace XmlExtensions
                     {
                         for (int i = 0; i < nodes.Count; i++)
                         {
-                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.child });
+                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.value });
                             AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index + 1, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
                         }
                     }
@@ -43,7 +43,7 @@ namespace XmlExtensions
                     {
                         for (int i = nodes.Count - 1; i >= 0; i--)
                         {
-                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.child });
+                            int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.value });
                             AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
                         }
                     }

@@ -20,9 +20,9 @@ namespace XmlExtensions
             }
             foreach (ObjectContainer obj in objects)
             {
-                if (obj.parent.GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.parent.value.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    AccessTools.Method(obj.parent.GetType(), "Remove").Invoke(obj.parent, new object[] { obj.child });
+                    AccessTools.Method(obj.parent.value.GetType(), "Remove").Invoke(obj.parent.value, new object[] { obj.value });
                 }
                 else
                 {

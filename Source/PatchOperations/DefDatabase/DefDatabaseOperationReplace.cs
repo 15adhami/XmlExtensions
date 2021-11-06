@@ -17,21 +17,21 @@ namespace XmlExtensions
             List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
-                Error("Failed to find an object with the given path");
+                XPathError("objPath");
                 return false;
             }
             foreach (ObjectContainer obj in objects)
             {
-                if (obj.parent.GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.parent.value.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    int index = (int)AccessTools.Method(obj.parent.GetType(), "IndexOf").Invoke(obj.parent, new object[] { obj.child });
-                    PropertyInfo indexer = AccessTools.Property(obj.parent.GetType(), "Item");
-                    indexer.SetValue(obj.parent, NodeToObject(value.node.FirstChild, obj.child.GetType()), new object[] { index });
+                    int index = (int)AccessTools.Method(obj.parent.value.GetType(), "IndexOf").Invoke(obj.parent.value, new object[] { obj.value });
+                    PropertyInfo indexer = AccessTools.Property(obj.parent.value.GetType(), "Item");
+                    indexer.SetValue(obj.parent.value, NodeToObject(value.node.FirstChild, obj.value.GetType()), new object[] { index });
                 }
                 else
                 {
                     List<string> list = CreateComponents(objPath);
-                    AccessTools.Field(obj.parent.GetType(), list[list.Count - 1]).SetValue(obj.parent, NodeToObject(value.node.FirstChild, obj.child.GetType()));
+                    AccessTools.Field(obj.parent.value.GetType(), list[list.Count - 1]).SetValue(obj.parent.value, NodeToObject(value.node.FirstChild, obj.value.GetType()));
                 }
             }
             return true;

@@ -8,17 +8,18 @@ namespace XmlExtensions
 {
     internal class ObjectContainer
     {
-        public object child;
-        public object parent;
+        public object value;
+        public ObjectContainer parent;
+        public string objPath = "";
 
-        public ObjectContainer(object child)
+        public ObjectContainer(object value)
         {
-            this.child = child;
+            this.value = value;
         }
 
-        public ObjectContainer(object child, object parent)
+        public ObjectContainer(object value, ObjectContainer parent)
         {
-            this.child = child;
+            this.value = value;
             this.parent = parent;
         }
     }

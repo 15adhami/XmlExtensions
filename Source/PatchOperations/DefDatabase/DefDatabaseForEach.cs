@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 
@@ -7,24 +8,19 @@ namespace XmlExtensions
 {
     internal class DefDatabaseForEach : DefDatabaseOperation
     {
-        public string defType;
+        public string objPath;
 
         protected override bool DoPatch()
         {
-            Type t = GetDefType(defType);
-            if (t == null)
+            List<ObjectContainer> list = SelectObjects(objPath);
+            if (list.Count == 0)
             {
-                Error("Failed to find the given defType");
+                Error("Failed to find an object with the given objPath");
                 return false;
             }
-            object list = t.GetProperty("AllDefsListForReading").GetValue(null);
-            PropertyInfo indexer = AccessTools.Property(list.GetType(), "Item");
-            int count = (int)list.GetType().GetProperty("Count").GetValue(list);
-            for (int i = 0; i < count; i++)
+            foreach (ObjectContainer objContainer in list)
             {
-                object def = indexer.GetValue(list, new object[] { i });
-                string defName = (string)Traverse.Create(def).Field("defName").GetValue();
-                XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, defName, brackets);
+                XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, objContainer.objPath, brackets);
                 if (!RunPatches(newContainer, null))
                 {
                     return false;

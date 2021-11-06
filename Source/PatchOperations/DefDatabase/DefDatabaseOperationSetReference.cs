@@ -28,7 +28,7 @@ namespace XmlExtensions
                 object parentObj = obj.parent;
                 List<string> list = CreateComponents(objPath1);
                 FieldInfo field = AccessTools.Field(parentObj.GetType(), list[list.Count - 1]);
-                field.SetValue(parentObj, objects2[0].child);
+                field.SetValue(parentObj, objects2[0].value);
             }
             return true;
         }

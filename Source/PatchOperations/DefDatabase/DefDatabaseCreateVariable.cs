@@ -20,7 +20,7 @@ namespace XmlExtensions
                 Error("Failed to find an object with the given path");
                 return false;
             }
-            vals.Add(objects[0].child.ToString());
+            vals.Add(objects[0].value.ToString());
             return true;
         }
     }

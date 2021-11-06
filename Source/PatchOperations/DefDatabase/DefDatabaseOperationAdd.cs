@@ -5,11 +5,13 @@ using Verse;
 
 namespace XmlExtensions
 {
+    // TODO: Eventually get rid of the extra tags
     internal class DefDatabaseOperationAdd : DefDatabaseOperation
     {
         public string defType;
         public string defName;
         public string objPath;
+        public string objPath2;
         public XmlContainer value;
         private Order order = Order.Append;
 
@@ -24,32 +26,51 @@ namespace XmlExtensions
             List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
-                Error("Failed to find an object with the given path");
+                XPathError("objPath");
                 return false;
             }
             foreach (ObjectContainer obj in objects)
             {
-                if (obj.child.GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.value.GetType().HasGenericDefinition(typeof(List<>)) || obj.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
                 {
-                    XmlNodeList nodes = value.node.ChildNodes;
-                    if (order == Order.Append)
+                    List<object> objectsToAdd = new();
+                    if (value != null)
                     {
+                        XmlNodeList nodes = value.node.ChildNodes;
                         foreach (XmlNode node in nodes)
                         {
-                            AccessTools.Method(obj.child.GetType(), "Add").Invoke(obj.child, new object[] { NodeToObject(node, obj.child.GetType().GetGenericArguments()[0]) });
+                            objectsToAdd.Add(NodeToObject(node, obj.value.GetType().GetGenericArguments()[0]));
+                        }
+                    }
+                    else if (objPath2 != null)
+                    {
+                        // TODO: cache
+                        List<ObjectContainer> objs = SelectObjects(objPath2);
+                        if (objs.Count == 0)
+                        {
+                            XPathError("objPath2");
+                            return false;
+                        }
+                        objectsToAdd.Add(objs[0].value);
+                    }
+                    if (order == Order.Append || obj.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
+                    {
+                        foreach (object objToAdd in objectsToAdd)
+                        {
+                            AccessTools.Method(obj.value.GetType(), "Add").Invoke(obj.value, new object[] { objToAdd });
                         }
                     }
                     else
                     {
-                        for (int i = nodes.Count - 1; i >= 0; i--)
+                        for (int i = objectsToAdd.Count - 1; i >= 0; i--)
                         {
-                            AccessTools.Method(obj.child.GetType(), "Insert").Invoke(obj.child, new object[] { 0, NodeToObject(nodes[i], obj.child.GetType().GetGenericArguments()[0]) });
+                            AccessTools.Method(obj.value.GetType(), "Insert").Invoke(obj.value, new object[] { 0, objectsToAdd[i] });
                         }
                     }
                 }
                 else
                 {
-                    Error("You can only Add to lists");
+                    Error("You can only Add to Lists or HashSets");
                     return false;
                 }
             }

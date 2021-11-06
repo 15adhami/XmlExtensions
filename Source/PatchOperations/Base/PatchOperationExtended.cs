@@ -11,26 +11,32 @@ namespace XmlExtensions
 
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
-        protected bool isDefDatabaseOperation = false;
+        protected bool requiresDelay = false;
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {
-            XmlDocument doc = xml;
-            if (xmlDoc != null)
-            {
-                if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
-                {
-                    Error("No XML document exists with docName=\"" + xmlDoc + "\"");
-                    return false;
-                }
-                else
-                {
-                    doc = PatchManager.XmlDocs[xmlDoc];
-                }
-            }
             try
             {
-                if (!isDefDatabaseOperation && !PreCheck(doc))
+                Initialize();
+                if (PatchManager.applyingPatches && requiresDelay)
+                {
+                    PatchManager.delayedPatches.Add(this);
+                    return true;
+                }
+                XmlDocument doc = xml;
+                if (xmlDoc != null)
+                {
+                    if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
+                    {
+                        Error("No XML document exists with docName=\"" + xmlDoc + "\"");
+                        return false;
+                    }
+                    else
+                    {
+                        doc = PatchManager.XmlDocs[xmlDoc];
+                    }
+                }
+                if (!PreCheck(doc))
                 {
                     return false;
                 }
@@ -41,6 +47,11 @@ namespace XmlExtensions
                 Error(e.Message);
                 return false;
             }
+        }
+
+        protected virtual void Initialize()
+        {
+
         }
 
         protected virtual bool PreCheck(XmlDocument xml)

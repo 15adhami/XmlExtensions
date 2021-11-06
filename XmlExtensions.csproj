@@ -127,6 +127,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationReplace.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationSetReference.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\ApplyValueOperation.cs" />
+    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationSortList.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\Nop.cs" />
     <Compile Include="Source\PatchOperations\Performance\Test.cs" />
     <Compile Include="Source\HarmonyPatches\Dialog_Options_Patch.cs" />
