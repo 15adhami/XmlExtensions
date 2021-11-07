@@ -74,7 +74,7 @@ namespace XmlExtensions
             }
             loadedMods.Sort();
             FilterMods();
-            if (prevMod != null && prevMod.ToString() != "CharacterEditor")
+            if (prevMod != null && prevMod.ToString() != "CharacterEditor") // For compatibility
             {
                 foreach (ModContainer mod in loadedMods)
                 {

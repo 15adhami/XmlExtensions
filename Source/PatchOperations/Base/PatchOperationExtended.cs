@@ -8,10 +8,10 @@ namespace XmlExtensions
     internal abstract class PatchOperationExtended : PatchOperation
     {
         public string xmlDoc;
+        public bool requiresDelay = false;
 
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
-        protected bool requiresDelay = false;
 
         protected sealed override bool ApplyWorker(XmlDocument xml)
         {

@@ -10,6 +10,7 @@ namespace XmlExtensions
 {
     internal static class CustomXmlLoader
     {
+        public static List<string> defaultNamespaces = new();
         private struct FieldAliasCache : IEquatable<FieldAliasCache>
         {
             public Type type;
@@ -90,7 +91,7 @@ namespace XmlExtensions
             XmlAttribute xmlAttribute = xmlRoot.Attributes["IsNull"];
             if (xmlAttribute != null && xmlAttribute.Value.ToUpperInvariant() == "TRUE")
             {
-                return default(T);
+                return default;
             }
             MethodInfo methodInfo = CustomDataLoadMethodOf(typeof(T));
             if (methodInfo != null)
@@ -373,8 +374,20 @@ namespace XmlExtensions
                 Type typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(xmlAttribute.Value, typeof(T).Namespace);
                 if (typeInAnyAssembly == null)
                 {
-                    Verse.Log.Error("Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
-                    return typeof(T);
+                    foreach (string t in defaultNamespaces)
+                    {
+                        
+                        typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(t + "." + xmlAttribute.Value, t);
+                        if (typeInAnyAssembly != null)
+                        {
+                            break;
+                        }
+                    }
+                    if (typeInAnyAssembly == null)
+                    {
+                        Verse.Log.Error(defaultNamespaces.Count.ToString() + "Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
+                        return typeof(T);
+                    } 
                 }
                 return typeInAnyAssembly;
             }
