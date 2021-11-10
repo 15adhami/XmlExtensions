@@ -28,7 +28,7 @@ namespace XmlExtensions
                 XmlNodeList nodes = value.node.ChildNodes;
                 foreach (XmlNode node in nodes)
                 {
-                    objectsToAdd.Add(DefDatabaseSearcher.NodeToObject(node, objects[0].value.GetType().GetGenericArguments()[0]));
+                    objectsToAdd.Add(DefDatabaseSearcher.NodeToObject(node, objects[0].value.GetType()));
                 }
             }
             else if (objPath2 != null)
