@@ -41,10 +41,10 @@ namespace XmlExtensions
             string str = GetType().ToString();
             if (exceptionVals != null)
             {
-                str += "(" + exceptionFields[0] + "=" + exceptionVals[0];
+                str += "(" + exceptionFields[0] + "='" + exceptionVals[0] + "'";
                 for (int i = 1; i < exceptionVals.Count; i++)
                 {
-                    str += ", " + exceptionFields[i] + "=" + exceptionVals[i];
+                    str += ", " + exceptionFields[i] + "='" + exceptionVals[i] + "'";
                 }
                 str += ")";
             }
@@ -56,10 +56,10 @@ namespace XmlExtensions
             string str = GetType().ToString();
             if (vals != null)
             {
-                str += "(" + fields[0] + "=" + vals[0];
+                str += "(" + fields[0] + "='" + vals[0] + "'";
                 for (int i = 1; i < vals.Length; i++)
                 {
-                    str += ", " + fields[i] + "=" + vals[i];
+                    str += ", " + fields[i] + "='" + vals[i] + "'";
                 }
                 str += ")";
             }

@@ -18,7 +18,7 @@ namespace XmlExtensions
                 op.Apply(null);
             }
             PatchManager.delayedPatches.Clear();
-
+            PatchManager.ModPatchDict.Clear();
             // Initializing mod settings menus
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
