@@ -14,7 +14,7 @@ namespace XmlExtensions
 
         public override bool getValues(List<string> vals, XmlDocument xml)
         {
-            List<ObjectContainer> objects = SelectObjects(objPath);
+            List<ObjectContainer> objects = DefDatabaseSearcher.SelectObjects(objPath);
             if (objects.Count == 0)
             {
                 XPathError("objPath");

@@ -16,7 +16,7 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
+            List<ObjectContainer> objects = DefDatabaseSearcher.SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
                 XPathError("objPath");
@@ -28,12 +28,12 @@ namespace XmlExtensions
                 XmlNodeList nodes = value.node.ChildNodes;
                 foreach (XmlNode node in nodes)
                 {
-                    objectsToAdd.Add(NodeToObject(node, objects[0].value.GetType().GetGenericArguments()[0]));
+                    objectsToAdd.Add(DefDatabaseSearcher.NodeToObject(node, objects[0].value.GetType().GetGenericArguments()[0]));
                 }
             }
             else if (objPath2 != null)
             {
-                List<ObjectContainer> objs = SelectObjects(objPath2);
+                List<ObjectContainer> objs = DefDatabaseSearcher.SelectObjects(objPath2);
                 if (objs.Count == 0)
                 {
                     XPathError("objPath2");
@@ -65,7 +65,7 @@ namespace XmlExtensions
                 }
                 else
                 {
-                    List<string> list = CreateComponents(objPath);
+                    List<string> list = DefDatabaseSearcher.CreateComponents(objPath);
                     AccessTools.Field(obj.parent.value.GetType(), list[list.Count - 1]).SetValue(obj.parent.value, objectsToAdd[0]);
                 }
             }

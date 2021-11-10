@@ -12,7 +12,7 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<ObjectContainer> list = SelectObjects(objPath);
+            List<ObjectContainer> list = DefDatabaseSearcher.SelectObjects(objPath);
             if (list.Count == 0)
             {
                 XPathError("objPath");

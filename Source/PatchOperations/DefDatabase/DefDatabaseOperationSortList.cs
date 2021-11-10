@@ -17,7 +17,7 @@ namespace XmlExtensions
 
         protected override bool DoPatch()
         {
-            List<ObjectContainer> lists = SelectObjects(objPath);
+            List<ObjectContainer> lists = DefDatabaseSearcher.SelectObjects(objPath);
             if (lists.Count == 0)
             {
                 XPathError("objPath");
@@ -26,19 +26,19 @@ namespace XmlExtensions
             for (int i = 0; i < lists.Count; i++)
             {
                 ObjectContainer list = lists[i];
-                List<ObjectContainer> objList = SelectObjects(list, "*");
+                List<ObjectContainer> objList = DefDatabaseSearcher.SelectObjects(list, "*");
                 objList.Sort(delegate (ObjectContainer obj1, ObjectContainer obj2)
                 {
                     if (nonNumeric)
                     {
-                        object tempObj1 = SelectObjects(obj1, objPathLocal)[0].value;
-                        object tempObj2 = SelectObjects(obj2, objPathLocal)[0].value;
+                        object tempObj1 = DefDatabaseSearcher.SelectObjects(obj1, objPathLocal)[0].value;
+                        object tempObj2 = DefDatabaseSearcher.SelectObjects(obj2, objPathLocal)[0].value;
                         return tempObj1.ToString().CompareTo(tempObj2.ToString());
                     }
                     else
                     {
-                        float tempObj1 = float.Parse(SelectObjects(obj1, objPathLocal)[0].value.ToString());
-                        float tempObj2 = float.Parse(SelectObjects(obj2, objPathLocal)[0].value.ToString());
+                        float tempObj1 = float.Parse(DefDatabaseSearcher.SelectObjects(obj1, objPathLocal)[0].value.ToString());
+                        float tempObj2 = float.Parse(DefDatabaseSearcher.SelectObjects(obj2, objPathLocal)[0].value.ToString());
                         if (tempObj1 < tempObj2)
                         {
                             return -1;
@@ -63,7 +63,7 @@ namespace XmlExtensions
                 {
                     AccessTools.Method(newList.GetType(), "Add").Invoke(newList, new object[] { temp.value });
                 }
-                List<string> components = CreateComponents(list.objPath);
+                List<string> components = DefDatabaseSearcher.CreateComponents(list.objPath);
                 FieldInfo fieldInfo = AccessTools.Field(list.parent.value.GetType(), components[components.Count - 1]);
                 fieldInfo.SetValue(list.parent.value, newList);
             }

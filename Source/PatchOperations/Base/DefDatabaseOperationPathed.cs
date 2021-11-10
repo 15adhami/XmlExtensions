@@ -2,7 +2,7 @@
 using System.Xml;
 
 namespace XmlExtensions
-{
+{/*
     internal abstract class DefDatabaseOperationPathed : DefDatabaseOperation
     {
         public string defType;
@@ -32,5 +32,5 @@ namespace XmlExtensions
             }
             return true;
         }
-    }
+    }*/
 }

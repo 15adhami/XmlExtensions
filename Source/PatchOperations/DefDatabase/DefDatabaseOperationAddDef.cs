@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             foreach (XmlNode node in value.node.ChildNodes)
             {
-                Type type = GetDefType(node.Name);
+                Type type = DefDatabaseSearcher.GetDefType(node.Name);
                 Type tempType = GenTypes.GetTypeInAnyAssembly(node.Name, "Verse");
                 if (tempType == null)
                 {

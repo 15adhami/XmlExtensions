@@ -14,9 +14,9 @@ namespace XmlExtensions
         {
             if (defType != null)
             {
-                return RunPatchesConditional(SelectObjects(defType + "/[defName=\"" + defName + "\"]/" + objPath).Count > 0, caseTrue, caseFalse, null);
+                return RunPatchesConditional(DefDatabaseSearcher.SelectObjects(defType + "/[defName=\"" + defName + "\"]/" + objPath).Count > 0, caseTrue, caseFalse, null);
             }
-            return RunPatchesConditional(SelectObjects(objPath).Count > 0, caseTrue, caseFalse, null);
+            return RunPatchesConditional(DefDatabaseSearcher.SelectObjects(objPath).Count > 0, caseTrue, caseFalse, null);
         }
     }
 }

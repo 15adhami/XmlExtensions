@@ -22,7 +22,7 @@ namespace XmlExtensions
                 Verse.Log.Warning(warning);
             if (error != null)
                 Verse.Log.Error(error);
-            List<ObjectContainer> list = SelectObjects(objPath);
+            List<ObjectContainer> list = DefDatabaseSearcher.SelectObjects(objPath);
             if (list.Count == 0)
             {
                 XPathError("objPath");
