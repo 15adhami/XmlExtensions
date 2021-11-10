@@ -7,17 +7,26 @@ namespace XmlExtensions
     internal class UsingNamespace : PatchOperationExtended
     {
         public XmlContainer apply;
-        public string namespaces;
+        public List<string> namespaces;
 
         protected override bool Patch(XmlDocument xml)
         {
-            CustomXmlLoader.defaultNamespaces.Add(namespaces);
+            foreach (string name in namespaces)
+            {
+                CustomXmlLoader.defaultNamespaces.Add(name);
+            }
             if (!RunPatches(apply, xml))
             {
-                CustomXmlLoader.defaultNamespaces.Remove(namespaces);
+                foreach (string name in namespaces)
+                {
+                    CustomXmlLoader.defaultNamespaces.Remove(name);
+                }
                 return false;
             }
-            CustomXmlLoader.defaultNamespaces.Remove(namespaces);
+            foreach (string name in namespaces)
+            {
+                CustomXmlLoader.defaultNamespaces.Remove(name);
+            }
             return true;
         }
     }

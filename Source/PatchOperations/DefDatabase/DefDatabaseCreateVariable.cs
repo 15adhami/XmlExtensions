@@ -17,7 +17,7 @@ namespace XmlExtensions
             List<ObjectContainer> objects = SelectObjects(objPath);
             if (objects.Count == 0)
             {
-                Error("Failed to find an object with the given path");
+                XPathError("objPath");
                 return false;
             }
             vals.Add(objects[0].value.ToString());

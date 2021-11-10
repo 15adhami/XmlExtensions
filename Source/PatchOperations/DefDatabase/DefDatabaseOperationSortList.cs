@@ -18,15 +18,40 @@ namespace XmlExtensions
         protected override bool DoPatch()
         {
             List<ObjectContainer> lists = SelectObjects(objPath);
+            if (lists.Count == 0)
+            {
+                XPathError("objPath");
+                return false;
+            }
             for (int i = 0; i < lists.Count; i++)
             {
                 ObjectContainer list = lists[i];
                 List<ObjectContainer> objList = SelectObjects(list, "*");
                 objList.Sort(delegate (ObjectContainer obj1, ObjectContainer obj2)
                 {
-                    object tempObj1 = SelectObjects(obj1, objPathLocal)[0].value;
-                    object tempObj2 = SelectObjects(obj2, objPathLocal)[0].value;
-                    return tempObj1.ToString().CompareTo(tempObj2.ToString());
+                    if (nonNumeric)
+                    {
+                        object tempObj1 = SelectObjects(obj1, objPathLocal)[0].value;
+                        object tempObj2 = SelectObjects(obj2, objPathLocal)[0].value;
+                        return tempObj1.ToString().CompareTo(tempObj2.ToString());
+                    }
+                    else
+                    {
+                        float tempObj1 = float.Parse(SelectObjects(obj1, objPathLocal)[0].value.ToString());
+                        float tempObj2 = float.Parse(SelectObjects(obj2, objPathLocal)[0].value.ToString());
+                        if (tempObj1 < tempObj2)
+                        {
+                            return -1;
+                        }
+                        else if (float.Parse(tempObj1.ToString()) == float.Parse(tempObj2.ToString()))
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
                 }
                 );
                 if (reverse)

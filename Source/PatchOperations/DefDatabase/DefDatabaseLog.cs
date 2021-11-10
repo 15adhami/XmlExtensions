@@ -25,7 +25,7 @@ namespace XmlExtensions
             List<ObjectContainer> list = SelectObjects(objPath);
             if (list.Count == 0)
             {
-                Error("Failed to find an object with the given objPath");
+                XPathError("objPath");
                 return false;
             }
             foreach (ObjectContainer obj in list)

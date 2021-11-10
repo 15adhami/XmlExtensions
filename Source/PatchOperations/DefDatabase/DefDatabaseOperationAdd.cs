@@ -29,30 +29,33 @@ namespace XmlExtensions
                 XPathError("objPath");
                 return false;
             }
+            List<object> objectsToAdd = new();
+            if (value != null)
+            {
+                XmlNodeList nodes = value.node.ChildNodes;
+                foreach (XmlNode node in nodes)
+                {
+                    objectsToAdd.Add(NodeToObject(node, objects[0].value.GetType().GetGenericArguments()[0]));
+                }
+            }
+            else if (objPath2 != null)
+            {
+                List<ObjectContainer> objs = SelectObjects(objPath2);
+                if (objs.Count == 0)
+                {
+                    XPathError("objPath2");
+                    return false;
+                }
+                foreach (ObjectContainer obj in objs)
+                {
+                    objectsToAdd.Add(obj.value);
+                }
+            }
             foreach (ObjectContainer obj in objects)
             {
                 if (obj.value.GetType().HasGenericDefinition(typeof(List<>)) || obj.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
                 {
-                    List<object> objectsToAdd = new();
-                    if (value != null)
-                    {
-                        XmlNodeList nodes = value.node.ChildNodes;
-                        foreach (XmlNode node in nodes)
-                        {
-                            objectsToAdd.Add(NodeToObject(node, obj.value.GetType().GetGenericArguments()[0]));
-                        }
-                    }
-                    else if (objPath2 != null)
-                    {
-                        // TODO: cache
-                        List<ObjectContainer> objs = SelectObjects(objPath2);
-                        if (objs.Count == 0)
-                        {
-                            XPathError("objPath2");
-                            return false;
-                        }
-                        objectsToAdd.Add(objs[0].value);
-                    }
+                    
                     if (order == Order.Append || obj.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
                     {
                         foreach (object objToAdd in objectsToAdd)

@@ -8,6 +8,7 @@ namespace XmlExtensions
     internal class DefDatabaseOperationInsert : DefDatabaseOperation
     {
         public string objPath;
+        public string objPath2;
         public XmlContainer value;
         private Order order = Order.Prepend;
 
@@ -22,30 +23,58 @@ namespace XmlExtensions
             List<ObjectContainer> objects = SelectObjects(objPath);
             if (objects.Count == 0)
             {
-                Error("Failed to find an object with the given path");
+                XPathError("objPath");
                 return false;
+            }
+            List<object> objectsToAdd = new();
+            if (value != null)
+            {
+                XmlNodeList nodes = value.node.ChildNodes;
+                foreach (XmlNode node in nodes)
+                {
+                    objectsToAdd.Add(NodeToObject(node, objects[0].value.GetType().GetGenericArguments()[0]));
+                }
+            }
+            else if (objPath2 != null)
+            {
+                List<ObjectContainer> objs = SelectObjects(objPath2);
+                if (objs.Count == 0)
+                {
+                    XPathError("objPath2");
+                    return false;
+                }
+                foreach (ObjectContainer obj in objs)
+                {
+                    objectsToAdd.Add(obj.value);
+                }
             }
             foreach (ObjectContainer obj in objects)
             {
                 object parentObj = obj.parent;
                 if (parentObj.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    XmlNodeList nodes = value.node.ChildNodes;
                     if (order == Order.Append)
                     {
-                        for (int i = 0; i < nodes.Count; i++)
+                        foreach(object objToAdd in objectsToAdd)
                         {
                             int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.value });
-                            AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index + 1, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
+                            AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index + 1, objToAdd });
                         }
                     }
                     else
                     {
-                        for (int i = nodes.Count - 1; i >= 0; i--)
+                        for (int i = objectsToAdd.Count - 1; i >= 0; i--)
                         {
                             int index = (int)AccessTools.Method(parentObj.GetType(), "IndexOf").Invoke(parentObj, new object[] { obj.value });
-                            AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index, NodeToObject(nodes[i], parentObj.GetType().GetGenericArguments()[0]) });
+                            AccessTools.Method(parentObj.GetType(), "Insert").Invoke(parentObj, new object[] { index, objectsToAdd[i] });
                         }
+                    }
+                }
+                else if (obj.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
+                {
+                    foreach (object objToAdd in objectsToAdd)
+                    {
+                        AccessTools.Method(obj.value.GetType(), "Add").Invoke(obj.value, new object[] { objToAdd });
                     }
                 }
                 else

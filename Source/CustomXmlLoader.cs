@@ -10,7 +10,7 @@ namespace XmlExtensions
 {
     internal static class CustomXmlLoader
     {
-        public static List<string> defaultNamespaces = new();
+        public static HashSet<string> defaultNamespaces = new();
         private struct FieldAliasCache : IEquatable<FieldAliasCache>
         {
             public Type type;
@@ -371,18 +371,18 @@ namespace XmlExtensions
             XmlAttribute xmlAttribute = xmlRoot.Attributes["Class"];
             if (xmlAttribute != null)
             {
-                Type typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(xmlAttribute.Value, typeof(T).Namespace);
+                Type typeInAnyAssembly = null;
+                foreach (string t in defaultNamespaces)
+                {
+                    typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(t + "." + xmlAttribute.Value, t);
+                    if (typeInAnyAssembly != null)
+                    {
+                        break;
+                    }
+                }
                 if (typeInAnyAssembly == null)
                 {
-                    foreach (string t in defaultNamespaces)
-                    {
-                        
-                        typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(t + "." + xmlAttribute.Value, t);
-                        if (typeInAnyAssembly != null)
-                        {
-                            break;
-                        }
-                    }
+                    typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(xmlAttribute.Value, typeof(T).Namespace);
                     if (typeInAnyAssembly == null)
                     {
                         Verse.Log.Error(defaultNamespaces.Count.ToString() + "Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);

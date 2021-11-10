@@ -15,18 +15,18 @@ namespace XmlExtensions
             List<ObjectContainer> objects = SelectObjects(defType != null ? defType + "/[defName=\"" + defName + "\"]/" + objPath : objPath);
             if (objects.Count == 0)
             {
-                Error("Failed to find an object with the given path");
+                XPathError("objPath");
                 return false;
             }
             foreach (ObjectContainer obj in objects)
             {
-                if (obj.parent.value.GetType().HasGenericDefinition(typeof(List<>)))
+                if (obj.parent.value.GetType().HasGenericDefinition(typeof(List<>)) || obj.parent.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
                 {
                     AccessTools.Method(obj.parent.value.GetType(), "Remove").Invoke(obj.parent.value, new object[] { obj.value });
                 }
                 else
                 {
-                    Error("You can only Remove from lists");
+                    Error("You can only Remove from Lists or HashSets");
                     return false;
                 }
             }
