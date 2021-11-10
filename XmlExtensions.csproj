@@ -71,8 +71,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\CustomXmlLoader.cs" />
-    <Compile Include="Source\ErrorManager.cs" />
+    <Compile Include="Source\Core\CustomXmlLoader.cs" />
+    <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\LoadPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
@@ -84,9 +84,9 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
-    <Compile Include="Source\MainButtonWorker_OpenMoreModSettings.cs" />
-    <Compile Include="Source\ModContainer.cs" />
-    <Compile Include="Source\ObjectContainer.cs" />
+    <Compile Include="Source\Mod\MainButtonWorker_OpenMoreModSettings.cs" />
+    <Compile Include="Source\Core\ModContainer.cs" />
+    <Compile Include="Source\Core\ObjectContainer.cs" />
     <Compile Include="Source\PatchOperations\Data\UsingNamespace.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAddDef.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseLog.cs" />
-    <Compile Include="Source\ErrorHandler.cs" />
+    <Compile Include="Source\Core\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\Nop.cs" />
     <Compile Include="Source\PatchOperations\Performance\Test.cs" />
     <Compile Include="Source\HarmonyPatches\Dialog_Options_Patch.cs" />
-    <Compile Include="Source\Helpers.cs" />
+    <Compile Include="Source\Core\Helpers.cs" />
     <Compile Include="Source\PatchOperations\Data\EvaluateBoolean.cs" />
     <Compile Include="Source\PatchOperations\Data\FindNodeInherited.cs" />
     <Compile Include="Source\PatchOperations\Data\GetAttribute.cs" />
@@ -177,7 +177,7 @@
     <Compile Include="Source\XmlObjects\Actions\KeyedAction.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
-    <Compile Include="Source\PatchManager.cs" />
+    <Compile Include="Source\Core\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />
     <Compile Include="Source\PatchOperations\Boolean\ConditionalInherited.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\OptionalPatch.cs" />
@@ -208,14 +208,14 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\ScrollView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Section.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SetColor.cs" />
-    <Compile Include="Source\SettingsManager.cs" />
+    <Compile Include="Source\Core\SettingsManager.cs" />
     <Compile Include="Source\XmlObjects\Defs\SettingsMenuDef.cs" />
     <Compile Include="Source\XmlObjects\Defs\SlateDef.cs" />
-    <Compile Include="Source\XmlExtensions.cs" />
-    <Compile Include="Source\XmlExtensions_MenuModSettings.cs" />
-    <Compile Include="Source\XmlMod.cs" />
-    <Compile Include="Source\XmlModBaseSettings.cs" />
-    <Compile Include="Source\XmlModSettings.cs" />
+    <Compile Include="Source\Mod\XmlExtensions.cs" />
+    <Compile Include="Source\Mod\XmlExtensions_MenuModSettings.cs" />
+    <Compile Include="Source\Mod\XmlMod.cs" />
+    <Compile Include="Source\Mod\XmlModBaseSettings.cs" />
+    <Compile Include="Source\Mod\XmlModSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\SettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Slider.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\SplitColumn.cs" />
