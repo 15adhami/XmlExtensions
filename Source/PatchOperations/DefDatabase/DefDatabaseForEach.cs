@@ -9,6 +9,7 @@ namespace XmlExtensions
     internal class DefDatabaseForEach : DefDatabaseOperation
     {
         public string objPath;
+        public int prefixLength = 2;
 
         protected override bool DoPatch()
         {
@@ -20,7 +21,7 @@ namespace XmlExtensions
             }
             foreach (ObjectContainer objContainer in list)
             {
-                XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, objContainer.objPath, brackets);
+                XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, Helpers.GetPrefix(objContainer.objPath, prefixLength), brackets);
                 if (!RunPatches(newContainer, null))
                 {
                     return false;
