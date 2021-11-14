@@ -48,7 +48,7 @@ namespace XmlExtensions
         public List<ActionContainer> postCloseActions;
 
         /// <summary>
-        /// The modId of the that defined this menu
+        /// The modId of the mod that defined this menu
         /// </summary>
         public string modId;
 

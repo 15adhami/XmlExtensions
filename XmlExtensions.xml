@@ -444,7 +444,7 @@
         </member>
         <member name="F:XmlExtensions.SettingsMenuDef.modId">
             <summary>
-            The modId of the that defined this menu
+            The modId of the mod that defined this menu
             </summary>
         </member>
         <member name="F:XmlExtensions.SettingsMenuDef.submenu">
