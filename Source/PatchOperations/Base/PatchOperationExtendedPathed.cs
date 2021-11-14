@@ -1,11 +1,14 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 namespace XmlExtensions
 {
     internal abstract class PatchOperationExtendedPathed : PatchOperationExtended
     {
         public string xpath;
-        protected XmlNodeList nodes;
+        public bool selectSingleNode = false;
+        protected List<XmlNode> nodes;
 
         protected override bool PreCheck(XmlDocument xml)
         {
@@ -14,7 +17,10 @@ namespace XmlExtensions
                 NullError("xpath");
                 return false;
             }
-            nodes = xml.SelectNodes(xpath);
+            if (selectSingleNode)
+                nodes = new() { xml.SelectSingleNode(xpath) };
+            else
+                nodes = xml.SelectNodes(xpath).Cast<XmlNode>().ToList();
             if (nodes == null || nodes.Count == 0)
             {
                 XPathError();

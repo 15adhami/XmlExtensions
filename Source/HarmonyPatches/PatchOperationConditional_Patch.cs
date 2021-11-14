@@ -21,8 +21,15 @@ namespace XmlExtensions
         static void Postfix(ref bool __result, ref string ___xpath, XmlDocument xml)
         {
             if (!__result)
-            {
-                ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error");
+            {ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error");
+                if (xml.SelectSingleNode(___xpath) == null)
+                {
+                    ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error in <nomatch>");
+                }
+                else
+                {
+                    ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error in <match>");
+                }
             }
         }
     }
