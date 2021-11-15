@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -77,6 +78,39 @@ namespace XmlExtensions
                 str += mod.Name + " (" + mod.PackageId + ")\n";
             }
             Verse.Log.Warning(str);
+        }
+
+        public static void PrintSusMods(XmlNode xmlNode)
+        {
+            HashSet<ModContentPack> modsTemp;
+            HashSet<ModContentPack> mods = new();
+            XmlNode tempNode = xmlNode;
+            do
+            {
+                if (PatchManager.DefModDict.TryGetValue(Helpers.GetDefNameFromNode(tempNode)??"", out modsTemp))
+                {
+                    foreach (ModContentPack pack in modsTemp)
+                    {
+                        if (!mods.Contains(pack))
+                        {
+                            mods.Add(pack);
+                        }
+                    }
+                }
+                if (tempNode.Attributes["ParentName"] != null)
+                {
+                    tempNode = xmlNode.OwnerDocument.SelectSingleNode("Defs/" + xmlNode.Name + "[@Name=\"" + tempNode.Attributes["ParentName"].ToString() + "\"]");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (tempNode != null);
+            if (mods.Count > 0)
+            {
+                PrintModsThatPatched(mods, "Relevant mods:");
+            }
         }
     }
 }

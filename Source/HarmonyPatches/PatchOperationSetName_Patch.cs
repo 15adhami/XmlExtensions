@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Xml;
+using Verse;
 
 namespace XmlExtensions
 {
@@ -25,6 +27,20 @@ namespace XmlExtensions
                     ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + "): Failed to find a node with the given xpath");
                 else
                     ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + ", name=" + ___name + "): Error");
+            }
+            else if (XmlMod.allSettings.advancedDebugging)
+            {
+                foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
+                {
+                    if (!PatchManager.DefModDict.ContainsKey(name))
+                    {
+                        PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
+                    }
+                    if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
+                    {
+                        PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
+                    }
+                }
             }
         }
     }

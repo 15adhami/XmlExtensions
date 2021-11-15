@@ -361,25 +361,47 @@ namespace XmlExtensions
             List<string> list = new();
             foreach (XmlNode node in nodeList)
             {
-                string tempPath = node.GetXPath();
-                if (tempPath[0] == '/')
-                {
-                    tempPath = tempPath.Substring(1);
-                }
-                if (!tempPath.Contains("/"))
-                {
-                    continue;
-                }
-                XmlNode defNode = xml.SelectSingleNode(GetPrefix(tempPath, 2));
-                string name = defNode.SelectSingleNode("defName")?.InnerText;
+                string name = GetDefNameFromNode(GetDefNode(node));
                 if (name != null)
                 {
-                    list.Add(defNode.Name + ";" + name);
+                    list.Add(name);
                 }
             }
             return list;
         }
 
-        //public static void 
+        public static XmlNode GetDefNode(XmlNode node)
+        {
+            XmlNode currNode;
+            for (currNode = node; currNode.ParentNode != null && currNode.ParentNode.Name != "Defs"; currNode = currNode.ParentNode) ;
+            return currNode;
+        }
+
+        public static string GetDefNameFromNode(XmlNode root)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+            XmlNode node = root.SelectSingleNode("defName");
+            string str = null;
+            if (node != null)
+            {
+                str = node.InnerText;
+            }
+            else
+            {
+                XmlAttribute att = root.Attributes?["Name"];
+                if (att != null)
+                {
+                    str = att.Value;
+                }
+            }
+            if (str != null)
+            {
+                str = root.Name + ";" + str;
+            }
+            return str;
+        }
     }
 }

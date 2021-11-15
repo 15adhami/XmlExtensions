@@ -21,15 +21,14 @@ namespace XmlExtensions
 				{
 					if (tempHashSet.Contains(childNode.Name))
 					{
-						Verse.Log.Error("XML error: Duplicate XML node name " + childNode.Name + " in this XML block: " + node.OuterXml + ((node != root) ? ("\n\nRoot node: " + root.OuterXml) : ""));
 						if (XmlMod.allSettings.advancedDebugging)
-                        {
-							List<string> list = Helpers.GetDefsFromPath(childNode.GetXPath(), childNode.OwnerDocument);
-							HashSet<ModContentPack> mods;
-							if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
-							{
-								ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
-							}
+						{
+							Verse.Log.Error("XML error: The node <" + childNode.Name + "> appeared twice within " + node.OuterXml + ((node != root) ? ("\nWhole XML: " + root.OuterXml) : ""));
+							ErrorManager.PrintSusMods(root);
+						}
+						else
+						{
+							Verse.Log.Error("XML error: Duplicate XML node name " + childNode.Name + " in this XML block: " + node.OuterXml + ((node != root) ? ("\n\nRoot node: " + root.OuterXml) : ""));
 						}
 					}
 					else

@@ -40,7 +40,7 @@ namespace XmlExtensions.Source.HarmonyPatches
                     ErrorManager.AddError(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Error");
                 }
             }
-            else
+            else if (XmlMod.allSettings.advancedDebugging)
             {
                 foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
                 {
@@ -53,7 +53,6 @@ namespace XmlExtensions.Source.HarmonyPatches
                         PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
                     }
                 }
-                
             }
             return null;
         }

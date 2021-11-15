@@ -27,6 +27,6 @@
 	<XmlExtensions_AddMainButton>Add a main button for opening the More Mod Settings menu</XmlExtensions_AddMainButton>
 	<XmlExtensions_AddMainButtonTip>Adds a main button that opens the More Mod Settings menu when clicked</XmlExtensions_AddMainButtonTip>
 	<XmlExtensions_AdvancedDebugging>Enable advanced XML debugging mode? (May impact load times)</XmlExtensions_AdvancedDebugging>
-	<XmlExtensions_AdvancedDebuggingTip>Enabling this option will list possible mods that are causing XML errors, but may impact your loading times.</XmlExtensions_AdvancedDebuggingTip>
+	<XmlExtensions_AdvancedDebuggingTip>Enabling this option will list possible mods that are causing XML errors, but may impact your loading times. Recommended to only enable when trying to solve mod conflicts.</XmlExtensions_AdvancedDebuggingTip>
 
 </LanguageData>
