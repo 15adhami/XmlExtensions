@@ -64,5 +64,19 @@ namespace XmlExtensions
         {
             return errors.Count;
         }
+
+        public static void PrintModsThatPatched(HashSet<ModContentPack> mods, string msg)
+        {
+            if (mods == null)
+            {
+                return;
+            }
+            string str = msg + "\n";
+            foreach (ModContentPack mod in mods)
+            {
+                str += mod.Name + " (" + mod.PackageId + ")\n";
+            }
+            Verse.Log.Warning(str);
+        }
     }
 }

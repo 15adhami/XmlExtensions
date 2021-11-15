@@ -46,7 +46,7 @@ namespace XmlExtensions
                 else
                     return 0;
             });
-            Verse.Log.Message("[XML Extensions] Finished initializing " + i.ToString() + " SettingsMenuDef(s)");
+            
 
             // Initializing unloaded mod settings
             int c = 0;
@@ -79,9 +79,11 @@ namespace XmlExtensions
             {
                 list.Sort();
             }
-            Verse.Log.Message("[XML Extensions] Found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
+            Verse.Log.Message("[XML Extensions] Initialized " + i.ToString() + " SettingsMenuDef(s) and found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
+            Verse.Log.Message(string.Concat("[XML Extensions] ", PatchManager.PatchCount, " total patches run in ", PatchManager.watch2.ElapsedMilliseconds, "ms, ", PatchManager.FailedPatchCount, " failed"));
             PatchManager.ModPatchDict.Clear();
             DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
+            PatchManager.DefModDict.Clear();
         }
     }
 }

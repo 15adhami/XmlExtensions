@@ -354,5 +354,32 @@ namespace XmlExtensions
                 return str;
             }
         }
+
+        public static List<string> GetDefsFromPath(string path, XmlDocument xml)
+        {
+            XmlNodeList nodeList = xml.SelectNodes(path);
+            List<string> list = new();
+            foreach (XmlNode node in nodeList)
+            {
+                string tempPath = node.GetXPath();
+                if (tempPath[0] == '/')
+                {
+                    tempPath = tempPath.Substring(1);
+                }
+                if (!tempPath.Contains("/"))
+                {
+                    continue;
+                }
+                XmlNode defNode = xml.SelectSingleNode(GetPrefix(tempPath, 2));
+                string name = defNode.SelectSingleNode("defName")?.InnerText;
+                if (name != null)
+                {
+                    list.Add(defNode.Name + ";" + name);
+                }
+            }
+            return list;
+        }
+
+        //public static void 
     }
 }

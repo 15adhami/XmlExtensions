@@ -14,6 +14,7 @@ namespace XmlExtensions
         public static Stopwatch watch;
         public static Stopwatch watch2;
         public static int PatchCount = 0;
+        public static int FailedPatchCount = 0;
 
         public static bool applyingPatches = false;
         public static bool loadingPatches = false;
@@ -24,6 +25,7 @@ namespace XmlExtensions
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
         public static ModContentPack ActiveMod;
         public static Dictionary<PatchOperation, ModContentPack> ModPatchDict;
+        public static Dictionary<string, HashSet<ModContentPack>> DefModDict;
         public static List<PatchOperationExtended> delayedPatches;
 
         public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
@@ -31,6 +33,7 @@ namespace XmlExtensions
 
         static PatchManager()
         {
+            DefModDict = new();
             delayedPatches = new List<PatchOperationExtended>();
             ModPatchDict = new Dictionary<PatchOperation, ModContentPack>();
             patchConstructors = new Dictionary<Type, Delegate>();
@@ -47,11 +50,6 @@ namespace XmlExtensions
             if (mod != null)
             {
                 ActiveMod = mod;
-                Verse.Log.Message(mod.PackageId);
-            }
-            else
-            {
-                Verse.Log.Message("null");
             }
         }
 

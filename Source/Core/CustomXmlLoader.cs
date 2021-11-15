@@ -1,4 +1,5 @@
 ﻿// Verse.DirectXmlToObject
+using HarmonyLib;
 using RimWorld.QuestGen;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace XmlExtensions
     internal static class CustomXmlLoader
     {
         public static HashSet<string> defaultNamespaces = new();
+
         private struct FieldAliasCache : IEquatable<FieldAliasCache>
         {
             public Type type;
@@ -115,6 +117,15 @@ namespace XmlExtensions
                 catch (Exception ex)
                 {
                     Verse.Log.Error(string.Concat("Exception in custom XML loader for ", typeof(T), ". Node is:\n ", xmlRoot.OuterXml, "\n\nException is:\n ", ex.ToString()));
+                    if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                    {
+                        List<string> list = Helpers.GetDefsFromPath(xmlRoot.GetXPath(), xmlRoot.OwnerDocument);
+                        HashSet<ModContentPack> mods;
+                        if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
+                        {
+                            ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
+                        }
+                    }
                     val = default(T);
                 }
                 if (doPostLoad)
@@ -241,6 +252,15 @@ namespace XmlExtensions
                     if (hashSet.Contains(xmlNode.Name))
                     {
                         Verse.Log.Error(string.Concat("XML ", typeof(T), " defines the same field twice: ", xmlNode.Name, ".\n\nField contents: ", xmlNode.InnerText, ".\n\nWhole XML:\n\n", xmlRoot.OuterXml));
+                        if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                        {
+                            List<string> list = Helpers.GetDefsFromPath(xmlNode.GetXPath(), xmlNode.OwnerDocument);
+                            HashSet<ModContentPack> mods;
+                            if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
+                            {
+                                ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
+                            }
+                        }
                     }
                     else
                     {
@@ -293,6 +313,15 @@ namespace XmlExtensions
                 if (value3 != null && value3.TryGetAttribute<UnsavedAttribute>() != null && !value3.TryGetAttribute<UnsavedAttribute>().allowLoading)
                 {
                     Verse.Log.Error("XML error: " + xmlNode.OuterXml + " corresponds to a field in type " + val2.GetType().Name + " which has an Unsaved attribute. Context: " + xmlRoot.OuterXml);
+                    if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                    {
+                        List<string> list = Helpers.GetDefsFromPath(xmlNode.GetXPath(), xmlNode.OwnerDocument);
+                        HashSet<ModContentPack> mods;
+                        if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
+                        {
+                            ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
+                        }
+                    }
                 }
                 else if (value3 == null)
                 {
@@ -320,6 +349,15 @@ namespace XmlExtensions
                         if (!flag)
                         {
                             Verse.Log.Error("XML error: " + xmlNode.OuterXml + " doesn't correspond to any field in type " + val2.GetType().Name + ". Context: " + xmlRoot.OuterXml);
+                            if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                            {
+                                List<string> list = Helpers.GetDefsFromPath(xmlNode.GetXPath(), xmlNode.OwnerDocument);
+                                HashSet<ModContentPack> mods;
+                                if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
+                                {
+                                    ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
+                                }
+                            }
                         }
                     }
                     finally
@@ -347,6 +385,15 @@ namespace XmlExtensions
                     catch (Exception ex4)
                     {
                         Verse.Log.Error("Exception loading from " + xmlNode.ToString() + ": " + ex4.ToString());
+                        if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                        {
+                            List<string> list = Helpers.GetDefsFromPath(xmlNode.GetXPath(), xmlNode.OwnerDocument);
+                            HashSet<ModContentPack> mods;
+                            if (PatchManager.DefModDict.TryGetValue(list[0], out mods))
+                            {
+                                ErrorManager.PrintModsThatPatched(mods, "Relevant mods:");
+                            }
+                        }
                         continue;
                     }
                     if (!typeof(T).IsValueType)
@@ -387,7 +434,7 @@ namespace XmlExtensions
                     {
                         Verse.Log.Error(defaultNamespaces.Count.ToString() + "Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
                         return typeof(T);
-                    } 
+                    }
                 }
                 return typeInAnyAssembly;
             }
@@ -575,6 +622,54 @@ namespace XmlExtensions
                 return xmlNode.InnerText.Replace("\\n", "\n");
             }
             return xmlNode.InnerXml;
+        }
+
+        public static MethodInfo GetObjectFromXmlReflection()
+        {
+            return AccessTools.Method(typeof(CustomXmlLoader), "ObjectFromXmlReflection");
+        }
+
+        public static XmlDocument CombineIntoUnifiedXMLMirror(List<LoadableXmlAsset> xmls, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
+        {
+            Verse.Log.Message("Combining");
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.AppendChild(xmlDocument.CreateElement("Defs"));
+            foreach (LoadableXmlAsset xml in xmls)
+            {
+                if (xml.xmlDoc == null || xml.xmlDoc.DocumentElement == null)
+                {
+                    Verse.Log.Error(string.Format("{0}: unknown parse failure", xml.fullFolderPath + "/" + xml.name));
+                    continue;
+                }
+                if (xml.xmlDoc.DocumentElement.Name != "Defs")
+                {
+                    Verse.Log.Error(string.Format("{0}: root element named {1}; should be named Defs", xml.fullFolderPath + "/" + xml.name, xml.xmlDoc.DocumentElement.Name));
+                }
+                foreach (XmlNode childNode in xml.xmlDoc.DocumentElement.ChildNodes)
+                {
+                    XmlNode xmlNode = xmlDocument.ImportNode(childNode, deep: true);
+                    assetlookup[xmlNode] = xml;
+                    xmlDocument.DocumentElement.AppendChild(xmlNode);
+                    if (XmlMod.allSettings.advancedDebugging)
+                    {
+                        foreach (string name in Helpers.GetDefsFromPath(xmlNode.GetXPath(), xmlDocument))
+                        {
+                            if (xml.mod != null)
+                            {
+                                if (!PatchManager.DefModDict.ContainsKey(name))
+                                {
+                                    PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
+                                }
+                                if (!PatchManager.DefModDict[name].Contains(xml.mod))
+                                {
+                                    PatchManager.DefModDict[name].Add(xml.mod);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return xmlDocument;
         }
     }
 }

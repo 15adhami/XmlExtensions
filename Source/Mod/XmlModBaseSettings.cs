@@ -10,6 +10,7 @@ namespace XmlExtensions
         public bool trace = true;
         public bool standardMods = false;
         public bool mainButton = false;
+        public bool advancedDebugging = false;
         public HashSet<string> PinnedMods;
 
         public XmlModBaseSettings()
@@ -25,6 +26,7 @@ namespace XmlExtensions
             Scribe_Values.Look(ref trace, "trace");
             Scribe_Values.Look(ref standardMods, "standardMods");
             Scribe_Values.Look(ref mainButton, "mainButton");
+            Scribe_Values.Look(ref advancedDebugging, "advancedDebugging");
             base.ExposeData();
         }
     }

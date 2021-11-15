@@ -40,6 +40,21 @@ namespace XmlExtensions.Source.HarmonyPatches
                     ErrorManager.AddError(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Error");
                 }
             }
+            else
+            {
+                foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
+                {
+                    if (!PatchManager.DefModDict.ContainsKey(name))
+                    {
+                        PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
+                    }
+                    if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
+                    {
+                        PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
+                    }
+                }
+                
+            }
             return null;
         }
     }

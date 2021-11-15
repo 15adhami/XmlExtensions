@@ -346,6 +346,7 @@ namespace XmlExtensions
                 {
                     DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
                 }
+                listingStandard.CheckboxLabeled("XmlExtensions_AdvancedDebugging".Translate(), ref XmlMod.allSettings.advancedDebugging, "XmlExtensions_AdvancedDebuggingTip".Translate());
                 if (listingStandard.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
                     viewingSettings = true;
                 listingStandard.End();

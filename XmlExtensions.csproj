@@ -75,6 +75,9 @@
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\CheckForDuplicateNodes_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\CombineIntoUnifiedXML_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\GetObjectFromXmlMethod_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\LoadPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
