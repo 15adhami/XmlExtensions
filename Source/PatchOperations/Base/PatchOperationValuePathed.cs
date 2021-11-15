@@ -21,7 +21,8 @@ namespace XmlExtensions
             }
             if (node == null)
             {
-                node = xml.SelectSingleNode(xpath);
+                // TODO: Upgrade to Helper
+                node = Helpers.SelectSingleNode(xpath, xml);
                 if (node == null)
                 {
                     XPathError();

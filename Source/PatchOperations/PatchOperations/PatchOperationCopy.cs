@@ -8,7 +8,7 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            XmlNodeList parents = xml.SelectNodes(paste);
+            XmlNodeList parents = Helpers.SelectNodes(paste, xml);
             if (parents == null || nodes.Count == 0)
             {
                 XPathError("paste");

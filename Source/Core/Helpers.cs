@@ -403,5 +403,43 @@ namespace XmlExtensions
             }
             return str;
         }
+
+        public static XmlNodeList SelectNodes(string path, XmlDocument xml)
+        {
+            XmlNodeList list = xml.SelectNodes(path);
+            if (XmlMod.allSettings.advancedDebugging)
+            {
+                foreach (string name in GetDefsFromPath(path, xml))
+                {
+                    if (!PatchManager.DefModDict.ContainsKey(name))
+                    {
+                        PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
+                    }
+                    if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
+                    {
+                        PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static XmlNode SelectSingleNode(string path, XmlDocument xml)
+        {
+            XmlNode node = xml.SelectSingleNode(path);
+            if (XmlMod.allSettings.advancedDebugging)
+            {
+                string name = GetDefNameFromNode(node);
+                if (!PatchManager.DefModDict.ContainsKey(name))
+                {
+                    PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
+                }
+                if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
+                {
+                    PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
+                }
+            }
+            return node;
+        }
     }
 }
