@@ -109,7 +109,7 @@ namespace XmlExtensions
             while (tempNode != null);
             if (mods.Count > 0)
             {
-                PrintModsThatPatched(mods, "Relevant mods:");
+                PrintModsThatPatched(mods, "Possibly relevant mods for above error:");
             }
         }
     }

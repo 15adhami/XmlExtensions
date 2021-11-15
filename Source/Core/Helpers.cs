@@ -394,7 +394,7 @@ namespace XmlExtensions
                 XmlAttribute att = root.Attributes?["Name"];
                 if (att != null)
                 {
-                    str = att.Value;
+                    str = "@" + att.Value;
                 }
             }
             if (str != null)
@@ -440,6 +440,20 @@ namespace XmlExtensions
                 }
             }
             return node;
+        }
+
+        public static string GetNameFromName(string name)
+        {
+            if (name == null)
+            {
+                return null;
+            }
+            List<string> parts = new(name.Split(';'));
+            if (parts.Count != 2)
+            {
+                return null;
+            }
+            return string.Concat("(", parts[0][0] == '@' ? "@Name=\"" : "defName=\"", parts[1], "\")");
         }
     }
 }

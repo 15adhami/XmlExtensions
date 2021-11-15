@@ -261,17 +261,14 @@ namespace XmlExtensions
                 {
                     if (hashSet.Contains(xmlNode.Name))
                     {
-                        if (XmlMod.allSettings.advancedDebugging)
+                        if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
                         {
-                            Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, ">.\nWhole XML: ", xmlRoot.OuterXml));
+                            Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, "> ", Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot)), "\nWhole XML: ", xmlRoot.OuterXml));
+                            ErrorManager.PrintSusMods(xmlRoot);
                         }
                         else
                         {
                             Verse.Log.Error(string.Concat("XML ", typeof(T), " defines the same field twice: ", xmlNode.Name, ".\n\nField contents: ", xmlNode.InnerText, ".\n\nWhole XML:\n\n", xmlRoot.OuterXml));
-                        }
-                        if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
-                        {
-                            ErrorManager.PrintSusMods(xmlRoot);
                         }
                     }
                     else
@@ -355,17 +352,14 @@ namespace XmlExtensions
                         }
                         if (!flag)
                         {
-                            if (XmlMod.allSettings.advancedDebugging)
+                            if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
                             {
-                                Verse.Log.Error("XML error: " + xmlNode.OuterXml + " does not belong in the type " + val2.GetType().Name + ".\nWhole XML: " + xmlRoot.OuterXml);
+                                Verse.Log.Error("XML error: " + xmlNode.OuterXml + " does not belong in <" + xmlRoot.Name + "> " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot)) + "\nWhole XML: " + xmlRoot.OuterXml);
+                                ErrorManager.PrintSusMods(xmlRoot);
                             }
                             else
                             {
                                 Verse.Log.Error("XML error: " + xmlNode.OuterXml + " doesn't correspond to any field in type " + val2.GetType().Name + ". Context: " + xmlRoot.OuterXml);
-                            }
-                            if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
-                            {
-                                ErrorManager.PrintSusMods(xmlRoot);
                             }
                         }
                     }
@@ -586,10 +580,14 @@ namespace XmlExtensions
                 {
                     if (hashSet.Contains(xmlNode.Name))
                     {
-                        Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, ">.\nWhole XML: ", xmlRoot.OuterXml));
-                        if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
+                        if (nameOfDef != null)
                         {
+                            Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, "> " + Helpers.GetNameFromName(nameOfDef) + "\nWhole XML: ", fullRoot.OuterXml));
                             ErrorManager.PrintSusMods(fullRoot);
+                        }
+                        else
+                        {
+                            Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, ">.\nWhole XML: ", fullRoot.OuterXml));
                         }
                     }
                     else
@@ -673,10 +671,14 @@ namespace XmlExtensions
                         }
                         if (!flag)
                         {
-                            Verse.Log.Error("XML error: <" + xmlNode.Name + "> does not belong in <" + xmlRoot.Name + "> (type=" + val2.GetType().ToString() + ")." + "\nXML Block: " + xmlRoot.OuterXml + "\nWhole XML: " + fullRoot.OuterXml);
-                            if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
+                            if (nameOfDef != null)
                             {
+                                Verse.Log.Error("XML error: <" + xmlNode.Name + "> does not belong in <" + xmlRoot.Name + "> (Type=" + val2.GetType().ToString() + ") " + Helpers.GetNameFromName(nameOfDef) + "\nXML Block: " + xmlRoot.OuterXml + "\nWhole XML: " + fullRoot.OuterXml);
                                 ErrorManager.PrintSusMods(fullRoot);
+                            }
+                            else
+                            {
+                                Verse.Log.Error("XML error: <" + xmlNode.Name + "> does not belong in <" + xmlRoot.Name + "> (Type=" + val2.GetType().ToString() + ").\nXML Block: " + xmlRoot.OuterXml + "\nWhole XML: " + fullRoot.OuterXml);
                             }
                         }
                     }
