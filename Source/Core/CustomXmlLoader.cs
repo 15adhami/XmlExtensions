@@ -805,7 +805,14 @@ namespace XmlExtensions
                     {
                         try
                         {
-                            list.Add(ObjectFromXmlRecursive<T>(childNode, fullRoot, nameOfDef, true));
+                            if (XmlMod.allSettings.advancedDebugging)
+                            {
+                                list.Add(ObjectFromXmlRecursive<T>(childNode, fullRoot, nameOfDef, true));
+                            }
+                            else
+                            {
+                                list.Add(ObjectFromXml<T>(childNode, true));
+                            }
                         }
                         catch (Exception ex)
                         {
