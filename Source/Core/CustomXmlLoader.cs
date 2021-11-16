@@ -956,7 +956,6 @@ namespace XmlExtensions
 
         public static XmlDocument CombineIntoUnifiedXMLMirror(List<LoadableXmlAsset> xmls, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
-            Verse.Log.Message("Combining");
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.AppendChild(xmlDocument.CreateElement("Defs"));
             foreach (LoadableXmlAsset xml in xmls)
