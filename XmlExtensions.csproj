@@ -92,6 +92,8 @@
     <Compile Include="Source\Mod\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\Core\ModContainer.cs" />
     <Compile Include="Source\Core\ObjectContainer.cs" />
+    <Compile Include="Source\Windows\PatchAnalyzer_Window.cs" />
+    <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
     <Compile Include="Source\PatchOperations\Data\UsingNamespace.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
@@ -218,7 +220,7 @@
     <Compile Include="Source\XmlObjects\Defs\SettingsMenuDef.cs" />
     <Compile Include="Source\XmlObjects\Defs\SlateDef.cs" />
     <Compile Include="Source\Mod\XmlExtensions.cs" />
-    <Compile Include="Source\Mod\XmlExtensions_MenuModSettings.cs" />
+    <Compile Include="Source\Windows\XmlExtensions_MenuModSettings.cs" />
     <Compile Include="Source\Mod\XmlMod.cs" />
     <Compile Include="Source\Mod\XmlModBaseSettings.cs" />
     <Compile Include="Source\Mod\XmlModSettings.cs" />

@@ -29,8 +29,11 @@
 	<XmlExtensions_AdvancedDebugging>Enable advanced XML debugging mode? (Enable when troubleshooting)</XmlExtensions_AdvancedDebugging>
 	<XmlExtensions_AdvancedDebuggingTip>Enabling this option will list possible mods that are causing XML errors, but may impact your loading times. Recommended to only enable when trying to solve mod conflicts or troubleshooting.</XmlExtensions_AdvancedDebuggingTip>
 	<XmlExtensions_DefTypes>Def type:</XmlExtensions_DefTypes>
-	<XmlExtensions_ViewPatchedDefs>View patched Defs</XmlExtensions_ViewPatchedDefs>
+	<XmlExtensions_PatchAnalyzer>Patch Analyzer</XmlExtensions_PatchAnalyzer>
 	<XmlExtensions_Defs>Def:</XmlExtensions_Defs>
-	<XmlExtensions_Mods>Mods that patched:</XmlExtensions_Mods>
+	<XmlExtensions_Mods>Mods:</XmlExtensions_Mods>
+	<XmlExtensions_EnableAdvancedDebuggingAndReboot>Boot game while Advanced Debugging is enabled to use Patch Analyzer.</XmlExtensions_EnableAdvancedDebuggingAndReboot>
+	<XmlExtensions_PatchedDefs>Defs patched: </XmlExtensions_PatchedDefs>
+	<XmlExtensions_PatchesApplied>Patches applied: </XmlExtensions_PatchesApplied>
 
 </LanguageData>
