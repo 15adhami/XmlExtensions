@@ -82,18 +82,18 @@ namespace XmlExtensions
 
         public static void PrintSusMods(XmlNode xmlNode)
         {
-            HashSet<ModContentPack> modsTemp;
+            HashSet<ModContentPackContainer> modsTemp;
             HashSet<ModContentPack> mods = new();
             XmlNode tempNode = xmlNode;
             do
             {
                 if (PatchManager.DefModDict.TryGetValue(Helpers.GetDefNameFromNode(tempNode)??"", out modsTemp))
                 {
-                    foreach (ModContentPack pack in modsTemp)
+                    foreach (ModContentPackContainer pack in modsTemp)
                     {
-                        if (!mods.Contains(pack))
+                        if (!mods.Contains(pack.Pack))
                         {
-                            mods.Add(pack);
+                            mods.Add(pack.Pack);
                         }
                     }
                 }

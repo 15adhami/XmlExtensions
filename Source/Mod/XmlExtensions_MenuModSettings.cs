@@ -11,35 +11,23 @@ namespace XmlExtensions
     // Window that appears when you press More Mod Settings
     internal class XmlExtensions_MenuModSettings : Window
     {
-        public static string selectedExtraMod;
-        public static string activeMenu = null; // defName
-
-        public readonly float ListWidth = 256f;
+        public static SettingsMenuDef activeMenu = null;
+        public SettingWindow activeSettingWindow;
 
         public static Vector2 settingsPosition;
         public static Vector2 modListPosition;
-        public static Vector2 keyPosition;
-        public static bool viewingSettings = false;
         public static ModContainer SelectedMod = null;
 
-        private List<ModContainer> loadedMods;
-        private List<ModContainer> cachedFilteredList;
+        private readonly List<ModContainer> loadedMods;
+        private readonly List<ModContainer> cachedFilteredList;
         private bool pinned = false;
-
         private static ModContainer prevMod = null;
         private string searchText = "";
         private static Dictionary<string, string> oldValuesCache;
         private bool focusSearchBox = false;
+        private readonly float ListWidth = 256f;
 
         private Texture2D pinTex;
-
-        public override Vector2 InitialSize
-        {
-            get
-            {
-                return new Vector2(900f + ListWidth + 6f, 700f);
-            }
-        }
 
         public XmlExtensions_MenuModSettings()
         {
@@ -54,26 +42,22 @@ namespace XmlExtensions
             closeOnAccept = false;
         }
 
+        public override Vector2 InitialSize
+        {
+            get
+            {
+                return new Vector2(900f + ListWidth + 6f, 700f);
+            }
+        }
+
         public override void PreOpen()
         {
             base.PreOpen();
             pinTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
             focusSearchBox = true;
-            foreach (string id in XmlMod.loadedXmlMods)
-            {
-                loadedMods.Add(new ModContainer(id));
-            }
-            if (XmlMod.allSettings.standardMods)
-            {
-                foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                     where !mod.SettingsCategory().NullOrEmpty()
-                                     select mod)
-                {
-                    loadedMods.Add(new ModContainer(item));
-                }
-            }
-            loadedMods.Sort();
-            FilterMods();
+            // activeSettingWindow
+            LoadMods();
+            FilterModlist();
             if (prevMod != null && prevMod.ToString() != "CharacterEditor") // For compatibility
             {
                 foreach (ModContainer mod in loadedMods)
@@ -86,7 +70,7 @@ namespace XmlExtensions
             }
             else
             {
-                SelectedMod = null;
+                SetSelectedMod(null);
             }
         }
 
@@ -103,9 +87,9 @@ namespace XmlExtensions
             listing.GapLine(9f);
             listing.End();
             GUI.BeginGroup(rectSettings);
-            Verse.Text.Font = Verse.GameFont.Small;
-            drawXmlModSettings(rectSettings);
-            Verse.Text.Font = Verse.GameFont.Small;
+            Text.Font = GameFont.Small;
+            DrawXmlModSettings(rectSettings);
+            Text.Font = GameFont.Small;
             GUI.EndGroup();
 
             string temp = searchText;
@@ -127,12 +111,12 @@ namespace XmlExtensions
             }
             if (searchText != temp)
             {
-                FilterMods();
+                FilterModlist();
             }
             if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), pinTex, pinned ? new Color(0.75f, 0.75f, 0.75f) : new Color(0.5f, 0.5f, 0.5f)))
             {
                 pinned = !pinned;
-                FilterMods();
+                FilterModlist();
             }
             GUI.color = Color.white;
             if (focusSearchBox)
@@ -140,10 +124,10 @@ namespace XmlExtensions
                 GUI.FocusControl("searchbox");
                 focusSearchBox = false;
             }
-            drawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
+            DrawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
         }
 
-        private void drawXmlModList(Rect rect)
+        private void DrawXmlModList(Rect rect)
         {
             int count = 0;
             foreach (string modId in XmlMod.loadedXmlMods)
@@ -178,11 +162,11 @@ namespace XmlExtensions
                                 newOptions.Add(new FloatMenuOption(Helpers.TryTranslate("Unpin mod", "XmlExtensions_Unpin"), delegate ()
                                 {
                                     XmlMod.allSettings.PinnedMods.Remove(mod.ToString());
-                                    FilterMods();
+                                    FilterModlist();
                                     if (cachedFilteredList.Count == 0)
                                     {
                                         pinned = false;
-                                        FilterMods();
+                                        FilterModlist();
                                     }
                                 }));
                             }
@@ -228,7 +212,7 @@ namespace XmlExtensions
             Widgets.EndScrollView();
         }
 
-        public static void SetSelectedMod(ModContainer mod)
+        public void SetSelectedMod(ModContainer mod)
         {
             // Run KeyedActions
             if (SelectedMod != null && SelectedMod.IsXmlMod() && XmlMod.keyedActionListDict.ContainsKey(SelectedMod.modId))
@@ -265,12 +249,15 @@ namespace XmlExtensions
             {
                 SelectedMod.WriteSettings();
             }
+            else
+            {
+                activeSettingWindow = new MainSettings();
+                activeSettingWindow.Init(this);
+            }
             SelectedMod = mod;
-            selectedExtraMod = null;
-            viewingSettings = false;
         }
 
-        private void drawXmlModSettings(Rect rect)
+        private void DrawXmlModSettings(Rect rect)
         {
             rect.x = 0;
             rect.y = 0;
@@ -278,14 +265,14 @@ namespace XmlExtensions
             {
                 if (SelectedMod.IsXmlMod())
                 {
-                    Rect scrollRect = new Rect(0, 0, rect.width - 20f, XmlMod.menus[activeMenu].CalculateHeight(rect.width - 20f, SelectedMod.modId));
+                    Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f, SelectedMod.modId));
                     Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
                     Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-                    XmlMod.menus[activeMenu].DrawSettings(rect2);
-                    if (XmlMod.menus[activeMenu].onFrameActions != null)
+                    activeMenu.DrawSettings(rect2);
+                    if (activeMenu.onFrameActions != null)
                     {
                         ErrorManager.ClearErrors();
-                        foreach (ActionContainer action in XmlMod.menus[activeMenu].onFrameActions)
+                        foreach (ActionContainer action in activeMenu.onFrameActions)
                         {
                             if (!action.DoAction())
                             {
@@ -303,173 +290,7 @@ namespace XmlExtensions
             }
             else
             {
-                drawXmlExtensionsSettings(rect.BottomPartPixels(rect.height - 40f));
-            }
-        }
-
-        private void drawXmlExtensionsSettings(Rect rect)
-        {
-            if (viewingSettings)
-            {
-                drawXmlSettingsList(rect);
-            }
-            else
-            {
-                Listing_Standard listingStandard = new Listing_Standard();
-                listingStandard.Begin(rect);
-                listingStandard.CheckboxLabeled("XmlExtensions_EnableStackTrace".Translate(), ref XmlMod.allSettings.trace, "XmlExtensions_StackTraceTip".Translate());
-                bool b = XmlMod.allSettings.standardMods;
-                listingStandard.CheckboxLabeled("XmlExtensions_IncludeStandardMods".Translate(), ref b, "XmlExtensions_IncludeStandardModsTip".Translate());
-                if (b != XmlMod.allSettings.standardMods)
-                {
-                    loadedMods.Clear();
-                    foreach (string id in XmlMod.loadedXmlMods)
-                    {
-                        loadedMods.Add(new ModContainer(id));
-                    }
-                    if (b)
-                    {
-                        foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                             where !mod.SettingsCategory().NullOrEmpty()
-                                             select mod)
-                        {
-                            loadedMods.Add(new ModContainer(item));
-                        }
-                    }
-                    loadedMods.Sort();
-                    FilterMods();
-                }
-                XmlMod.allSettings.standardMods = b;
-                b = XmlMod.allSettings.mainButton;
-                listingStandard.CheckboxLabeled("XmlExtensions_AddMainButton".Translate(), ref XmlMod.allSettings.mainButton, "XmlExtensions_AddMainButtonTip".Translate());
-                if (b != XmlMod.allSettings.mainButton)
-                {
-                    DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
-                }
-                listingStandard.CheckboxLabeled("XmlExtensions_AdvancedDebugging".Translate(), ref XmlMod.allSettings.advancedDebugging, "XmlExtensions_AdvancedDebuggingTip".Translate());
-                if (listingStandard.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
-                    viewingSettings = true;
-                listingStandard.End();
-            }
-        }
-
-        private static void drawXmlSettingsList(Rect rect)
-        {
-            Rect modListRect = rect.LeftPartPixels(300f);
-            Rect keyListRect = rect.RightPartPixels(rect.width - 300f - 8f);
-            Listing_Standard modListListing = new Listing_Standard();
-            modListListing.Begin(modListRect);
-            modListListing.Label(Helpers.TryTranslate("Currently inactive mods:", "XmlExtensions_InactiveMods"));
-            modListListing.GapLine(4);
-            modListListing.Gap(2);
-            Rect modRect = modListListing.GetRect(rect.height - 30f);
-            Rect scrollRect = new Rect(0, 0, modRect.width - 20f, Math.Max(XmlMod.unusedMods.Count > 0 ? XmlMod.unusedMods.Count * 32 : 30, rect.height - 29f));
-            Widgets.BeginScrollView(modRect, ref settingsPosition, scrollRect);
-            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
-            Listing_Standard modListing = new Listing_Standard();
-            modListing.Begin(rect2);
-            if (XmlMod.unusedMods.Count == 0)
-            {
-                modListing.Label(Helpers.TryTranslate("No extra settings at the moment", "XmlExtensions_NoExtraSettings"));
-            }
-            foreach (string mod in XmlMod.unusedMods)
-            {
-                if (modListing.ButtonText(mod)) { selectedExtraMod = mod; }
-            }
-            modListing.End();
-            Widgets.EndScrollView();
-            modListListing.End();
-
-            // Draw right column
-            if (selectedExtraMod != null)
-            {
-                Listing_Standard keyListListing = new Listing_Standard();
-                keyListListing.Begin(keyListRect);
-                keyListListing.Label(Helpers.TryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedKeys"));
-                keyListListing.GapLine(4);
-                keyListListing.Gap(2);
-
-                Rect keyRect = keyListListing.GetRect(rect.height - 30f - 36f);
-                Rect scrollRect2 = new Rect(0, 0, keyRect.width - 20f, Math.Max(XmlMod.unusedSettings[selectedExtraMod].Count * 24f, rect.height - 29f - 36f));
-                Widgets.BeginScrollView(keyRect, ref keyPosition, scrollRect2);
-                rect2 = new Rect(0f, 0f, scrollRect2.width, 99999f);
-                Listing_Standard keyListing = new Listing_Standard();
-                keyListing.Begin(rect2);
-                string tempStr = null;
-                foreach (string key in XmlMod.unusedSettings[selectedExtraMod])
-                {
-                    bool del = false;
-                    keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedExtraMod, key), ref del, Helpers.TryTranslate("Delete", "XmlExtensions_Delete"));
-                    if (del)
-                    {
-                        SettingsManager.DeleteSetting(selectedExtraMod, key);
-                        tempStr = key;
-                    }
-                }
-                if (tempStr != null)
-                {
-                    XmlMod.unusedSettings[selectedExtraMod].Remove(tempStr);
-                    if (XmlMod.unusedSettings[selectedExtraMod].Count == 0)
-                    {
-                        XmlMod.unusedMods.Remove(selectedExtraMod);
-                        XmlMod.unusedSettings.Remove(selectedExtraMod);
-                        selectedExtraMod = null;
-                    }
-                }
-                keyListing.End();
-                Widgets.EndScrollView();
-                // Make sure the last key wasn't just deleted (otherwise missing key in dict exception)
-                if (selectedExtraMod != null)
-                {
-                    keyListListing.GapLine(4);
-                    Rect tempRect = keyListListing.GetRect(32f);
-                    Rect firstRect = tempRect.LeftPart(0.495f);
-                    Listing_Standard buttonLeftListing = new Listing_Standard();
-                    buttonLeftListing.Begin(firstRect);
-                    if (buttonLeftListing.ButtonText(Helpers.TryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", XmlMod.unusedSettings[selectedExtraMod].Count.ToString())))
-                    {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete every unused key of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
-                        {
-                            foreach (string key in XmlMod.unusedSettings[selectedExtraMod])
-                            {
-                                SettingsManager.DeleteSetting(selectedExtraMod, key);
-                            }
-                            XmlMod.unusedMods.Remove(selectedExtraMod);
-                            XmlMod.unusedSettings.Remove(selectedExtraMod);
-                            selectedExtraMod = null;
-                        }, "No".Translate(), null, null, false, null, null));
-                    }
-                    buttonLeftListing.End();
-
-                    Rect secondRect = tempRect.RightPart(0.495f);
-                    Listing_Standard buttonRightListing = new Listing_Standard();
-                    buttonRightListing.Begin(secondRect);
-                    GUI.color = Color.red;
-                    int count = 0;
-                    foreach (List<string> list in XmlMod.unusedSettings.Values)
-                    {
-                        count += list.Count;
-                    }
-                    if (buttonRightListing.ButtonText(Helpers.TryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
-                    {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete all unused keys from every mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
-                        {
-                            foreach (string mod in XmlMod.unusedMods)
-                            {
-                                foreach (string key in XmlMod.unusedSettings[mod])
-                                {
-                                    SettingsManager.DeleteSetting(mod, key);
-                                }
-                            }
-                            XmlMod.unusedSettings.Clear();
-                            XmlMod.unusedMods.Clear();
-                            selectedExtraMod = null;
-                        }, "No".Translate(), null, null, false, null, null));
-                    }
-                    GUI.color = Color.white;
-                    buttonRightListing.End();
-                }
-                keyListListing.End();
+                activeSettingWindow.DrawContents(rect.BottomPartPixels(rect.height - 40f));
             }
         }
 
@@ -481,7 +302,27 @@ namespace XmlExtensions
             base.PreClose();
         }
 
-        private void FilterMods()
+        public void LoadMods()
+        {
+            loadedMods.Clear();
+            foreach (string id in XmlMod.loadedXmlMods)
+            {
+                loadedMods.Add(new ModContainer(id));
+            }
+            if (XmlMod.allSettings.standardMods)
+            {
+                foreach (Mod item in from mod in LoadedModManager.ModHandles
+                                     where !mod.SettingsCategory().NullOrEmpty()
+                                     select mod)
+                {
+                    loadedMods.Add(new ModContainer(item));
+                }
+            }
+            loadedMods.Sort();
+            FilterModlist();
+        }
+
+        private void FilterModlist()
         {
             cachedFilteredList.Clear();
             foreach (ModContainer mod in loadedMods)
@@ -500,13 +341,322 @@ namespace XmlExtensions
         {
             if (activeMenu != null)
             {
-                XmlMod.menus[activeMenu].RunPostCloseActions();
+                activeMenu.RunPostCloseActions();
             }
             if (defName != null)
             {
-                XmlMod.menus[defName].RunPreOpenActions();
+                activeMenu = DefDatabase<SettingsMenuDef>.GetNamed(defName);
+                activeMenu.RunPreOpenActions();
             }
-            activeMenu = defName;
+        }
+
+        public abstract class SettingWindow
+        {
+            public XmlExtensions_MenuModSettings MoreModSettings = null;
+
+            public virtual void Init(XmlExtensions_MenuModSettings obj)
+            {
+                MoreModSettings = obj;
+            }
+
+            public abstract void DrawContents(Rect rect);
+        }
+
+        public class MainSettings : SettingWindow
+        {
+            public override void DrawContents(Rect rect)
+            {
+                Listing_Standard listingStandard = new Listing_Standard();
+                listingStandard.Begin(rect);
+                listingStandard.CheckboxLabeled("XmlExtensions_EnableStackTrace".Translate(), ref XmlMod.allSettings.trace, "XmlExtensions_StackTraceTip".Translate());
+                bool b = XmlMod.allSettings.standardMods;
+                listingStandard.CheckboxLabeled("XmlExtensions_IncludeStandardMods".Translate(), ref b, "XmlExtensions_IncludeStandardModsTip".Translate());
+                if (b != XmlMod.allSettings.standardMods)
+                {
+                    XmlMod.allSettings.standardMods = b;
+                    MoreModSettings.LoadMods();
+                }
+                XmlMod.allSettings.standardMods = b;
+                b = XmlMod.allSettings.mainButton;
+                listingStandard.CheckboxLabeled("XmlExtensions_AddMainButton".Translate(), ref XmlMod.allSettings.mainButton, "XmlExtensions_AddMainButtonTip".Translate());
+                if (b != XmlMod.allSettings.mainButton)
+                {
+                    DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
+                }
+                listingStandard.CheckboxLabeled("XmlExtensions_AdvancedDebugging".Translate(), ref XmlMod.allSettings.advancedDebugging, "XmlExtensions_AdvancedDebuggingTip".Translate());
+                if (listingStandard.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
+                {
+                    MoreModSettings.activeSettingWindow = new ViewUnusedSettings();
+                    MoreModSettings.activeSettingWindow.Init(MoreModSettings);
+                }
+                if (listingStandard.ButtonText("XmlExtensions_ViewPatchedDefs".Translate()))
+                {
+                    MoreModSettings.activeSettingWindow = new ViewPatchedDefs();
+                    MoreModSettings.activeSettingWindow.Init(MoreModSettings);
+                }
+                listingStandard.End();
+            }
+        }
+
+        public class ViewUnusedSettings : SettingWindow
+        {
+            public string selectedMod = null;
+            public Vector2 keyPosition = new();
+            public Vector2 settingsPosition = new();
+
+            public override void DrawContents(Rect rect)
+            {
+                Rect modListRect = rect.LeftPartPixels(300f);
+                Rect keyListRect = rect.RightPartPixels(rect.width - 300f - 8f);
+                Listing_Standard modListListing = new Listing_Standard();
+                modListListing.Begin(modListRect);
+                modListListing.Label(Helpers.TryTranslate("Currently inactive mods:", "XmlExtensions_InactiveMods"));
+                modListListing.GapLine(4);
+                modListListing.Gap(2);
+                Rect modRect = modListListing.GetRect(rect.height - 30f);
+                Rect scrollRect = new Rect(0, 0, modRect.width - 20f, Math.Max(XmlMod.unusedMods.Count > 0 ? XmlMod.unusedMods.Count * 32 : 30, rect.height - 29f));
+                Widgets.BeginScrollView(modRect, ref settingsPosition, scrollRect);
+                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
+                Listing_Standard modListing = new Listing_Standard();
+                modListing.Begin(rect2);
+                if (XmlMod.unusedMods.Count == 0)
+                {
+                    modListing.Label(Helpers.TryTranslate("No extra settings at the moment", "XmlExtensions_NoExtraSettings"));
+                }
+                foreach (string mod in XmlMod.unusedMods)
+                {
+                    if (mod == selectedMod)
+                    {
+                        GUI.color = new Color(0.7f, 0.7f, 0.7f);
+                    }
+                    if (modListing.ButtonText(mod)) { selectedMod = mod; }
+                    GUI.color = Color.white;
+                }
+                modListing.End();
+                Widgets.EndScrollView();
+                modListListing.End();
+
+                // Draw right column
+                if (selectedMod != null)
+                {
+                    Listing_Standard keyListListing = new Listing_Standard();
+                    keyListListing.Begin(keyListRect);
+                    keyListListing.Label(Helpers.TryTranslate("Currently selected mod's unused settings:", "XmlExtensions_SelectedModUnusedKeys"));
+                    keyListListing.GapLine(4);
+                    keyListListing.Gap(2);
+
+                    Rect keyRect = keyListListing.GetRect(rect.height - 30f - 36f);
+                    Rect scrollRect2 = new Rect(0, 0, keyRect.width - 20f, Math.Max(XmlMod.unusedSettings[selectedMod].Count * 24f, rect.height - 29f - 36f));
+                    Widgets.BeginScrollView(keyRect, ref keyPosition, scrollRect2);
+                    rect2 = new Rect(0f, 0f, scrollRect2.width, 99999f);
+                    Listing_Standard keyListing = new Listing_Standard();
+                    keyListing.Begin(rect2);
+                    string tempStr = null;
+                    foreach (string key in XmlMod.unusedSettings[selectedMod])
+                    {
+                        bool del = false;
+                        keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedMod, key), ref del, Helpers.TryTranslate("Delete", "XmlExtensions_Delete"));
+                        if (del)
+                        {
+                            SettingsManager.DeleteSetting(selectedMod, key);
+                            tempStr = key;
+                        }
+                    }
+                    if (tempStr != null)
+                    {
+                        XmlMod.unusedSettings[selectedMod].Remove(tempStr);
+                        if (XmlMod.unusedSettings[selectedMod].Count == 0)
+                        {
+                            XmlMod.unusedMods.Remove(selectedMod);
+                            XmlMod.unusedSettings.Remove(selectedMod);
+                            selectedMod = null;
+                        }
+                    }
+                    keyListing.End();
+                    Widgets.EndScrollView();
+                    // Make sure the last key wasn't just deleted (otherwise missing key in dict exception)
+                    if (selectedMod != null)
+                    {
+                        keyListListing.GapLine(4);
+                        Rect tempRect = keyListListing.GetRect(32f);
+                        Rect firstRect = tempRect.LeftPart(0.495f);
+                        Listing_Standard buttonLeftListing = new Listing_Standard();
+                        buttonLeftListing.Begin(firstRect);
+                        if (buttonLeftListing.ButtonText(Helpers.TryTranslate("Delete {0} keys", "XmlExtensions_DeleteKeys").Replace("{0}", XmlMod.unusedSettings[selectedMod].Count.ToString())))
+                        {
+                            Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete every unused key of the current mod?", "XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                            {
+                                foreach (string key in XmlMod.unusedSettings[selectedMod])
+                                {
+                                    SettingsManager.DeleteSetting(selectedMod, key);
+                                }
+                                XmlMod.unusedMods.Remove(selectedMod);
+                                XmlMod.unusedSettings.Remove(selectedMod);
+                                selectedMod = null;
+                            }, "No".Translate(), null, null, false, null, null));
+                        }
+                        buttonLeftListing.End();
+
+                        Rect secondRect = tempRect.RightPart(0.495f);
+                        Listing_Standard buttonRightListing = new Listing_Standard();
+                        buttonRightListing.Begin(secondRect);
+                        GUI.color = Color.red;
+                        int count = 0;
+                        foreach (List<string> list in XmlMod.unusedSettings.Values)
+                        {
+                            count += list.Count;
+                        }
+                        if (buttonRightListing.ButtonText(Helpers.TryTranslate("Delete all {0} unused keys", "XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
+                        {
+                            Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate("Are you sure you want to delete all unused keys from every mod?", "XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
+                            {
+                                foreach (string mod in XmlMod.unusedMods)
+                                {
+                                    foreach (string key in XmlMod.unusedSettings[mod])
+                                    {
+                                        SettingsManager.DeleteSetting(mod, key);
+                                    }
+                                }
+                                XmlMod.unusedSettings.Clear();
+                                XmlMod.unusedMods.Clear();
+                                selectedMod = null;
+                            }, "No".Translate(), null, null, false, null, null));
+                        }
+                        GUI.color = Color.white;
+                        buttonRightListing.End();
+                    }
+                    keyListListing.End();
+                }
+            }
+        }
+
+        public class ViewPatchedDefs : SettingWindow
+        {
+            public List<string> defTypes = new();
+            public Vector2 scroll1 = new();
+            public string selectedDefType = null;
+            public List<string> defs = new();
+            public Vector2 scroll2 = new();
+            public string selectedDef = null;
+            public List<ModContentPackContainer> mods = new();
+            public Vector2 scroll3 = new();
+
+            public override void Init(XmlExtensions_MenuModSettings obj)
+            {
+                base.Init(obj);
+                foreach (string name in PatchManager.DefModDict.Keys)
+                {
+                    string temp = name.Split(';')[0];
+                    if (!defTypes.Contains(temp) && PatchManager.PatchedDefSet.Contains(name))
+                    {
+                        defTypes.Add(temp);
+                    }
+                }
+                defTypes.Sort();
+            }
+
+            public override void DrawContents(Rect rect)
+            {
+                Rect defTypeRect = rect.LeftPart(0.33f);
+                Listing_Standard listing = new();
+                listing.Begin(defTypeRect);
+                listing.Label("XmlExtensions_DefTypes".Translate());
+                listing.GapLine(6f);
+                Rect defTypeListRect = listing.GetRect(defTypeRect.height - listing.CurHeight);
+                Rect scrollRect = new Rect(defTypeListRect.x, defTypeListRect.y, defTypeListRect.width - 16f, Math.Max(defTypes.Count * 32, defTypeListRect.height + 1));
+                Widgets.BeginScrollView(defTypeListRect, ref scroll1, scrollRect);
+                Rect rect2 = new Rect(defTypeListRect.x, defTypeListRect.y, scrollRect.width, 99999f);
+                Listing_Standard listing2 = new();
+                listing2.Begin(rect2);
+                foreach (string defType in defTypes)
+                {
+                    if (defType == selectedDefType)
+                    {
+                        GUI.color = new Color(0.7f, 0.7f, 0.7f);
+                    }
+                    if (listing2.ButtonText(defType))
+                    {
+                        selectedDefType = defType;
+                        defs.Clear();
+                        foreach (string name in PatchManager.DefModDict.Keys)
+                        {
+                            string temp = name.Split(';')[0];
+                            if (temp == defType)
+                            {
+                                string temp2 = name.Split(';')[1];
+                                if (!defs.Contains(temp2) && PatchManager.PatchedDefSet.Contains(selectedDefType + ";" + temp2))
+                                {
+                                    defs.Add(temp2);
+                                }
+                            }
+                        }
+                        defs.Sort();
+                    }
+                    GUI.color = Color.white;
+                }
+                listing2.End();
+                Widgets.EndScrollView();
+                listing.End();
+
+                Rect defRect = rect.LeftPart(0.66f).RightPartPixels(rect.width * 0.33f);
+                listing = new();
+                listing.Begin(defRect);
+                listing.Label("XmlExtensions_Defs".Translate());
+                listing.GapLine(6f);
+                Rect defListRect = listing.GetRect(defRect.height - listing.CurHeight);
+                scrollRect = new Rect(defListRect.x, defListRect.y, defListRect.width - 16f, Math.Max(defs.Count * 32, defListRect.height + 1));
+                Widgets.BeginScrollView(defListRect, ref scroll2, scrollRect);
+                rect2 = new Rect(defListRect.x, defListRect.y, scrollRect.width, 99999f);
+                listing2 = new();
+                listing2.Begin(rect2);
+                foreach (string def in defs)
+                {
+                    if (def == selectedDef)
+                    {
+                        GUI.color = new Color(0.7f, 0.7f, 0.7f);
+                    }
+                    if (listing2.ButtonText(def))
+                    {
+                        selectedDef = def;
+                        mods.Clear();
+                        foreach (ModContentPackContainer pack in PatchManager.DefModDict[selectedDefType + ";" + selectedDef])
+                        {
+                            mods.Add(pack);
+                        }
+                        mods.Sort();
+                    }
+                    GUI.color = Color.white;
+                }
+                listing2.End();
+                Widgets.EndScrollView();
+                listing.End();
+                Rect modRect = rect.RightPartPixels(rect.width * 0.33f);
+                listing = new();
+                listing.Begin(modRect);
+                listing.Label("XmlExtensions_Mods".Translate());
+                listing.GapLine(6f);
+                Rect modListRect = listing.GetRect(modRect.height - listing.CurHeight);
+                scrollRect = new Rect(modListRect.x, modListRect.y, modListRect.width - 16f, Math.Max(mods.Count * 24, modListRect.height + 1));
+                Widgets.BeginScrollView(modListRect, ref scroll3, scrollRect);
+                rect2 = new Rect(modListRect.x, modListRect.y, scrollRect.width, 99999f);
+                listing2 = new();
+                listing2.Begin(rect2);
+                foreach (ModContentPackContainer mod in mods)
+                {
+                    if (mod.Pack != null && mod.Pack.Name != null)
+                    {
+                        string str = mod.Pack.Name + ":";
+                        foreach (Type type in mod.OperationTypes)
+                        {
+                            str += "\n" + (type?.ToString() ?? "Source");
+                        }
+                        listing2.Label(str);
+                    }
+                }
+                listing2.End();
+                Widgets.EndScrollView();
+                listing.End();
+            }
         }
     }
 }

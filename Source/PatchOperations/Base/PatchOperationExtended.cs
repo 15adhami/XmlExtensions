@@ -20,8 +20,8 @@ namespace XmlExtensions
                 Initialize();
                 if (PatchManager.applyingPatches && requiresDelay)
                 {
-                    if (!PatchManager.ModPatchDict.ContainsKey(this) && PatchManager.ActiveMod != null)
-                        PatchManager.ModPatchDict.Add(this, PatchManager.ActiveMod);
+                    if (!PatchManager.PatchModDict.ContainsKey(this) && PatchManager.ActiveMod != null)
+                        PatchManager.PatchModDict.Add(this, PatchManager.ActiveMod);
                     PatchManager.delayedPatches.Add(this);
                     return true;
                 }

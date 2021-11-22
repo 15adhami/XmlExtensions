@@ -22,7 +22,7 @@ namespace XmlExtensions
             if (node == null)
             {
                 // TODO: Upgrade to Helper
-                node = Helpers.SelectSingleNode(xpath, xml);
+                node = Helpers.SelectSingleNode(xpath, xml, this);
                 if (node == null)
                 {
                     XPathError();

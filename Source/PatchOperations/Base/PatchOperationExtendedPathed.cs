@@ -18,9 +18,9 @@ namespace XmlExtensions
                 return false;
             }
             if (selectSingleNode)
-                nodes = new() { Helpers.SelectSingleNode(xpath, xml) };
+                nodes = new() { Helpers.SelectSingleNode(xpath, xml, this) };
             else
-                nodes = Helpers.SelectNodes(xpath, xml).Cast<XmlNode>().ToList();
+                nodes = Helpers.SelectNodes(xpath, xml, this).Cast<XmlNode>().ToList();
             if (nodes == null || nodes.Count == 0)
             {
                 XPathError();

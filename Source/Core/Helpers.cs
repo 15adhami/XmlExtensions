@@ -404,40 +404,27 @@ namespace XmlExtensions
             return str;
         }
 
-        public static XmlNodeList SelectNodes(string path, XmlDocument xml)
+        // TODO: Put type of patch operation here
+        public static XmlNodeList SelectNodes(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNodeList list = xml.SelectNodes(path);
-            if (XmlMod.allSettings.advancedDebugging)
+            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
             {
                 foreach (string name in GetDefsFromPath(path, xml))
                 {
-                    if (!PatchManager.DefModDict.ContainsKey(name))
-                    {
-                        PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
-                    }
-                    if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
-                    {
-                        PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
-                    }
+                    PatchManager.ModPatchedDef(name, null, operation.GetType());
                 }
             }
             return list;
         }
 
-        public static XmlNode SelectSingleNode(string path, XmlDocument xml)
+        public static XmlNode SelectSingleNode(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNode node = xml.SelectSingleNode(path);
-            if (XmlMod.allSettings.advancedDebugging)
+            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
             {
                 string name = GetDefNameFromNode(node);
-                if (!PatchManager.DefModDict.ContainsKey(name))
-                {
-                    PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
-                }
-                if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
-                {
-                    PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
-                }
+                PatchManager.ModPatchedDef(name, null, operation.GetType());
             }
             return node;
         }

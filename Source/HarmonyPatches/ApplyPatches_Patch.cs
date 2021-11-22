@@ -18,7 +18,7 @@ namespace XmlExtensions
             {
                 foreach (PatchOperation patch in mod.Patches)
                 {
-                    PatchManager.ModPatchDict.Add(patch, mod);
+                    PatchManager.PatchModDict.Add(patch, mod);
                 }
             }
             PatchManager.applyingPatches = true;

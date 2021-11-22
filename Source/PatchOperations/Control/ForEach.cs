@@ -3,8 +3,9 @@ using Verse;
 
 namespace XmlExtensions
 {
-    internal class ForEach : PatchOperationExtendedPathed
+    internal class ForEach : PatchOperationExtended
     {
+        public string xpath;
         protected XmlContainer apply;
         protected string storeIn = "DEF";
         protected string brackets = "{}";
@@ -26,6 +27,12 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
+            XmlNodeList nodes = xml.SelectNodes(xpath);
+            if (nodes.Count == 0)
+            {
+                XPathError();
+                return false;
+            }
             foreach (XmlNode xmlNode in nodes)
             {
                 string path = xmlNode.GetXPath();

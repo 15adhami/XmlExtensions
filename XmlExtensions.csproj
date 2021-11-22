@@ -74,6 +74,7 @@
     <Compile Include="Source\Core\CustomXmlLoader.cs" />
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
+    <Compile Include="Source\Core\ModContentPackContainer.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\CheckForDuplicateNodes_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\CombineIntoUnifiedXML_Patch.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Source\XmlObjects\Setting\Base\KeyedSettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\MiddleColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Numeric.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\RadioButton.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\RadioButtons.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Range.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\ResetSettings.cs" />

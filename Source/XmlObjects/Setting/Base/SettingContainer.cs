@@ -171,7 +171,7 @@ namespace XmlExtensions.Setting
         /// <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
         protected int GetDefaultSpacing()
         {
-            return XmlMod.menus[XmlExtensions_MenuModSettings.activeMenu].defaultSpacing;
+            return XmlExtensions_MenuModSettings.activeMenu.defaultSpacing;
         }
 
         /// <summary>

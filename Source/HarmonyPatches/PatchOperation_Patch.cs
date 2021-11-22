@@ -13,7 +13,7 @@ namespace XmlExtensions
             {
                 if (ErrorManager.depth == 0)
                 {
-                    ModContentPack pack = PatchManager.ModPatchDict[__instance];
+                    ModContentPack pack = PatchManager.PatchModDict[__instance];
                     if (pack != null && PatchManager.ActiveMod != pack)
                     {
                         PatchManager.SetActiveMod(pack);
@@ -34,9 +34,9 @@ namespace XmlExtensions
             if (ErrorManager.depth == 0 && ErrorManager.ErrorCount() > 0 && !__result)
             {
                 PatchManager.FailedPatchCount++;
-                if (PatchManager.ModPatchDict.ContainsKey(__instance))
+                if (PatchManager.PatchModDict.ContainsKey(__instance))
                 {
-                    ErrorManager.PrintErrors(__instance.sourceFile, PatchManager.ModPatchDict[__instance]);
+                    ErrorManager.PrintErrors(__instance.sourceFile, PatchManager.PatchModDict[__instance]);
                 }
                 else
                 {

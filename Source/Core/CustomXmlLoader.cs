@@ -986,14 +986,7 @@ namespace XmlExtensions
                         string name = Helpers.GetDefNameFromNode(xmlNode);
                         if (name != null && xml.mod != null)
                         {
-                            if (!PatchManager.DefModDict.ContainsKey(name))
-                            {
-                                PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
-                            }
-                            if (!PatchManager.DefModDict[name].Contains(xml.mod))
-                            {
-                                PatchManager.DefModDict[name].Add(xml.mod);
-                            }
+                            PatchManager.ModPatchedDef(name, xml.mod, null);
                         }
                     }
                 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
+using System.Linq;
 using Verse;
 
 namespace XmlExtensions
@@ -24,18 +25,20 @@ namespace XmlExtensions
         public static Dictionary<string, XmlDocument> XmlDocs;
         public static Dictionary<string, Dictionary<XmlNode, XmlNode>> nodeMap;
         public static ModContentPack ActiveMod;
-        public static Dictionary<PatchOperation, ModContentPack> ModPatchDict;
-        public static Dictionary<string, HashSet<ModContentPack>> DefModDict;
+        public static Dictionary<PatchOperation, ModContentPack> PatchModDict;
+        public static Dictionary<string, HashSet<ModContentPackContainer>> DefModDict;
+        public static HashSet<string> PatchedDefSet;
         public static List<PatchOperationExtended> delayedPatches;
 
-        public static List<Type> PatchedClasses = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
+        public static List<Type> PatchedPatchOperations = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
              typeof(Verse.PatchOperationSetName),  };
 
         static PatchManager()
         {
+            PatchedDefSet = new();
             DefModDict = new();
             delayedPatches = new List<PatchOperationExtended>();
-            ModPatchDict = new Dictionary<PatchOperation, ModContentPack>();
+            PatchModDict = new Dictionary<PatchOperation, ModContentPack>();
             patchConstructors = new Dictionary<Type, Delegate>();
             nodeMap = new Dictionary<string, Dictionary<XmlNode, XmlNode>>();
             XmlDocs = new Dictionary<string, XmlDocument>();
@@ -53,12 +56,40 @@ namespace XmlExtensions
             }
         }
 
+        public static void ModPatchedDef(string name, ModContentPack pack, Type type)
+        {
+            pack ??= ActiveMod;
+            if (!DefModDict.ContainsKey(name))
+            {
+                DefModDict.Add(name, new HashSet<ModContentPackContainer>());
+            }
+            if (!DefModDict[name].Any(c => c.Pack == pack))
+            {
+                DefModDict[name].Add(new ModContentPackContainer(pack, type));
+            }
+            else
+            {
+                ModContentPackContainer container = DefModDict[name].Single(p => p.Pack == pack);
+                if (!container.OperationTypes.Contains(type))
+                {
+                    container.OperationTypes.Add(type);
+                }
+            }
+            if (type != null)
+            {
+                if (!PatchedDefSet.Contains(name))
+                {
+                    PatchedDefSet.Add(name);
+                }
+            }
+        }
+
         public static bool CheckType(Type T)
         {
             if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
             if (T.Namespace == "XmlExtensions") { return false; }
             if (typeof(PatchOperationPathed).IsAssignableFrom(T)) { return false; }
-            if (PatchedClasses.Contains(T)) { return false; }
+            if (PatchedPatchOperations.Contains(T)) { return false; }
             try
             {
                 if (AccessTools.Method(T, "ApplyWorker") == null)
@@ -77,7 +108,7 @@ namespace XmlExtensions
         {
             if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
             if (T.Namespace == "XmlExtensions") { return false; }
-            if (PatchedClasses.Contains(T)) { return false; }
+            if (PatchedPatchOperations.Contains(T)) { return false; }
             try
             {
                 if (AccessTools.Method(T, "ApplyWorker") == null)

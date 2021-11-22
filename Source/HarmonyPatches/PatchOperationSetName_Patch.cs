@@ -19,7 +19,7 @@ namespace XmlExtensions
             return null;
         }
 
-        private static void Postfix(ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
+        private static void Postfix(object __instance, ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
         {
             if (!__result)
             {
@@ -28,18 +28,11 @@ namespace XmlExtensions
                 else
                     ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + ", name=" + ___name + "): Error");
             }
-            else if (XmlMod.allSettings.advancedDebugging)
+            else if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
             {
                 foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
                 {
-                    if (!PatchManager.DefModDict.ContainsKey(name))
-                    {
-                        PatchManager.DefModDict.Add(name, new HashSet<ModContentPack>());
-                    }
-                    if (!PatchManager.DefModDict[name].Contains(PatchManager.ActiveMod))
-                    {
-                        PatchManager.DefModDict[name].Add(PatchManager.ActiveMod);
-                    }
+                    PatchManager.ModPatchedDef(name, null, __instance.GetType());
                 }
             }
         }
