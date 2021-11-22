@@ -59,7 +59,7 @@ namespace XmlExtensions
                 listingInfo.Label("XmlExtensions_PatchesApplied".Translate() + PatchManager.PatchCount.ToString() + "    " + "XmlExtensions_PatchedDefs".Translate() + PatchManager.PatchedDefSet.Count.ToString());
                 listingInfo.End();
                 inRect = inRect.BottomPartPixels(inRect.height - 24f);
-                Rect defTypeRect = inRect.LeftPart(0.33f);
+                Rect defTypeRect = inRect.LeftPartPixels(0.3333f * inRect.width);
                 Listing_Standard listing = new();
                 listing.Begin(defTypeRect);
                 listing.Label("XmlExtensions_DefTypes".Translate());
@@ -109,7 +109,7 @@ namespace XmlExtensions
                 Widgets.EndScrollView();
                 listing.End();
 
-                Rect defRect = inRect.LeftPart(0.66f).RightPartPixels(inRect.width * 0.33f);
+                Rect defRect = inRect.LeftPart(0.6666f).RightPartPixels(inRect.width * 0.3333f);
                 listing = new();
                 listing.Begin(defRect);
                 listing.Label("XmlExtensions_Defs".Translate());
@@ -150,7 +150,7 @@ namespace XmlExtensions
                 listing2.End();
                 Widgets.EndScrollView();
                 listing.End();
-                Rect modRect = inRect.RightPartPixels(inRect.width * 0.33f);
+                Rect modRect = inRect.RightPartPixels(inRect.width * 0.3333f);
                 listing = new();
                 listing.Begin(modRect);
                 listing.Label("XmlExtensions_Mods".Translate());
