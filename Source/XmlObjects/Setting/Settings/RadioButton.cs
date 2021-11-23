@@ -11,7 +11,6 @@ namespace XmlExtensions.Setting
         public string tooltip;
         public string tKey;
         public string tKeyTip;
-        public Color color = Color.white;
         public bool highlight = true;
 
         private Texture2D RadioButOnTex;
@@ -60,7 +59,7 @@ namespace XmlExtensions.Setting
                 SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
             }
             Color colorTemp = GUI.color;
-            GUI.color = color;
+            GUI.color = Color.white;
             GUI.DrawTexture(image: (!active) ? RadioButOffTex : RadioButOnTex, position: new Rect(rect.x + rect.width - 24f, rect.y + rect.height / 2f - 12f, 24f, 24f));
             GUI.color = colorTemp;
             return num;
