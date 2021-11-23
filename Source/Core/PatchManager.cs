@@ -27,7 +27,9 @@ namespace XmlExtensions
         public static ModContentPack ActiveMod;
         public static Dictionary<PatchOperation, ModContentPack> PatchModDict;
         public static Dictionary<string, HashSet<ModContentPackContainer>> DefModDict;
+        public static Dictionary<ModContentPack, HashSet<DefNameContainer>> ModDefDict;
         public static HashSet<string> PatchedDefSet;
+        public static HashSet<ModContentPack> PatchedModSet;
         public static List<PatchOperationExtended> delayedPatches;
 
         public static List<Type> PatchedPatchOperations = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
@@ -35,6 +37,8 @@ namespace XmlExtensions
 
         static PatchManager()
         {
+            ModDefDict = new();
+            PatchedModSet = new();
             PatchedDefSet = new();
             DefModDict = new();
             delayedPatches = new List<PatchOperationExtended>();
@@ -75,11 +79,34 @@ namespace XmlExtensions
                     container.OperationTypes.Add(type);
                 }
             }
+            if (pack != null)
+            {
+                if (!ModDefDict.ContainsKey(pack))
+                {
+                    ModDefDict.Add(pack, new HashSet<DefNameContainer>());
+                }
+                if (!ModDefDict[pack].Any(d => d.Name == name))
+                {
+                    ModDefDict[pack].Add(new DefNameContainer(name, type));
+                }
+                else
+                {
+                    DefNameContainer container = ModDefDict[pack].Single(d => d.Name == name);
+                    if (!container.OperationTypes.Contains(type))
+                    {
+                        container.OperationTypes.Add(type);
+                    }
+                }
+            }
             if (type != null)
             {
                 if (!PatchedDefSet.Contains(name))
                 {
                     PatchedDefSet.Add(name);
+                }
+                if (!PatchedModSet.Contains(pack))
+                {
+                    PatchedModSet.Add(pack);
                 }
             }
         }

@@ -749,7 +749,11 @@ namespace XmlExtensions
                     typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(xmlAttribute.Value, typeof(T).Namespace);
                     if (typeInAnyAssembly == null)
                     {
-                        Verse.Log.Error(defaultNamespaces.Count.ToString() + "Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
+                        Verse.Log.Error("Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
+                        if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
+                        {
+                            ErrorManager.PrintSusMods(Helpers.GetDefNode(xmlRoot));
+                        }
                         return typeof(T);
                     }
                 }

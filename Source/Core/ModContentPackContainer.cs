@@ -13,7 +13,10 @@ namespace XmlExtensions
         {
             Pack = pack;
             OperationTypes ??= new();
-            OperationTypes.Add(type);
+            if (type != null && !OperationTypes.Contains(type))
+            {
+                OperationTypes.Add(type);
+            }
         }
 
         public int CompareTo(object obj)
