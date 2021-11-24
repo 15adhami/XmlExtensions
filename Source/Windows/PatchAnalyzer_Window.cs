@@ -65,7 +65,7 @@ namespace XmlExtensions
             {
                 foreach (ModContentPack pack in PatchManager.ModDefDict.Keys)
                 {
-                    if (!packs.Contains(pack) && PatchManager.PatchedModSet.Contains(pack))
+                    if (PatchManager.PatchedModSet.Contains(pack))
                     {
                         packs.Add(pack);
                     }
@@ -158,7 +158,12 @@ namespace XmlExtensions
                                     if (temp == defType.Split(';')[0])
                                     {
                                         string temp2 = name.Split(';')[1];
-                                        if (!defs.Any(d => d.Split(';')[1] == temp2) && PatchManager.PatchedDefSet.Contains(name))
+                                       /* if (!defs.Any(d => d.Split(';')[1] == temp2) && PatchManager.PatchedDefSet.Contains(name))
+                                        {
+                                            defs.Add(name);
+                                        }*/
+
+                                        if (PatchManager.PatchedDefSet.Contains(name))
                                         {
                                             defs.Add(name);
                                         }
@@ -329,7 +334,7 @@ namespace XmlExtensions
                                     string temp = nameContainer.Name.Split(';')[0];
                                     if (temp == defType.Split(';')[0])
                                     {
-                                        if (!defContainers.Contains(nameContainer) && PatchManager.PatchedDefSet.Contains(nameContainer.Name) && PatchManager.ModDefDict[selectedPack].Any(p => ((p.Name == nameContainer.Name) && ((p.OperationTypes.Contains(null) && p.OperationTypes.Count > 1) || (!p.OperationTypes.Contains(null) && p.OperationTypes.Count > 0)))))
+                                        if (PatchManager.PatchedDefSet.Contains(nameContainer.Name) && PatchManager.ModDefDict[selectedPack].Any(p => ((p.Name == nameContainer.Name) && ((p.OperationTypes.Contains(null) && p.OperationTypes.Count > 1) || (!p.OperationTypes.Contains(null) && p.OperationTypes.Count > 0)))))
                                         {
                                             defContainers.Add(nameContainer);
                                         }
