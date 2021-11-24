@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace XmlExtensions
@@ -21,7 +21,7 @@ namespace XmlExtensions
         public Vector2 scroll3 = new();
         public int mode = 0;
 
-        public override Vector2 InitialSize => new Vector2(900, 740);
+        public override Vector2 InitialSize => new Vector2(900f + 256 + 6f, 740);
 
         public PatchAnalyzer_Window()
         {
@@ -54,9 +54,9 @@ namespace XmlExtensions
                 foreach (string name in PatchManager.DefModDict.Keys)
                 {
                     string temp = name.Split(';')[0];
-                    if (!defTypes.Contains(temp) && PatchManager.PatchedDefSet.Contains(name))
+                    if (!defTypes.Any(d => d.Split(';')[0] == temp) && PatchManager.PatchedDefSet.Contains(name))
                     {
-                        defTypes.Add(temp);
+                        defTypes.Add(name);
                     }
                 }
                 defTypes.Sort();
@@ -89,14 +89,16 @@ namespace XmlExtensions
                 Rect infoRect = inRect.TopPartPixels(24f).LeftPart(0.49f);
                 Listing_Standard listingInfo = new();
                 listingInfo.Begin(infoRect);
-                listingInfo.Label("XmlExtensions_PatchesApplied".Translate() + PatchManager.PatchCount.ToString() + "    " + "XmlExtensions_PatchedDefs".Translate() + PatchManager.PatchedDefSet.Count.ToString());
+                listingInfo.Label("XmlExtensions_AppliedPatches".Translate() + PatchManager.PatchCount.ToString() + "    " + "XmlExtensions_PatchedDefs".Translate() + PatchManager.PatchedDefSet.Count.ToString() + "    " + "XmlExtensions_TimeTaken".Translate() + PatchManager.watch2.ElapsedMilliseconds.ToString() + "ms");
                 listingInfo.End();
                 Rect modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).LeftPart(0.3333f);
                 Listing_Standard modeListing = new();
                 modeListing.Begin(modeRect);
-                modeListing.Label("XmlExtensions_Mode".Translate());
+                Verse.Text.Anchor = TextAnchor.UpperRight;
+                modeListing.Label("XmlExtensions_Mode".Translate() + "   ");
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
                 modeListing.End();
-                modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).LeftPart(0.6666f).RightPart(0.5f);
+                modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).RightPart(0.6666f).LeftPart(0.3333f).LeftPart(0.95f);
                 modeListing = new();
                 modeListing.Begin(modeRect);
                 if (modeListing.RadioButton("XmlExtensions_ByDef".Translate(), mode == 0, 0, "XmlExtensions_ByDefTip".Translate()))
@@ -105,7 +107,7 @@ namespace XmlExtensions
                     Init();
                 }
                 modeListing.End();
-                modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).RightPart(0.3333f);
+                modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).RightPart(0.6666f).LeftPart(0.6666f).RightPart(0.5f).LeftPart(0.975f).RightPart(0.9875f);
                 modeListing = new();
                 modeListing.Begin(modeRect);
                 if (modeListing.RadioButton("XmlExtensions_ByMod".Translate(), mode == 1, 0, "XmlExtensions_ByModTip".Translate()))
@@ -114,9 +116,18 @@ namespace XmlExtensions
                     Init();
                 }
                 modeListing.End();
+                modeRect = inRect.TopPartPixels(24f).RightPart(0.49f).RightPart(0.6666f).RightPart(0.3333f).RightPart(0.95f);
+                modeListing = new();
+                modeListing.Begin(modeRect);
+                if (modeListing.RadioButton("XmlExtensions_Summary".Translate(), mode == 2, 0, "XmlExtensions_SummaryTip".Translate()))
+                {
+                    mode = 2;
+                    Init();
+                }
+                modeListing.End();
+                inRect = inRect.BottomPartPixels(inRect.height - 24f);
                 if (mode == 0)
                 {
-                    inRect = inRect.BottomPartPixels(inRect.height - 24f);
                     Rect defTypeRect = inRect.LeftPartPixels(0.3333f * inRect.width);
                     Listing_Standard listing = new();
                     listing.Begin(defTypeRect);
@@ -137,19 +148,19 @@ namespace XmlExtensions
                             {
                                 GUI.color = new Color(0.7f, 0.7f, 0.7f);
                             }
-                            if (listing2.ButtonText(defType))
+                            if (listing2.ButtonText(defType.Split(';')[0]))
                             {
                                 selectedDefType = defType;
                                 defs.Clear();
                                 foreach (string name in PatchManager.DefModDict.Keys)
                                 {
                                     string temp = name.Split(';')[0];
-                                    if (temp == defType)
+                                    if (temp == defType.Split(';')[0])
                                     {
                                         string temp2 = name.Split(';')[1];
-                                        if (!defs.Contains(temp2) && PatchManager.PatchedDefSet.Contains(selectedDefType + ";" + temp2))
+                                        if (!defs.Any(d => d.Split(';')[1] == temp2) && PatchManager.PatchedDefSet.Contains(name))
                                         {
-                                            defs.Add(temp2);
+                                            defs.Add(name);
                                         }
                                     }
                                 }
@@ -187,11 +198,11 @@ namespace XmlExtensions
                             {
                                 GUI.color = new Color(0.7f, 0.7f, 0.7f);
                             }
-                            if (listing2.ButtonText(def))
+                            if (listing2.ButtonText(def.Split(';')[1]))
                             {
                                 selectedDef = def;
                                 mods.Clear();
-                                foreach (ModContentPackContainer pack in PatchManager.DefModDict[selectedDefType + ";" + selectedDef])
+                                foreach (ModContentPackContainer pack in PatchManager.DefModDict[selectedDef])
                                 {
                                     mods.Add(pack);
                                 }
@@ -208,6 +219,7 @@ namespace XmlExtensions
                     listing2.End();
                     Widgets.EndScrollView();
                     listing.End();
+
                     Rect modRect = inRect.RightPartPixels(inRect.width * 0.3333f);
                     listing = new();
                     listing.Begin(modRect);
@@ -239,15 +251,13 @@ namespace XmlExtensions
                 }
                 else if (mode == 1)
                 {
-                    inRect = inRect.BottomPartPixels(inRect.height - 24f);
-
                     Rect modRect = inRect.LeftPartPixels(0.3333f * inRect.width);
                     Listing_Standard listing = new();
                     listing.Begin(modRect);
                     listing.Label("XmlExtensions_Mods".Translate());
                     listing.GapLine(6f);
                     Rect modListRect = listing.GetRect(modRect.height - listing.CurHeight);
-                    Rect scrollRect = new Rect(modListRect.x, modListRect.y, modListRect.width - 16f, Math.Max(mods.Count * 24, modListRect.height + 1));
+                    Rect scrollRect = new Rect(modListRect.x, modListRect.y, modListRect.width - 16f, Math.Max(packs.Count * 32, modListRect.height + 1));
                     Widgets.BeginScrollView(modListRect, ref scroll1, scrollRect);
                     Rect rect2 = new Rect(modListRect.x, modListRect.y, scrollRect.width, 99999f);
                     Listing_Standard listing2 = new();
@@ -271,9 +281,9 @@ namespace XmlExtensions
                                     if (PatchManager.DefModDict[name].Any(p => p.Pack == pack))
                                     {
                                         ModContentPackContainer cont = PatchManager.DefModDict[name].Single(p => p.Pack == pack);
-                                        if (!defTypes.Contains(temp) && cont.OperationTypes.Count > 0)
+                                        if (!defTypes.Any(d => d.Split(';')[0] == temp) && ((cont.OperationTypes.Contains(null) && cont.OperationTypes.Count > 1) || (!cont.OperationTypes.Contains(null) && cont.OperationTypes.Count > 0)))
                                         {
-                                            defTypes.Add(temp);
+                                            defTypes.Add(name);
                                         }
                                     }
                                 }
@@ -310,16 +320,16 @@ namespace XmlExtensions
                             {
                                 GUI.color = new Color(0.7f, 0.7f, 0.7f);
                             }
-                            if (listing2.ButtonText(defType))
+                            if (listing2.ButtonText(defType.Split(';')[0]))
                             {
                                 selectedDefType = defType;
                                 defContainers.Clear();
                                 foreach (DefNameContainer nameContainer in PatchManager.ModDefDict[selectedPack])
                                 {
                                     string temp = nameContainer.Name.Split(';')[0];
-                                    if (temp == defType)
+                                    if (temp == defType.Split(';')[0])
                                     {
-                                        if (!defContainers.Contains(nameContainer) && PatchManager.PatchedDefSet.Contains(nameContainer.Name))
+                                        if (!defContainers.Contains(nameContainer) && PatchManager.PatchedDefSet.Contains(nameContainer.Name) && PatchManager.ModDefDict[selectedPack].Any(p => ((p.Name == nameContainer.Name) && ((p.OperationTypes.Contains(null) && p.OperationTypes.Count > 1) || (!p.OperationTypes.Contains(null) && p.OperationTypes.Count > 0)))))
                                         {
                                             defContainers.Add(nameContainer);
                                         }
@@ -345,7 +355,17 @@ namespace XmlExtensions
                     listing.Label("XmlExtensions_Defs".Translate());
                     listing.GapLine(6f);
                     Rect defListRect = listing.GetRect(defRect.height - listing.CurHeight);
-                    scrollRect = new Rect(defListRect.x, defListRect.y, defListRect.width - 16f, Math.Max(defs.Count * 32, defListRect.height + 1));
+                    float h = 0;
+                    foreach (DefNameContainer defName in defContainers)
+                    {
+                        h += 24;
+                        foreach (Type type in defName.OperationTypes)
+                        {
+                            h += 24;
+                        }
+                        h += 12;
+                    }
+                    scrollRect = new Rect(defListRect.x, defListRect.y, defListRect.width - 16f, Math.Max(h - 12, defListRect.height + 1));
                     Widgets.BeginScrollView(defListRect, ref scroll3, scrollRect);
                     rect2 = new Rect(defListRect.x, defListRect.y, scrollRect.width, 99999f);
                     listing2 = new();
@@ -362,6 +382,34 @@ namespace XmlExtensions
                         listing2.GetRect(12);
                         GUI.color = Color.white;
                         curr++;
+                    }
+                    listing2.End();
+                    Widgets.EndScrollView();
+                    listing.End();
+                }
+                else if (mode == 2)
+                {
+                    Rect modRect = inRect;
+                    Listing_Standard listing = new();
+                    listing.Begin(modRect);
+                    listing.Label("XmlExtensions_Mods".Translate());
+                    listing.GapLine(6f);
+                    Rect modListRect = listing.GetRect(modRect.height - listing.CurHeight);
+                    Rect scrollRect = new Rect(modListRect.x, modListRect.y, modListRect.width - 16f, Math.Max(PatchManager.PatchedModSet.Count * 100 - 12, modListRect.height + 1));
+                    Widgets.BeginScrollView(modListRect, ref scroll3, scrollRect);
+                    Rect rect2 = new Rect(modListRect.x, modListRect.y, scrollRect.width, 99999f);
+                    Listing_Standard listing2 = new();
+                    listing2.Begin(rect2);
+                    listing2.verticalSpacing = 0;
+                    foreach (ModContentPack pack in PatchManager.PatchedModSet)
+                    {
+                        listing2.Label(pack.Name + ":");
+                        GUI.color = Color.gray;
+                        listing2.Label("- " + PatchManager.ModPatchInfoDict[pack].patchCount.ToString() + " " + "XmlExtensions_PatchesApplied".Translate());
+                        listing2.Label("- " + PatchManager.ModPatchInfoDict[pack].defNames.Count.ToString() + " " + "XmlExtensions_DefsPatched".Translate());
+                        listing2.Label("- " + PatchManager.ModPatchInfoDict[pack].elapsedTime.ToString() + "ms " + "XmlExtensions_Elapsed".Translate());
+                        listing2.GetRect(12);
+                        GUI.color = Color.white;
                     }
                     listing2.End();
                     Widgets.EndScrollView();

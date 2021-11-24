@@ -34,11 +34,17 @@
 	<XmlExtensions_Mods>Mods:</XmlExtensions_Mods>
 	<XmlExtensions_EnableAdvancedDebuggingAndReboot>Boot game while Advanced Debugging is enabled to use Patch Analyzer.</XmlExtensions_EnableAdvancedDebuggingAndReboot>
 	<XmlExtensions_PatchedDefs>Defs patched: </XmlExtensions_PatchedDefs>
-	<XmlExtensions_PatchesApplied>Patches applied: </XmlExtensions_PatchesApplied>
+	<XmlExtensions_AppliedPatches>Patches applied: </XmlExtensions_AppliedPatches>
 	<XmlExtensions_ByDef>By Def</XmlExtensions_ByDef>
 	<XmlExtensions_ByDefTip>View patches by Def</XmlExtensions_ByDefTip>
 	<XmlExtensions_ByMod>By Mod</XmlExtensions_ByMod>
 	<XmlExtensions_ByModTip>View patches by Mod</XmlExtensions_ByModTip>
 	<XmlExtensions_Mode>Mode:</XmlExtensions_Mode>
+	<XmlExtensions_Summary>Summary</XmlExtensions_Summary>
+	<XmlExtensions_SummaryTip>View a summary of the patches</XmlExtensions_SummaryTip>
+	<XmlExtensions_TimeTaken>Time taken: </XmlExtensions_TimeTaken>
+	<XmlExtensions_PatchesApplied>patch(es) applied</XmlExtensions_PatchesApplied>
+	<XmlExtensions_DefsPatched>Def(s) patched</XmlExtensions_DefsPatched>
+	<XmlExtensions_Elapsed>elapsed</XmlExtensions_Elapsed>
 
 </LanguageData>

@@ -12,7 +12,7 @@ namespace XmlExtensions
         {
             Name = name;
             OperationTypes ??= new();
-            if (type != null && !OperationTypes.Contains(type))
+            if (!OperationTypes.Contains(type))
             {
                 OperationTypes.Add(type);
             }            

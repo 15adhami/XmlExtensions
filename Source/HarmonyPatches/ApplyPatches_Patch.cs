@@ -32,6 +32,7 @@ namespace XmlExtensions
             PatchManager.XmlDocs.Clear();
             PatchManager.nodeMap.Clear();
             PatchManager.watch.Reset();
+            PatchManager.SetActiveMod(null);
 
             //Add defNames to the menus
             foreach (XmlNode node in xmlDoc.SelectNodes("/Defs/XmlExtensions.SettingsMenuDef"))

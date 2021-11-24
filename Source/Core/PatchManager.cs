@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Xml;
 using System.Linq;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -14,6 +14,7 @@ namespace XmlExtensions
         public static XmlDocument defaultDoc;
         public static Stopwatch watch;
         public static Stopwatch watch2;
+        public static Stopwatch tempWatch;
         public static int PatchCount = 0;
         public static int FailedPatchCount = 0;
 
@@ -30,6 +31,7 @@ namespace XmlExtensions
         public static Dictionary<ModContentPack, HashSet<DefNameContainer>> ModDefDict;
         public static HashSet<string> PatchedDefSet;
         public static HashSet<ModContentPack> PatchedModSet;
+        public static Dictionary<ModContentPack, ModPatchContainer> ModPatchInfoDict;
         public static List<PatchOperationExtended> delayedPatches;
 
         public static List<Type> PatchedPatchOperations = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
@@ -37,6 +39,8 @@ namespace XmlExtensions
 
         static PatchManager()
         {
+            tempWatch = new();
+            ModPatchInfoDict = new();
             ModDefDict = new();
             PatchedModSet = new();
             PatchedDefSet = new();
@@ -54,9 +58,21 @@ namespace XmlExtensions
 
         public static void SetActiveMod(ModContentPack mod)
         {
+            if (ActiveMod != null)
+            {
+                if (ModPatchInfoDict.ContainsKey(ActiveMod))
+                {
+                    ModPatchInfoDict[ActiveMod].elapsedTime = (int)tempWatch.ElapsedMilliseconds;
+                }
+            }
+            ActiveMod = mod;
             if (mod != null)
             {
-                ActiveMod = mod;
+                tempWatch.Restart();
+            }
+            else
+            {
+                tempWatch.Reset();
             }
         }
 
@@ -107,6 +123,18 @@ namespace XmlExtensions
                 if (!PatchedModSet.Contains(pack))
                 {
                     PatchedModSet.Add(pack);
+                }
+                if (pack != null)
+                {
+                    if (!ModPatchInfoDict.ContainsKey(pack))
+                    {
+                        ModPatchInfoDict.Add(pack, new ModPatchContainer());
+                    }
+                    ModPatchInfoDict[pack].patchCount++;
+                    if (!ModPatchInfoDict[pack].defNames.Contains(name))
+                    {
+                        ModPatchInfoDict[pack].defNames.Add(name);
+                    }
                 }
             }
         }
