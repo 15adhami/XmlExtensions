@@ -19,19 +19,24 @@ namespace XmlExtensions.Boolean
                 NullError("mods");
                 return false;
             }
-            if (logic == "or")
+            foreach (string mod in mods)
             {
-                if (!packageId)
-                    flag = mods.Any(x => LoadedModManager.RunningMods.Any(y => y.Name == x));
+                if (LoadedModManager.RunningMods.Any(m => (packageId ? m.PackageId.ToLower() : m.Name.ToLower()) == mod.ToLower()))
+                {
+                    flag = true;
+                    if (logic.ToLower() == "or")
+                    {
+                        break;
+                    }
+                }
                 else
-                    flag = mods.Any(x => LoadedModManager.RunningMods.Any(y => y.PackageId.ToLower() == x.ToLower()));
-            }
-            else
-            {
-                if (!packageId)
-                    flag = mods.All(x => LoadedModManager.RunningMods.Any(y => y.Name == x));
-                else
-                    flag = mods.All(x => LoadedModManager.RunningMods.Any(y => y.PackageId.ToLower() == x.ToLower()));
+                {
+                    flag = false;
+                    if (logic.ToLower() == "and")
+                    {
+                        break;
+                    }
+                }
             }
             b = flag;
             return true;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Verse;
+using System.Linq;
 
 namespace XmlExtensions
 {
@@ -30,14 +31,13 @@ namespace XmlExtensions
                 NullError("mods");
                 return false;
             }
-            foreach (ModContentPack mod in LoadedModManager.RunningMods)
+            foreach (string mod in mods)
             {
-                string str = packageId ? mod.PackageId : mod.Name;
-                if (mods.Contains(str))
+                if (LoadedModManager.RunningMods.Any(m => (packageId ? m.PackageId.ToLower() : m.Name.ToLower()) == mod.ToLower()))
                 {
-                    foundMod = str;
+                    foundMod = mod;
                     flag = true;
-                    if (logic == "or")
+                    if (logic.ToLower() == "or")
                     {
                         break;
                     }
@@ -45,7 +45,7 @@ namespace XmlExtensions
                 else
                 {
                     flag = false;
-                    if (logic == "and")
+                    if (logic.ToLower() == "and")
                     {
                         break;
                     }
