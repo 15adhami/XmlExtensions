@@ -13,7 +13,7 @@ namespace XmlExtensions.Setting
         protected override bool Init(string selectedMod)
         {
             settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings;
-            return InitializeSettingsList(selectedMod, settings);
+            return true;
         }
 
         protected override float CalculateHeight(float width, string selectedMod)
