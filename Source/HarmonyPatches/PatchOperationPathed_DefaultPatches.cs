@@ -40,7 +40,7 @@ namespace XmlExtensions.Source.HarmonyPatches
                     ErrorManager.AddError(__instance.GetType().ToString() + "(xpath=\"" + ___xpath + "\"): Error");
                 }
             }
-            else if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
+            else if (ErrorManager.bootedWithAdvancedDebugging && PatchManager.applyingPatches)
             {
                 foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
                 {

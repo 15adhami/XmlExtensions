@@ -21,6 +21,7 @@ namespace XmlExtensions
         public XmlMod(ModContentPack content) : base(content)
         {
             allSettings = GetSettings<XmlModBaseSettings>();
+            ErrorManager.bootedWithAdvancedDebugging = allSettings.advancedDebugging;
             if (allSettings.PinnedMods == null)
             {
                 allSettings.PinnedMods = new HashSet<string>();

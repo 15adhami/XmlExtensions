@@ -21,7 +21,7 @@ namespace XmlExtensions
 				{
 					if (tempHashSet.Contains(childNode.Name))
 					{
-						if (XmlMod.allSettings.advancedDebugging)
+						if (ErrorManager.bootedWithAdvancedDebugging)
 						{
 							Verse.Log.Error("XML error: The node <" + childNode.Name + "> appeared twice within <" + node.Name + "> " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(root)) + ((node != root) ? ("\nWhole XML: " + root.OuterXml) : ""));
 							ErrorManager.PrintSusMods(root);
