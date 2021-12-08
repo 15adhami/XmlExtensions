@@ -408,7 +408,7 @@ namespace XmlExtensions
         public static XmlNodeList SelectNodes(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNodeList list = xml.SelectNodes(path);
-            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
+            if (ErrorManager.bootedWithAdvancedDebugging && PatchManager.applyingPatches)
             {
                 foreach (string name in GetDefsFromPath(path, xml))
                 {
@@ -421,7 +421,7 @@ namespace XmlExtensions
         public static XmlNode SelectSingleNode(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNode node = xml.SelectSingleNode(path);
-            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
+            if (ErrorManager.bootedWithAdvancedDebugging && PatchManager.applyingPatches)
             {
                 string name = GetDefNameFromNode(node);
                 PatchManager.ModPatchedDef(name, null, operation.GetType());
