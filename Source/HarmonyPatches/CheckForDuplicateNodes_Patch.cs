@@ -23,7 +23,7 @@ namespace XmlExtensions
 					{
 						if (ErrorManager.bootedWithAdvancedDebugging)
 						{
-							Verse.Log.Error("XML error: The node <" + childNode.Name + "> appeared twice within <" + node.Name + "> " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(root)) + ((node != root) ? ("\nWhole XML: " + root.OuterXml) : ""));
+							Verse.Log.Error("XML error: The node <" + childNode.Name + "> appeared twice within <" + node.Name + ">. Def: " + root.Name + " " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(root)) + ((node != root) ? ("\nWhole XML: " + root.OuterXml) : ""));
 							ErrorManager.PrintSusMods(root);
 						}
 						else

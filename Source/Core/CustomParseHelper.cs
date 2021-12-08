@@ -45,7 +45,7 @@ namespace XmlExtensions
 			{
 				result = (int)float.Parse(str, CultureInfo.InvariantCulture);
 				string warn = "Parsed " + str + " as int from the node " + xmlNode.OuterXml;
-				warn += "\n" + xmlRoot.Name + " " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot)) + "\n";
+				warn += ". Def: " + xmlRoot.Name + " " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot));
 				Verse.Log.Warning(warn);
 			}
 			return result;

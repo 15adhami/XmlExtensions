@@ -506,7 +506,10 @@ namespace XmlExtensions
                 catch (Exception ex3)
                 {
                     if (nameOfDef != null)
+                    {
                         Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeof(T), ". Def: ", fullRoot.Name, " ", Helpers.GetNameFromName(nameOfDef), "\n", ex3));
+                        ErrorManager.PrintSusMods(fullRoot);
+                    }
                     else
                         Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeof(T), "\n", ex3));
                 }
