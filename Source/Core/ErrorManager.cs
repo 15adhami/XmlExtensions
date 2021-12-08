@@ -7,7 +7,7 @@ namespace XmlExtensions
     internal static class ErrorManager
     {
         public static int depth = 0;
-        public static bool bootedWithAdvancedDebugging = false;
+        public static bool bootedWithAdvancedDebugging = true;
 
         private static List<string> errors;
 
