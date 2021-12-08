@@ -14,10 +14,11 @@ namespace XmlExtensions.Setting
         }
 
         public List<Tab> tabs;
+        public int rows = 1;
 
         private List<TabRecord> tabRecords;
         private int selectedTab = 0;
-        private float tabHeight = 32;
+        private float tabHeight = 31;
 
         protected override bool Init(string selectedMod)
         {
@@ -47,13 +48,13 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return CalculateHeightSettingsList(width, selectedMod, tabs[selectedTab].settings) + (int)tabHeight + 4;
+            return CalculateHeightSettingsList(width, selectedMod, tabs[selectedTab].settings) + rows*((int)tabHeight);
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            inRect.yMin += tabHeight;
-            TabDrawer.DrawTabs(inRect, tabRecords, 200f);
+            inRect.yMin += rows*tabHeight;
+            TabDrawer.DrawTabs(inRect, tabRecords, rows);
             DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
         }
     }
