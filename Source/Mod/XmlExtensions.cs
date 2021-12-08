@@ -12,11 +12,7 @@ namespace XmlExtensions
     {
         static XmlExtensions()
         {
-            ErrorManager.ClearErrors();/*
-            if (ErrorManager.shouldEnableAdvancedDebugging && !ErrorManager.bootedWithAdvancedDebugging)
-            {
-                Verse.Log.Warning("[XML Extensions]: Enable Advanced Debugging Mode for additional info on errors/warnings!");
-            }*/
+            ErrorManager.ClearErrors();
             foreach (PatchOperationExtended op in PatchManager.delayedPatches)
             {
                 op.Apply(null);

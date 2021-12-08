@@ -7,8 +7,6 @@ namespace XmlExtensions
     internal static class ErrorManager
     {
         public static int depth = 0;
-        public static bool shouldEnableAdvancedDebugging = false;
-        public static bool bootedWithAdvancedDebugging = false;
 
         private static List<string> errors;
 
@@ -113,17 +111,6 @@ namespace XmlExtensions
             {
                 PrintModsThatPatched(mods, "Possibly relevant mods for above error:");
             }
-        }
-
-        public static void Error(string error)
-        {
-            Verse.Log.Error(error);
-        }
-
-        public static void AdvancedError(string error)
-        {
-            shouldEnableAdvancedDebugging = true;
-            Error(error);
         }
     }
 }
