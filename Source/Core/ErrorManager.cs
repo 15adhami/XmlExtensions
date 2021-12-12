@@ -40,6 +40,7 @@ namespace XmlExtensions
         /// </summary>
         public static void PrintErrors()
         {
+
             string trace = "";
             trace += "[Start of stack trace]\n";
             foreach (string error in errors)
