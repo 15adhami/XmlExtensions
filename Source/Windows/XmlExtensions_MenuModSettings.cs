@@ -301,7 +301,10 @@ namespace XmlExtensions
             loadedMods.Clear();
             foreach (string id in XmlMod.loadedXmlMods)
             {
-                loadedMods.Add(new ModContainer(id));
+                if (XmlMod.settingsPerMod[id].label != null)
+                {
+                    loadedMods.Add(new ModContainer(id));
+                }
             }
             if (XmlMod.allSettings.standardMods)
             {

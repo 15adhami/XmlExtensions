@@ -30,7 +30,10 @@ namespace XmlExtensions
                 string defStr = "";
                 defStr += "<defName>" + modId.Replace('.', '_') + "</defName>";
                 defStr += "<modId>" + modId + "</modId>";
-                defStr += "<tKey>" + (tKey == null ? "" : tKey) + "</tKey>";
+                if (tKey != null)
+                {
+                    defStr += "<tKey>" + tKey + "</tKey>";
+                }
                 defStr += "<defaultSpacing>" + defaultSpacing.ToString() + "</defaultSpacing>";
                 defStr += "<label>" + label + "</label>";
                 defStr += settings.node.OuterXml;
