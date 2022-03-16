@@ -29,7 +29,7 @@
         </member>
         <member name="M:XmlExtensions.PatchOperationSafe.ContainsNode(System.Xml.XmlNode,System.Xml.XmlNode)">
             <summary>
-            Checks if a node somtains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
+            Checks if a node contains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
             </summary>
             <param name="parent">The node whose children you want check</param>
             <param name="node">The node that will be checked against</param>
