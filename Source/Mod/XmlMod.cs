@@ -6,6 +6,9 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions
 {
+    /// <summary>
+    /// Class containing internal data and obsolete methods.
+    /// </summary>
     public class XmlMod : Mod
     {
         internal static XmlModBaseSettings allSettings;

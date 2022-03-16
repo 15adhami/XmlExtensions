@@ -6,9 +6,16 @@ namespace XmlExtensions
     {
         public int safetyDepth = -1;
         public bool checkAttributes = false;
+        public Mode mode = Mode.Name;
+
+        public enum Mode
+        {
+            Name,
+            InnerText
+        }
 
         /// <summary>
-        /// Checks if a node somtains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
+        /// Checks if a node contains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
         /// </summary>
         /// <param name="parent">The node whose children you want check</param>
         /// <param name="node">The node that will be checked against</param>
@@ -18,7 +25,7 @@ namespace XmlExtensions
             XmlAttributeCollection attrs = node.Attributes;
             foreach (XmlNode childNode in parent.ChildNodes)
             {
-                if (childNode.Name == node.Name)
+                if ((childNode.Name == node.Name && mode == Mode.Name) || (childNode.InnerText == node.InnerText && mode == Mode.InnerText))
                 {
                     if (!checkAttributes)
                     {
