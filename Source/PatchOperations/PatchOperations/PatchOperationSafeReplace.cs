@@ -26,7 +26,7 @@ namespace XmlExtensions
             XmlNode foundNode = null;
             if (ContainsNode(parent, child, ref foundNode))
             {
-                if (safetyDepth != depth)
+                if (depth < safetyDepth)
                 {
                     if (child.HasChildNodes && child.FirstChild.HasChildNodes)
                     {

@@ -14,26 +14,26 @@ namespace XmlExtensions
             {
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
-                    int d = 0;
-                    tryAddNode(xmlNode, addNode, d);
+                    tryAddNode(xmlNode, addNode, 0);
                 }
             }
             return true;
         }
 
-        private void tryAddNode(XmlNode parent, XmlNode child, int depth)
+        private void tryAddNode(XmlNode parent, XmlNode addNode, int depth)
         {
-            if (!ContainsNode(parent, child) || depth == safetyDepth)
+            XmlNode foundNode = null;
+            if (!ContainsNode(parent, addNode, ref foundNode) || depth >= safetyDepth)
             {
-                parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+                parent.AppendChild(parent.OwnerDocument.ImportNode(addNode, true));
             }
             else
             {
-                if (child.HasChildNodes && child.FirstChild.HasChildNodes)
+                if (addNode.HasChildNodes && addNode.FirstChild.HasChildNodes)
                 {
-                    foreach (XmlNode newChild in child.ChildNodes)
+                    foreach (XmlNode newChild in addNode.ChildNodes)
                     {
-                        tryAddNode(parent[child.Name], newChild, depth + 1);
+                        tryAddNode(foundNode, newChild, depth + 1);
                     }
                 }
             }

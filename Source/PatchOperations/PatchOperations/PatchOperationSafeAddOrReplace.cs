@@ -28,17 +28,10 @@ namespace XmlExtensions
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
-            else if (depth == safetyDepth)
+            else if (depth >= safetyDepth)
             {
-                if (!ContainsNode(parent, child))
-                {
-                    parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
-                }
-                else
-                {
-                    parent.InsertAfter(parent.OwnerDocument.ImportNode(child, true), foundNode);
-                    parent.RemoveChild(foundNode);
-                }
+                parent.InsertAfter(parent.OwnerDocument.ImportNode(child, true), foundNode);
+                parent.RemoveChild(foundNode);
             }
             else
             {
@@ -48,6 +41,11 @@ namespace XmlExtensions
                     {
                         tryAddOrReplaceNode(foundNode, newChild, depth + 1);
                     }
+                }
+                else
+                {
+                    parent.InsertAfter(parent.OwnerDocument.ImportNode(child, true), foundNode);
+                    parent.RemoveChild(foundNode);
                 }
             }
         }

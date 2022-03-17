@@ -20,16 +20,6 @@ namespace XmlExtensions
         protected override bool PreCheck(XmlDocument xml)
         {
             if (!base.PreCheck(xml)) { return false; }
-            if (value == null)
-            {
-                Error("<value> is null");
-                return false;
-            }
-            if (operation == null)
-            {
-                Error("<operation> is null");
-                return false;
-            }
             return true;
         }
 
