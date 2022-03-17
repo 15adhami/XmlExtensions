@@ -23,7 +23,8 @@ namespace XmlExtensions
 
         private void tryReplaceNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (ContainsNode(parent, child))
+            XmlNode foundNode = null;
+            if (ContainsNode(parent, child, ref foundNode))
             {
                 if (safetyDepth != depth)
                 {
@@ -31,19 +32,19 @@ namespace XmlExtensions
                     {
                         foreach (XmlNode newChild in child.ChildNodes)
                         {
-                            tryReplaceNode(parent[child.Name], newChild, depth + 1);
+                            tryReplaceNode(foundNode, newChild, depth + 1);
                         }
                     }
                     else
                     {
-                        XmlNode xmlNode = parent[child.Name];
+                        XmlNode xmlNode = foundNode;
                         parent.InsertBefore(parent.OwnerDocument.ImportNode(child, true), xmlNode);
                         parent.RemoveChild(xmlNode);
                     }
                 }
                 else
                 {
-                    XmlNode xmlNode = parent[child.Name];
+                    XmlNode xmlNode = foundNode;
                     parent.InsertBefore(parent.OwnerDocument.ImportNode(child, true), xmlNode);
                     parent.RemoveChild(xmlNode);
                 }

@@ -27,7 +27,8 @@ namespace XmlExtensions
 
         private void tryAddNode(XmlNode parent, XmlNode child, int depth)
         {
-            if (!ContainsNode(parent, child) || depth == safetyDepth)
+            XmlNode foundNode = null;
+            if (!ContainsNode(parent, child, ref foundNode) || depth == safetyDepth)
             {
                 parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
             }
@@ -37,7 +38,7 @@ namespace XmlExtensions
                 {
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
-                        tryAddNode(parent[child.Name], newChild, depth + 1);
+                        tryAddNode(foundNode, newChild, depth + 1);
                     }
                 }
             }

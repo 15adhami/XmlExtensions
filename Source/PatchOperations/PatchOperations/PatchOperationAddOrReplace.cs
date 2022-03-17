@@ -10,18 +10,19 @@ namespace XmlExtensions
         protected override bool Patch(XmlDocument xml)
         {
             XmlNode node = value.node;
+            XmlNode foundNode = null;
             foreach (XmlNode xmlNode in nodes)
             {
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
-                    if (!ContainsNode(xmlNode, addNode))
+                    if (!ContainsNode(xmlNode, addNode, ref foundNode))
                     {
                         xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(addNode, true));
                     }
                     else
                     {
-                        xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), xmlNode[addNode.Name]);
-                        xmlNode.RemoveChild(xmlNode[addNode.Name]);
+                        xmlNode.InsertAfter(xmlNode.OwnerDocument.ImportNode(addNode, true), foundNode);
+                        xmlNode.RemoveChild(foundNode);
                     }
                 }
             }
