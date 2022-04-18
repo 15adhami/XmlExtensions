@@ -20,7 +20,7 @@ namespace XmlExtensions
         public enum Operation
         {
             Remove,
-            Add
+            Merge
         }
         protected override bool Patch(XmlDocument xml)
         {
@@ -38,7 +38,7 @@ namespace XmlExtensions
                             {
                                 nodesToRemove.Add(child);
                             }
-                            else if (operation == Operation.Add)
+                            else if (operation == Operation.Merge)
                             {
                                 if (child.HasChildNodes)
                                 {
