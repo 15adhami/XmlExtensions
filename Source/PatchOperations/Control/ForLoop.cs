@@ -21,21 +21,17 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            if (increment > 0)
+            int count = 0;
+            for (i = from; (increment > 0) ? (i < to) : (i > to); i += increment)
             {
-                for (i = from; i < to; i += increment)
+                count++;
+                if (count >= 10000)
                 {
-                    XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, i.ToString(), brackets);
-                    if (!RunPatches(newContainer, xml)) { return false; }
+                    Error("Loop limit reached");
+                    return false;
                 }
-            }
-            else if (increment < 0)
-            {
-                for (i = from - 1; i >= to; i -= increment)
-                {
-                    XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, i.ToString(), brackets);
-                    if (!RunPatches(newContainer, xml)) { return false; }
-                }
+                XmlContainer newContainer = Helpers.SubstituteVariableXmlContainer(apply, storeIn, i.ToString(), brackets);
+                if (!RunPatches(newContainer, xml)) { return false; }
             }
             return true;
         }
