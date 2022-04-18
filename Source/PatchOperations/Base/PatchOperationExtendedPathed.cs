@@ -20,7 +20,13 @@ namespace XmlExtensions
             if (selectSingleNode)
                 nodes = new() { Helpers.SelectSingleNode(xpath, xml, this) };
             else
-                nodes = Helpers.SelectNodes(xpath, xml, this).Cast<XmlNode>().ToList();
+            {
+                nodes = new();
+                foreach (XmlNode node in Helpers.SelectNodes(xpath, xml, this))
+                {
+                    nodes.Add(node);
+                }
+            }
             if (nodes == null || nodes.Count == 0)
             {
                 XPathError();

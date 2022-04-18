@@ -94,6 +94,7 @@
     <Compile Include="Source\Core\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\Core\ModContainer.cs" />
     <Compile Include="Source\Core\ObjectContainer.cs" />
+    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />
     <Compile Include="Source\Windows\PatchAnalyzer_Window.cs" />
     <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
     <Compile Include="Source\PatchOperations\Data\UsingNamespace.cs" />
