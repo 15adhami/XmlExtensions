@@ -78,6 +78,10 @@ namespace XmlExtensions
 
         public static void ModPatchedDef(string name, ModContentPack pack, Type type)
         {
+            if (name == null)
+            {
+                return;
+            }
             pack ??= ActiveMod;
             if (!DefModDict.ContainsKey(name))
             {
