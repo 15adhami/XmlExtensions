@@ -423,7 +423,7 @@ namespace XmlExtensions
             XmlNode node = xml.SelectSingleNode(path);
             if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
             {
-                string name = GetDefNameFromNode(node);
+                string name = GetDefNameFromNode(GetDefNode(node));
                 PatchManager.ModPatchedDef(name, null, operation.GetType());
             }
             return node;
