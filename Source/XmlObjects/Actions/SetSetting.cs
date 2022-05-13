@@ -17,11 +17,19 @@
 
             if (isKey)
             {
-                newStr1 = SettingsManager.GetSetting(modId, value);
+                if (!SettingsManager.TryGetSetting(modId, value, out newStr1))
+                {
+                    Error("The key given in <value> does not exist");
+                    return false;
+                }
             }
             if (isKey2)
             {
-                newStr2 = SettingsManager.GetSetting(modId, value2);
+                if (!SettingsManager.TryGetSetting(modId, value2, out newStr2))
+                {
+                    Error("The key given in <value2> does not exist");
+                    return false;
+                }
             }
             if (operation == "")
             {
