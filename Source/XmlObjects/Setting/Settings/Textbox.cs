@@ -7,6 +7,14 @@ namespace XmlExtensions.Setting
     {
         public string tKey;
         public int lines = 1;
+        public Anchor anchor = Anchor.Left;
+
+        public enum Anchor
+        {
+            Left = TextAnchor.MiddleLeft,
+            Middle = TextAnchor.MiddleCenter,
+            Right = TextAnchor.MiddleRight
+        }
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
@@ -18,7 +26,10 @@ namespace XmlExtensions.Setting
             string currStr = SettingsManager.GetSetting(selectedMod, key);
             if (label != null)
             {
-                SettingsManager.SetSetting(selectedMod, key, Widgets.TextEntryLabeled(inRect, Helpers.TryTranslate(label, tKey), currStr));
+                Verse.Text.Anchor = (TextAnchor)anchor;
+                Widgets.Label(inRect.LeftHalf(), Helpers.TryTranslate(label, tKey));
+                SettingsManager.SetSetting(selectedMod, key, Widgets.TextField(inRect.RightHalf(), currStr));
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
             }
             else
             {

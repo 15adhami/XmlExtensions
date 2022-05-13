@@ -46,13 +46,14 @@ namespace XmlExtensions
                 else
                     return 0;
             });
-            
+
 
             // Initializing unloaded mod settings
             int c = 0;
             string tId = "";
             List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             kvpList.Sort(delegate (KeyValuePair<string, string> pair1, KeyValuePair<string, string> pair2) { return pair1.Key.CompareTo(pair2.Key); });
+            Verse.Log.Message("TT");
             foreach (KeyValuePair<string, string> pair in kvpList)
             {
                 if (pair.Key.Contains(";"))
@@ -74,6 +75,7 @@ namespace XmlExtensions
                     XmlMod.allSettings.dataDict.Remove(pair.Key);
                 }
             }
+            
             XmlMod.unusedMods.Sort();
             foreach (List<string> list in XmlMod.unusedSettings.Values)
             {

@@ -106,6 +106,27 @@ namespace XmlExtensions
                         XmlMod.AddKeyedAction(modId, action.key, action);
                     }
                 }
+                if (preOpenActions != null)
+                {
+                    foreach (ActionContainer action in preOpenActions)
+                    {
+                        action.modId = modId;
+                    }
+                }
+                if (postCloseActions != null)
+                {
+                    foreach (ActionContainer action in postCloseActions)
+                    {
+                        action.modId = modId;
+                    }
+                }
+                if (onFrameActions != null)
+                {
+                    foreach (ActionContainer action in onFrameActions)
+                    {
+                        action.modId = modId;
+                    }
+                }
             }
             catch (Exception e)
             {
