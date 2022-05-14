@@ -18,6 +18,13 @@ namespace XmlExtensions.Setting
                 label = "Apply";
                 tKey = "XmlExtensions_Apply";
             }
+            if (actions != null)
+            {
+                foreach (ActionContainer action in actions)
+                {
+                    action.modId = selectedMod;
+                }
+            }
             return true;
         }
 

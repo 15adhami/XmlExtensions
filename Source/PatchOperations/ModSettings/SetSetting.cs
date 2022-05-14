@@ -14,6 +14,16 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
+            if (key == null)
+            {
+                NullError("key");
+                return false;
+            }
+            if (modId == null)
+            {
+                NullError("modId");
+                return false;
+            }
             string val;
             string newStr1 = value;
             string newStr2 = value2;
