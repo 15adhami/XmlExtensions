@@ -6,10 +6,30 @@ namespace XmlExtensions
     internal class CreateDocument : PatchOperationExtendedPathed
     {
         public string docName;
+        public bool emptyDocument = false;
+
+        protected override bool PreCheck(XmlDocument xml)
+        {
+            if (!emptyDocument)
+            {
+                return base.PreCheck(xml);
+            }
+            else
+            {
+                return true;
+            } 
+        }
 
         protected override void SetException()
         {
-            CreateExceptions(docName, "docName", xpath, "xpath");
+            if (!emptyDocument)
+            {
+                CreateExceptions(docName, "docName", xpath, "xpath");
+            }  
+            else
+            {
+                CreateExceptions(docName, "docName");
+            }
         }
 
         protected override bool Patch(XmlDocument xml)
@@ -19,22 +39,28 @@ namespace XmlExtensions
                 PatchManager.nodeMap.Add(docName, new Dictionary<XmlNode, XmlNode>());
                 XmlDocument doc = new XmlDocument();
                 doc.AppendChild(doc.CreateNode(XmlNodeType.Element, null, docName, null));
-                foreach (XmlNode node in nodes)
+                if (!emptyDocument)
                 {
-                    XmlNode newNode = doc.ImportNode(node, true);
-                    doc.DocumentElement.AppendChild(newNode);
-                    PatchManager.nodeMap[docName].Add(newNode, node);
+                    foreach (XmlNode node in nodes)
+                    {
+                        XmlNode newNode = doc.ImportNode(node, true);
+                        doc.DocumentElement.AppendChild(newNode);
+                        PatchManager.nodeMap[docName].Add(newNode, node);
+                    }
                 }
                 PatchManager.XmlDocs.Add(docName, doc);
             }
             else
             {
                 XmlDocument doc = PatchManager.XmlDocs[docName];
-                foreach (XmlNode node in nodes)
+                if (!emptyDocument)
                 {
-                    XmlNode newNode = doc.ImportNode(node, true);
-                    doc.DocumentElement.AppendChild(newNode);
-                    PatchManager.nodeMap[docName].Add(newNode, node);
+                    foreach (XmlNode node in nodes)
+                    {
+                        XmlNode newNode = doc.ImportNode(node, true);
+                        doc.DocumentElement.AppendChild(newNode);
+                        PatchManager.nodeMap[docName].Add(newNode, node);
+                    }
                 }
             }
             return true;
