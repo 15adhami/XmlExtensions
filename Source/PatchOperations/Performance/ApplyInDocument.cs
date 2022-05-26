@@ -9,7 +9,7 @@ namespace XmlExtensions
         public string docName = "Defs";
         public PatchContainer apply;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        public override bool ApplyWorker(XmlDocument xml)
         {
             try
             {

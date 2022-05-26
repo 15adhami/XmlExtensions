@@ -8,7 +8,7 @@ namespace XmlExtensions
     {
         public string docName;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        public override bool ApplyWorker(XmlDocument xml)
         {
             try
             {

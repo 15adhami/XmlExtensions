@@ -13,7 +13,7 @@ namespace XmlExtensions
         public XmlContainer settings;
         public string tKey;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        public override bool ApplyWorker(XmlDocument xml)
         {
             if (modId == null)
             {

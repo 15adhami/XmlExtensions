@@ -13,7 +13,7 @@ namespace XmlExtensions
         protected List<string> exceptionVals;
         protected List<string> exceptionFields;
 
-        protected sealed override bool ApplyWorker(XmlDocument xml)
+        public sealed override bool ApplyWorker(XmlDocument xml)
         {
             try
             {

@@ -1,51 +1,70 @@
-﻿using HarmonyLib;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿// Code by Taranchuk
+
+using HarmonyLib;
 using System.Xml;
 using Verse;
+using static Verse.XmlInheritance;
 
 namespace XmlExtensions
 {
     [HarmonyPatch(typeof(XmlInheritance), "CheckForDuplicateNodes")]
     internal static class CheckForDuplicateNodes_Patch
     {
-        private static bool Prefix(XmlNode node, XmlNode root)
+        public static bool Prefix(XmlNode node, XmlNode root)
         {
-			HashSet<string> tempHashSet = ((HashSet<string>)AccessTools.Field(typeof(XmlInheritance), "tempUsedNodeNames").GetValue(null));
-			tempHashSet.Clear();
-			foreach (XmlNode childNode in node.ChildNodes)
-			{
-				if (childNode.NodeType == XmlNodeType.Element && !((bool)AccessTools.Method(typeof(XmlInheritance), "IsListElement").Invoke(null, new object[]{ childNode})))
-				{
-					if (tempHashSet.Contains(childNode.Name))
-					{
-						if (XmlMod.allSettings.advancedDebugging)
-						{
-							Verse.Log.Error("XML error: The node <" + childNode.Name + "> appeared twice within <" + node.Name + "> " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(root)) + ((node != root) ? ("\nWhole XML: " + root.OuterXml) : ""));
-							ErrorManager.PrintSusMods(root);
-						}
-						else
-						{
-							Verse.Log.Error("XML error: Duplicate XML node name " + childNode.Name + " in this XML block: " + node.OuterXml + ((node != root) ? ("\n\nRoot node: " + root.OuterXml) : ""));
-						}
-					}
-					else
-					{
-						tempHashSet.Add(childNode.Name);
-					}
-				}
-			}
-			tempHashSet.Clear();
-			foreach (XmlNode childNode2 in node.ChildNodes)
-			{
-				if (childNode2.NodeType == XmlNodeType.Element)
-				{
-					AccessTools.Method(typeof(XmlInheritance), "CheckForDuplicateNodes").Invoke(null, new object[] { childNode2, root });
-				}
-			}
-			return false;
-		}
+            CheckForDuplicateNodes(node, root);
+            return false;
+        }
+
+        private static void CheckForDuplicateNodes(XmlNode node, XmlNode root)
+        {
+            tempUsedNodeNames.Clear();
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.NodeType == XmlNodeType.Element && !IsListElement(childNode))
+                {
+                    if (tempUsedNodeNames.Contains(childNode.Name))
+                    {
+                        var outerNode = GetFirstMatchingNode(node.ChildNodes, childNode);
+                        if (!(outerNode is null))
+                        {
+                            if (outerNode.ChildNodes?[0]?.NodeType == XmlNodeType.Element)
+                            {
+                                for (var i = 0; i < childNode.ChildNodes.Count; i++)
+                                {
+                                    outerNode.AppendChild(childNode.ChildNodes[i]);
+                                }
+                            }
+                            node.RemoveChild(childNode);
+                        }
+                    }
+                    else
+                    {
+                        tempUsedNodeNames.Add(childNode.Name);
+                    }
+                }
+            }
+            tempUsedNodeNames.Clear();
+            foreach (XmlNode childNode2 in node.ChildNodes)
+            {
+                if (childNode2.NodeType == XmlNodeType.Element)
+                {
+                    CheckForDuplicateNodes(childNode2, root);
+                }
+            }
+        }
+
+        public static XmlNode GetFirstMatchingNode(XmlNodeList xmlNodeList, XmlNode childNode)
+        {
+            for (var i = 0; i < xmlNodeList.Count; i++)
+            {
+                var node = xmlNodeList[i];
+                if (node != childNode && node.Name == childNode.Name)
+                {
+                    return node;
+                }
+            }
+            return null;
+        }
     }
 }
