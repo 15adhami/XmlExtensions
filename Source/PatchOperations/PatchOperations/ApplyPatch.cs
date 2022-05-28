@@ -53,7 +53,14 @@ namespace XmlExtensions
                 }
             }
             XmlContainer newContainer = patchDef.apply;
-            if (arguments != null)
+            int params_count = patchDef.parameters.NullOrEmpty() ? 0 : patchDef.parameters.Count;
+            int args_count = arguments.NullOrEmpty() ? 0 : arguments.Count;
+            if (params_count != args_count)
+            {
+                Error("PatchDef expects " + params_count.ToString() + " arguments but received " + args_count.ToString());
+                return false;
+            }
+            else if (params_count > 0)
             {
                 newContainer = Helpers.SubstituteVariablesXmlContainer(patchDef.apply, patchDef.parameters, arguments, patchDef.brackets);
             }
