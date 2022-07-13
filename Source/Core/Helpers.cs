@@ -258,6 +258,16 @@ namespace XmlExtensions
                 float xval2 = float.Parse(str2);
                 result = (Math.Floor(xval1 / xval2) * xval2).ToString();
             }
+            else if (operation == "roundnearest")
+            {
+                float xval1 = float.Parse(str1);
+                if (str2 == "")
+                {
+                    str2 = "1";
+                }
+                float xval2 = float.Parse(str2);
+                result = (Math.Round(xval1 / xval2) * xval2).ToString();
+            }
             return result;
         }
 
