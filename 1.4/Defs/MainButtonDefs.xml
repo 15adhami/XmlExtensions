@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<MainButtonDef>
+		<defName>XmlExtensions_MainButton_ModSettings</defName>
+		<label>Mod Settings</label>
+		<description>Edit Mod Settings.</description>
+		<workerClass>XmlExtensions.MainButtonWorker_OpenMoreModSettings</workerClass>
+		<order>490</order>
+		<minimized>True</minimized>
+		<validWithoutMap>true</validWithoutMap>
+		<iconPath>UI/Buttons/MainButtons/MainButton_ModSettings</iconPath>
+	</MainButtonDef>
+</Defs>

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
-// This code is so bad
-
 namespace XmlExtensions
 {
     [StaticConstructorOnStartup]

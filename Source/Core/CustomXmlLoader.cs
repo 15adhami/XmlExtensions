@@ -376,7 +376,8 @@ namespace XmlExtensions
                         continue;
                     }
                     XmlAttribute xmlAttribute4 = xmlNode.Attributes["MayRequire"];
-                    DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(val2, value3, xmlNode.InnerText, xmlAttribute4?.Value.ToLower());
+                    XmlAttribute xmlAttribute5 = xmlNode.Attributes["MayRequireAnyOf"];
+                    DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(val2, value3, xmlNode.InnerText, xmlAttribute4?.Value.ToLower(), xmlAttribute5?.Value.ToLower());
                 }
                 else
                 {

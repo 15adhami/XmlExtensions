@@ -16,6 +16,7 @@ namespace XmlExtensions
         internal static string loadedMod;
         internal static List<string> loadedXmlMods;
         internal static Dictionary<string, XmlModSettings> settingsPerMod;
+        internal static HashSet<string> modsWithSettings;
 
         internal static Dictionary<string, SettingsMenuDef> menus;
         internal static Dictionary<string, List<string>> unusedSettings;
@@ -36,6 +37,14 @@ namespace XmlExtensions
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
             loadedXmlMods = new List<string>();
+            modsWithSettings = new();
+            Verse.Log.Message("Hashing mods...");
+            foreach(string fullKey in allSettings.dataDict.Keys)
+            {
+                string modId = fullKey.Split(';')[0];
+                Verse.Log.Message("adding mod: " + modId);
+                modsWithSettings.Add(modId);
+            }
         }
 
         internal static void AddKeyedAction(string modId, string key, KeyedAction action)
@@ -49,6 +58,20 @@ namespace XmlExtensions
                 keyedActionListDict[modId].Add(key, new List<KeyedAction>());
             }
             keyedActionListDict[modId][key].Add(action);
+        }
+
+        internal static bool ModHasSettings(string modId)
+        {
+            bool flag = false;
+            foreach(string key in allSettings.dataDict.Keys)
+            {
+                if (key.Split(';')[0] == modId)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
         }
 
         [Obsolete]

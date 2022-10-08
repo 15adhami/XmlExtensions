@@ -1,0 +1,466 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>XmlExtensions</name>
+    </assembly>
+    <members>
+        <member name="M:XmlExtensions.ErrorManager.PrintErrors(System.String,Verse.ModContentPack)">
+            <summary>
+            Prints the stack of errors, then clears them.
+            </summary>
+            <param name="source">The path to the source file.</param>
+            <param name="mod">The ModContentPack of the active mod.</param>
+        </member>
+        <member name="M:XmlExtensions.ErrorManager.PrintErrors">
+            <summary>
+            Prints the stack of errors, then clears them.
+            </summary>
+        </member>
+        <member name="T:XmlExtensions.ErrorHandler">
+            <summary>
+            The base type to inherit from in order to access improved error handling
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.ErrorHandler.Error(System.String)">
+            <summary>
+            Throw an error message.
+            </summary>
+            <param name="msg">The message</param>
+        </member>
+        <member name="M:XmlExtensions.PatchOperationSafe.ContainsNode(System.Xml.XmlNode,System.Xml.XmlNode)">
+            <summary>
+            Checks if a node contains another node. Checks names and potentially attributes. XmlDocument doesn't matter.
+            </summary>
+            <param name="parent">The node whose children you want check</param>
+            <param name="node">The node that will be checked against</param>
+            <returns>Whether or not the node contains the given node</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.GetPrefix(System.String,System.Int32)">
+            <summary>
+            Calculates the prefix of the given length.
+            </summary>
+            <param name="path">The xpath you want to get the prefix of.</param>
+            <param name="length">The number of nodes that appear in the xpath.</param>
+            <returns>The prefix.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.SubstituteVariable(System.String,System.String,System.String,System.String)">
+            <summary>
+            Substitutes a variable with its value in a given a string.
+            </summary>
+            <param name="str">The string that you want to edit.</param>
+            <param name="var">The name of the variable.</param>
+            <param name="val">The value of the variable.</param>
+            <param name="brackets">The left and right brackets that surround the variable.</param>
+            <returns>The new string after the substitution.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.SubstituteVariables(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Substitutes a list of variables with their corresponding values in a given string.
+            </summary>
+            <param name="str">The string that you want to edit.</param>
+            <param name="vars">The list of variable names.</param>
+            <param name="vals">The list of values for the variables.</param>
+            <param name="brackets">The left and right brackets that surround the variables.</param>
+            <returns>The new string after the substitution.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.SubstituteVariableXmlContainer(Verse.XmlContainer,System.String,System.String,System.String)">
+            <summary>
+            Substitutes a variable with its value in a given XmlContainer.
+            </summary>
+            <param name="container">The XmlContainer that you want to edit.</param>
+            <param name="var">The name of the variable.</param>
+            <param name="val">The value of the variable.</param>
+            <param name="brackets">The left and right brackets that surround the variable.</param>
+            <returns>The new XmlContainer after the substitution.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.SubstituteVariablesXmlContainer(Verse.XmlContainer,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Substitutes a list of variables with their corresponding values in a given string.
+            </summary>
+            <param name="container">The string that you want to edit.</param>
+            <param name="var">The list of variable names.</param>
+            <param name="val">The list of values for the variables.</param>
+            <param name="brackets">The left and right brackets that surround the variables.</param>
+            <returns>The new string after the substitution.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.GetPatchFromString(System.String)">
+            <summary>
+            Creates a PatchOperation from its OuterXml.
+            </summary>
+            <param name="OuterXml">The OuterXml of the PatchOperation.</param>
+            <returns>A PatchOperation from the given OuterXml.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.OperationOnString(System.String,System.String,System.String)">
+            <summary>
+            Performs a mathematical on two strings.
+            </summary>
+            <param name="str1">The first string.</param>
+            <param name="str2">The second string.</param>
+            <param name="operation">The operation to be performed.</param>
+            <returns>The resulting string.</returns>
+        </member>
+        <member name="M:XmlExtensions.Helpers.RelationOnString(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Computes a binary relation between two strings.
+            </summary>
+            <param name="str1">The first string.</param>
+            <param name="str2">The second string.</param>
+            <param name="relation">The binary relation.</param>
+            <param name="nonNumeric">If true, then the inputs will be interpreted as strings and dictionary order is used instead.</param>
+            <returns>Whether or not the relations holds.</returns>
+        </member>
+        <member name="M:XmlExtensions.PatchOperationExtended.Error(System.String)">
+            <summary>
+            Throws an error for the patch operation
+            </summary>
+            <param name="msg">The message to be displayed</param>
+        </member>
+        <member name="T:XmlExtensions.Action.ActionContainer">
+            <summary>
+            Inherit from this class in order to embed C# code into XML
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.ActionContainer.modId">
+            <summary>
+            If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.ActionContainer.output">
+            <summary>
+            If you want to return a value to be used by the XML, set this field to that value
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Action.ActionContainer.DoAction">
+            <summary>
+            Runs the ApplyAction() method of the ActionContainer
+            </summary>
+            <returns>true if it succeeded, false if there was an error</returns>
+        </member>
+        <member name="M:XmlExtensions.Action.ActionContainer.ApplyAction">
+            <summary>
+            The method you should implement
+            </summary>
+            <returns>Return false if there was an error, true otherwise</returns>
+        </member>
+        <member name="T:XmlExtensions.Action.KeyedAction">
+            <summary>
+            Inherit from this class to embed C# code that gets called everytime a specified key is changed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.KeyedAction.key">
+            <summary>
+            The key that is tied to this KeyedAction
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.DoKeyedAction(System.String,System.String)">
+            <summary>
+            Applies the keyed action
+            </summary>
+            <param name="oldValue">The previous value of the key</param>
+            <param name="newValue">The new value of the key</param>
+            <returns>false if there was an error, true otherwise</returns>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.ApplyAction">
+            <summary>
+            This method should not be called
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlExtensions.Action.KeyedAction.ApplyKeyedAction(System.String,System.String)">
+            <summary>
+            Implement a method that will be called when the associated key is changed
+            </summary>
+            <param name="oldValue">The previous value of the key</param>
+            <param name="newValue">The current value of the key</param>
+            <returns>Return true if successful, false is there was an error</returns>
+        </member>
+        <member name="T:XmlExtensions.PatchDef">
+            <summary>
+            A Def that contains a patch
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.parameters">
+            <summary>
+            The list of parameters
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.apply">
+            <summary>
+            The patch operations to apply
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.brackets">
+            <summary>
+            Brackets used in variable substitution
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.PatchDef.valueOperation">
+            <summary>
+            Whether or not the PatchDef returns a value
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.PatchDef.ApplyPatch(System.Collections.Generic.List{System.String},System.Xml.XmlDocument)">
+            <summary>
+            Run the patches in the PatchDef. Error handling is done automatically
+            </summary>
+            <param name="arguments">The input arguments</param>
+            <param name="xml">The XML document to run the patches on. Set to null if applying in-game</param>
+            <returns>Reeturns false if there was an error, true otherwise</returns>
+        </member>
+        <member name="T:XmlExtensions.Setting.KeyedSettingContainer">
+            <summary>
+            Inherit from this class in order to create a new setting that manages a key.
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.key">
+            <summary>
+            They key that this setting manages
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.label">
+            <summary>
+            The label to print (optional)
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.defaultValue">
+            <summary>
+            The default value of the key
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Setting.KeyedSettingContainer.SetDefaultValue(System.String)">
+            <summary>
+            Automatically sets the default value of the key.
+            </summary>
+            <param name="selectedMod">The modId</param>
+            <returns></returns>
+        </member>
+        <member name="T:XmlExtensions.Setting.SettingContainer">
+            <summary>
+            Inherit from this class in order to create a new setting.
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.ParentContainer">
+            <summary>
+            The SettingContainer that this SettingContainer is contained in.<br/>
+            If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
+            <summary>
+            This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
+            </summary>
+            <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single,System.String)">
+            <summary>
+            Returns the height of the setting for the current frame
+            </summary>
+            <param name="width">The width of the column the setting is contaiend in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <returns>The height of the setting, in pixels</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect,System.String)">
+            <summary>
+            Draw the setting in the given <c>Rect</c>
+            </summary>
+            <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.SetDefaultValue(System.String)">
+            <summary>
+            Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
+            You may skip this if your setting doesn't contain other settings, or doesn't require a special method
+            </summary>
+            <param name="selectedMod"></param>
+            <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.Init(System.String)">
+            <summary>
+            This method will be run exactly one time after the game finishes booting and after running <c>SetDefaultValue()</c><br/>
+            You may run any initialization or pre-computation code here
+            </summary>
+            <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeight(System.Single,System.String)">
+            <summary>
+            Returns the height of the setting for the current frame
+            </summary>
+            <param name="width">The width of the column the setting is contaiend in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <returns>The height of the setting, in pixels</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingContents(UnityEngine.Rect,System.String)">
+            <summary>
+            Draw the setting in the given <c>Rect</c>
+            </summary>
+            <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.GetDefaultSpacing">
+            <summary>
+            Gets the defaultSpacing of the currently open <c>SettingsMenuDef</c>.
+            </summary>
+            <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.SetActiveMenu(System.String)">
+            <summary>
+            Sets the currently displayed menu to the one given
+            </summary>
+            <param name="defName">the defName of the SettingsMenuDef you want to display</param>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingsList(UnityEngine.Rect,System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
+            <summary>
+            Draws a list of SettingsContainer, error handling is done automatically
+            </summary>
+            <param name="rect">The <c>Rect</c> to draw in, should be the same height as the height of the list of settings</param>
+            <param name="selectedMod">The <c>modId</c> of the selected mod in the menu</param>
+            <param name="settings">The list of settings to draw</param>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeightSettingsList(System.Single,System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
+            <summary>
+            Calculates the total height of every setting in the list
+            </summary>
+            <param name="width">The width of the column the settings will be placed in</param>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <param name="settings">The list of settings</param>
+            <returns>The total height of the settings</returns>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.InitializeSettingsList(System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer},System.String)">
+            <summary>
+            Applies the <c>Init()</c> method on every setting in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
+            </summary>
+            <param name="selectedMod">The modId of the active mod in the settings menu</param>
+            <param name="settings">The list of settings</param>
+            <param name="name">The name of the list (for error reporting purposes)</param>
+            <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        </member>
+        <member name="T:XmlExtensions.SettingsManager">
+            <summary>
+            This class contains methods to access settings that XML Extensions manages
+            </summary>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.GetDefaultValue(System.String,System.String)">
+            <summary>
+            Gets the defaultValue of a given setting.
+            </summary>
+            <param name="modId">The modId of your mod</param>
+            <param name="key">The key of the setting</param>
+            <returns>The defaultValue of the setting associated with the given key</returns>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.SetDefaultValue(System.String,System.String,System.String)">
+            <summary>
+            Sets the defaultValue of a setting to the value given
+            </summary>
+            <param name="modId">The modId of your mod</param>
+            <param name="key">The key of the setting</param>
+            <param name="value">The value you want to set as default</param>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.GetSetting(System.String,System.String)">
+            <summary>
+            Gets the current value of a setting.
+            </summary>
+            <param name="modId">The modId of your mod.</param>
+            <param name="key">The key of the setting you want to access.</param>
+            <returns>The current value associated with the given key.</returns>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.TryGetSetting(System.String,System.String,System.String@)">
+            <summary>
+            Tries to retrieve the value of a given setting, and stores it into <c>value</c>.
+            </summary>
+            <param name="modId">The modId of your mod.</param>
+            <param name="key">The key of the setting.</param>
+            <param name="value">The reference of the variable you want to store the value in.</param>
+            <returns>Whether or not a value was found for the key.</returns>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.SetSetting(System.String,System.String,System.String)">
+            <summary>
+            Sets the given value to the key. The settings will be saved via Scribe as soon as the user closes the "More Mod Settings" menu.
+            </summary>
+            <param name="modId">The modId of your mod.</param>
+            <param name="key">The key of the setting.</param>
+            <param name="value">The value you want to store.</param>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.ContainsKey(System.String,System.String)">
+            <summary>
+            Determines whether or not the given mod has a setting associated with the given key
+            </summary>
+            <param name="modId">The <c>modId</c> of your mod</param>
+            <param name="key">The key of the setting you want to check</param>
+            <returns><c>true</c> if the mod contains the key, <c>false</c> otherwise</returns>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.GetKeys(System.String)">
+            <summary>
+            Iterator for all active keys associated with the given mod
+            </summary>
+            <param name="modId">The modId of the mod</param>
+            <returns>An iterator for every active key associated with the given mod</returns>
+        </member>
+        <member name="M:XmlExtensions.SettingsManager.DeleteSetting(System.String,System.String)">
+            <summary>
+            Deletes the setting and key for the given mod
+            </summary>
+            <param name="modId">The modId of the mod</param>
+            <param name="key">The key you want to delete</param>
+        </member>
+        <member name="T:XmlExtensions.SettingsMenuDef">
+            <summary>
+            A Def that defines a settings menu
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.tKey">
+            <summary>
+            Translation key for the label
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.defaultSpacing">
+            <summary>
+            The spacing between each setting, in pixels
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.settings">
+            <summary>
+            The list of settings to be displayed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.keyedActions">
+            <summary>
+            The list of KeyedActions to run
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.preOpenActions">
+            <summary>
+            The list of ActionContainers that will be run when the menu is opened
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.onFrameActions">
+            <summary>
+            The list of ActionContainers that will be run every frame
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.postCloseActions">
+            <summary>
+            The list of ActionContainers that will be run when the menu is closed
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.modId">
+            <summary>
+            The modId of the mod that defined this menu
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.submenu">
+            <summary>
+            Whether or not the menu is a submenu
+            </summary>
+        </member>
+        <member name="T:XmlExtensions.SlateDef">
+            <summary>
+            A Def that does not do anything, exists only as a way to store information
+            </summary>
+        </member>
+        <member name="T:XmlExtensions.XmlMod">
+            <summary>
+            Class containing internal data and obsolete methods.
+            </summary>
+        </member>
+    </members>
+</doc>
