@@ -38,6 +38,11 @@ namespace XmlExtensions
             menus = new Dictionary<string, SettingsMenuDef>();
             loadedXmlMods = new List<string>();
             modsWithSettings = new();
+            foreach (string fullKey in allSettings.dataDict.Keys)
+            {
+                string modId = fullKey.Split(';')[0];
+                modsWithSettings.Add(modId);
+            }
         }
 
         internal static void AddKeyedAction(string modId, string key, KeyedAction action)
