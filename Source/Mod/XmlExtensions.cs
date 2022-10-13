@@ -83,6 +83,7 @@ namespace XmlExtensions
             PatchManager.PatchModDict.Clear();
             DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
             // PatchManager.DefModDict.Clear();
+            LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
         }
     }
 }
