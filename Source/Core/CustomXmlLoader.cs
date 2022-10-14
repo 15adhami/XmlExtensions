@@ -135,7 +135,7 @@ namespace XmlExtensions
                     Verse.Log.Error(string.Concat("Exception in custom XML loader for ", typeFromHandle, ". Node is:\n ", xmlRoot.OuterXml, "\n\nException is:\n ", ex.ToString()));
                     if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
                     {
-                        ErrorManager.PrintSusMods(xmlRoot);
+                        ErrorManager.PrintPatchingMods(xmlRoot);
                     }
                     val = default(T);
                 }
@@ -156,7 +156,7 @@ namespace XmlExtensions
                     Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex2));
                     if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
                     {
-                        ErrorManager.PrintSusMods(xmlRoot);
+                        ErrorManager.PrintPatchingMods(xmlRoot);
                     }
                 }
                 return default(T);
@@ -181,7 +181,7 @@ namespace XmlExtensions
                     if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
                     {
                         Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
-                        ErrorManager.PrintSusMods(xmlRoot);
+                        ErrorManager.PrintPatchingMods(xmlRoot);
                     }
                     else
                     {
@@ -275,7 +275,7 @@ namespace XmlExtensions
                     if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
                     {
                         Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, "> ", Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot)), "\nWhole XML: ", xmlRoot.OuterXml));
-                        ErrorManager.PrintSusMods(xmlRoot);
+                        ErrorManager.PrintPatchingMods(xmlRoot);
                     }
                     else
                     {
@@ -324,7 +324,7 @@ namespace XmlExtensions
                         Verse.Log.Error("XML error: " + xmlNode.OuterXml + " corresponds to a field in type " + type3.Name + " which has an Unsaved attribute. Context: " + xmlRoot.OuterXml);
                         if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeof(T)))
                         {
-                            ErrorManager.PrintSusMods(xmlRoot);
+                            ErrorManager.PrintPatchingMods(xmlRoot);
                         }
                         continue;
                     }
@@ -357,7 +357,7 @@ namespace XmlExtensions
                             if (XmlMod.allSettings.advancedDebugging && typeof(Def).IsAssignableFrom(typeFromHandle))
                             {
                                 Verse.Log.Error("XML error: " + xmlNode.OuterXml + " does not belong in <" + xmlRoot.Name + "> " + Helpers.GetNameFromName(Helpers.GetDefNameFromNode(xmlRoot)) + "\nWhole XML: " + xmlRoot.OuterXml);
-                                ErrorManager.PrintSusMods(xmlRoot);
+                                ErrorManager.PrintPatchingMods(xmlRoot);
                             }
                             else
                             {
@@ -400,7 +400,7 @@ namespace XmlExtensions
                         Verse.Log.Error("Exception loading from " + xmlNode.ToString() + ": " + ex5.ToString());
                         if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
                         {
-                            ErrorManager.PrintSusMods(xmlRoot);
+                            ErrorManager.PrintPatchingMods(xmlRoot);
                         }
                         continue;
                     }
@@ -461,7 +461,7 @@ namespace XmlExtensions
                     Verse.Log.Error(string.Concat("Exception in custom XML loader for ", typeFromHandle, ". Node is:\n ", xmlRoot.OuterXml, "\n\nException is:\n ", ex.ToString()));
                     if (nameOfDef != null)
                     {
-                        ErrorManager.PrintSusMods(xmlRoot);
+                        ErrorManager.PrintPatchingMods(fullRoot);
                     }
                     val = default(T);
                 }
@@ -480,6 +480,10 @@ namespace XmlExtensions
                 catch (Exception ex2)
                 {
                     Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex2));
+                    if (nameOfDef != null)
+                    {
+                        ErrorManager.PrintPatchingMods(fullRoot);
+                    }
                 }
                 return default(T);
             }
@@ -488,6 +492,10 @@ namespace XmlExtensions
                 if (typeFromHandle != typeof(string))
                 {
                     Verse.Log.Error("CDATA can only be used for strings. Bad xml: " + xmlRoot.OuterXml);
+                    if (nameOfDef != null)
+                    {
+                        ErrorManager.PrintPatchingMods(fullRoot);
+                    }
                     return default(T);
                 }
                 return (T)(object)xmlRoot.FirstChild.Value;
@@ -500,14 +508,10 @@ namespace XmlExtensions
                 }
                 catch (Exception ex3)
                 {
+                    Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
                     if (nameOfDef != null)
                     {
-                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
-                        ErrorManager.PrintSusMods(fullRoot);
-                    }
-                    else
-                    {
-                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                        ErrorManager.PrintPatchingMods(fullRoot);
                     }
                 }
                 return default(T);
@@ -599,7 +603,7 @@ namespace XmlExtensions
                         if (nameOfDef != null)
                         {
                             Verse.Log.Error(string.Concat("XML error: The node <", xmlNode.Name, "> appeared twice within <", xmlRoot.Name, "> " + Helpers.GetNameFromName(nameOfDef) + "\nWhole XML: ", fullRoot.OuterXml));
-                            ErrorManager.PrintSusMods(fullRoot);
+                            ErrorManager.PrintPatchingMods(fullRoot);
                         }
                         else
                         {
@@ -653,7 +657,7 @@ namespace XmlExtensions
                         Verse.Log.Error("XML error: " + xmlNode.OuterXml + " corresponds to a field in type " + type3.Name + " which has an Unsaved attribute. Context: " + xmlRoot.OuterXml);
                         if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
                         {
-                            ErrorManager.PrintSusMods(xmlRoot);
+                            ErrorManager.PrintPatchingMods(xmlRoot);
                         }
                         continue;
                     }
@@ -686,7 +690,7 @@ namespace XmlExtensions
                             if (nameOfDef != null)
                             {
                                 Verse.Log.Error("XML error: <" + xmlNode.Name + "> does not belong in <" + xmlRoot.Name + "> (Type=" + type3.Name + ") " + Helpers.GetNameFromName(nameOfDef) + "\nXML Block: " + xmlRoot.OuterXml + "\nWhole XML: " + fullRoot.OuterXml);
-                                ErrorManager.PrintSusMods(fullRoot);
+                                ErrorManager.PrintPatchingMods(fullRoot);
                             }
                             else
                             {
@@ -722,7 +726,7 @@ namespace XmlExtensions
                         Verse.Log.Error("Exception loading from " + xmlNode.ToString() + ": " + ex5.ToString());
                         if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
                         {
-                            ErrorManager.PrintSusMods(fullRoot);
+                            ErrorManager.PrintPatchingMods(fullRoot);
                         }
                         continue;
                     }
@@ -765,7 +769,7 @@ namespace XmlExtensions
                         Verse.Log.Error("Could not find type named " + xmlAttribute.Value + " from node " + xmlRoot.OuterXml);
                         if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeof(T)))
                         {
-                            ErrorManager.PrintSusMods(Helpers.GetDefNode(xmlRoot));
+                            ErrorManager.PrintPatchingMods(Helpers.GetDefNode(xmlRoot));
                         }
                         return typeof(T);
                     }
@@ -826,7 +830,7 @@ namespace XmlExtensions
                             Verse.Log.Error("Faulty MayRequire: " + xmlAttribute.Value);
                             if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
                             {
-                                ErrorManager.PrintSusMods(fullRoot);
+                                ErrorManager.PrintPatchingMods(fullRoot);
                             }
                         }
                     }
@@ -848,7 +852,7 @@ namespace XmlExtensions
                             Verse.Log.Error($"Exception loading list element {typeof(T)} from XML: {arg}\nXML:\n{listRootNode.OuterXml}");
                             if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
                             {
-                                ErrorManager.PrintSusMods(fullRoot);
+                                ErrorManager.PrintPatchingMods(fullRoot);
                             }
                         }
                     }
@@ -860,7 +864,7 @@ namespace XmlExtensions
                 Verse.Log.Error(string.Concat("Exception loading list from XML: ", ex, "\nXML:\n", listRootNode.OuterXml));
                 if (XmlMod.allSettings.advancedDebugging && nameOfDef != null)
                 {
-                    ErrorManager.PrintSusMods(fullRoot);
+                    ErrorManager.PrintPatchingMods(fullRoot);
                 }
                 return list;
             }

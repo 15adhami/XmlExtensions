@@ -80,7 +80,7 @@ namespace XmlExtensions
             Verse.Log.Warning(str);
         }
 
-        public static void PrintSusMods(XmlNode xmlNode)
+        public static void PrintPatchingMods(XmlNode xmlNode)
         {
             HashSet<ModContentPackContainer> modsTemp;
             HashSet<ModContentPack> mods = new();
