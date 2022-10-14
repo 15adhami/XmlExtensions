@@ -2,7 +2,7 @@
 
 namespace XmlExtensions.Boolean
 {
-    internal class ModHasBeenUsed : BooleanBase
+    internal class HasModBeenUsed : BooleanBase
     {
         public string modId;
 

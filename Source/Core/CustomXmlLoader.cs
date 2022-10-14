@@ -133,6 +133,10 @@ namespace XmlExtensions
                 catch (Exception ex)
                 {
                     Verse.Log.Error(string.Concat("Exception in custom XML loader for ", typeFromHandle, ". Node is:\n ", xmlRoot.OuterXml, "\n\nException is:\n ", ex.ToString()));
+                    if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
+                    {
+                        ErrorManager.PrintSusMods(xmlRoot);
+                    }
                     val = default(T);
                 }
                 if (doPostLoad)
@@ -150,6 +154,10 @@ namespace XmlExtensions
                 catch (Exception ex2)
                 {
                     Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex2));
+                    if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
+                    {
+                        ErrorManager.PrintSusMods(xmlRoot);
+                    }
                 }
                 return default(T);
             }
@@ -170,7 +178,15 @@ namespace XmlExtensions
                 }
                 catch (Exception ex3)
                 {
-                    Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                    if (XmlMod.allSettings.advancedDebugging && GenTypes.IsDef(typeFromHandle))
+                    {
+                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                        ErrorManager.PrintSusMods(xmlRoot);
+                    }
+                    else
+                    {
+                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                    }
                 }
                 return default(T);
             }
@@ -443,6 +459,10 @@ namespace XmlExtensions
                 catch (Exception ex)
                 {
                     Verse.Log.Error(string.Concat("Exception in custom XML loader for ", typeFromHandle, ". Node is:\n ", xmlRoot.OuterXml, "\n\nException is:\n ", ex.ToString()));
+                    if (nameOfDef != null)
+                    {
+                        ErrorManager.PrintSusMods(xmlRoot);
+                    }
                     val = default(T);
                 }
                 if (doPostLoad)
@@ -480,7 +500,15 @@ namespace XmlExtensions
                 }
                 catch (Exception ex3)
                 {
-                    Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                    if (nameOfDef != null)
+                    {
+                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                        ErrorManager.PrintSusMods(fullRoot);
+                    }
+                    else
+                    {
+                        Verse.Log.Error(string.Concat("Exception parsing ", xmlRoot.OuterXml, " to type ", typeFromHandle, ": ", ex3));
+                    }
                 }
                 return default(T);
             }
