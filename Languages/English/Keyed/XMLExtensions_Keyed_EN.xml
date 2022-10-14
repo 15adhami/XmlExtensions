@@ -7,7 +7,7 @@
     <XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
     <XmlExtensions_EnableStackTrace>Enable stack trace for XML patch errors</XmlExtensions_EnableStackTrace>
     <XmlExtensions_StackTraceTip>Improves error reporting when enabled</XmlExtensions_StackTraceTip>
-    <XmlExtensions_IncludeStandardMods>Include standard Mod Settings</XmlExtensions_IncludeStandardMods>
+    <XmlExtensions_IncludeStandardMods>Display settings for all mods</XmlExtensions_IncludeStandardMods>
     <XmlExtensions_IncludeStandardModsTip>Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)</XmlExtensions_IncludeStandardModsTip>
     <XmlExtensions_ViewUnusedSettings>View unused settings</XmlExtensions_ViewUnusedSettings>
     <XmlExtensions_InactiveMods>Currently inactive mods:</XmlExtensions_InactiveMods>
