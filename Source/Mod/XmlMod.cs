@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
 
@@ -70,6 +71,17 @@ namespace XmlExtensions
                 }
             }
             return flag;
+        }
+
+        public override void DoSettingsWindowContents(Rect inRect)
+        {
+            Find.WindowStack.TryRemoveAssignableFromType(typeof(Window));
+            Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
+        }
+
+        public override string SettingsCategory()
+        {
+            return "XmlExtensions_MoreModSettings".Translate();
         }
 
         [Obsolete]

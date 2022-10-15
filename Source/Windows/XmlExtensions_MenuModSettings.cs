@@ -312,7 +312,10 @@ namespace XmlExtensions
                                      where !mod.SettingsCategory().NullOrEmpty()
                                      select mod)
                 {
-                    loadedMods.Add(new ModContainer(item));
+                    if (item.GetType() != typeof(XmlMod))
+                    {
+                        loadedMods.Add(new ModContainer(item));
+                    }
                 }
             }
             loadedMods.Sort();
