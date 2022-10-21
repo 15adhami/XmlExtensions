@@ -35,7 +35,7 @@ namespace XmlExtensions
 
             if (foundMethod)
             {
-                codes[startIndex].operand = AccessTools.Method(typeof(CustomXmlLoader), "ObjectFromXml").MakeGenericMethod(typeof(PatchOperation));
+                codes[startIndex].operand = AccessTools.Method(typeof(CustomXmlLoader), "ObjectFromXmlReflection").MakeGenericMethod(typeof(PatchOperation));
             }
 
             return codes.AsEnumerable();
