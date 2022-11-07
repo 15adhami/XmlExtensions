@@ -47,11 +47,12 @@ namespace XmlExtensions
             {
                 if (obj.parent.value.GetType().HasGenericDefinition(typeof(List<>)))
                 {
-                    int index = (int)AccessTools.Method(obj.parent.value.GetType(), "IndexOf").Invoke(obj.parent.value, new object[] { obj.value });
-                    AccessTools.Method(obj.value.GetType(), "RemoveAt").Invoke(obj.value, new object[] { index });
+                    System.Reflection.MethodInfo method = AccessTools.Method(obj.parent.value.GetType(), "IndexOf", new System.Type[] { obj.parent.value.GetType().GenericTypeArguments[0] });
+                    int index = (int)method.Invoke(obj.parent.value, new object[] { obj.value });
+                    AccessTools.Method(obj.parent.value.GetType(), "RemoveAt").Invoke(obj.parent.value, new object[] { index });
                     foreach (object objToAdd in objectsToAdd)
                     {
-                        AccessTools.Method(obj.value.GetType(), "Insert").Invoke(obj.value, new object[] { index, objToAdd });
+                        AccessTools.Method(obj.parent.value.GetType(), "Insert").Invoke(obj.parent.value, new object[] { index, objToAdd });
                     }
                 }
                 else if (obj.parent.value.GetType().HasGenericDefinition(typeof(HashSet<>)))
