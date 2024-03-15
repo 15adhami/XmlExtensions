@@ -72,6 +72,14 @@ namespace XmlExtensions
         /// <param name="value">The value you want to store.</param>
         public static void SetSetting(string modId, string key, string value)
         {
+            string curr_val = null;
+            if (TryGetSetting(modId, key, out curr_val))
+            {
+                if (curr_val != value)
+                {
+
+                }
+            }
             RegisterKey(modId, key, value);
             XmlMod.allSettings.dataDict[modId + ";" + key] = value;
         }
