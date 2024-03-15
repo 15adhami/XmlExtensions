@@ -341,7 +341,9 @@ namespace XmlExtensions
         {
             if (activeMenu != null)
             {
-                activeMenu.RunPostCloseActions();
+                SettingsMenuDef tempMenu = activeMenu;
+                activeMenu = null;
+                tempMenu.RunPostCloseActions();
             }
             if (defName != null)
             {
