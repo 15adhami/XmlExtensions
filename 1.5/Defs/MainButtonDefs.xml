@@ -4,7 +4,7 @@
 		<defName>XmlExtensions_MainButton_ModSettings</defName>
 		<label>Mod Settings</label>
 		<description>Edit Mod Settings.</description>
-		<workerClass>XmlExtensions.MainButtonWorker_OpenMoreModSettings</workerClass>
+		<tabWindowClass>XmlExtensions.XmlExtensions_MenuModSettings</tabWindowClass>
 		<order>490</order>
 		<minimized>True</minimized>
 		<validWithoutMap>true</validWithoutMap>
