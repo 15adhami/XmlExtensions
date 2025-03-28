@@ -59,6 +59,7 @@
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\Core\ModContentPackContainer.cs" />
     <Compile Include="Source\Core\ModPatchContainer.cs" />
+    <Compile Include="Source\Core\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\CheckForDuplicateNodes_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\CombineIntoUnifiedXML_Patch.cs" />
