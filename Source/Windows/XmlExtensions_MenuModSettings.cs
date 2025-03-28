@@ -9,7 +9,7 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     // Window that appears when you press More Mod Settings
-    internal class XmlExtensions_MenuModSettings : MainTabWindow
+    internal class XmlExtensions_MenuModSettings : Window
     {
         public static SettingsMenuDef activeMenu = null;
 
@@ -41,15 +41,13 @@ namespace XmlExtensions
             closeOnAccept = false;
         }
 
-        public override void SetInitialSizeAndPosition()
+        public override Vector2 InitialSize
         {
-            Vector2 initialSize = InitialSize;
-            windowRect = new Rect((float) ((UI.screenWidth - (double) initialSize.x) / 2.0), 
-                (float) ((UI.screenHeight - (double) initialSize.y) / 2.0), initialSize.x, initialSize.y);
-            windowRect = windowRect.Rounded();
+            get
+            {
+                return new Vector2(900f + ListWidth + 6f, 700f);
+            }
         }
-
-        public override Vector2 RequestedTabSize => new(900f + ListWidth + 6f, 700f);
 
         public override void PreOpen()
         {
