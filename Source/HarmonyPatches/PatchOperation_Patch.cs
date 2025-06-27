@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.Xml;
 using Verse;
 
@@ -20,8 +21,8 @@ namespace XmlExtensions
                     }
                 }
             }
-            catch
-            {
+            catch(Exception e)
+            { //TODO: Catch exceptions for DefDatabaseOperations
             }
             ErrorManager.depth += 1;
             if (PatchManager.applyingPatches)

@@ -8,7 +8,7 @@ namespace XmlExtensions
 {
     [HarmonyPatch(typeof(Dialog_Options), "DoCategoryRow")]
     internal static class Dialog_Options_Patch
-    {// TODO: Need to fix settings menu
+    {
         private static void Prefix(ref Rect r, OptionCategoryDef optionCategory)
         {
             if (optionCategory == OptionCategoryDefOf.Mods)
