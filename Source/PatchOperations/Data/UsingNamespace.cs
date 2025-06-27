@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions
 {
     internal class UsingNamespace : PatchOperationExtended
-    {
+    {//TODO: Fix UsingNamespace
         public XmlContainer apply;
         public List<string> namespaces;
         /*
