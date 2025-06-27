@@ -7,7 +7,7 @@ namespace XmlExtensions
     internal class PatchContainer
     {
         public List<PatchOperation> patches = new List<PatchOperation>();
-
+        /*
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
             XmlNodeList nodeList = xmlRoot.ChildNodes;
@@ -15,6 +15,6 @@ namespace XmlExtensions
             {
                 patches.Add(Helpers.GetPatchFromString(node.OuterXml));
             }
-        }
+        }*/
     }
 }

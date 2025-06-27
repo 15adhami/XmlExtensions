@@ -8,6 +8,7 @@ namespace XmlExtensions
     {
         public XmlContainer apply;
         public List<string> namespaces;
+        /*
 
         protected override bool Patch(XmlDocument xml)
         {
@@ -29,5 +30,6 @@ namespace XmlExtensions
             }
             return true;
         }
+        */
     }
 }

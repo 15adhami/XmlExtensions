@@ -11,6 +11,7 @@ namespace XmlExtensions
 {
     internal static class CustomXmlLoader
     {
+        /*
         public static HashSet<string> defaultNamespaces = new();
         /*
 
@@ -36,6 +37,7 @@ namespace XmlExtensions
             }
         }
         */
+        /*
         private static Dictionary<Type, Func<XmlNode, XmlNode, string, object>> listFromXmlMethods = new Dictionary<Type, Func<XmlNode, XmlNode, string, object>>();
 
         private static Dictionary<Type, Func<XmlNode, object>> dictionaryFromXmlMethods = new Dictionary<Type, Func<XmlNode, object>>();
@@ -409,6 +411,7 @@ namespace XmlExtensions
                     }
                 }
                 */
+        /*
                 if (typeInAnyAssembly == null)
                 {
                     typeInAnyAssembly = GenTypes.GetTypeInAnyAssembly(xmlAttribute.Value, typeof(T).Namespace);
@@ -576,5 +579,6 @@ namespace XmlExtensions
             }
             return xmlDocument;
         }
+    */
     }
 }

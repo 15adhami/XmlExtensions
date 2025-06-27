@@ -97,7 +97,7 @@ namespace XmlExtensions
             newXml = Helpers.SubstituteVariables(oldXml, var, val, brackets);
             return new XmlContainer() { node = Helpers.GetNodeFromString(newXml) };
         }
-
+        
         /// <summary>
         /// Creates a PatchOperation from its OuterXml.
         /// </summary>
@@ -108,7 +108,8 @@ namespace XmlExtensions
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(OuterXml);
             XmlNode newNode = doc.DocumentElement;
-            return CustomXmlLoader.ObjectFromXml<PatchOperation>(newNode, false);
+            //return CustomXmlLoader.ObjectFromXml<PatchOperation>(newNode, false);
+            return DirectXmlToObject.ObjectFromXml<PatchOperation>(newNode, false);
         }
 
         public static XmlNode GetNodeFromString(string str)

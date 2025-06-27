@@ -75,6 +75,7 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
+            
             Rect rectSettings = inRect.RightPartPixels(864f).TopPartPixels(inRect.height - 40);
             Rect headerRect = rectSettings.TopPartPixels(40f);
             Listing_Standard listing = new Listing_Standard();
@@ -124,6 +125,7 @@ namespace XmlExtensions
                 focusSearchBox = false;
             }
             DrawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
+            listing.End();
         }
 
         private void DrawXmlModList(Rect rect)
