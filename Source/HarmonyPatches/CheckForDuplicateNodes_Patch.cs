@@ -12,8 +12,9 @@ namespace XmlExtensions
     {
         public static bool Prefix(XmlNode node, XmlNode root)
         {
-            CheckForDuplicateNodes(node, root);
-            return false;
+            //CheckForDuplicateNodes(node, root);
+            //return false;
+            return true;
         }
 
         private static void CheckForDuplicateNodes(XmlNode node, XmlNode root)

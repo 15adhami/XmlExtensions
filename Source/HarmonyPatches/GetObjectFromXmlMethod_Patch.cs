@@ -14,6 +14,7 @@ namespace XmlExtensions
             var foundMethod = false;
             var startIndex = -1;
             var codes = new List<CodeInstruction>(instructions);
+            /*
             for (var i = 0; i < codes.Count; i++)
             {
                 if (codes[i].opcode == OpCodes.Stloc_1)
@@ -29,7 +30,7 @@ namespace XmlExtensions
                 codes.Insert(startIndex, new CodeInstruction(OpCodes.Pop));
                 codes.Insert(startIndex + 1, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomXmlLoader), "GetObjectFromXmlReflection")));
             }
-
+            */
             return codes.AsEnumerable();
         }
     }

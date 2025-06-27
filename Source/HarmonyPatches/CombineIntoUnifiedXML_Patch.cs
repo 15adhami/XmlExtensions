@@ -10,11 +10,14 @@ namespace XmlExtensions
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator gen)
         {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            /*
             List<CodeInstruction> codes = new List<CodeInstruction>();
             codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
             codes.Add(new CodeInstruction(OpCodes.Ldarg_1));
             codes.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(CustomXmlLoader), "CombineIntoUnifiedXMLMirror")));
             codes.Add(new CodeInstruction(OpCodes.Ret));
+            */
             return codes;
         }
     }

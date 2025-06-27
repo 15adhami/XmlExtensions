@@ -19,6 +19,7 @@ namespace XmlExtensions
             var foundMethod = false;
             var startIndex = -1;
             var codes = new List<CodeInstruction>(instructions);
+            /*
             for (var i = 0; i < codes.Count; i++)
             {
                 if (codes[i].opcode == OpCodes.Call)
@@ -37,7 +38,7 @@ namespace XmlExtensions
             {
                 codes[startIndex].operand = AccessTools.Method(typeof(CustomXmlLoader), "ObjectFromXmlReflection").MakeGenericMethod(typeof(PatchOperation));
             }
-
+            */
             return codes.AsEnumerable();
         }
     }
