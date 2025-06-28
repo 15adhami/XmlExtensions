@@ -40,14 +40,15 @@ namespace XmlExtensions
             doCloseX = true;
             closeOnAccept = false;
         }
-
+        /*
         public override Vector2 InitialSize
         {
             get
             {
                 return new Vector2(900f + ListWidth + 6f, 700f);
             }
-        }
+        }*/
+        public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
 
         public override void PreOpen()
         {
@@ -125,7 +126,6 @@ namespace XmlExtensions
                 focusSearchBox = false;
             }
             DrawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
-            listing.End();
         }
 
         private void DrawXmlModList(Rect rect)
