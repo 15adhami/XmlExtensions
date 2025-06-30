@@ -74,7 +74,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Core\CustomXmlLoader.cs" />
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\DefNameContainer.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
