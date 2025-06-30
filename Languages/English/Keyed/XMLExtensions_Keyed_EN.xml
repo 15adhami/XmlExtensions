@@ -5,8 +5,6 @@
     <XmlExtensions_MoreModSettings>More Mod Settings</XmlExtensions_MoreModSettings>
 	<XmlExtensions_Confirmation>Are you sure?</XmlExtensions_Confirmation>
     <XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
-    <XmlExtensions_EnableStackTrace>Enable stack trace for XML patch errors</XmlExtensions_EnableStackTrace>
-    <XmlExtensions_StackTraceTip>Improves error reporting when enabled</XmlExtensions_StackTraceTip>
     <XmlExtensions_IncludeStandardMods>Display settings for all mods</XmlExtensions_IncludeStandardMods>
     <XmlExtensions_IncludeStandardModsTip>Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)</XmlExtensions_IncludeStandardModsTip>
     <XmlExtensions_ViewUnusedSettings>View unused settings</XmlExtensions_ViewUnusedSettings>

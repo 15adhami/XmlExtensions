@@ -29,8 +29,7 @@ namespace XmlExtensions
                 trace += error + "\n";
             }
             trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\nSource file: " + source + "\n";
-            if (XmlMod.allSettings.trace)
-                Verse.Log.Error(trace);
+            Verse.Log.Error(trace);
             ClearErrors();
         }
 
@@ -46,8 +45,7 @@ namespace XmlExtensions
                 trace += error + "\n";
             }
             trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\n";
-            if (XmlMod.allSettings.trace)
-                Verse.Log.Error(trace);
+            Verse.Log.Error(trace);
             ClearErrors();
         }
 

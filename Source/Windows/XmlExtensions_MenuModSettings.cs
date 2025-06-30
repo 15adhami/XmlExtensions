@@ -351,7 +351,6 @@ namespace XmlExtensions
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
-            listingStandard.CheckboxLabeled("XmlExtensions_EnableStackTrace".Translate(), ref XmlMod.allSettings.trace, "XmlExtensions_StackTraceTip".Translate());
             bool b = XmlMod.allSettings.standardMods;
             listingStandard.CheckboxLabeled("XmlExtensions_IncludeStandardMods".Translate(), ref b, "XmlExtensions_IncludeStandardModsTip".Translate());
             if (b != XmlMod.allSettings.standardMods)
