@@ -79,7 +79,7 @@ namespace XmlExtensions
                 list.Sort();
             }
             Verse.Log.Message("[XML Extensions] Initialized " + i.ToString() + " SettingsMenuDef(s) and found " + c.ToString() + " unused key(s) from " + XmlMod.unusedMods.Count.ToString() + " mod(s)");
-            Verse.Log.Message(string.Concat("[XML Extensions] ", PatchManager.PatchCount, " total patches run in ", PatchManager.watch2.ElapsedMilliseconds, "ms, ", PatchManager.FailedPatchCount, " failed"));
+            Verse.Log.Message(string.Concat("[XML Extensions] ", PatchManager.PatchCount, " total patch operations run in ", PatchManager.watch2.ElapsedMilliseconds, "ms, ", PatchManager.FailedPatchCount, " failed"));
             PatchManager.PatchModDict.Clear();
             DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
             // PatchManager.DefModDict.Clear();
