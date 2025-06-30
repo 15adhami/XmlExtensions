@@ -75,9 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
-    <Compile Include="Source\Core\DefNameContainer.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
-    <Compile Include="Source\Core\ModContentPackContainer.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
