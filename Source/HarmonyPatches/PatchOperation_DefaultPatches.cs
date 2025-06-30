@@ -9,7 +9,7 @@ namespace XmlExtensions.Source.HarmonyPatches
 {
     [HarmonyPatch]
     internal static class PatchOperation_DefaultPatches
-    {
+    { //  Default patch used for PatchOPerations added by mods (Catch-all patch)
         private static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(PatchOperation), "ApplyWorker");

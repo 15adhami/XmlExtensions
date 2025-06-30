@@ -12,7 +12,7 @@ namespace XmlExtensions
         {
             try
             {
-                if (ErrorManager.depth == 0)
+                if (ErrorManager.depth == 0 && PatchManager.PatchModDict.ContainsKey(__instance))
                 {
                     ModContentPack pack = PatchManager.PatchModDict[__instance];
                     if (pack != null && PatchManager.ActiveMod != pack)
@@ -23,6 +23,7 @@ namespace XmlExtensions
             }
             catch(Exception e)
             { //TODO: Catch exceptions for DefDatabaseOperations
+            //    Verse.Log.Error(e.ToString());
             }
             ErrorManager.depth += 1;
             if (PatchManager.applyingPatches)
