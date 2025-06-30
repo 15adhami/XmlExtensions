@@ -8,7 +8,7 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     /// <summary>
-    /// Class containing internal data and obsolete methods.
+    /// Class containing internal data and obsolete methods (for backwards compatability).
     /// </summary>
     public class XmlMod : Mod
     {
