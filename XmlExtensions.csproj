@@ -78,7 +78,6 @@
     <Compile Include="Source\Core\DefNameContainer.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\Core\ModContentPackContainer.cs" />
-    <Compile Include="Source\Core\ModPatchContainer.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Source\Core\ObjectContainer.cs" />
     <Compile Include="Source\PatchOperations\Boolean\HasModBeenUsed.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />
-    <Compile Include="Source\Windows\PatchAnalyzer_Window.cs" />
     <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />

@@ -79,38 +79,5 @@ namespace XmlExtensions
             }
             Verse.Log.Warning(str);
         }
-
-        public static void PrintPatchingMods(XmlNode xmlNode)
-        {
-            HashSet<ModContentPackContainer> modsTemp;
-            HashSet<ModContentPack> mods = new();
-            XmlNode tempNode = xmlNode;
-            do
-            {
-                if (PatchManager.DefModDict.TryGetValue(Helpers.GetDefNameFromNode(tempNode)??"", out modsTemp))
-                {
-                    foreach (ModContentPackContainer pack in modsTemp)
-                    {
-                        if (!mods.Contains(pack.Pack))
-                        {
-                            mods.Add(pack.Pack);
-                        }
-                    }
-                }
-                if (tempNode.Attributes["ParentName"] != null)
-                {
-                    tempNode = xmlNode.OwnerDocument.SelectSingleNode("Defs/" + xmlNode.Name + "[@Name=\"" + tempNode.Attributes["ParentName"].ToString() + "\"]");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (tempNode != null);
-            if (mods.Count > 0)
-            {
-                PrintModsThatPatched(mods, "Possibly relevant mods for above error:");
-            }
-        }
     }
 }

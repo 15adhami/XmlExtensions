@@ -40,14 +40,7 @@ namespace XmlExtensions
             doCloseX = true;
             closeOnAccept = false;
         }
-        /*
-        public override Vector2 InitialSize
-        {
-            get
-            {
-                return new Vector2(900f + ListWidth + 6f, 700f);
-            }
-        }*/
+
         public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
 
         public override void PreOpen()
@@ -373,20 +366,12 @@ namespace XmlExtensions
             {
                 DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
             }
-            listingStandard.CheckboxLabeled("XmlExtensions_AdvancedDebugging".Translate(), ref XmlMod.allSettings.advancedDebugging, "XmlExtensions_AdvancedDebuggingTip".Translate());
             Rect buttonRect = listingStandard.GetRect(30f);
             Listing_Standard listingStandard2 = new();
-            listingStandard2.Begin(buttonRect.LeftHalf().LeftPartPixels(buttonRect.LeftHalf().width - 3));
+            listingStandard2.Begin(buttonRect);
             if (listingStandard2.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
             {
                 Find.WindowStack.Add(new UnusedSettings_Window());
-            }
-            listingStandard2.End();
-            listingStandard2 = new();
-            listingStandard2.Begin(buttonRect.RightHalf().RightPartPixels(buttonRect.RightHalf().width - 3));
-            if (listingStandard2.ButtonText("XmlExtensions_PatchAnalyzer".Translate()))
-            {
-                Find.WindowStack.Add(new PatchAnalyzer_Window());
             }
             listingStandard2.End();
             listingStandard.End();

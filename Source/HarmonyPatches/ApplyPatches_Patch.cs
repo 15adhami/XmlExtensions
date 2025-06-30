@@ -20,10 +20,6 @@ namespace XmlExtensions
                     PatchManager.PatchModDict.Add(patch, mod);
                 }
             }
-            if (XmlMod.allSettings.advancedDebugging)
-            {
-                Verse.Log.Warning("[XML Extensions]: Advanced XML Debugging is enabled");
-            }
             PatchManager.applyingPatches = true;
             PatchManager.watch2.Start();
         }

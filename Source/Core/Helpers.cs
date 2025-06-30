@@ -435,28 +435,15 @@ namespace XmlExtensions
             return str;
         }
 
-        // TODO: Put type of patch operation here
         public static XmlNodeList SelectNodes(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNodeList list = xml.SelectNodes(path);
-            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
-            {
-                foreach (string name in GetDefsFromPath(path, xml))
-                {
-                    PatchManager.ModPatchedDef(name, null, operation.GetType());
-                }
-            }
             return list;
         }
 
         public static XmlNode SelectSingleNode(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNode node = xml.SelectSingleNode(path);
-            if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
-            {
-                string name = GetDefNameFromNode(GetDefNode(node));
-                PatchManager.ModPatchedDef(name, null, operation.GetType());
-            }
             return node;
         }
 

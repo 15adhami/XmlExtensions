@@ -28,13 +28,6 @@ namespace XmlExtensions
                 else
                     ErrorManager.AddError("Verse.PatchOperationAttributeRemove(xpath=" + ___xpath + ", attribute=" + ___attribute + "): Error ");
             }
-            else if (XmlMod.allSettings.advancedDebugging && PatchManager.applyingPatches)
-            {
-                foreach (string name in Helpers.GetDefsFromPath(___xpath, xml))
-                {
-                    PatchManager.ModPatchedDef(name, null, __instance.GetType());
-                }
-            }
         }
     }
 }
