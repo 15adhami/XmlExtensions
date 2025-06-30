@@ -386,55 +386,6 @@ namespace XmlExtensions
             }
         }
 
-        public static List<string> GetDefsFromPath(string path, XmlDocument xml)
-        {
-            XmlNodeList nodeList = xml.SelectNodes(path);
-            List<string> list = new();
-            foreach (XmlNode node in nodeList)
-            {
-                string name = GetDefNameFromNode(GetDefNode(node));
-                if (name != null)
-                {
-                    list.Add(name);
-                }
-            }
-            return list;
-        }
-
-        public static XmlNode GetDefNode(XmlNode node)
-        {
-            XmlNode currNode;
-            for (currNode = node; currNode.ParentNode != null && currNode.ParentNode.Name != "Defs"; currNode = currNode.ParentNode) ;
-            return currNode;
-        }
-
-        public static string GetDefNameFromNode(XmlNode root)
-        {
-            if (root == null)
-            {
-                return null;
-            }
-            XmlNode node = root.SelectSingleNode("defName");
-            string str = null;
-            if (node != null)
-            {
-                str = node.InnerText;
-            }
-            else
-            {
-                XmlAttribute att = root.Attributes?["Name"];
-                if (att != null)
-                {
-                    str = "@" + att.Value;
-                }
-            }
-            if (str != null)
-            {
-                str = root.Name + ";" + str;
-            }
-            return str;
-        }
-
         public static XmlNodeList SelectNodes(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNodeList list = xml.SelectNodes(path);
@@ -445,20 +396,6 @@ namespace XmlExtensions
         {
             XmlNode node = xml.SelectSingleNode(path);
             return node;
-        }
-
-        public static string GetNameFromName(string name)
-        {
-            if (name == null)
-            {
-                return null;
-            }
-            List<string> parts = new(name.Split(';'));
-            if (parts.Count != 2)
-            {
-                return null;
-            }
-            return string.Concat("(", parts[0][0] == '@' ? "@Name=\"" : "defName=\"", parts[1], "\")");
         }
     }
 }
