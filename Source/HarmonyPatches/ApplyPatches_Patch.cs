@@ -10,7 +10,6 @@ namespace XmlExtensions
     {
         private static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
         {
-            PatchManager.context = false;
             PatchManager.xmlDoc = xmlDoc;
             PatchManager.defaultDoc = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
