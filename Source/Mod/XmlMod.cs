@@ -75,7 +75,6 @@ namespace XmlExtensions
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            Find.WindowStack.TryRemoveAssignableFromType(typeof(Window));
             Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
         }
 

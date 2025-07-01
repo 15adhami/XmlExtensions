@@ -39,6 +39,7 @@ namespace XmlExtensions
             closeOnClickedOutside = true;
             doCloseX = true;
             closeOnAccept = false;
+            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
         }
 
         public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
