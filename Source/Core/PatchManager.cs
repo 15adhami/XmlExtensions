@@ -17,7 +17,7 @@ namespace XmlExtensions
         public static int FailedPatchCount = 0;
         public static bool applyingPatches = false;
 
-        // Required to fix a vanilla bug with range sldiers
+        // Required to fix a vanilla bug with range sliders
         public static int rangeCount = 1;
 
         // Used for xmldoc patch operations
