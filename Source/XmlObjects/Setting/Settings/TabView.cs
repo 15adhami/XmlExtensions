@@ -19,6 +19,7 @@ namespace XmlExtensions.Setting
         private List<TabRecord> tabRecords;
         private int selectedTab = 0;
         private float tabHeight = 31;
+        private float maxTabWidth = 200;
 
         protected override bool Init(string selectedMod)
         {
@@ -54,7 +55,7 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             inRect.yMin += rows*tabHeight;
-            TabDrawer.DrawTabs(inRect, tabRecords, rows, 200);
+            TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
             DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
         }
     }
