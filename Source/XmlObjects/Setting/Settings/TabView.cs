@@ -54,7 +54,7 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             inRect.yMin += rows*tabHeight;
-            TabDrawer.DrawTabs(inRect, tabRecords, rows);
+            TabDrawer.DrawTabs(inRect, tabRecords, rows, 200);
             DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
         }
     }
