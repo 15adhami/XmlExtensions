@@ -188,7 +188,14 @@ namespace XmlExtensions.Setting
         /// <param name="defName">the defName of the SettingsMenuDef you want to display</param>
         protected void SetActiveMenu(string defName)
         {
-            XmlExtensions_MenuModSettings.SetActiveMenu(defName);
+            if (XmlExtensions_MenuModSettings.activeMenu != null)
+            {
+                XmlExtensions_MenuModSettings.SetActiveMenu(defName);
+            }
+            else
+            {
+                ModSettings_Window.SetActiveMenu(defName);
+            }
         }
 
         /// <summary>
