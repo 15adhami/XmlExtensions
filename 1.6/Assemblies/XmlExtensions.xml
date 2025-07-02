@@ -16,6 +16,11 @@
             Prints the stack of errors, then clears them.
             </summary>
         </member>
+        <member name="T:XmlExtensions.ModEmitter">
+            <summary>
+            Class for emitting a Mod subclass with given SettignsMEnuDef
+            </summary>
+        </member>
         <member name="T:XmlExtensions.ErrorHandler">
             <summary>
             The base type to inherit from in order to access improved error handling

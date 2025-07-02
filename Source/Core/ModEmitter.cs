@@ -6,10 +6,14 @@ using Verse;
 
 namespace XmlExtensions
 {
+    /// <summary>
+    /// Class for emitting a Mod subclass with given SettignsMEnuDef
+    /// </summary>
     public static class ModEmitter
     {
-        public static Type EmitModSubclass(SettingsMenuDef menu, ModContentPack content)
+        public static Type EmitModSubclass(SettingsMenuDef menu)
         {
+            ModContentPack content = menu.modContentPack;
             if (content == null)
             {
                 Verse.Log.Error("[XML Extensions] EmitModSubclass called with null ModContentPack");
@@ -39,6 +43,7 @@ namespace XmlExtensions
             ilCtor.Emit(OpCodes.Ldarg_1); // content
             ilCtor.Emit(OpCodes.Call, baseCtor); // base(content)
             ilCtor.Emit(OpCodes.Ret);
+
             // Override DoSettingsWindowContents(Rect)
             MethodInfo baseDrawMethod = typeof(Mod).GetMethod("DoSettingsWindowContents", BindingFlags.Public | BindingFlags.Instance);
             MethodBuilder drawMethod = typeBuilder.DefineMethod(
@@ -58,15 +63,14 @@ namespace XmlExtensions
                 new[] { typeof(SettingsMenuDef), typeof(bool) }
             );
 
+            // Create Find.WindowStack.Add(new XmlExtensions_MenuModSettings(menu))
             ILGenerator ilDraw = drawMethod.GetILGenerator();
-            // Find.WindowStack.Add(new XmlExtensions_MenuModSettings(menu))
             ilDraw.Emit(OpCodes.Call, findWindowStack);      // -> push Find.WindowStack
             ilDraw.Emit(OpCodes.Ldsfld, menuField);          // -> push SettingsMenuDef (menuDef)
             ilDraw.Emit(OpCodes.Ldc_I4_0);                   // -> push 'false' (bool is nested = false)
             ilDraw.Emit(OpCodes.Newobj, ctor);               // -> call ctor(SettingsMenuDef, bool)
             ilDraw.Emit(OpCodes.Callvirt, addWindowMethod);  // -> call WindowStack.Add(Window)
             ilDraw.Emit(OpCodes.Ret);
-            //ilDraw.Emit(OpCodes.Ret); // no-op
             typeBuilder.DefineMethodOverride(drawMethod, baseDrawMethod);
 
             // Override SettingsCategory()
