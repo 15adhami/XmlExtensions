@@ -254,6 +254,8 @@
     <Content Include="About\PublishedFileId.txt" />
     <Content Include="Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
     <Content Include="LoadFolders.xml" />
+    <Content Include="Textures\UI\Buttons\MainButtons\MainButton_ModSettings.png" />
+    <Content Include="Textures\UI\Icons\XMLEIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About\Untitled.xcf" />
@@ -273,4 +275,5 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
 </Project>
