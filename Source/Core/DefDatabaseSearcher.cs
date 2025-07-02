@@ -66,6 +66,10 @@ namespace XmlExtensions
                     string component = components[i];
                     foreach (ObjectContainer objC in list)
                     {
+                        if (objC.value == null)
+                        {
+                            continue;
+                        }
                         object obj = objC.value;
                         Type tempType = obj.GetType();
                         List<ObjectContainer> objectsToAdd = new();
@@ -109,7 +113,6 @@ namespace XmlExtensions
             List<ObjectContainer> list = new();
             try
             {
-                // Verse.Log.Message("t1");
                 if (objPath == null)
                 {
                     return list;
@@ -123,6 +126,10 @@ namespace XmlExtensions
                     string component = components[i];
                     foreach (ObjectContainer objC in list)
                     {
+                        if (objC.value == null)
+                        {
+                            continue;
+                        }
                         object obj = objC.value;
                         Type tempType = obj.GetType();
                         List<ObjectContainer> objectsToAdd = new();
@@ -158,9 +165,9 @@ namespace XmlExtensions
                 }
                 return list;
             }
-            catch
+            catch(Exception e)
             {
-                Verse.Log.Error("exc2");
+                Verse.Log.Error(e.Message);
                 return new List<ObjectContainer>();
             }
         }
