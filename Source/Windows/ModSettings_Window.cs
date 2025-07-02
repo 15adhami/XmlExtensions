@@ -14,25 +14,12 @@ namespace XmlExtensions
         public static SettingsMenuDef activeMenu = null;
 
         public static Vector2 settingsPosition;
-        public static Vector2 modListPosition;
         public static ModContainer SelectedMod = null;
 
-
-        private bool pinned = false;
-        private string searchText = "";
+        // For KeyedActions
         private static Dictionary<string, string> oldValuesCache;
-        private bool focusSearchBox = false;
-        private readonly float ListWidth = 256f;
-
-        private const float TopAreaHeight = 40f;
-
-        private const float TopButtonHeight = 35f;
-
-        private const float TopButtonWidth = 150f;
 
         public override Vector2 InitialSize => new Vector2(900f, 700f);
-
-        private Texture2D pinTex;
 
         public ModSettings_Window(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
