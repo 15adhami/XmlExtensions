@@ -8,8 +8,8 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions
 {
-    // Window that appears when you press More Mod Settings
-    public class XmlExtensions_MenuModSettings : Window
+    // Window to hold the settings of XML mods
+    public class ModSettings_Window : Window
     {
         public static SettingsMenuDef activeMenu = null;
 
@@ -28,10 +28,8 @@ namespace XmlExtensions
 
         private Texture2D pinTex;
 
-        public XmlExtensions_MenuModSettings(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
+        public ModSettings_Window(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
-            soundAmbient = null;
-            soundAppear = null;
             loadedMods = new();
             cachedFilteredList = new();
             oldValuesCache = new();
@@ -41,24 +39,7 @@ namespace XmlExtensions
             closeOnClickedOutside = true;
             doCloseX = true;
             closeOnAccept = false;
-
-            // Close other mod dialgue windows
-            XmlExtensions_MenuModSettings xmlModDialogue;
-            bool foundXmlModWindow = Find.WindowStack.TryGetWindow(out xmlModDialogue);
-            if (foundXmlModWindow)
-            {
-                xmlModDialogue.soundClose = null;
-                xmlModDialogue.Close(false);
-            }
-            Dialog_ModSettings modDialogue;
-            bool foundModWindow = Find.WindowStack.TryGetWindow(out modDialogue);
-            if (foundModWindow)
-            {
-                modDialogue.soundClose = null;
-                modDialogue.Close(false);
-            }
-
-            // Set initial menu
+            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
             if (initialMenu != null)
             {
                 prevMod = new ModContainer(initialMenu.modId);
@@ -74,8 +55,10 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
+            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
             pinTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
             focusSearchBox = true;
+            // activeSettingWindow
             LoadMods();
             FilterModlist();
             if (prevMod != null && prevMod.ToString() != "CharacterEditor") // For compatibility
@@ -96,7 +79,7 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
-            
+
             Rect rectSettings = inRect.RightPartPixels(864f).TopPartPixels(inRect.height - 40);
             Rect headerRect = rectSettings.TopPartPixels(40f);
             Listing_Standard listing = new Listing_Standard();
@@ -329,8 +312,8 @@ namespace XmlExtensions
                 }
             }
             foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                    where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
-                                    select mod)
+                                 where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
+                                 select mod)
             {
                 if (item.GetType() != typeof(XmlMod))
                 {
