@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace XmlExtensions
 {
@@ -17,17 +16,7 @@ namespace XmlExtensions
             {
                 return RunPatchesConditional(DefDatabaseSearcher.SelectObjects(defType + "/[defName=\"" + defName + "\"]/" + objPath).Count > 0, caseTrue, caseFalse, null);
             }
-            try
-            {
-                bool b = RunPatchesConditional(DefDatabaseSearcher.SelectObjects(objPath).Count > 0, caseTrue, caseFalse, null);
-                return b;
-            }
-            catch(Exception e)
-            {
-                Verse.Log.Error(e.Message);
-                return false;
-            }
-            return false;
+            return RunPatchesConditional(DefDatabaseSearcher.SelectObjects(objPath).Count > 0, caseTrue, caseFalse, null);
         }
     }
 }
