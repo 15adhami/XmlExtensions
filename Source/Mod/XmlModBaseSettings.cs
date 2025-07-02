@@ -7,8 +7,8 @@ namespace XmlExtensions
     internal class XmlModBaseSettings : ModSettings
     {
         public Dictionary<string, string> dataDict;
-        public bool standardMods = false;
         public bool mainButton = false;
+        public bool showSettingsButton = false;
         public HashSet<string> PinnedMods;
 
         public XmlModBaseSettings()
@@ -21,7 +21,7 @@ namespace XmlExtensions
         {
             Scribe_Collections.Look(ref dataDict, "dataDict", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref PinnedMods, "PinnedMods", LookMode.Value);
-            Scribe_Values.Look(ref standardMods, "standardMods");
+            Scribe_Values.Look(ref showSettingsButton, "showSettingsButton");
             Scribe_Values.Look(ref mainButton, "mainButton");
             base.ExposeData();
         }

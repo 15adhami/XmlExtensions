@@ -4,8 +4,8 @@
     <XmlExtensions_Label>XML Extensions</XmlExtensions_Label>
 	<XmlExtensions_Confirmation>Are you sure?</XmlExtensions_Confirmation>
     <XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
-    <XmlExtensions_IncludeStandardMods>Display settings for all mods</XmlExtensions_IncludeStandardMods>
-    <XmlExtensions_IncludeStandardModsTip>Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)</XmlExtensions_IncludeStandardModsTip>
+	<XmlExtensions_ShowSettingsButton>Add "+" button to open this alternate mod settings menu?</XmlExtensions_ShowSettingsButton>
+	<XmlExtensions_ShowSettingsButtonTip>If enabled, a small "+" button will appear next to the vanilla Mod options button which will open this alternate mod settings menu.</XmlExtensions_ShowSettingsButtonTip>
     <XmlExtensions_ViewUnusedSettings>View unused settings</XmlExtensions_ViewUnusedSettings>
     <XmlExtensions_InactiveMods>Currently inactive mods:</XmlExtensions_InactiveMods>
     <XmlExtensions_NoExtraSettings>No extra settings at the moment</XmlExtensions_NoExtraSettings>

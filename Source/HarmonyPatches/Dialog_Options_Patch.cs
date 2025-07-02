@@ -11,7 +11,7 @@ namespace XmlExtensions
     {
         private static void Prefix(ref Rect r, OptionCategoryDef optionCategory)
         {
-            if (optionCategory == OptionCategoryDefOf.Mods)
+            if (optionCategory == OptionCategoryDefOf.Mods && XmlMod.allSettings.showSettingsButton)
             {
                 Rect r_right = r.RightPart(0.15f);
                 Rect r_right_button = r_right.RightPartPixels(r_right.width-4);

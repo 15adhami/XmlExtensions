@@ -311,16 +311,13 @@ namespace XmlExtensions
                     loadedMods.Add(new ModContainer(id));
                 }
             }
-            if (XmlMod.allSettings.standardMods)
+            foreach (Mod item in from mod in LoadedModManager.ModHandles
+                                    where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
+                                    select mod)
             {
-                foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                     where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
-                                     select mod)
+                if (item.GetType() != typeof(XmlMod))
                 {
-                    if (item.GetType() != typeof(XmlMod))
-                    {
-                        loadedMods.Add(new ModContainer(item));
-                    }
+                    loadedMods.Add(new ModContainer(item));
                 }
             }
             loadedMods.Sort();
@@ -361,14 +358,14 @@ namespace XmlExtensions
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
-            bool b = XmlMod.allSettings.standardMods;
-            listingStandard.CheckboxLabeled("XmlExtensions_IncludeStandardMods".Translate(), ref b, "XmlExtensions_IncludeStandardModsTip".Translate());
-            if (b != XmlMod.allSettings.standardMods)
+            bool b = XmlMod.allSettings.showSettingsButton;
+            listingStandard.CheckboxLabeled("XmlExtensions_ShowSettingsButton".Translate(), ref b, "XmlExtensions_ShowSettingsButtonTip".Translate());
+            if (b != XmlMod.allSettings.showSettingsButton)
             {
-                XmlMod.allSettings.standardMods = b;
+                XmlMod.allSettings.showSettingsButton = b;
                 LoadMods();
             }
-            XmlMod.allSettings.standardMods = b;
+            XmlMod.allSettings.showSettingsButton = b;
             b = XmlMod.allSettings.mainButton;
             listingStandard.CheckboxLabeled("XmlExtensions_AddMainButton".Translate(), ref XmlMod.allSettings.mainButton, "XmlExtensions_AddMainButtonTip".Translate());
             if (b != XmlMod.allSettings.mainButton)
