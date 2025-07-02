@@ -18,7 +18,6 @@ namespace XmlExtensions
                 r = r.LeftPart(0.85f);
 
                 Widgets.DrawOptionBackground(r_right_button, false);
-                TooltipHandler.TipRegion(r_right_button, Helpers.TryTranslate("More Mod Settings", "XmlExtensions_MoreModSettings"));
                 if (Widgets.ButtonInvisible(r_right_button))
                 {
                     Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
