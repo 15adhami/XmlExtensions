@@ -192,7 +192,7 @@ namespace XmlExtensions.Setting
             {
                 XmlExtensions_MenuModSettings.SetActiveMenu(defName);
             }
-            else
+            else if (ModSettings_Window.activeMenu != null)
             {
                 ModSettings_Window.SetActiveMenu(defName);
             }

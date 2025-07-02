@@ -1,7 +1,5 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
@@ -63,10 +61,10 @@ namespace XmlExtensions
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(0f, 0f, rightRect.width - 150f - 17f, 35f), SelectedMod != null ? SelectedMod.ToString() : "XML Extensions");
             Text.Font = GameFont.Small;
-            //Rect rect = new Rect(0f, 40f, inRect.width, inRect.height - 40f - Window.CloseButSize.y);
-            Rect rect = new Rect(0f, 0f, rightRect.width, rightRect.height - 40f);
+            Rect rect = new Rect(0f, 0f, rightRect.width, rightRect.height - 40f - Window.CloseButSize.y);
             GUI.BeginGroup(rect);
-            if (SelectedMod != null)
+
+            if (SelectedMod != null && activeMenu != null)
             {
                 Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f, SelectedMod.modId));
                 Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
@@ -85,10 +83,6 @@ namespace XmlExtensions
                 }
                 GUI.color = Color.white;
                 Widgets.EndScrollView();
-            }
-            else
-            {
-                DrawXmlExtensionsSettings(rect.BottomPartPixels(rect.height - 40f));
             }
             GUI.EndGroup();
         }
@@ -129,6 +123,7 @@ namespace XmlExtensions
             else
             {
                 SetActiveMenu(null);
+                SelectedMod = null;
             }
         }
 
@@ -152,34 +147,10 @@ namespace XmlExtensions
                 activeMenu = DefDatabase<SettingsMenuDef>.GetNamed(defName);
                 activeMenu.RunPreOpenActions();
             }
-        }
-
-        private void DrawXmlExtensionsSettings(Rect rect)
-        {
-            Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.Begin(rect);
-            bool b = XmlMod.allSettings.showSettingsButton;
-            listingStandard.CheckboxLabeled("XmlExtensions_ShowSettingsButton".Translate(), ref b, "XmlExtensions_ShowSettingsButtonTip".Translate());
-            if (b != XmlMod.allSettings.showSettingsButton)
+            else
             {
-                XmlMod.allSettings.showSettingsButton = b;
+                activeMenu = null;
             }
-            XmlMod.allSettings.showSettingsButton = b;
-            b = XmlMod.allSettings.mainButton;
-            listingStandard.CheckboxLabeled("XmlExtensions_AddMainButton".Translate(), ref XmlMod.allSettings.mainButton, "XmlExtensions_AddMainButtonTip".Translate());
-            if (b != XmlMod.allSettings.mainButton)
-            {
-                DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
-            }
-            Rect buttonRect = listingStandard.GetRect(30f);
-            Listing_Standard listingStandard2 = new();
-            listingStandard2.Begin(buttonRect);
-            if (listingStandard2.ButtonText("XmlExtensions_ViewUnusedSettings".Translate()))
-            {
-                Find.WindowStack.Add(new UnusedSettings_Window());
-            }
-            listingStandard2.End();
-            listingStandard.End();
         }
     }
 }
