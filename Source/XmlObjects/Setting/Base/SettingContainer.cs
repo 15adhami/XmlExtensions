@@ -95,7 +95,7 @@ namespace XmlExtensions.Setting
                 if (errHeight > 0)
                 {
                     GUI.color = Color.red;
-                    Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
+                    Widgets.Label(inRect, "Error drawing setting2: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
                     errHeight = 22;
                     GUI.color = Color.white;
                 }
@@ -171,7 +171,15 @@ namespace XmlExtensions.Setting
         /// <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
         protected int GetDefaultSpacing()
         {
-            return XmlExtensions_MenuModSettings.activeMenu.defaultSpacing;
+            if (XmlExtensions_MenuModSettings.activeMenu != null)
+            {
+                return XmlExtensions_MenuModSettings.activeMenu.defaultSpacing;
+            }
+            else if (ModSettings_Window.activeMenu != null)
+            {
+                return ModSettings_Window.activeMenu.defaultSpacing;
+            }
+            return 3;
         }
 
         /// <summary>

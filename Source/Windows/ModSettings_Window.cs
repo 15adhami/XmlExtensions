@@ -19,7 +19,6 @@ namespace XmlExtensions
 
 
         private bool pinned = false;
-        private static ModContainer prevMod = null;
         private string searchText = "";
         private static Dictionary<string, string> oldValuesCache;
         private bool focusSearchBox = false;
@@ -72,11 +71,12 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
+            Rect rightRect = inRect.RightPartPixels(864f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 150f - 17f, 35f), SelectedMod != null ? SelectedMod.ToString() : "XML Extensions");
+            Widgets.Label(new Rect(0f, 0f, rightRect.width - 150f - 17f, 35f), SelectedMod != null ? SelectedMod.ToString() : "XML Extensions");
             Text.Font = GameFont.Small;
             //Rect rect = new Rect(0f, 40f, inRect.width, inRect.height - 40f - Window.CloseButSize.y);
-            Rect rect = new Rect(0f, 0f, inRect.width, inRect.height - 40f - Window.CloseButSize.y);
+            Rect rect = new Rect(0f, 0f, rightRect.width, rightRect.height - 40f);
             GUI.BeginGroup(rect);
             if (SelectedMod != null)
             {
@@ -120,6 +120,10 @@ namespace XmlExtensions
                     }
                 }
             }
+            if (SelectedMod != null)
+            {
+                SelectedMod.WriteSettings();
+            }
             oldValuesCache.Clear();
             if (menu != null)
             {
@@ -138,15 +142,10 @@ namespace XmlExtensions
             {
                 SetActiveMenu(null);
             }
-            if (SelectedMod != null)
-            {
-                SelectedMod.WriteSettings();
-            }
         }
 
         public override void PreClose()
         {
-            prevMod = SelectedMod;
             SetSelectedMod(null);
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
             base.PreClose();
