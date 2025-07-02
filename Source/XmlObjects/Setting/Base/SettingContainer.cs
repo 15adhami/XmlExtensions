@@ -95,7 +95,7 @@ namespace XmlExtensions.Setting
                 if (errHeight > 0)
                 {
                     GUI.color = Color.red;
-                    Widgets.Label(inRect, "Error drawing setting2: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
+                    Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
                     errHeight = 22;
                     GUI.color = Color.white;
                 }
