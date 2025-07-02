@@ -9,7 +9,7 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     // Window that appears when you press More Mod Settings
-    internal class XmlExtensions_MenuModSettings : Window
+    public class XmlExtensions_MenuModSettings : Window
     {
         public static SettingsMenuDef activeMenu = null;
 
@@ -28,7 +28,7 @@ namespace XmlExtensions
 
         private Texture2D pinTex;
 
-        public XmlExtensions_MenuModSettings()
+        public XmlExtensions_MenuModSettings(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
             loadedMods = new();
             cachedFilteredList = new();
@@ -40,6 +40,14 @@ namespace XmlExtensions
             doCloseX = true;
             closeOnAccept = false;
             Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
+            if (initialMenu != null)
+            {
+                prevMod = new ModContainer(initialMenu.modId);
+            }
+            else if (isXmlExtensions)
+            {
+                prevMod = null;
+            }
         }
 
         public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
@@ -47,6 +55,7 @@ namespace XmlExtensions
         public override void PreOpen()
         {
             base.PreOpen();
+            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
             pinTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
             focusSearchBox = true;
             // activeSettingWindow
@@ -305,7 +314,7 @@ namespace XmlExtensions
             if (XmlMod.allSettings.standardMods)
             {
                 foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                     where !mod.SettingsCategory().NullOrEmpty()
+                                     where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
                                      select mod)
                 {
                     if (item.GetType() != typeof(XmlMod))

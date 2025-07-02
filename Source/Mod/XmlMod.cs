@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -75,12 +76,12 @@ namespace XmlExtensions
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
+            Find.WindowStack.Add(new XmlExtensions_MenuModSettings(null, true));
         }
 
         public override string SettingsCategory()
         {
-            return "XmlExtensions_MoreModSettings".Translate();
+            return "XmlExtensions_Label".Translate();
         }
 
         [Obsolete]

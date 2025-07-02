@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -17,6 +18,7 @@ namespace XmlExtensions
             }
             PatchManager.delayedPatches.Clear();
             PatchManager.PatchModDict.Clear();
+            HashSet<SettingsMenuDef> modsForMenu = new();
             // Initializing mod settings menus
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
@@ -29,7 +31,10 @@ namespace XmlExtensions
                 else
                 {
                     if (!menuDef.submenu)
+                    {
+                        modsForMenu.Add(menuDef);
                         i++;
+                    }
                 }
                 if (XmlMod.settingsPerMod[menuDef.modId].menus == null)
                 {
@@ -72,7 +77,7 @@ namespace XmlExtensions
                     XmlMod.allSettings.dataDict.Remove(pair.Key);
                 }
             }
-            
+
             XmlMod.unusedMods.Sort();
             foreach (List<string> list in XmlMod.unusedSettings.Values)
             {
@@ -84,6 +89,17 @@ namespace XmlExtensions
             DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
             // PatchManager.DefModDict.Clear();
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
+
+            // Emit Mod classes
+            Dictionary<string, ModContentPack> contentLookup = LoadedModManager.RunningMods.ToDictionary(b => b.PackageId.ToLower());
+            int emiitedMods = 0;
+            foreach (SettingsMenuDef menu in modsForMenu)
+            {
+                Type emittedModType = ModEmitter.EmitModSubclass(menu, menu.modContentPack);
+                LoadedModManager.runningModClasses[emittedModType] = (Mod)Activator.CreateInstance(emittedModType, menu.modContentPack);
+                emiitedMods += 1;
+            }
+            Verse.Log.Message("[XML Extensions] Emitted " + emiitedMods.ToString() + " mod class(es)");
         }
     }
 }

@@ -2,7 +2,6 @@
 <LanguageData>
 
     <XmlExtensions_Label>XML Extensions</XmlExtensions_Label>
-    <XmlExtensions_MoreModSettings>More Mod Settings</XmlExtensions_MoreModSettings>
 	<XmlExtensions_Confirmation>Are you sure?</XmlExtensions_Confirmation>
     <XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
     <XmlExtensions_IncludeStandardMods>Display settings for all mods</XmlExtensions_IncludeStandardMods>

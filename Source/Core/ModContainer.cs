@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions
 {
-    internal class ModContainer : IComparable
+    public class ModContainer : IComparable
     {
         public string modId;
         public Mod mod;
