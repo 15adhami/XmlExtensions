@@ -8,7 +8,7 @@ using XmlExtensions.Action;
 
 namespace XmlExtensions
 {
-    // Window to hold the settings of XML mods
+    // Window that appears when you press More Mod Settings
     public class ModSettings_Window : Window
     {
         public static SettingsMenuDef activeMenu = null;
@@ -17,8 +17,7 @@ namespace XmlExtensions
         public static Vector2 modListPosition;
         public static ModContainer SelectedMod = null;
 
-        private readonly List<ModContainer> loadedMods;
-        private readonly List<ModContainer> cachedFilteredList;
+
         private bool pinned = false;
         private static ModContainer prevMod = null;
         private string searchText = "";
@@ -26,12 +25,20 @@ namespace XmlExtensions
         private bool focusSearchBox = false;
         private readonly float ListWidth = 256f;
 
+        private const float TopAreaHeight = 40f;
+
+        private const float TopButtonHeight = 35f;
+
+        private const float TopButtonWidth = 150f;
+
+        public override Vector2 InitialSize => new Vector2(900f, 700f);
+
         private Texture2D pinTex;
 
         public ModSettings_Window(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
-            loadedMods = new();
-            cachedFilteredList = new();
+            soundAmbient = null;
+            soundAppear = null;
             oldValuesCache = new();
             doCloseButton = true;
             forcePause = true;
@@ -39,187 +46,68 @@ namespace XmlExtensions
             closeOnClickedOutside = true;
             doCloseX = true;
             closeOnAccept = false;
-            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
+
+            // Close other mod dialgue windows
+            ModSettings_Window xmlModDialogue;
+            bool foundXmlModWindow = Find.WindowStack.TryGetWindow(out xmlModDialogue);
+            if (foundXmlModWindow)
+            {
+                xmlModDialogue.soundClose = null;
+                xmlModDialogue.Close(false);
+            }
+            Dialog_ModSettings modDialogue;
+            bool foundModWindow = Find.WindowStack.TryGetWindow(out modDialogue);
+            if (foundModWindow)
+            {
+                modDialogue.soundClose = null;
+                modDialogue.Close(false);
+            }
+
+            // Set initial menu
             if (initialMenu != null)
             {
-                prevMod = new ModContainer(initialMenu.modId);
-            }
-            else if (isXmlExtensions)
-            {
-                prevMod = null;
-            }
-        }
-
-        public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
-
-        public override void PreOpen()
-        {
-            base.PreOpen();
-            Find.WindowStack.TryRemoveAssignableFromType(typeof(Dialog_ModSettings));
-            pinTex = ContentFinder<Texture2D>.Get("UI/Icons/Pin-Outline", false);
-            focusSearchBox = true;
-            // activeSettingWindow
-            LoadMods();
-            FilterModlist();
-            if (prevMod != null && prevMod.ToString() != "CharacterEditor") // For compatibility
-            {
-                foreach (ModContainer mod in loadedMods)
-                {
-                    if (mod.ToString() == prevMod.ToString())
-                    {
-                        SetSelectedMod(mod);
-                    }
-                }
-            }
-            else
-            {
-                SetSelectedMod(null);
+                SetSelectedMod(initialMenu);
             }
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-
-            Rect rectSettings = inRect.RightPartPixels(864f).TopPartPixels(inRect.height - 40);
-            Rect headerRect = rectSettings.TopPartPixels(40f);
-            Listing_Standard listing = new Listing_Standard();
-            listing.Begin(headerRect);
             Text.Font = GameFont.Medium;
-            listing.verticalSpacing = 0;
-            listing.Label(Helpers.TryTranslate("Mod settings for ", "XmlExtensions_ModSettingsFor") + (SelectedMod != null ? SelectedMod.ToString() : "XML Extensions"));
+            Widgets.Label(new Rect(0f, 0f, inRect.width - 150f - 17f, 35f), SelectedMod != null ? SelectedMod.ToString() : "XML Extensions");
             Text.Font = GameFont.Small;
-            listing.GapLine(9f);
-            listing.End();
-            GUI.BeginGroup(rectSettings);
-            Text.Font = GameFont.Small;
-            DrawXmlModSettings(rectSettings);
-            Text.Font = GameFont.Small;
-            GUI.EndGroup();
-
-            string temp = searchText;
-            Rect rectMods = inRect.LeftPartPixels(ListWidth).TopPartPixels(inRect.height - 40); //.285f
-            GUI.SetNextControlName("searchbox");
-            searchText = Widgets.TextField(rectMods.TopPartPixels(22).LeftPartPixels(rectMods.width - 22 - 22), temp);
-            GUI.color *= new Color(0.33f, 0.33f, 0.33f);
-            if (searchText == null || searchText == "")
+            //Rect rect = new Rect(0f, 40f, inRect.width, inRect.height - 40f - Window.CloseButSize.y);
+            Rect rect = new Rect(0f, 0f, inRect.width, inRect.height - 40f - Window.CloseButSize.y);
+            GUI.BeginGroup(rect);
+            if (SelectedMod != null)
             {
-                GUI.color = new Color(0.5f, 0.5f, 0.5f);
-                GUI.DrawTexture(rectMods.TopPartPixels(22).RightPartPixels(44).LeftPartPixels(22), TexButton.Search);
+                Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f, SelectedMod.modId));
+                Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
+                Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
+                activeMenu.DrawSettings(rect2);
+                if (activeMenu.onFrameActions != null)
+                {
+                    ErrorManager.ClearErrors();
+                    foreach (ActionContainer action in activeMenu.onFrameActions)
+                    {
+                        if (!action.DoAction())
+                        {
+                            ErrorManager.PrintErrors();
+                        }
+                    }
+                }
+                GUI.color = Color.white;
+                Widgets.EndScrollView();
             }
             else
             {
-                if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(44).LeftPartPixels(22).ContractedBy(2f), TexButton.CloseXSmall))
-                {
-                    searchText = "";
-                }
+                DrawXmlExtensionsSettings(rect.BottomPartPixels(rect.height - 40f));
             }
-            if (searchText != temp)
-            {
-                FilterModlist();
-            }
-            if (Widgets.ButtonImage(rectMods.TopPartPixels(22).RightPartPixels(22).ContractedBy(2f), pinTex, pinned ? new Color(0.75f, 0.75f, 0.75f) : new Color(0.5f, 0.5f, 0.5f)))
-            {
-                pinned = !pinned;
-                FilterModlist();
-            }
-            GUI.color = Color.white;
-            if (focusSearchBox)
-            {
-                GUI.FocusControl("searchbox");
-                focusSearchBox = false;
-            }
-            DrawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
+            GUI.EndGroup();
         }
-
-        private void DrawXmlModList(Rect rect)
-        {
-            int count = 0;
-            foreach (string modId in XmlMod.loadedXmlMods)
-            {
-                if (XmlMod.settingsPerMod[modId].label != null)
-                    count++;
-            }
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, Math.Max(cachedFilteredList.Count * (30 + 2) + 38, rect.height + 1));
-            Widgets.BeginScrollView(rect, ref modListPosition, scrollRect);
-            Listing_Standard listingStandard = new();
-            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 99999f);
-            listingStandard.Begin(rect2);
-            int currMod = 0;
-            // Draw the button list
-            foreach (ModContainer mod in cachedFilteredList)
-            {
-                // Only draw the button if it is within the viewing window
-                if (currMod * 32 + 32 >= modListPosition.y && currMod * 32 <= modListPosition.y + rect.height)
-                {
-                    if (mod == SelectedMod)
-                    {
-                        GUI.color = new Color(0.7f, 0.7f, 0.7f);
-                    }
-                    Rect buttonRect = listingStandard.GetRect(30);
-                    if (Widgets.ButtonText(buttonRect, mod.ToString()))
-                    {
-                        if (Event.current.button == 1)
-                        {
-                            var newOptions = new List<FloatMenuOption>();
-                            if (XmlMod.allSettings.PinnedMods.Contains(mod.ToString()))
-                            {
-                                newOptions.Add(new FloatMenuOption(Helpers.TryTranslate("Unpin mod", "XmlExtensions_Unpin"), delegate ()
-                                {
-                                    XmlMod.allSettings.PinnedMods.Remove(mod.ToString());
-                                    FilterModlist();
-                                    if (cachedFilteredList.Count == 0)
-                                    {
-                                        pinned = false;
-                                        FilterModlist();
-                                    }
-                                }));
-                            }
-                            else
-                            {
-                                newOptions.Add(new FloatMenuOption(Helpers.TryTranslate("Pin mod", "XmlExtensions_Pin"), delegate ()
-                                {
-                                    XmlMod.allSettings.PinnedMods.Add(mod.ToString());
-                                }));
-                            }
-                            Find.WindowStack.Add(new FloatMenu(newOptions));
-                        }
-                        else
-                        {
-                            SetSelectedMod(mod);
-                        }
-                    }
-                    listingStandard.GetRect(2);
-                    GUI.color = Color.white;
-                }
-                else
-                {
-                    listingStandard.GetRect(32);
-                }
-                currMod++;
-            }
-            if (pinned && cachedFilteredList.Count == 0)
-            {
-                listingStandard.Label(Helpers.TryTranslate("Right-click a mod to pin it", "XmlExtensions_HowToPin"));
-            }
-            listingStandard.GapLine(4);
-            listingStandard.Gap(2);
-            if (SelectedMod == null)
-            {
-                GUI.color = new Color(0.7f, 0.7f, 0.7f);
-            }
-            if (listingStandard.ButtonText(Helpers.TryTranslate("XML Extensions", "XmlExtensions_Label")))
-            {
-                SetSelectedMod(null);
-            }
-            GUI.color = Color.white;
-            listingStandard.End();
-            Widgets.EndScrollView();
-        }
-
-        public void SetSelectedMod(ModContainer mod)
+        public void SetSelectedMod(SettingsMenuDef menu)
         {
             // Run KeyedActions
-            if (SelectedMod != null && SelectedMod.IsXmlMod() && XmlMod.keyedActionListDict.ContainsKey(SelectedMod.modId))
+            if (SelectedMod != null && XmlMod.keyedActionListDict.ContainsKey(SelectedMod.modId))
             {
                 foreach (string key in XmlMod.keyedActionListDict[SelectedMod.modId].Keys)
                 {
@@ -233,17 +121,18 @@ namespace XmlExtensions
                 }
             }
             oldValuesCache.Clear();
-            if (mod != null && mod.IsXmlMod())
+            if (menu != null)
             {
                 // Cache values for next mod
-                if (XmlMod.keyedActionListDict.ContainsKey(mod.modId))
+                if (XmlMod.keyedActionListDict.ContainsKey(menu.modId))
                 {
-                    foreach (string key in XmlMod.keyedActionListDict[mod.modId].Keys)
+                    foreach (string key in XmlMod.keyedActionListDict[menu.modId].Keys)
                     {
-                        oldValuesCache.Add(key, SettingsManager.GetSetting(mod.modId, key));
+                        oldValuesCache.Add(key, SettingsManager.GetSetting(menu.modId, key));
                     }
                 }
-                SetActiveMenu(XmlMod.settingsPerMod[mod.modId].homeMenu);
+                SetActiveMenu(menu.defName);
+                SelectedMod = new ModContainer(menu.modId);
             }
             else
             {
@@ -253,44 +142,6 @@ namespace XmlExtensions
             {
                 SelectedMod.WriteSettings();
             }
-            SelectedMod = mod;
-        }
-
-        private void DrawXmlModSettings(Rect rect)
-        {
-            rect.x = 0;
-            rect.y = 0;
-            if (SelectedMod != null)
-            {
-                if (SelectedMod.IsXmlMod())
-                {
-                    Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f, SelectedMod.modId));
-                    Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
-                    Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-                    activeMenu.DrawSettings(rect2);
-                    if (activeMenu.onFrameActions != null)
-                    {
-                        ErrorManager.ClearErrors();
-                        foreach (ActionContainer action in activeMenu.onFrameActions)
-                        {
-                            if (!action.DoAction())
-                            {
-                                ErrorManager.PrintErrors();
-                            }
-                        }
-                    }
-                    GUI.color = Color.white;
-                    Widgets.EndScrollView();
-                }
-                else
-                {
-                    SelectedMod.mod.DoSettingsWindowContents(rect.BottomPartPixels(rect.height - 40));
-                }
-            }
-            else
-            {
-                DrawXmlExtensionsSettings(rect.BottomPartPixels(rect.height - 40f));
-            }
         }
 
         public override void PreClose()
@@ -299,44 +150,6 @@ namespace XmlExtensions
             SetSelectedMod(null);
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
             base.PreClose();
-        }
-
-        private void LoadMods()
-        {
-            loadedMods.Clear();
-            foreach (string id in XmlMod.loadedXmlMods)
-            {
-                if (XmlMod.settingsPerMod[id].label != null)
-                {
-                    loadedMods.Add(new ModContainer(id));
-                }
-            }
-            foreach (Mod item in from mod in LoadedModManager.ModHandles
-                                 where !mod.SettingsCategory().NullOrEmpty() && !mod.GetType().Name.StartsWith("XmlExtensions_Mod_")
-                                 select mod)
-            {
-                if (item.GetType() != typeof(XmlMod))
-                {
-                    loadedMods.Add(new ModContainer(item));
-                }
-            }
-            loadedMods.Sort();
-            FilterModlist();
-        }
-
-        private void FilterModlist()
-        {
-            cachedFilteredList.Clear();
-            foreach (ModContainer mod in loadedMods)
-            {
-                if (searchText == null || searchText == "" || mod.ToString().ToLower().Contains(searchText.ToLower()))
-                {
-                    if (!pinned || (pinned && XmlMod.allSettings.PinnedMods.Contains(mod.ToString())))
-                    {
-                        cachedFilteredList.Add(mod);
-                    }
-                }
-            }
         }
 
         public static void SetActiveMenu(string defName)
@@ -363,7 +176,6 @@ namespace XmlExtensions
             if (b != XmlMod.allSettings.showSettingsButton)
             {
                 XmlMod.allSettings.showSettingsButton = b;
-                LoadMods();
             }
             XmlMod.allSettings.showSettingsButton = b;
             b = XmlMod.allSettings.mainButton;

@@ -59,7 +59,7 @@ namespace XmlExtensions
             );
             MethodInfo findWindowStack = typeof(Find).GetProperty("WindowStack").GetGetMethod();
             MethodInfo addWindowMethod = typeof(WindowStack).GetMethod("Add", new[] { typeof(Window) });
-            ConstructorInfo ctor = typeof(XmlExtensions_MenuModSettings).GetConstructor(
+            ConstructorInfo ctor = typeof(ModSettings_Window).GetConstructor(
                 new[] { typeof(SettingsMenuDef), typeof(bool) }
             );
 
