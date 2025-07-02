@@ -87,7 +87,6 @@ namespace XmlExtensions
             Verse.Log.Message(string.Concat("[XML Extensions] ", PatchManager.PatchCount, " total patch operations run in ", PatchManager.watch2.ElapsedMilliseconds, "ms, ", PatchManager.FailedPatchCount, " failed"));
             PatchManager.PatchModDict.Clear();
             DefDatabase<MainButtonDef>.GetNamed("XmlExtensions_MainButton_ModSettings").buttonVisible = XmlMod.allSettings.mainButton;
-            // PatchManager.DefModDict.Clear();
             LoadedModManager.GetMod(typeof(XmlMod)).WriteSettings();
 
             // Emit Mod classes
