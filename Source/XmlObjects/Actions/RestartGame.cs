@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace XmlExtensions.Action
 {
     internal class RestartGame : ActionContainer
-    { // TODO: Close standard mod menu or xml extensiosn menu before restarting
+    {
         protected override bool ApplyAction()
         {
             if (Find.WindowStack.IsOpen(typeof(XmlExtensions_MenuModSettings)))
