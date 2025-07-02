@@ -23,6 +23,7 @@ namespace XmlExtensions
 
         public ModSettings_Window(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
+            settingsPosition = new();
             soundAmbient = null;
             soundAppear = null;
             oldValuesCache = new();
