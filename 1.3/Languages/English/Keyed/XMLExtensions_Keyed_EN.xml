@@ -1,0 +1,50 @@
+﻿﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<XmlExtensions_Label>XML Extensions</XmlExtensions_Label>
+	<XmlExtensions_MoreModSettings>More Mod Settings</XmlExtensions_MoreModSettings>
+	<XmlExtensions_Confirmation>Are you sure?</XmlExtensions_Confirmation>
+	<XmlExtensions_ResetSettings>Reset Settings</XmlExtensions_ResetSettings>
+	<XmlExtensions_EnableStackTrace>Enable stack trace for XML patch errors</XmlExtensions_EnableStackTrace>
+	<XmlExtensions_StackTraceTip>Improves error reporting when enabled</XmlExtensions_StackTraceTip>
+	<XmlExtensions_IncludeStandardMods>Display settings for all mods</XmlExtensions_IncludeStandardMods>
+	<XmlExtensions_IncludeStandardModsTip>Include settings from mods that do not use XML Extensions (does not support settings created via HugsLib)</XmlExtensions_IncludeStandardModsTip>
+	<XmlExtensions_ViewUnusedSettings>View unused settings</XmlExtensions_ViewUnusedSettings>
+	<XmlExtensions_InactiveMods>Currently inactive mods:</XmlExtensions_InactiveMods>
+	<XmlExtensions_NoExtraSettings>No extra settings at the moment</XmlExtensions_NoExtraSettings>
+	<XmlExtensions_SelectedModUnusedKeys>Selected mod's unused keys:</XmlExtensions_SelectedModUnusedKeys>
+	<XmlExtensions_Delete>Delete</XmlExtensions_Delete>
+	<XmlExtensions_DeleteKeys>Delete {0} keys</XmlExtensions_DeleteKeys>
+	<XmlExtensions_ConfirmationResetMod>Are you sure you want to delete every unused key of the current mod?</XmlExtensions_ConfirmationResetMod>
+	<XmlExtensions_DeleteAllUnusedKeys>Delete all {0} unused keys</XmlExtensions_DeleteAllUnusedKeys>
+	<XmlExtensions_ConfirmResetAll>Are you sure you want to delete all unused keys from every mod?</XmlExtensions_ConfirmResetAll>
+	<XmlExtensions_Open>Open</XmlExtensions_Open>
+	<XmlExtensions_Apply>Apply</XmlExtensions_Apply>
+	<XmlExtensions_ModSettingsFor>Mod settings for </XmlExtensions_ModSettingsFor>
+	<XmlExtensions_Unpin>Unpin mod</XmlExtensions_Unpin>
+	<XmlExtensions_Pin>Pin mod</XmlExtensions_Pin>
+	<XmlExtensions_HowToPin>Right-click a mod to pin it</XmlExtensions_HowToPin>
+	<XmlExtensions_AddMainButton>Add a main button for opening the More Mod Settings menu</XmlExtensions_AddMainButton>
+	<XmlExtensions_AddMainButtonTip>Adds a main button that opens the More Mod Settings menu when clicked</XmlExtensions_AddMainButtonTip>
+	<XmlExtensions_AdvancedDebugging>Enable advanced XML debugging mode? (Enable when troubleshooting)</XmlExtensions_AdvancedDebugging>
+	<XmlExtensions_AdvancedDebuggingTip>Enabling this option will list possible mods that are causing XML errors, but may impact your loading times. Recommended to only enable when trying to solve mod conflicts or troubleshooting.</XmlExtensions_AdvancedDebuggingTip>
+	<XmlExtensions_DefTypes>Def type:</XmlExtensions_DefTypes>
+	<XmlExtensions_PatchAnalyzer>Patch Analyzer</XmlExtensions_PatchAnalyzer>
+	<XmlExtensions_Defs>Def:</XmlExtensions_Defs>
+	<XmlExtensions_Mods>Mods:</XmlExtensions_Mods>
+	<XmlExtensions_EnableAdvancedDebuggingAndReboot>Boot game while Advanced Debugging is enabled to use Patch Analyzer.</XmlExtensions_EnableAdvancedDebuggingAndReboot>
+	<XmlExtensions_PatchedDefs>Defs patched: </XmlExtensions_PatchedDefs>
+	<XmlExtensions_AppliedPatches>Patches applied: </XmlExtensions_AppliedPatches>
+	<XmlExtensions_ByDef>By Def</XmlExtensions_ByDef>
+	<XmlExtensions_ByDefTip>View patches by Def</XmlExtensions_ByDefTip>
+	<XmlExtensions_ByMod>By Mod</XmlExtensions_ByMod>
+	<XmlExtensions_ByModTip>View patches by Mod</XmlExtensions_ByModTip>
+	<XmlExtensions_Mode>Mode:</XmlExtensions_Mode>
+	<XmlExtensions_Summary>Summary</XmlExtensions_Summary>
+	<XmlExtensions_SummaryTip>View a summary of the patches</XmlExtensions_SummaryTip>
+	<XmlExtensions_TimeTaken>Time taken: </XmlExtensions_TimeTaken>
+	<XmlExtensions_PatchesApplied>patch(es) applied</XmlExtensions_PatchesApplied>
+	<XmlExtensions_DefsPatched>Def(s) patched</XmlExtensions_DefsPatched>
+	<XmlExtensions_Elapsed>elapsed</XmlExtensions_Elapsed>
+
+</LanguageData>
