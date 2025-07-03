@@ -61,7 +61,7 @@ namespace XmlExtensions
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(0f, 0f, rightRect.width - 150f - 17f, 35f), SelectedMod != null ? SelectedMod.ToString() : "XML Extensions");
             Text.Font = GameFont.Small;
-            Rect rect = new Rect(0f, 0f, rightRect.width, rightRect.height - 40f - Window.CloseButSize.y);
+            Rect rect = new Rect(0f, 0f, rightRect.width, rightRect.height - Window.CloseButSize.y);
             GUI.BeginGroup(rect);
 
             if (SelectedMod != null && activeMenu != null)
