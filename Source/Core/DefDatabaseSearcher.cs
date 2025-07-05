@@ -66,6 +66,10 @@ namespace XmlExtensions
                     string component = components[i];
                     foreach (ObjectContainer objC in list)
                     {
+                        if (objC.value == null)
+                        {
+                            continue;
+                        }
                         object obj = objC.value;
                         Type tempType = obj.GetType();
                         List<ObjectContainer> objectsToAdd = new();
@@ -123,6 +127,10 @@ namespace XmlExtensions
                     string component = components[i];
                     foreach (ObjectContainer objC in list)
                     {
+                        if (objC.value == null)
+                        {
+                            continue;
+                        }
                         object obj = objC.value;
                         Type tempType = obj.GetType();
                         List<ObjectContainer> objectsToAdd = new();
