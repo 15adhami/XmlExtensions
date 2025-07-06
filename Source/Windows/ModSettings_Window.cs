@@ -32,6 +32,9 @@ namespace XmlExtensions
             doCloseX = true;
             closeOnAccept = false;
 
+            SelectedMod = null;
+            activeMenu = null;
+
             // Close other mod dialgue windows
             ModSettings_Window xmlModDialogue;
             bool foundXmlModWindow = Find.WindowStack.TryGetWindow(out xmlModDialogue);
