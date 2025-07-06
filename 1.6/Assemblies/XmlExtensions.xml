@@ -184,9 +184,19 @@
             Inherit from this class to embed C# code that gets called everytime a specified key is changed
             </summary>
         </member>
+        <member name="F:XmlExtensions.Action.KeyedActionContainer.modId">
+            <summary>
+            If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
+            </summary>
+        </member>
         <member name="F:XmlExtensions.Action.KeyedActionContainer.key">
             <summary>
             The key that is tied to this KeyedAction
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Action.KeyedActionContainer.output">
+            <summary>
+            If you want to return a value to be used by the XML, set this field to that value
             </summary>
         </member>
         <member name="M:XmlExtensions.Action.KeyedActionContainer.DoKeyedAction(System.String,System.String)">
@@ -196,12 +206,6 @@
             <param name="oldValue">The previous value of the key</param>
             <param name="newValue">The new value of the key</param>
             <returns>false if there was an error, true otherwise</returns>
-        </member>
-        <member name="M:XmlExtensions.Action.KeyedActionContainer.ApplyAction">
-            <summary>
-            This method should not be called
-            </summary>
-            <returns></returns>
         </member>
         <member name="M:XmlExtensions.Action.KeyedActionContainer.ApplyKeyedAction(System.String,System.String)">
             <summary>
