@@ -240,7 +240,7 @@ namespace XmlExtensions
             {
                 foreach (string key in XmlMod.keyedActionListDict[SelectedMod.modId].Keys)
                 {
-                    foreach (KeyedActionContainer action in XmlMod.keyedActionListDict[SelectedMod.modId][key])
+                    foreach (KeyedAction action in XmlMod.keyedActionListDict[SelectedMod.modId][key])
                     {
                         if (!action.DoKeyedAction(oldValuesCache[key], SettingsManager.GetSetting(SelectedMod.modId, key)))
                         {

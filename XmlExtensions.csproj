@@ -178,11 +178,10 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
-    <Compile Include="Source\XmlObjects\Actions\ActionContainer.cs" />
+    <Compile Include="Source\XmlObjects\Actions\Base\ActionContainer.cs" />
     <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
-    <Compile Include="Source\XmlObjects\Actions\KeyedAction.cs" />
+    <Compile Include="Source\XmlObjects\Actions\Base\KeyedAction.cs" />
     <Compile Include="Source\XmlObjects\Actions\RestartGame.cs" />
-    <Compile Include="Source\XmlObjects\Actions\KeyedActionContainer.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Actions\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />

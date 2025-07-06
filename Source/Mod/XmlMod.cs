@@ -23,7 +23,7 @@ namespace XmlExtensions
         internal static Dictionary<string, SettingsMenuDef> menus;
         internal static Dictionary<string, List<string>> unusedSettings;
         internal static List<string> unusedMods;
-        internal static Dictionary<string, Dictionary<string, List<KeyedActionContainer>>> keyedActionListDict;
+        internal static Dictionary<string, Dictionary<string, List<KeyedAction>>> keyedActionListDict;
 
        public XmlMod(ModContentPack content) : base(content)
         {
@@ -34,7 +34,7 @@ namespace XmlExtensions
             }
             var harmony = new Harmony("com.github.15adhami.xmlextensions");
             harmony.PatchAll();
-            keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedActionContainer>>>();
+            keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
@@ -47,15 +47,15 @@ namespace XmlExtensions
             }
         }
 
-        internal static void AddKeyedAction(string modId, string key, KeyedActionContainer action)
+        internal static void AddKeyedAction(string modId, string key, KeyedAction action)
         {
             if (!keyedActionListDict.ContainsKey(modId))
             {
-                keyedActionListDict.Add(modId, new Dictionary<string, List<KeyedActionContainer>>());
+                keyedActionListDict.Add(modId, new Dictionary<string, List<KeyedAction>>());
             }
             if (!keyedActionListDict[modId].ContainsKey(key))
             {
-                keyedActionListDict[modId].Add(key, new List<KeyedActionContainer>());
+                keyedActionListDict[modId].Add(key, new List<KeyedAction>());
             }
             keyedActionListDict[modId][key].Add(action);
         }

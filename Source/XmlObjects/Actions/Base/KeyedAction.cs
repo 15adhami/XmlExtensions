@@ -5,26 +5,12 @@ namespace XmlExtensions.Action
     /// <summary>
     /// Inherit from this class to embed C# code that gets called everytime a specified key is changed
     /// </summary>
-    public abstract class KeyedActionContainer : ErrorHandler
+    public abstract class KeyedAction : ActionContainer
     {
-        /// <summary>
-        /// If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
-        /// </summary>
-        public string modId;
-
         /// <summary>
         /// The key that is tied to this KeyedAction
         /// </summary>
         public string key;
-
-        /// <summary>
-        /// If you want to return a value to be used by the XML, set this field to that value
-        /// </summary>
-        public object output = null;
-
-        private protected sealed override void SetException()
-        {
-        }
 
         /// <summary>
         /// Applies the keyed action
@@ -32,7 +18,7 @@ namespace XmlExtensions.Action
         /// <param name="oldValue">The previous value of the key</param>
         /// <param name="newValue">The new value of the key</param>
         /// <returns>false if there was an error, true otherwise</returns>
-        internal bool DoKeyedAction(string oldValue, string newValue)
+        public bool DoKeyedAction(string oldValue, string newValue)
         {
             try
             {
@@ -46,6 +32,15 @@ namespace XmlExtensions.Action
                 Error(e.Message);
                 return false;
             }
+            return true;
+        }
+
+        /// <summary>
+        /// This method should not be called
+        /// </summary>
+        /// <returns></returns>
+        protected sealed override bool ApplyAction()
+        {
             return true;
         }
 

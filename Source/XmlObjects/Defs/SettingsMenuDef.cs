@@ -30,7 +30,7 @@ namespace XmlExtensions
         /// <summary>
         /// The list of KeyedActions to run
         /// </summary>
-        public List<KeyedActionContainer> keyedActions;
+        public List<KeyedAction> keyedActions;
 
         /// <summary>
         /// The list of ActionContainers that will be run when the menu is opened
@@ -100,7 +100,7 @@ namespace XmlExtensions
                 }
                 if (keyedActions != null)
                 {
-                    foreach (KeyedActionContainer action in keyedActions)
+                    foreach (KeyedAction action in keyedActions)
                     {
                         action.modId = modId;
                         XmlMod.AddKeyedAction(modId, action.key, action);
