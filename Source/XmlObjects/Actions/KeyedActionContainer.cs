@@ -3,9 +3,9 @@
 namespace XmlExtensions.Action
 {
     /// <summary>
-    /// OBSOLETE Use KeyedActionContainer. Keeping for backwards compatability.
+    /// Inherit from this class to embed C# code that gets called everytime a specified key is changed
     /// </summary>
-    public abstract class KeyedAction : ActionContainer
+    public abstract class KeyedActionContainer : ActionContainer
     {
         /// <summary>
         /// The key that is tied to this KeyedAction
