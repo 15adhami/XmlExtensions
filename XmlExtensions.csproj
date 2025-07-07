@@ -196,6 +196,7 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\AltRect.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\ApplyActions.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Checkbox.cs" />
+    <Compile Include="ColorWheel.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\DropdownButton.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\EmbedMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\DisplayMenu.cs" />
