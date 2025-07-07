@@ -45,5 +45,15 @@ namespace XmlExtensions.Setting
             }
             DrawSettingsList(rightRect, selectedMod, rightCol);
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            if (!PreOpenSettingsList(selectedMod, leftCol, "leftCol"))
+            {
+                return false;
+            }
+            else
+                return PreOpenSettingsList(selectedMod, rightCol, "rightCol");
+        }
     }
 }

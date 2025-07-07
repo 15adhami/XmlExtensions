@@ -62,5 +62,15 @@ namespace XmlExtensions.Setting
             Large = 9,
             Huge = 15
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            if (!PreOpenSettingsList(selectedMod, leftCol, "leftCol"))
+            {
+                return false;
+            }
+            else
+                return PreOpenSettingsList(selectedMod, rightCol, "rightCol");
+        }
     }
 }

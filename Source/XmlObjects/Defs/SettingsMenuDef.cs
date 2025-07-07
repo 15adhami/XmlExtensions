@@ -188,5 +188,31 @@ namespace XmlExtensions
                 }
             }
         }
+
+        internal void PreOpenSettings()
+        {
+            if (settings != null)
+            {
+                ErrorManager.ClearErrors();
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    try
+                    {
+                        c++;
+                        if (!setting.PreOpen(modId))
+                        {
+                            ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in preopening a setting at position=" + c.ToString());
+                            ErrorManager.PrintErrors();
+                        }
+                    }
+                    catch
+                    {
+                        ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in preopening a setting at position=" + c.ToString());
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+        }
     }
 }

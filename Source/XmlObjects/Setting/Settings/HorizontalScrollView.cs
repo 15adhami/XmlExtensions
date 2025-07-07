@@ -29,5 +29,10 @@ namespace XmlExtensions.Setting
             DrawSettingsList(scrollRect, selectedMod, settings);
             Widgets.EndScrollView();
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            return PreOpenSettingsList(selectedMod, settings);
+        }
     }
 }

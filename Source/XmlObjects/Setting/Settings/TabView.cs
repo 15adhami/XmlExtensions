@@ -58,5 +58,17 @@ namespace XmlExtensions.Setting
             TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
             DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            foreach (Tab tab in tabs)
+            {
+                if (!PreOpenSettingsList(selectedMod, tab.settings))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

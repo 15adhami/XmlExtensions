@@ -119,5 +119,10 @@ namespace XmlExtensions.Setting
                 Find.WindowStack.Add(window);
             }
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            return PreOpenSettingsList(selectedMod, settings);
+        }
     }
 }

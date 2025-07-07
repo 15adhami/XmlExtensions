@@ -125,6 +125,16 @@ namespace XmlExtensions.Setting
         // Methods to override
 
         /// <summary>
+        /// This method gets called right when the user open the settings menu
+        /// </summary>
+        /// <param name="selectedMod"></param>
+        /// <returns></returns>
+        internal virtual bool PreOpen(string selectedMod)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
         /// You may skip this if your setting doesn't contain other settings, or doesn't require a special method
         /// </summary>
@@ -264,6 +274,31 @@ namespace XmlExtensions.Setting
                         else
                         {
                             Error("Failed to initialize a setting at position = " + c.ToString());
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected bool PreOpenSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
+        {
+            if (settings != null)
+            {
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    c++;
+                    if (!setting.PreOpen(selectedMod))
+                    {
+                        if (name != null)
+                        {
+                            Error("Failed to preopen a setting in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            Error("Failed to preopen a setting at position = " + c.ToString());
                         }
                         return false;
                     }

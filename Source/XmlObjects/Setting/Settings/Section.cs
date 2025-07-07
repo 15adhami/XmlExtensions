@@ -51,5 +51,10 @@ namespace XmlExtensions.Setting
                 DrawSettingsList(rect2, selectedMod, settings);
             }
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            return PreOpenSettingsList(selectedMod, settings);
+        }
     }
 }

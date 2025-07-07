@@ -92,5 +92,17 @@ namespace XmlExtensions.Setting
                 c++;
             }
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            foreach (List<SettingContainer> settings_list in settings)
+            {
+                if (!PreOpenSettingsList(selectedMod, settings_list))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

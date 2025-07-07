@@ -42,5 +42,17 @@ namespace XmlExtensions.Setting
         {
             DrawSettingsList(inRect, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
         }
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            foreach (SwitchSetting switch_setting in cases)
+            {
+                if (!PreOpenSettingsList(selectedMod, switch_setting.settings))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

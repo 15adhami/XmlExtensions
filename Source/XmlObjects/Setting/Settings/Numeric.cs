@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 using static HarmonyLib.Code;
+using static System.Math;
 
 namespace XmlExtensions.Setting
 {
@@ -21,13 +22,15 @@ namespace XmlExtensions.Setting
             Right = TextAnchor.MiddleRight
         }
 
-        protected override bool Init(string selectedMod)
+        internal override bool PreOpen(string selectedMod)
         {
 
             if (allowFloat)
                 buf = float.Parse(SettingsManager.GetSetting(selectedMod, key)).ToString();
             else
                 buf = ((int)float.Parse(SettingsManager.GetSetting(selectedMod, key))).ToString();
+            if (buf == "")
+                buf = defaultValue;
             return true;
         }
 
@@ -38,8 +41,8 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            float f = 0;
-            int i = 0;
+            float f = float.Parse(defaultValue);
+            int i = (int)f;
             if (label != null)
             {
                 Rect rect2 = inRect.LeftHalf().Rounded();
@@ -49,11 +52,11 @@ namespace XmlExtensions.Setting
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
                 if (allowFloat)
                 {
-                    Widgets.TextFieldNumeric<float>(inRect, ref f, ref buf, min, max);
+                    Widgets.TextFieldNumeric<float>(rect3, ref f, ref buf, min, max);
                 }
                 else
                 {
-                    Widgets.TextFieldNumeric<int>(inRect, ref i, ref buf, min, max);
+                    Widgets.TextFieldNumeric<int>(rect3, ref i, ref buf, min, max);
                 }
             }
             else
@@ -67,7 +70,18 @@ namespace XmlExtensions.Setting
                     Widgets.TextFieldNumeric<int>(inRect, ref i, ref buf, min, max);
                 }
             }
-            SettingsManager.SetSetting(selectedMod, key, f.ToString());
+            if (allowFloat)
+            {
+                if (buf!="" && buf !=null)
+                    f = float.Parse(buf);
+                SettingsManager.SetSetting(selectedMod, key, f.ToString());
+            }
+            else
+            {
+                if (buf != "" && buf != null)
+                    i = int.Parse(buf);
+                SettingsManager.SetSetting(selectedMod, key, i.ToString());
+            }
         }
     }
 }
