@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Verse;
 using System;
-using static HarmonyLib.Code;
 
 namespace XmlExtensions.Setting
 {
@@ -11,6 +10,7 @@ namespace XmlExtensions.Setting
         public float max;
         public string tKey;
         public int decimals = 0;
+        public bool percent = false;
         public Anchor anchor = Anchor.Left;
 
         private string buf = null;
@@ -40,8 +40,17 @@ namespace XmlExtensions.Setting
         {
             float f = (float)Math.Round(double.Parse(defaultValue), decimals);
             int i = (int)f;
-            if (buf != null && buf != "" && buf[buf.Length - 1] != '.' && buf[0] != '.')
-                buf = Math.Round(float.Parse(buf), decimals).ToString();
+            if (buf != null && buf != "")
+            {
+                try
+                {
+                    if (buf[buf.Length - 1] != '.' && buf[0] != '.' && !(buf[0] == '-' && buf[1] == '.'))
+                        buf = Math.Round(float.Parse(buf), decimals).ToString();
+                    if (decimals == 0)
+                        buf = buf.Replace(".","");
+                }
+                catch { }
+            }
             if (label != null)
             {
                 Rect rect2 = inRect.LeftHalf().Rounded();
@@ -49,20 +58,33 @@ namespace XmlExtensions.Setting
                 Verse.Text.Anchor = (TextAnchor)anchor;
                 Widgets.Label(rect2, Helpers.TryTranslate(label, tKey));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
-                if (decimals == 0)
-                    Widgets.TextFieldNumeric<int>(rect3, ref i, ref buf, min, max);
+                if (percent)
+                    Widgets.TextFieldPercent(rect3, ref f, ref buf, min, max);
                 else
-                    Widgets.TextFieldNumeric<float>(rect3, ref f, ref buf, min, max);
+                {
+                    if (decimals == 0)
+                        Widgets.TextFieldNumeric(rect3, ref i, ref buf, min, max);
+                    else
+                        Widgets.TextFieldNumeric(rect3, ref f, ref buf, min, max);
+                }
             }
             else
             {
-                if (decimals == 0)
-                    Widgets.TextFieldNumeric<int>(inRect, ref i, ref buf, min, max);
+                if (percent)
+                    Widgets.TextFieldPercent(inRect, ref f, ref buf, min, max);
                 else
-                    Widgets.TextFieldNumeric<float>(inRect, ref f, ref buf, min, max);
+                {
+                    if (decimals == 0)
+                        Widgets.TextFieldNumeric(inRect, ref i, ref buf, min, max);
+                    else
+                        Widgets.TextFieldNumeric(inRect, ref f, ref buf, min, max);
+                }
             }
-            if (buf != null && buf != "" && !buf.Equals("."))
+            try
+            {
                 f = (float)Math.Round(double.Parse(buf), decimals);
+            }
+            catch { }
             SettingsManager.SetSetting(selectedMod, key, f.ToString());
         }
     }
