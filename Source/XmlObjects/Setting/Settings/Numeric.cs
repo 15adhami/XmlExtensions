@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Verse;
+using static HarmonyLib.Code;
 
 namespace XmlExtensions.Setting
 {
@@ -33,11 +34,15 @@ namespace XmlExtensions.Setting
                 Verse.Text.Anchor = (TextAnchor)anchor;
                 Widgets.Label(rect2, Helpers.TryTranslate(label, tKey));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
-                Widgets.TextFieldNumeric(rect3, ref f, ref buf, min, max);
+                int val = (int)f;
+                Widgets.TextFieldNumeric<int>(rect3, ref val, ref buf, min, max);
+                f = val;
             }
             else
             {
-                Widgets.TextFieldNumeric(inRect, ref f, ref buf, min, max);
+                int val = (int)f;
+                Widgets.TextFieldNumeric<int>(inRect, ref val, ref buf, min, max);
+                f = val;
             }
             SettingsManager.SetSetting(selectedMod, key, f.ToString());
         }
