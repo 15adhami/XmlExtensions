@@ -29,7 +29,7 @@ namespace XmlExtensions.Setting
                 buf = float.Parse(SettingsManager.GetSetting(selectedMod, key)).ToString();
             else
                 buf = ((int)float.Parse(SettingsManager.GetSetting(selectedMod, key))).ToString();
-            if (buf == "")
+            if (buf == "" || buf == null)
                 buf = defaultValue;
             return true;
         }
