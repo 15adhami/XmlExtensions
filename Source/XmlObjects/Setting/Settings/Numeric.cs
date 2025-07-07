@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
+using System;
 using static HarmonyLib.Code;
-using static System.Math;
 
 namespace XmlExtensions.Setting
 {
@@ -10,7 +10,7 @@ namespace XmlExtensions.Setting
         public float min;
         public float max;
         public string tKey;
-        public bool allowFloat = false;
+        public int decimals = 0;
         public Anchor anchor = Anchor.Left;
 
         private string buf = null;
@@ -25,12 +25,9 @@ namespace XmlExtensions.Setting
         internal override bool PreOpen(string selectedMod)
         {
 
-            if (allowFloat)
-                buf = float.Parse(SettingsManager.GetSetting(selectedMod, key)).ToString();
-            else
-                buf = ((int)float.Parse(SettingsManager.GetSetting(selectedMod, key))).ToString();
+            buf = Math.Round(float.Parse(SettingsManager.GetSetting(selectedMod, key)), decimals).ToString();
             if (buf == "" || buf == null)
-                buf = defaultValue;
+                buf = ((float)Math.Round(double.Parse(defaultValue), decimals)).ToString();
             return true;
         }
 
@@ -41,8 +38,10 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            float f = float.Parse(defaultValue);
+            float f = (float)Math.Round(double.Parse(defaultValue), decimals);
             int i = (int)f;
+            if (buf != null && buf != "" && buf[buf.Length - 1] != '.' && buf[0] != '.')
+                buf = Math.Round(float.Parse(buf), decimals).ToString();
             if (label != null)
             {
                 Rect rect2 = inRect.LeftHalf().Rounded();
@@ -50,38 +49,21 @@ namespace XmlExtensions.Setting
                 Verse.Text.Anchor = (TextAnchor)anchor;
                 Widgets.Label(rect2, Helpers.TryTranslate(label, tKey));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
-                if (allowFloat)
-                {
-                    Widgets.TextFieldNumeric<float>(rect3, ref f, ref buf, min, max);
-                }
-                else
-                {
+                if (decimals == 0)
                     Widgets.TextFieldNumeric<int>(rect3, ref i, ref buf, min, max);
-                }
-            }
-            else
-            {
-                if (allowFloat)
-                {
-                    Widgets.TextFieldNumeric<float>(inRect, ref f, ref buf, min, max);
-                }
                 else
-                {
-                    Widgets.TextFieldNumeric<int>(inRect, ref i, ref buf, min, max);
-                }
-            }
-            if (allowFloat)
-            {
-                if (buf!="" && buf !=null)
-                    f = float.Parse(buf);
-                SettingsManager.SetSetting(selectedMod, key, f.ToString());
+                    Widgets.TextFieldNumeric<float>(rect3, ref f, ref buf, min, max);
             }
             else
             {
-                if (buf != "" && buf != null)
-                    i = int.Parse(buf);
-                SettingsManager.SetSetting(selectedMod, key, i.ToString());
+                if (decimals == 0)
+                    Widgets.TextFieldNumeric<int>(inRect, ref i, ref buf, min, max);
+                else
+                    Widgets.TextFieldNumeric<float>(inRect, ref f, ref buf, min, max);
             }
+            if (buf != null && buf != "" && !buf.Equals("."))
+                f = (float)Math.Round(double.Parse(buf), decimals);
+            SettingsManager.SetSetting(selectedMod, key, f.ToString());
         }
     }
 }
