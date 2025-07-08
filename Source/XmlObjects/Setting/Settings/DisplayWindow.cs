@@ -79,10 +79,12 @@ namespace XmlExtensions.Setting
             }
             if (menu != null)
             {
-                ScrollView scrollView = new ScrollView
-                {
-                    settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings
-                };
+                ScrollView scrollView = new() { settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings };
+                settings = new List<SettingContainer>() { scrollView };
+            }
+            else if (settings != null)
+            {
+                ScrollView scrollView = new() { settings = settings };
                 settings = new List<SettingContainer>() { scrollView };
             }
             return InitializeSettingsList(selectedMod, settings);
