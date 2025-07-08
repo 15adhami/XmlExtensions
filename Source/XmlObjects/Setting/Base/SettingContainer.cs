@@ -16,8 +16,6 @@ namespace XmlExtensions.Setting
         /// </summary>
         public SettingContainer ParentContainer = null;
 
-        private List<List<SettingContainer>> cachedLists = new List<List<SettingContainer>>();
-        private Dictionary<List<SettingContainer>, string> listNameDict = new Dictionary<List<SettingContainer>, string>();
         private float cachedHeight = -1f;
         private int errHeight = -1;
         private string tag;
@@ -259,8 +257,6 @@ namespace XmlExtensions.Setting
         {
             if (settings != null)
             {
-                cachedLists.Add(settings);
-                listNameDict.Add(settings, name);
                 int c = 0;
                 foreach (SettingContainer setting in settings)
                 {

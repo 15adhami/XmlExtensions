@@ -193,6 +193,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\ApplyPatch.cs" />
     <Compile Include="Source\PatchOperations\Performance\MergeDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\ColorEntry.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\AltRect.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\ApplyActions.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\Checkbox.cs" />
