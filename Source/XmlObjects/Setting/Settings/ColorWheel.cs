@@ -50,7 +50,6 @@ namespace XmlExtensions.Setting
             float totalWidth = inRect.width;
             float totalHeight = inRect.height;
 
-            // Determine composite layout dimensions
             float layoutWidth = (brightnessLocation == Location.Left || brightnessLocation == Location.Right)
                 ? wheelSize + brightnessWidth + gap
                 : wheelSize;
@@ -58,7 +57,6 @@ namespace XmlExtensions.Setting
                 ? wheelSize + brightnessWidth + gap
                 : wheelSize;
 
-            // Anchor positioning
             float offsetX = anchor switch
             {
                 Anchor.Left => 0f,
@@ -67,11 +65,10 @@ namespace XmlExtensions.Setting
                 _ => 0f
             };
 
-            float offsetY = (totalHeight - layoutHeight) / 2f; // vertical centering
+            float offsetY = (totalHeight - layoutHeight) / 2f;
 
             Rect layoutRect = new Rect(inRect.x + offsetX, inRect.y + offsetY, layoutWidth, layoutHeight);
 
-            // Assign wheel & bar positions
             switch (brightnessLocation)
             {
                 case Location.Left:
@@ -93,7 +90,6 @@ namespace XmlExtensions.Setting
                     break;
             }
 
-            // Draw the UI
             Widgets.HSVColorWheel(rectWheel, ref color, ref currentlyDraggingWheel);
 
             if (brightnessLocation == Location.Left || brightnessLocation == Location.Right)
@@ -149,8 +145,8 @@ namespace XmlExtensions.Setting
             Color markerColor = v < 0.5f ? Color.white : Color.black;
             GUI.color = markerColor;
 
-            Widgets.DrawLineVertical(xPos - 1f, rect.y, rect.height);
-            Widgets.DrawLineVertical(xPos + 1f, rect.y, rect.height);
+            Widgets.DrawLineVertical(xPos - 2f, rect.y, rect.height);
+            Widgets.DrawLineVertical(xPos + 2f, rect.y, rect.height);
         }
 
 
@@ -194,12 +190,10 @@ namespace XmlExtensions.Setting
                 }
             }
             float yPos = rect.y + rect.height * (1f - v);
-
             Color markerColor = v < 0.5f ? new Color(175, 175, 175) : Color.black;
             GUI.color = markerColor;
 
             Widgets.DrawLineHorizontal(rect.x, yPos - 2f, rect.width, markerColor);
-
             Widgets.DrawLineHorizontal(rect.x, yPos + 2f, rect.width, markerColor);
         }
     }
