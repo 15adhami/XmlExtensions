@@ -6,13 +6,14 @@ namespace XmlExtensions.Setting
 {
     internal class ColorEntry : KeyedSettingContainer
     {
+        public float spacing = 6;
+
         private int r, g, b;
         private string rBuf = "", gBuf = "", bBuf = "";
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
             float boxHeight = 24;
-            float spacing = 6f;
             return 3 * boxHeight + 2 * spacing + GetDefaultSpacing();
         }
 
@@ -38,7 +39,6 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             float boxHeight = 24;
-            float spacing = 6f;
 
             Color c = ParseHelper.FromString<Color>(defaultValue);
             r = Mathf.RoundToInt(c.r * 255f);
@@ -73,6 +73,14 @@ namespace XmlExtensions.Setting
                 }
                 SettingsManager.SetSetting(selectedMod, key, newColor.ToString());
             }
+
+            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+            r = Mathf.RoundToInt(color.r * 255f);
+            g = Mathf.RoundToInt(color.g * 255f);
+            b = Mathf.RoundToInt(color.b * 255f);
+            rBuf = r.ToString();
+            gBuf = g.ToString();
+            bBuf = b.ToString();
         }
     }
 }
