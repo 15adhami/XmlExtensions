@@ -23,47 +23,45 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            if (height == -1 && colors != null && colors[0] != null)
+            if (height == -1 && colors != null)
             {
                 int color_size = colorSize + spacing * 2;
                 height = colors.Count * (color_size + spacing);
             }
             else if (height == -1)
             {
-                height = 0;
+                height = -1 * GetDefaultSpacing();
             }
-            return height;
+            return height + GetDefaultSpacing();
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            if (height >= 0)
+            Rect draw_rect = inRect.TopPartPixels(height);
+            float height_temp = height;
+            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+            int row_num = 0;
+            foreach (List<Color> row in colors)
             {
-                float height_temp = height;
-                Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
-                int row_num = 0;
-                foreach (List<Color> row in colors)
+                row_num++;
+                Rect rect;
+                int color_size = (colorSize + spacing * 2);
+                float rowWidth = row.Count * color_size + (row.Count - 1) * spacing;
+                if (anchor == Anchor.Left)
                 {
-                    row_num++;
-                    Rect rect;
-                    int color_size = (colorSize + spacing * 2);
-                    float rowWidth = row.Count * color_size + (row.Count - 1) * spacing;
-                    if (anchor == Anchor.Left)
-                    {
-                        rect = inRect.LeftPartPixels(rowWidth).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
-                    }
-                    else if (anchor == Anchor.Middle)
-                    {
-                        rect = inRect.MiddlePartPixels(rowWidth, inRect.height).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
-                    }
-                    else
-                    {
-                        rect = inRect.RightPartPixels(rowWidth).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
-                    }
-                    Widgets.ColorSelector(rect, ref color, row, out height_temp, null, colorSize, spacing);
+                    rect = draw_rect.LeftPartPixels(rowWidth).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
                 }
-                SettingsManager.SetSetting(selectedMod, key, color.ToString());
+                else if (anchor == Anchor.Middle)
+                {
+                    rect = draw_rect.MiddlePartPixels(rowWidth, draw_rect.height).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
+                }
+                else
+                {
+                    rect = draw_rect.RightPartPixels(rowWidth).TopPartPixels(row_num * (color_size + spacing)).BottomPartPixels(color_size);
+                }
+                Widgets.ColorSelector(rect, ref color, row, out height_temp, null, colorSize, spacing);
             }
+            SettingsManager.SetSetting(selectedMod, key, color.ToString());
         }
     }
 }
