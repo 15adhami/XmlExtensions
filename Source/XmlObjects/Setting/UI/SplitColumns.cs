@@ -7,7 +7,7 @@ namespace XmlExtensions.Setting
 {
     internal class SplitColumns : SettingContainer
     {
-        public List<float> splits = [0.5f];
+        public List<float> splits;
         public List<float> widths;
         public List<List<SettingContainer>> settings;
         public List<Position> positions = [Position.Top];
@@ -23,6 +23,18 @@ namespace XmlExtensions.Setting
 
         private List<float> cachedHeights = new();
         private float totalHeight = 0f;
+
+        internal override bool PreOpen(string selectedMod)
+        {
+            foreach (List<SettingContainer> list in settings)
+            {
+                if (!PreOpenSettingsList(selectedMod, list))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         protected override bool Init(string selectedMod)
         {
@@ -44,9 +56,11 @@ namespace XmlExtensions.Setting
             float offset = 0;
             float maxHeight = 0;
 
+            List<float> activeSplits = GetActiveSplits();
+
             for (int i = 0; i < settings.Count; i++)
             {
-                float colWidth = GetColumnWidth(i, width, offset);
+                float colWidth = GetColumnWidth(i, width, offset, activeSplits);
                 float colHeight = CalculateHeightSettingsList(colWidth, selectedMod, settings[i]);
                 cachedHeights.Add(colHeight);
                 maxHeight = Math.Max(maxHeight, colHeight);
@@ -62,9 +76,11 @@ namespace XmlExtensions.Setting
             float offsetX = 0;
             float totalWidth = inRect.width;
 
+            List<float> activeSplits = GetActiveSplits();
+
             for (int i = 0; i < settings.Count; i++)
             {
-                float colWidth = GetColumnWidth(i, totalWidth, offsetX);
+                float colWidth = GetColumnWidth(i, totalWidth, offsetX, activeSplits);
                 float colHeight = cachedHeights[i];
                 Position colPosition = GetPosition(i);
                 float yOffset = GetYOffset(colPosition, totalHeight, colHeight);
@@ -84,15 +100,15 @@ namespace XmlExtensions.Setting
             }
         }
 
-        private float GetColumnWidth(int index, float totalWidth, float offset)
+        private float GetColumnWidth(int index, float totalWidth, float offset, List<float> activeSplits)
         {
             if (widths != null && index < widths.Count)
             {
                 return Math.Min(totalWidth - offset - gapSize, widths[index]);
             }
-            else if (index < splits.Count)
+            else if (index < activeSplits.Count)
             {
-                return totalWidth * splits[index] - gapSize / 2f;
+                return totalWidth * activeSplits[index] - gapSize / 2f;
             }
             else
             {
@@ -120,16 +136,21 @@ namespace XmlExtensions.Setting
             };
         }
 
-        internal override bool PreOpen(string selectedMod)
+        private List<float> GetActiveSplits()
         {
-            foreach (List<SettingContainer> list in settings)
+            if ((splits == null || splits.Count == 0) &&
+                (widths == null || widths.Count == 0) &&
+                settings != null && settings.Count > 0)
             {
-                if (!PreOpenSettingsList(selectedMod, list))
+                float evenSplit = 1f / settings.Count;
+                List<float> fallbackSplits = new(settings.Count);
+                for (int i = 0; i < settings.Count; i++)
                 {
-                    return false;
+                    fallbackSplits.Add(evenSplit);
                 }
+                return fallbackSplits;
             }
-            return true;
+            return splits ?? new List<float>();
         }
     }
 }
