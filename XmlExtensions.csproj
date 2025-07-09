@@ -30,9 +30,9 @@
     <NoWarn>0649, 0169</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>1.6\Assemblies\</OutputPath>
+    <OutputPath>1.5\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
@@ -62,18 +63,23 @@
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Core\CustomXmlLoader.cs" />
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\Core\ModEmitter.cs" />
@@ -196,8 +202,6 @@
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\AltRect.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\ApplyActions.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\Checkbox.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\ColorPalette.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\ColorWheel.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\Keyed\DropdownButton.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\EmbedMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\Settings\UI\DisplayMenu.cs" />
@@ -253,10 +257,6 @@
     <Content Include="1.5\Assemblies\XmlExtensions.xml" />
     <Content Include="1.5\Defs\MainButtonDefs.xml" />
     <Content Include="1.5\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.6\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.6\Assemblies\XmlExtensions.xml" />
-    <Content Include="1.6\Defs\MainButtonDefs.xml" />
-    <Content Include="1.6\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
     <Content Include="About\About.xml" />
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />

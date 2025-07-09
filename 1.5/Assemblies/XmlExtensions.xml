@@ -16,6 +16,11 @@
             Prints the stack of errors, then clears them.
             </summary>
         </member>
+        <member name="T:XmlExtensions.ModEmitter">
+            <summary>
+            Class for emitting a Mod subclass with given SettignsMEnuDef
+            </summary>
+        </member>
         <member name="T:XmlExtensions.ErrorHandler">
             <summary>
             The base type to inherit from in order to access improved error handling
@@ -266,6 +271,13 @@
             <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
             <param name="selectedMod">The modId of the active mod in the settings menu</param>
         </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.PreOpen(System.String)">
+            <summary>
+            This method gets called right when the user open the settings menu
+            </summary>
+            <param name="selectedMod"></param>
+            <returns></returns>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.SetDefaultValue(System.String)">
             <summary>
             Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
@@ -459,7 +471,7 @@
         </member>
         <member name="T:XmlExtensions.XmlMod">
             <summary>
-            Class containing internal data and obsolete methods.
+            Class containing internal data and obsolete methods (for backwards compatability).
             </summary>
         </member>
     </members>
