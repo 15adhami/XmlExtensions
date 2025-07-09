@@ -87,10 +87,7 @@ namespace XmlExtensions
             }
         }
 
-        /// <summary>
-        /// Throws an error for the patch operation
-        /// </summary>
-        /// <param name="msg">The message to be displayed</param>
+        /*
         protected void Error(string msg)
         {
             SetException();
@@ -105,8 +102,32 @@ namespace XmlExtensions
                 str += ")";
             }
             ErrorManager.AddError(str + ": " + msg);
+        }*/
+        /// <summary>
+        /// Throws an error for the patch operation
+        /// </summary>
+        /// <param name="msg">The message to be displayed</param>
+        protected void Error(string msg)
+        {
+            SetException();
+            ErrorManager.AddError(new ErrorContext(
+                GetType(),
+                exceptionFields,
+                exceptionVals,
+                msg
+            ));
         }
 
+        private protected void Error(string[] vals, string[] fields, string msg)
+        {
+            ErrorManager.AddError(new ErrorContext(
+                GetType(),
+                new List<string>(fields),
+                new List<string>(vals),
+                msg
+            ));
+        }
+        /*
         protected void Error(string[] vals, string[] fields, string msg)
         {
             string str = GetType().ToString();
@@ -120,7 +141,7 @@ namespace XmlExtensions
                 str += ")";
             }
             ErrorManager.AddError(str + ": " + msg);
-        }
+        }*/
 
         protected bool ErrorIfFalse(bool condition, string message)
         {

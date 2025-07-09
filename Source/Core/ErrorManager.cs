@@ -12,7 +12,7 @@ namespace XmlExtensions
 
         static ErrorManager()
         {
-            errors = new List<string>();
+            errors = [];
         }
 
         /// <summary>
@@ -57,6 +57,11 @@ namespace XmlExtensions
         public static void AddError(string msg)
         {
             errors.Add(msg);
+        }
+
+        public static void AddError(ErrorContext context)
+        {
+            errors.Add(context.ToString());
         }
 
         public static int ErrorCount()

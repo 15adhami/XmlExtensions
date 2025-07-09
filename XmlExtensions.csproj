@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
+    <Compile Include="Source\Core\ErrorContext.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\Core\ModEmitter.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
