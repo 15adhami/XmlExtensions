@@ -7,7 +7,7 @@ namespace XmlExtensions.Setting
     internal class ColorWheel : KeyedSettingContainer
     {
         public float wheelSize = 128;
-        public float brightnessWidth = 22;
+        public float brightnessWidth = 12;
         public float gapSize = 16;
         public Location brightnessLocation = Location.Left;
         public Anchor anchor = Anchor.Middle;
