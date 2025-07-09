@@ -6,7 +6,7 @@ namespace XmlExtensions.Setting
 {
     internal class ColorEntry : KeyedSettingContainer
     {
-        public float spacing = 6;
+        public float spacing = 2;
         public float textGap = 12;
         public bool colorLabels = false;
 
