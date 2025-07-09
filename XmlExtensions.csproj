@@ -83,6 +83,10 @@
     <Compile Include="Source\Core\ErrorContext.cs" />
     <Compile Include="Source\Core\ErrorManager.cs" />
     <Compile Include="Source\Core\ModEmitter.cs" />
+    <Compile Include="Source\Core\PatchCoordinator.cs" />
+    <Compile Include="Source\Core\PatchFilter.cs" />
+    <Compile Include="Source\Core\PatchProfiler.cs" />
+    <Compile Include="Source\Core\XmlDocumentManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />

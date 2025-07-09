@@ -17,7 +17,7 @@ namespace XmlExtensions
                     ModContentPack pack = PatchManager.PatchModDict[__instance];
                     if (pack != null && PatchManager.ActiveMod != pack)
                     {
-                        PatchManager.SetActiveMod(pack);
+                        PatchManager.SetActivePatchingMod(pack);
                     }
                 }
             }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Verse;
+using XmlExtensions.Source.Core;
 
 namespace XmlExtensions
 {
@@ -33,8 +34,7 @@ namespace XmlExtensions
         // For DefDatabase operations
         public static List<PatchOperationExtended> delayedPatches;
 
-        public static List<Type> PatchedPatchOperations = new List<Type> { typeof(Verse.PatchOperationFindMod), typeof(Verse.PatchOperationSequence), typeof(Verse.PatchOperationAttributeAdd), typeof(Verse.PatchOperationAttributeRemove), typeof(Verse.PatchOperationAttributeSet), typeof(Verse.PatchOperationConditional),
-             typeof(Verse.PatchOperationSetName),  };
+        
 
         static PatchManager()
         {
@@ -48,48 +48,14 @@ namespace XmlExtensions
             defaultDoc = new XmlDocument();
         }
 
-        public static void SetActiveMod(ModContentPack mod)
-        {
-            ActiveMod = mod;
-        }
+        internal static PatchCoordinator Coordinator = new();
+        internal static XmlDocumentManager XmlDocs = new();
+        internal static PatchProfiler Profiler = new();
 
-        public static bool CheckType(Type T)
-        {
-            if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
-            if (T.Namespace == "XmlExtensions") { return false; }
-            if (typeof(PatchOperationPathed).IsAssignableFrom(T)) { return false; }
-            if (PatchedPatchOperations.Contains(T)) { return false; }
-            try
-            {
-                if (AccessTools.Method(T, "ApplyWorker") == null)
-                {
-                    return false;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
+        internal static void SetActivePatchingMod(ModContentPack mod) => Coordinator.SetActiveMod(mod);
 
-        public static bool CheckTypePathed(Type T)
-        {
-            if (typeof(PatchOperationExtended).IsAssignableFrom(T)) { return false; }
-            if (T.Namespace == "XmlExtensions") { return false; }
-            if (PatchedPatchOperations.Contains(T)) { return false; }
-            try
-            {
-                if (AccessTools.Method(T, "ApplyWorker") == null)
-                {
-                    return false;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
+        internal static bool CheckType(Type t) => PatchFilter.IsValidPatchOperation(t);
+
+        internal static bool CheckTypePathed(Type t) => PatchFilter.IsValidPathedOperation(t);
     }
 }
