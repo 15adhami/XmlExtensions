@@ -28,7 +28,7 @@ namespace XmlExtensions
             {
                 trace += error + "\n";
             }
-            trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\nSource file: " + source + "\n";
+            trace += "[End of stack trace]\nSource file: " + source + "\n";
             Verse.Log.Error(trace);
             ClearErrors();
         }
@@ -44,7 +44,7 @@ namespace XmlExtensions
             {
                 trace += error + "\n";
             }
-            trace += "[End of stack trace]\nThe top operation is the one that failed, the ones below it are the parents\n";
+            trace += "[End of stack trace]\n";
             Verse.Log.Error(trace);
             ClearErrors();
         }
