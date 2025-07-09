@@ -11,11 +11,11 @@ namespace XmlExtensions.Setting
         public float width = -1f;
         public List<SettingContainer> leftCol;
         public List<SettingContainer> rightCol;
-        public Position position = Position.Top;
+        public Anchor anchor = Anchor.Top;
         public bool drawLine = false;
         public int gapSize = 6;
 
-        public enum Position
+        public enum Anchor
         {
             Top,
             Middle,
@@ -71,8 +71,8 @@ namespace XmlExtensions.Setting
                 rightWidth = inRect.width * (1 - split) - gapSize / 2f;
             }
 
-            float leftYOffset = GetYOffset(position, totalHeight, leftHeight);
-            float rightYOffset = GetYOffset(position, totalHeight, rightHeight);
+            float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight);
+            float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight);
 
             Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight);
             Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight);
@@ -90,13 +90,13 @@ namespace XmlExtensions.Setting
             DrawSettingsList(rightRect, selectedMod, rightCol);
         }
 
-        private float GetYOffset(Position pos, float total, float col)
+        private float GetYOffset(Anchor pos, float total, float col)
         {
             return pos switch
             {
-                Position.Top => 0f,
-                Position.Middle => (total - col) / 2f,
-                Position.Bottom => total - col,
+                Anchor.Top => 0f,
+                Anchor.Middle => (total - col) / 2f,
+                Anchor.Bottom => total - col,
                 _ => 0f
             };
         }

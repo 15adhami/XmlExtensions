@@ -10,11 +10,11 @@ namespace XmlExtensions.Setting
         public List<float> splits;
         public List<float> widths;
         public List<List<SettingContainer>> settings;
-        public List<Position> positions = [Position.Top];
+        public List<Anchor> anchors = [Anchor.Top];
         public bool drawLine = false;
         public int gapSize = 6;
 
-        public enum Position
+        public enum Anchor
         {
             Top,
             Middle,
@@ -82,7 +82,7 @@ namespace XmlExtensions.Setting
             {
                 float colWidth = GetColumnWidth(i, totalWidth, offsetX, activeSplits);
                 float colHeight = cachedHeights[i];
-                Position colPosition = GetPosition(i);
+                Anchor colPosition = GetPosition(i);
                 float yOffset = GetYOffset(colPosition, totalHeight, colHeight);
 
                 Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, colWidth, colHeight);
@@ -116,22 +116,22 @@ namespace XmlExtensions.Setting
             }
         }
 
-        private Position GetPosition(int index)
+        private Anchor GetPosition(int index)
         {
-            if (positions != null && index < positions.Count)
+            if (anchors != null && index < anchors.Count)
             {
-                return positions[index];
+                return anchors[index];
             }
-            return Position.Top;
+            return Anchor.Top;
         }
 
-        private float GetYOffset(Position pos, float total, float col)
+        private float GetYOffset(Anchor pos, float total, float col)
         {
             return pos switch
             {
-                Position.Top => 0f,
-                Position.Middle => (total - col) / 2f,
-                Position.Bottom => total - col,
+                Anchor.Top => 0f,
+                Anchor.Middle => (total - col) / 2f,
+                Anchor.Bottom => total - col,
                 _ => 0f
             };
         }
