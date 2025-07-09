@@ -7,6 +7,8 @@ namespace XmlExtensions.Setting
     internal class ColorEntry : KeyedSettingContainer
     {
         public float spacing = 6;
+        public float textGap = 12;
+        public bool colorLabels = false;
 
         private int r, g, b;
         private string rBuf = "", gBuf = "", bBuf = "";
@@ -40,26 +42,58 @@ namespace XmlExtensions.Setting
         {
             float boxHeight = 24;
 
+            // Convert default value to color
             Color c = ParseHelper.FromString<Color>(defaultValue);
             r = Mathf.RoundToInt(c.r * 255f);
             g = Mathf.RoundToInt(c.g * 255f);
             b = Mathf.RoundToInt(c.b * 255f);
 
-            Rect rRect = new Rect(inRect.x, inRect.y, inRect.width, boxHeight);
-            Rect gRect = new Rect(inRect.x, rRect.yMax + spacing, inRect.width, boxHeight);
-            Rect bRect = new Rect(inRect.x, gRect.yMax + spacing, inRect.width, boxHeight);
+            // Label width
+            float labelWidth = Verse.Text.CalcSize("R:").x;
 
-            int rPrev = r;
-            int gPrev = g;
-            int bPrev = b;
+            // Define rects
+            Rect rRow = new Rect(inRect.x, inRect.y, inRect.width, boxHeight);
+            Rect gRow = new Rect(inRect.x, rRow.yMax + spacing, inRect.width, boxHeight);
+            Rect bRow = new Rect(inRect.x, gRow.yMax + spacing, inRect.width, boxHeight);
 
+            Rect rLabel = new Rect(rRow.x, rRow.y + 2, labelWidth, boxHeight);
+            Rect gLabel = new Rect(gRow.x, gRow.y + 2, labelWidth, boxHeight);
+            Rect bLabel = new Rect(bRow.x, bRow.y + 2, labelWidth, boxHeight);
+
+            Rect rField = new Rect(rLabel.xMax + textGap, rRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+            Rect gField = new Rect(gLabel.xMax + textGap, gRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+            Rect bField = new Rect(bLabel.xMax + textGap, bRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+
+            int rPrev = r, gPrev = g, bPrev = b;
+
+            // Labels
+            if (colorLabels)
+            {
+                Color temp = GUI.color;
+                GUI.color = Color.red;
+                Widgets.Label(rLabel, Helpers.TryTranslate("R", "XmlExtensions_R") + ":");
+                GUI.color = Color.green;
+                Widgets.Label(gLabel, Helpers.TryTranslate("G", "XmlExtensions_G") + ":");
+                GUI.color = Color.blue;
+                Widgets.Label(bLabel, Helpers.TryTranslate("B", "XmlExtensions_B") + ":");
+                GUI.color = temp;
+            }
+            else
+            {
+                Widgets.Label(rLabel, Helpers.TryTranslate("R", "XmlExtensions_R") + ":");
+                Widgets.Label(gLabel, Helpers.TryTranslate("G", "XmlExtensions_G") + ":");
+                Widgets.Label(bLabel, Helpers.TryTranslate("B", "XmlExtensions_B") + ":");
+            }
+
+            // Fields
             GUI.SetNextControlName("box1");
-            Widgets.TextFieldNumeric(rRect, ref r, ref rBuf, 0, 255);
+            Widgets.TextFieldNumeric(rField, ref r, ref rBuf, 0, 255);
             GUI.SetNextControlName("box2");
-            Widgets.TextFieldNumeric(gRect, ref g, ref gBuf, 0, 255);
+            Widgets.TextFieldNumeric(gField, ref g, ref gBuf, 0, 255);
             GUI.SetNextControlName("box3");
-            Widgets.TextFieldNumeric(bRect, ref b, ref bBuf, 0, 255);
+            Widgets.TextFieldNumeric(bField, ref b, ref bBuf, 0, 255);
 
+            // Update setting if changed
             if (rPrev != r || gPrev != g || bPrev != b)
             {
                 Color newColor;
@@ -74,6 +108,7 @@ namespace XmlExtensions.Setting
                 SettingsManager.SetSetting(selectedMod, key, newColor.ToString());
             }
 
+            // Sync buffers in case external value was updated
             Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
             r = Mathf.RoundToInt(color.r * 255f);
             g = Mathf.RoundToInt(color.g * 255f);
