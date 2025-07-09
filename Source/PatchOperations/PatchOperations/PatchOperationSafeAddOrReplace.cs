@@ -15,13 +15,13 @@ namespace XmlExtensions
                 foreach (XmlNode addNode in node.ChildNodes)
                 {
                     int d = 0;
-                    tryAddOrReplaceNode(xmlNode, addNode, d);
+                    TryAddOrReplaceNode(xmlNode, addNode, d);
                 }
             }
             return true;
         }
 
-        private void tryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
+        private void TryAddOrReplaceNode(XmlNode parent, XmlNode child, int depth)
         {
             XmlNode foundNode = null;
             if (!ContainsNode(parent, child, ref foundNode))
@@ -39,7 +39,7 @@ namespace XmlExtensions
                 {
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
-                        tryAddOrReplaceNode(foundNode, newChild, depth + 1);
+                        TryAddOrReplaceNode(foundNode, newChild, depth + 1);
                     }
                 }
                 else

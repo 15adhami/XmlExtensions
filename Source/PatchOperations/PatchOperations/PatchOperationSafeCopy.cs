@@ -19,13 +19,13 @@ namespace XmlExtensions
                 foreach (XmlNode parent in parents)
                 {
                     int d = 0;
-                    tryAddNode(parent, node, d);
+                    TryAddNode(parent, node, d);
                 }
             }
             return true;
         }
 
-        private void tryAddNode(XmlNode parent, XmlNode child, int depth)
+        private void TryAddNode(XmlNode parent, XmlNode child, int depth)
         {
             XmlNode foundNode = null;
             if (!ContainsNode(parent, child, ref foundNode) || depth == safetyDepth)
@@ -38,7 +38,7 @@ namespace XmlExtensions
                 {
                     foreach (XmlNode newChild in child.ChildNodes)
                     {
-                        tryAddNode(foundNode, newChild, depth + 1);
+                        TryAddNode(foundNode, newChild, depth + 1);
                     }
                 }
             }

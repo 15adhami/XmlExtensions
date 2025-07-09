@@ -32,7 +32,7 @@ namespace XmlExtensions
                     List<XmlNode> nodesToRemove = new();
                     foreach (XmlNode child in parentNode.ChildNodes)
                     {
-                        if (child != xmlNode && isDuplicate(xmlNode, child))
+                        if (child != xmlNode && IsDuplicate(xmlNode, child))
                         {
                             if (operation == Operation.Remove)
                             {
@@ -60,7 +60,7 @@ namespace XmlExtensions
             return true;
         }
 
-        private bool isDuplicate(XmlNode node1, XmlNode node2)
+        private bool IsDuplicate(XmlNode node1, XmlNode node2)
         {
             bool duplicate = false;
             if (compare == Compare.Name && node1.Name == node2.Name)
