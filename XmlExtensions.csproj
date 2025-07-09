@@ -205,6 +205,7 @@
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorPalette.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorWheel.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\DropdownButton.cs" />
+    <Compile Include="Source\XmlObjects\Setting\UI\DrawColor.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\EmbedMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\DisplayMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\DisplayWindow.cs" />
