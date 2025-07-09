@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
     {
         public float wheelSize = 128;
         public float brightnessWidth = 22;
-        public float gap = 16;
+        public float gapSize = 16;
         public Location brightnessLocation = Location.Left;
         public Anchor anchor = Anchor.Middle;
 
@@ -35,7 +35,7 @@ namespace XmlExtensions.Setting
             float size = wheelSize;
             if (brightnessLocation == Location.Top || brightnessLocation == Location.Bottom)
             {
-                size += brightnessWidth + gap;
+                size += brightnessWidth + gapSize;
             }
             return size + GetDefaultSpacing();
         }
@@ -51,10 +51,10 @@ namespace XmlExtensions.Setting
             float totalHeight = inRect.height;
 
             float layoutWidth = (brightnessLocation == Location.Left || brightnessLocation == Location.Right)
-                ? wheelSize + brightnessWidth + gap
+                ? wheelSize + brightnessWidth + gapSize
                 : wheelSize;
             float layoutHeight = (brightnessLocation == Location.Top || brightnessLocation == Location.Bottom)
-                ? wheelSize + brightnessWidth + gap
+                ? wheelSize + brightnessWidth + gapSize
                 : wheelSize;
 
             float offsetX = anchor switch
@@ -73,20 +73,20 @@ namespace XmlExtensions.Setting
             {
                 case Location.Left:
                     rectBrightness = new Rect(layoutRect.x, layoutRect.y, brightnessWidth, wheelSize);
-                    rectWheel = new Rect(rectBrightness.xMax + gap, layoutRect.y, wheelSize, wheelSize);
+                    rectWheel = new Rect(rectBrightness.xMax + gapSize, layoutRect.y, wheelSize, wheelSize);
                     break;
                 case Location.Right:
                     rectWheel = new Rect(layoutRect.x, layoutRect.y, wheelSize, wheelSize);
-                    rectBrightness = new Rect(rectWheel.xMax + gap, layoutRect.y, brightnessWidth, wheelSize);
+                    rectBrightness = new Rect(rectWheel.xMax + gapSize, layoutRect.y, brightnessWidth, wheelSize);
                     break;
                 case Location.Top:
                     rectBrightness = new Rect(layoutRect.x, layoutRect.y, wheelSize, brightnessWidth);
-                    rectWheel = new Rect(layoutRect.x, rectBrightness.yMax + gap, wheelSize, wheelSize);
+                    rectWheel = new Rect(layoutRect.x, rectBrightness.yMax + gapSize, wheelSize, wheelSize);
                     break;
                 case Location.Bottom:
                 default:
                     rectWheel = new Rect(layoutRect.x, layoutRect.y, wheelSize, wheelSize);
-                    rectBrightness = new Rect(layoutRect.x, rectWheel.yMax + gap, wheelSize, brightnessWidth);
+                    rectBrightness = new Rect(layoutRect.x, rectWheel.yMax + gapSize, wheelSize, brightnessWidth);
                     break;
             }
 
