@@ -14,6 +14,7 @@ namespace XmlExtensions.Setting
         public Anchor anchor = Anchor.Left;
 
         private string buf = null;
+        private float cachedValue;
 
         public enum Anchor
         {
@@ -24,8 +25,8 @@ namespace XmlExtensions.Setting
 
         internal override bool PreOpen(string selectedMod)
         {
-
-            buf = Math.Round(float.Parse(SettingsManager.GetSetting(selectedMod, key)), decimals).ToString();
+            cachedValue = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            buf = Math.Round(cachedValue, decimals).ToString();
             if (buf == "" || buf == null)
                 buf = ((float)Math.Round(double.Parse(defaultValue), decimals)).ToString();
             return true;
@@ -39,6 +40,13 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             float f = (float)Math.Round(double.Parse(defaultValue), decimals);
+            float currentValue = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            if (cachedValue != currentValue)
+            {
+                cachedValue = currentValue;
+                f = cachedValue;
+                buf = f.ToString();
+            }
             int i = (int)f;
             if (buf != null && buf != "")
             {
@@ -47,7 +55,7 @@ namespace XmlExtensions.Setting
                     if (buf[buf.Length - 1] != '.' && buf[0] != '.' && !(buf[0] == '-' && buf[1] == '.'))
                         buf = Math.Round(float.Parse(buf), decimals).ToString();
                     if (decimals == 0)
-                        buf = buf.Replace(".","");
+                        buf = buf.Replace(".", "");
                 }
                 catch { }
             }
