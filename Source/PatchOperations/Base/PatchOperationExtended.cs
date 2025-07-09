@@ -87,22 +87,6 @@ namespace XmlExtensions
             }
         }
 
-        /*
-        protected void Error(string msg)
-        {
-            SetException();
-            string str = GetType().ToString();
-            if (exceptionVals != null)
-            {
-                str += "(" + exceptionFields[0] + "='" + exceptionVals[0] + "'";
-                for (int i = 1; i < exceptionVals.Count; i++)
-                {
-                    str += ", " + exceptionFields[i] + "='" + exceptionVals[i] + "'";
-                }
-                str += ")";
-            }
-            ErrorManager.AddError(str + ": " + msg);
-        }*/
         /// <summary>
         /// Throws an error for the patch operation
         /// </summary>
@@ -127,21 +111,6 @@ namespace XmlExtensions
                 msg
             ));
         }
-        /*
-        protected void Error(string[] vals, string[] fields, string msg)
-        {
-            string str = GetType().ToString();
-            if (vals != null)
-            {
-                str += "(" + fields[0] + "='" + vals[0] + "'";
-                for (int i = 1; i < vals.Length; i++)
-                {
-                    str += ", " + fields[i] + "='" + vals[i] + "'";
-                }
-                str += ")";
-            }
-            ErrorManager.AddError(str + ": " + msg);
-        }*/
 
         protected bool ErrorIfFalse(bool condition, string message)
         {
