@@ -10,9 +10,7 @@ namespace XmlExtensions
         private List<string> exceptionVals;
         private List<string> exceptionFields;
 
-        private protected virtual void SetException()
-        {
-        }
+        private protected virtual void SetException() { }
 
         private protected void CreateExceptions(params string[] values)
         {
@@ -30,23 +28,6 @@ namespace XmlExtensions
                 }
             }
         }
-
-        /*
-        protected void Error(string msg)
-        {
-            SetException();
-            string str = GetType().ToString();
-            if (exceptionVals != null)
-            {
-                str += "(" + exceptionFields[0] + "='" + exceptionVals[0] + "'";
-                for (int i = 1; i < exceptionVals.Count; i++)
-                {
-                    str += ", " + exceptionFields[i] + "='" + exceptionVals[i] + "'";
-                }
-                str += ")";
-            }
-            ErrorManager.AddError(str + ": " + msg);
-        }*/
 
         /// <summary>
         /// Throw an error message.
@@ -72,22 +53,6 @@ namespace XmlExtensions
                 msg
             ));
         }
-
-        /*
-        private protected void Error(string[] vals, string[] fields, string msg)
-        {
-            string str = GetType().ToString();
-            if (vals != null)
-            {
-                str += "(" + fields[0] + "='" + vals[0] + "'";
-                for (int i = 1; i < vals.Length; i++)
-                {
-                    str += ", " + fields[i] + "='" + vals[i] + "'";
-                }
-                str += ")";
-            }
-            ErrorManager.AddError(str + ": " + msg);
-        }*/
 
         private protected void NullError(string node)
         {
