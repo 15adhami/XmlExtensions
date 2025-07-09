@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
     internal class SplitColumn : SettingContainer
     {
         public float split = 0.50f;
-        public float pixels = -1f;
+        public float width = -1f;
         public List<SettingContainer> leftCol;
         public List<SettingContainer> rightCol;
         public Position position = Position.Top;
@@ -41,9 +41,9 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            if (pixels >= 0)
+            if (this.width >= 0)
             {
-                float leftSize = Math.Min(width - gapSize, pixels);
+                float leftSize = Math.Min(width - gapSize, this.width);
                 leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
                 rightHeight = CalculateHeightSettingsList(width - leftSize - gapSize, selectedMod, leftCol);
             }
@@ -60,9 +60,9 @@ namespace XmlExtensions.Setting
         {
             float leftWidth, rightWidth;
 
-            if (pixels >= 0)
+            if (width >= 0)
             {
-                leftWidth = Math.Min(inRect.width - gapSize, pixels);
+                leftWidth = Math.Min(inRect.width - gapSize, width);
                 rightWidth = inRect.width - leftWidth - 2 * gapSize;
             }
             else

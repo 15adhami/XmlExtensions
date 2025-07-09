@@ -7,10 +7,22 @@ namespace XmlExtensions.Setting
 {
     internal class SplitColumns : SettingContainer
     {
-        public List<float> splits = new List<float>() { 0.5f };
+        public List<float> splits = [0.5f];
+        public List<float> widths;
         public List<List<SettingContainer>> settings;
+        public List<Position> positions = [Position.Top];
         public bool drawLine = false;
         public int gapSize = 6;
+
+        public enum Position
+        {
+            Top,
+            Middle,
+            Bottom
+        }
+
+        private List<float> cachedHeights = new();
+        private float totalHeight = 0f;
 
         protected override bool Init(string selectedMod)
         {
@@ -28,76 +40,91 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
+            cachedHeights.Clear();
             float offset = 0;
-            int c = 0;
-            float h = 0;
-            foreach (List<SettingContainer> list in settings)
+            float maxHeight = 0;
+
+            for (int i = 0; i < settings.Count; i++)
             {
-                float tempWidth = 0;
-                if (c == splits.Count)
-                {
-                    tempWidth = width - offset - gapSize / 2;
-                }
-                else if (c > splits.Count)
-                {
-                    tempWidth = 0;
-                }
-                else
-                {
-                    tempWidth = width * splits[c] - gapSize / 2;
-                }
-                h = Math.Max(CalculateHeightSettingsList(tempWidth, selectedMod, list), h);
-                offset += tempWidth + gapSize;
-                c++;
+                float colWidth = GetColumnWidth(i, width, offset);
+                float colHeight = CalculateHeightSettingsList(colWidth, selectedMod, settings[i]);
+                cachedHeights.Add(colHeight);
+                maxHeight = Math.Max(maxHeight, colHeight);
+                offset += colWidth + gapSize;
             }
-            return h;
+
+            totalHeight = maxHeight;
+            return totalHeight;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            float offset = 0;
-            int c = 0;
-            float width = inRect.width;
-            Rect currRect = inRect;
-            Rect tempRect = new Rect(inRect);
-            foreach (List<SettingContainer> list in settings)
-            {
-                float tempWidth = 0;
+            float offsetX = 0;
+            float totalWidth = inRect.width;
 
-                if (c == splits.Count)
+            for (int i = 0; i < settings.Count; i++)
+            {
+                float colWidth = GetColumnWidth(i, totalWidth, offsetX);
+                float colHeight = cachedHeights[i];
+                Position colPosition = GetPosition(i);
+                float yOffset = GetYOffset(colPosition, totalHeight, colHeight);
+
+                Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, colWidth, colHeight);
+                DrawSettingsList(colRect, selectedMod, settings[i]);
+
+                if (drawLine && i < settings.Count - 1)
                 {
-                    tempWidth = width - offset - gapSize / 2;
-                    tempRect = currRect;
+                    Color old = GUI.color;
+                    GUI.color = old * new Color(1f, 1f, 1f, 0.4f);
+                    GUI.DrawTexture(new Rect(inRect.x + offsetX + colWidth + gapSize / 2f, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
+                    GUI.color = old;
                 }
-                else if (c > splits.Count)
-                {
-                    tempWidth = 0;
-                    tempRect = currRect.LeftPartPixels(tempWidth);
-                }
-                else
-                {
-                    tempWidth = width * splits[c] - gapSize / 2;
-                    tempRect = currRect.LeftPartPixels(tempWidth);
-                }
-                DrawSettingsList(tempRect, selectedMod, list);
-                if (drawLine)
-                {
-                    Color color = GUI.color;
-                    GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                    GUI.DrawTexture(new Rect(currRect.x + tempWidth + gapSize / 2, currRect.yMin, 1f, currRect.height), BaseContent.WhiteTex);
-                    GUI.color = color;
-                }
-                currRect = currRect.RightPartPixels(currRect.width - (tempWidth + gapSize));
-                offset += tempWidth + gapSize;
-                c++;
+
+                offsetX += colWidth + gapSize;
             }
+        }
+
+        private float GetColumnWidth(int index, float totalWidth, float offset)
+        {
+            if (widths != null && index < widths.Count)
+            {
+                return Math.Min(totalWidth - offset - gapSize, widths[index]);
+            }
+            else if (index < splits.Count)
+            {
+                return totalWidth * splits[index] - gapSize / 2f;
+            }
+            else
+            {
+                return totalWidth - offset - gapSize;
+            }
+        }
+
+        private Position GetPosition(int index)
+        {
+            if (positions != null && index < positions.Count)
+            {
+                return positions[index];
+            }
+            return Position.Top;
+        }
+
+        private float GetYOffset(Position pos, float total, float col)
+        {
+            return pos switch
+            {
+                Position.Top => 0f,
+                Position.Middle => (total - col) / 2f,
+                Position.Bottom => total - col,
+                _ => 0f
+            };
         }
 
         internal override bool PreOpen(string selectedMod)
         {
-            foreach (List<SettingContainer> settings_list in settings)
+            foreach (List<SettingContainer> list in settings)
             {
-                if (!PreOpenSettingsList(selectedMod, settings_list))
+                if (!PreOpenSettingsList(selectedMod, list))
                 {
                     return false;
                 }
