@@ -44,9 +44,9 @@ namespace XmlExtensions.Setting
         {
             if (this.width >= 0)
             {
-                float leftSize = Math.Min(width - gapSize / 2f, this.width);
+                float leftSize = Math.Min(width, this.width - gapSize / 2f);
                 leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
-                rightHeight = CalculateHeightSettingsList(width - leftSize - gapSize, selectedMod, leftCol);
+                rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
             }
             else
             {
@@ -63,8 +63,8 @@ namespace XmlExtensions.Setting
 
             if (width >= 0)
             {
-                leftWidth = Math.Min(inRect.width - gapSize, width);
-                rightWidth = inRect.width - leftWidth - 2 * gapSize;
+                leftWidth = Math.Min(inRect.width, width - gapSize / 2f);
+                rightWidth = Math.Max(inRect.width - leftWidth - gapSize, 0);
             }
             else
             {

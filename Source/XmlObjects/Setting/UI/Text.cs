@@ -23,19 +23,10 @@ namespace XmlExtensions.Setting
             Right = TextAnchor.UpperRight
         }
 
+        private string cachedText;
+
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            Verse.Text.Font = font;
-            Verse.Text.Anchor = (TextAnchor)anchor;
-            string str = Helpers.TryTranslate(text, tKey);
-            float h = (float)Math.Ceiling(Verse.Text.CalcHeight(str, width));
-            Verse.Text.Font = GameFont.Small;
-            Verse.Text.Anchor = TextAnchor.UpperLeft;
-            return h;
-        }
-
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
-        {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
             string str = Helpers.TryTranslate(text, tKey);
@@ -46,13 +37,25 @@ namespace XmlExtensions.Setting
                     str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(selectedMod, key), "{}");
                 }
             }
+            cachedText = str;
+            float h = (float)Math.Ceiling(Verse.Text.CalcHeight(str, width));
+            Verse.Text.Font = GameFont.Small;
+            Verse.Text.Anchor = TextAnchor.UpperLeft;
+            return h;
+        }
+
+        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        {//M: 29 S: 22 T:18
+            Verse.Text.Font = font;
+            Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
-            Widgets.Label(inRect, str);
+            Widgets.Label(inRect, cachedText);
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
+            cachedText = "";
         }
 
         protected override bool Init(string selectedMod)

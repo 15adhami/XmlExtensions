@@ -225,6 +225,7 @@ namespace XmlExtensions.Setting
             if (settings != null)
             {
                 Listing_Standard listing = new Listing_Standard();
+                listing.verticalSpacing = 0;
                 listing.Begin(rect);
                 foreach (SettingContainer setting in settings)
                 {
