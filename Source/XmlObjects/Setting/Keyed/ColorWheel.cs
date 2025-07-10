@@ -37,7 +37,7 @@ namespace XmlExtensions.Setting
             {
                 size += brightnessWidth + gapSize;
             }
-            return size + GetDefaultSpacing();
+            return size;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

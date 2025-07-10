@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return 30 + GetDefaultSpacing();
+            return 30;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

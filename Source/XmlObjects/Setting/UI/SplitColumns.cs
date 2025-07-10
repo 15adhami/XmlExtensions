@@ -38,6 +38,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             int c = 0;
             foreach (List<SettingContainer> list in settings)
             {

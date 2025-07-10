@@ -30,9 +30,9 @@ namespace XmlExtensions.Setting
             }
             else if (height == -1)
             {
-                height = -1 * GetDefaultSpacing();
+                height = 0;
             }
-            return height + GetDefaultSpacing();
+            return height;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

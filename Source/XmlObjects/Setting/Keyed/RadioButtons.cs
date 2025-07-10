@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -22,6 +23,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             foreach (RadioButton button in buttons)
             {
                 if (button.tooltip == null)
@@ -38,14 +40,14 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return buttons.Count * ((spacing < 0 ? GetDefaultSpacing() : spacing) + 22);
+            return buttons.Count * (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing) + buttons.Count * 22;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
-            listingStandard.verticalSpacing = spacing < 0 ? GetDefaultSpacing() : spacing;
+            listingStandard.verticalSpacing = (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing);
             foreach (RadioButton button in buttons)
             {
                 bool selected = SettingsManager.GetSetting(selectedMod, key) == button.value;

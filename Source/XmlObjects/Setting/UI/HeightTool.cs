@@ -10,6 +10,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
+            addDefaultSpacing = false;
             return Math.Max(22, h);
         }
 

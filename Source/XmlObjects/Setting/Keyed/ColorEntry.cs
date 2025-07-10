@@ -16,7 +16,7 @@ namespace XmlExtensions.Setting
         protected override float CalculateHeight(float width, string selectedMod)
         {
             float boxHeight = 24;
-            return 3 * boxHeight + 2 * spacing + GetDefaultSpacing();
+            return 3 * boxHeight + 2 * spacing;
         }
 
         internal override bool PreOpen(string selectedMod)

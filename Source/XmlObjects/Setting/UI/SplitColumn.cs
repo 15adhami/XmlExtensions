@@ -28,6 +28,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             if (!InitializeSettingsList(selectedMod, leftCol, "leftCol"))
             {
                 return false;

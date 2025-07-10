@@ -20,7 +20,7 @@ namespace XmlExtensions
         /// <summary>
         /// The spacing between each setting, in pixels
         /// </summary>
-        public int defaultSpacing = 2;
+        public int defaultSpacing = 0;
 
         /// <summary>
         /// The list of settings to be displayed

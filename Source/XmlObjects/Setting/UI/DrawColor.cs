@@ -21,9 +21,14 @@ namespace XmlExtensions.Setting
             Right
         }
 
+        protected override bool Init(string selectedMod)
+        {
+            return true;
+        }
+
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return colorSize + border * 2 + GetDefaultSpacing();
+            return colorSize + border * 2;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

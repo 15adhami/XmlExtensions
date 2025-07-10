@@ -23,6 +23,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             if (tabs != null)
             {
                 foreach (Tab tab in tabs)

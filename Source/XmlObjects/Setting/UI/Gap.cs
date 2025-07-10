@@ -8,6 +8,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
+            addDefaultSpacing = false;
             return spacing;
         }
 

@@ -25,14 +25,13 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
-            return GetDefaultSpacing() + 22;
+            return 22;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             bool selected = SettingsManager.GetSetting(selectedMod, key) == value;
-            Rect rect = inRect.TopPartPixels(22f);
-            if (DrawRadioButton(rect, Helpers.TryTranslate(label, tKey), selected, highlight, Helpers.TryTranslate(tooltip, tKeyTip)))
+            if (DrawRadioButton(inRect, Helpers.TryTranslate(label, tKey), selected, highlight, Helpers.TryTranslate(tooltip, tKeyTip)))
             {
                 SettingsManager.SetSetting(selectedMod, key, value);
             }

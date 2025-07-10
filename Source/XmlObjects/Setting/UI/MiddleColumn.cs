@@ -13,6 +13,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             return InitializeSettingsList(selectedMod, settings);
         }
 

@@ -31,7 +31,7 @@ namespace XmlExtensions.Setting
             float h = (float)Math.Ceiling(Verse.Text.CalcHeight(str, width));
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-            return h + GetDefaultSpacing(); // TODO: Move GetDefaultSpacing() to SettingContainer
+            return h;
         }
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)

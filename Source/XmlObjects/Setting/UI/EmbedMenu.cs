@@ -12,6 +12,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings;
             return true;
         }

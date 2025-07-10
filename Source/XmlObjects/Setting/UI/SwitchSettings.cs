@@ -18,6 +18,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             if (cases != null)
             {
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();

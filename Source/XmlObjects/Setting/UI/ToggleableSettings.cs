@@ -11,6 +11,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
+            addDefaultSpacing = false;
             if (!InitializeSettingsList(selectedMod, caseTrue, "caseTrue"))
             {
                 return false;

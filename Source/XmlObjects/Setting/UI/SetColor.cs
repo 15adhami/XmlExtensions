@@ -8,6 +8,12 @@ namespace XmlExtensions.Setting
         protected Color color = Color.white;
         public string key;
 
+        protected override bool Init(string selectedMod)
+        {
+            addDefaultSpacing = false;
+            return true;
+        }
+
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             if (key != null)
