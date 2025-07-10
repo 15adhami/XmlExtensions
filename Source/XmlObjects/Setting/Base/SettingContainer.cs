@@ -195,7 +195,7 @@ namespace XmlExtensions.Setting
             {
                 return ModSettings_Window.activeMenu.defaultSpacing;
             }
-            return 3;
+            return 0;
         }
 
         /// <summary>
