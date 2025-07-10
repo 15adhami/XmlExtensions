@@ -222,6 +222,7 @@
     <Compile Include="Source\XmlObjects\Setting\UI\HorizontalScrollView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\IntEntry.cs" />
     <Compile Include="Source\XmlObjects\Setting\Base\KeyedSettingContainer.cs" />
+    <Compile Include="Source\XmlObjects\Setting\UI\IfStatement.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\MiddleColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\Numeric.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\RadioButton.cs" />
