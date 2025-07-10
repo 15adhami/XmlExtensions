@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace XmlExtensions.Source.Core
+namespace XmlExtensions
 {
     internal class PatchProfiler
     {

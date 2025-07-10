@@ -80,13 +80,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
-    <Compile Include="Source\Core\ErrorContext.cs" />
-    <Compile Include="Source\Core\ErrorManager.cs" />
+    <Compile Include="Source\Core\ErrorManager\ErrorContext.cs" />
+    <Compile Include="Source\Core\ErrorManager\ErrorManager.cs" />
     <Compile Include="Source\Core\ModEmitter.cs" />
-    <Compile Include="Source\Core\PatchCoordinator.cs" />
-    <Compile Include="Source\Core\PatchFilter.cs" />
-    <Compile Include="Source\Core\PatchProfiler.cs" />
-    <Compile Include="Source\Core\XmlDocumentManager.cs" />
+    <Compile Include="Source\Core\PatchManager\PatchCoordinator.cs" />
+    <Compile Include="Source\Core\PatchManager\PatchFilter.cs" />
+    <Compile Include="Source\Core\PatchManager\PatchProfiler.cs" />
+    <Compile Include="Source\Core\PatchManager\XmlDocumentManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAddDef.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseLog.cs" />
-    <Compile Include="Source\Core\ErrorHandler.cs" />
+    <Compile Include="Source\Core\ErrorManager\ErrorHandler.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
     <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
     <Compile Include="Source\PatchOperations\Boolean\And.cs" />
@@ -195,7 +195,7 @@
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Actions\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
-    <Compile Include="Source\Core\PatchManager.cs" />
+    <Compile Include="Source\Core\PatchManager\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />
     <Compile Include="Source\PatchOperations\Boolean\ConditionalInherited.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\OptionalPatch.cs" />

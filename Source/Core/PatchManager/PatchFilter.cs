@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Verse;
 
-namespace XmlExtensions.Source.Core
+namespace XmlExtensions
 {
     internal static class PatchFilter
     {
