@@ -44,7 +44,7 @@ namespace XmlExtensions.Setting
         {
             if (this.width >= 0)
             {
-                float leftSize = Math.Min(width - gapSize, this.width);
+                float leftSize = Math.Min(width - gapSize / 2f, this.width);
                 leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
                 rightHeight = CalculateHeightSettingsList(width - leftSize - gapSize, selectedMod, leftCol);
             }
