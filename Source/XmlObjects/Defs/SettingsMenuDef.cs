@@ -150,7 +150,7 @@ namespace XmlExtensions
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
-            listingStandard.verticalSpacing = defaultSpacing;
+            listingStandard.verticalSpacing = 0;
             float width = listingStandard.ColumnWidth;
             foreach (SettingContainer setting in settings)
             {
