@@ -255,6 +255,16 @@
             Determines whether or not the default setting should be added after drawing the setting
             </summary>
         </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.padAbove">
+            <summary>
+            How many pixels to pad above the setting
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.padBelow">
+            <summary>
+            How many pixels to pad below the setting
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
@@ -271,7 +281,7 @@
         </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect,System.String)">
             <summary>
-            Draw the setting in the given <c>Rect</c>
+            Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
             </summary>
             <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
             <param name="selectedMod">The modId of the active mod in the settings menu</param>

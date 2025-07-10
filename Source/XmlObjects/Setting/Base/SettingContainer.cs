@@ -21,6 +21,16 @@ namespace XmlExtensions.Setting
         /// </summary>
         protected bool addDefaultSpacing = true;
 
+        /// <summary>
+        /// How many pixels to pad above the setting
+        /// </summary>
+        protected float padAbove = 0f;
+
+        /// <summary>
+        /// How many pixels to pad below the setting
+        /// </summary>
+        protected float padBelow = 0f;
+
         private float cachedHeight = -1f;
         private int errHeight = -1;
         private string tag;
@@ -76,6 +86,9 @@ namespace XmlExtensions.Setting
                 {
                     cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
                 }
+                cachedHeight += addDefaultSpacing ? GetDefaultSpacing() : 0f;
+                cachedHeight += padAbove > 0 ? padAbove : 0f;
+                cachedHeight += padBelow > 0 ? padBelow : 0f;
                 return cachedHeight;
             }
             catch
@@ -87,7 +100,7 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Draw the setting in the given <c>Rect</c>
+        /// Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
@@ -111,9 +124,17 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        Rect drawRect = inRect;
-                        if (addDefaultSpacing)
-                            drawRect = inRect.TopPartPixels(inRect.height - GetDefaultSpacing());
+                        float topPad = padAbove > 0 ? padAbove : 0f;
+                        float bottomPad = padBelow > 0 ? padBelow : 0f;
+                        float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
+
+                        Rect drawRect = new Rect(
+                            inRect.x,
+                            inRect.y + topPad,
+                            inRect.width,
+                            inRect.height - topPad - bottomPad - spacing
+                        );
+
                         DrawSettingContents(drawRect, selectedMod);
                     }
                 }
