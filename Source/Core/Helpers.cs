@@ -284,7 +284,7 @@ namespace XmlExtensions
         {
             if (nonNumeric)
             {
-                int compare = str1.CompareTo(str2);
+                int compare = str1.ToLower().CompareTo(str2.ToLower());
                 if (relation == "eq")
                 {
                     if (compare == 0)
