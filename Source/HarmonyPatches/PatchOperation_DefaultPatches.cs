@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Xml;
 using Verse;
 
-namespace XmlExtensions.Source.HarmonyPatches
+namespace XmlExtensions
 {
     [HarmonyPatch]
     internal static class PatchOperation_DefaultPatches

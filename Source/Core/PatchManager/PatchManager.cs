@@ -1,11 +1,5 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Xml;
+﻿using System;
 using Verse;
-using XmlExtensions.Source.Core;
 
 namespace XmlExtensions
 {
@@ -20,6 +14,5 @@ namespace XmlExtensions
         internal static bool CheckType(Type t) => PatchFilter.IsValidPatchOperation(t);
 
         internal static bool CheckTypePathed(Type t) => PatchFilter.IsValidPathedOperation(t);
-
     }
 }
