@@ -76,7 +76,7 @@ namespace XmlExtensions.Setting
                 {
                     cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
                 }
-                return cachedHeight + (addDefaultSpacing ? GetDefaultSpacing() : 0);
+                return cachedHeight;
             }
             catch
             {
