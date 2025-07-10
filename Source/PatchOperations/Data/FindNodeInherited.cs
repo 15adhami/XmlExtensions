@@ -36,9 +36,9 @@ namespace XmlExtensions
             XmlNode node = findNode(defNode, xpathLocal, xml);
             if (node == null)
             {
-                if (xml != PatchManager.XmlDocs["Defs"])
+                if (xml != PatchManager.XmlDocs.MainDocument)
                 {
-                    node = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
+                    node = findNode(defNode, xpathLocal, PatchManager.XmlDocs.MainDocument);
                     if (node == null)
                     {
                         if (defaultValue == null)

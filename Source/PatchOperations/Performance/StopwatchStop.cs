@@ -6,8 +6,9 @@ namespace XmlExtensions
     {
         protected override bool Patch(XmlDocument xml)
         {
-            PatchManager.watch.Stop();
-            Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.watch.ElapsedMilliseconds.ToString() + "ms");
+            PatchManager.Profiler.StopWatch();
+            Verse.Log.Message("XmlExtensions.Stopwatch: " + PatchManager.Profiler.ElapsedMilliseconds().ToString() + "ms");
+            PatchManager.Profiler.ResetWatch();
             return true;
         }
     }

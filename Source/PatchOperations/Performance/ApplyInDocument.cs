@@ -13,7 +13,7 @@ namespace XmlExtensions
         {
             try
             {
-                if (!PatchManager.XmlDocs.ContainsKey(docName))
+                if (!PatchManager.XmlDocs.Contains(docName))
                 {
                     ErrorManager.AddError("XmlExtensions.ApplyInDocument(docName=" + docName + "): No document exists with the given name");
                     return false;
@@ -24,7 +24,7 @@ namespace XmlExtensions
                     return false;
                 }
                 int errNum = 0;
-                XmlDocument doc = PatchManager.XmlDocs[docName];
+                XmlDocument doc = PatchManager.XmlDocs.Get(docName);
                 if (!Helpers.RunPatchesInPatchContainer(apply, doc, ref errNum))
                 {
                     ErrorManager.AddError("XmlExtensions.ApplyInDocument(docName=" + docName + "): Error in the operation at position=" + errNum.ToString());

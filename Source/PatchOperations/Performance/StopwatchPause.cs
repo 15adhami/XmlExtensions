@@ -6,9 +6,9 @@ namespace XmlExtensions
     {
         protected override bool Patch(XmlDocument xml)
         {
-            if (PatchManager.watch.IsRunning)
+            if (PatchManager.Profiler.IsRunning())
             {
-                PatchManager.watch.Stop();
+                PatchManager.Profiler.StopWatch();
             }
             return true;
         }

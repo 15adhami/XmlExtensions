@@ -16,8 +16,8 @@ namespace XmlExtensions.Setting
 
         protected override bool Init(string selectedMod)
         {
-            id = PatchManager.rangeCount;
-            PatchManager.rangeCount++;
+            id = SettingsManager.rangeCount;
+            SettingsManager.rangeCount++;
             return true;
         }
 

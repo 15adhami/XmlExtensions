@@ -12,34 +12,34 @@ namespace XmlExtensions
         {
             try
             {
-                if (!PatchManager.XmlDocs.ContainsKey(docName))
+                if (!PatchManager.XmlDocs.Contains(docName))
                 {
                     ErrorManager.AddError("XmlExtensions.MergeDocument(docName=" + docName + "): No document exists with the given name");
                     return false;
                 }
-                XmlDocument doc = PatchManager.XmlDocs[docName];
+                XmlDocument doc = PatchManager.XmlDocs.Get(docName);
                 foreach (XmlNode node in doc.DocumentElement.ChildNodes)
                 {
-                    if (PatchManager.nodeMap[docName].ContainsKey(node))
+                    if (PatchManager.XmlDocs.NodeMapContainsKey(docName, node))
                     {
                         // Replace the given node
-                        XmlNode oldNode = PatchManager.nodeMap[docName][node];
+                        XmlNode oldNode = PatchManager.XmlDocs.GetNodeFromNodeMap(docName, node);
                         XmlNode parentNode = oldNode.ParentNode;
                         if (parentNode != null)
                         {
                             parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(node, true), oldNode);
                             parentNode.RemoveChild(oldNode);
                         }
-                        PatchManager.nodeMap[docName].Remove(node);
+                        PatchManager.XmlDocs.RemoveNodeFromNodeMap(docName, node);
                     }
                     else
                     {
                         // Add the new node
-                        PatchManager.XmlDocs["Defs"].DocumentElement.AppendChild(PatchManager.XmlDocs["Defs"].ImportNode(node, true));
+                        PatchManager.XmlDocs.MainDocument.DocumentElement.AppendChild(PatchManager.XmlDocs.MainDocument.ImportNode(node, true));
                     }
                 }
                 // Remove deleted nodes
-                foreach (XmlNode node in PatchManager.nodeMap[docName].Values)
+                foreach (XmlNode node in PatchManager.XmlDocs.GetNodeMap(docName).Values)
                 {
                     XmlNode parentNode = node.ParentNode;
                     if (parentNode != null)
@@ -48,7 +48,7 @@ namespace XmlExtensions
                     }
                 }
                 PatchManager.XmlDocs.Remove(docName);
-                PatchManager.nodeMap.Remove(docName);
+                PatchManager.XmlDocs.RemoveNodeMap(docName);
                 return true;
             }
             catch (Exception e)

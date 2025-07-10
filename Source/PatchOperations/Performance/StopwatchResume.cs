@@ -6,7 +6,7 @@ namespace XmlExtensions
     {
         protected override bool Patch(XmlDocument xml)
         {
-            PatchManager.watch.Start();
+            PatchManager.Profiler.StartWatch();
             return true;
         }
     }

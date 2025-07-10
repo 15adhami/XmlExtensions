@@ -25,7 +25,7 @@ namespace XmlExtensions
         protected override bool Patch(XmlDocument xml)
         {
             PatchDef patchDef;
-            if (PatchManager.applyingPatches)
+            if (PatchManager.Coordinator.IsApplyingPatches)
             {
                 XmlNode node;
                 if (patchName != null)

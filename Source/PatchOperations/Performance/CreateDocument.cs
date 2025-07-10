@@ -34,9 +34,9 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            if (!PatchManager.XmlDocs.ContainsKey(docName))
+            if (!PatchManager.XmlDocs.Contains(docName))
             {
-                PatchManager.nodeMap.Add(docName, new Dictionary<XmlNode, XmlNode>());
+                PatchManager.XmlDocs.RegisterNodeMap(docName);
                 XmlDocument doc = new XmlDocument();
                 doc.AppendChild(doc.CreateNode(XmlNodeType.Element, null, docName, null));
                 if (!emptyDocument)
@@ -45,21 +45,21 @@ namespace XmlExtensions
                     {
                         XmlNode newNode = doc.ImportNode(node, true);
                         doc.DocumentElement.AppendChild(newNode);
-                        PatchManager.nodeMap[docName].Add(newNode, node);
+                        PatchManager.XmlDocs.AddNodesToMap(docName, newNode, node);
                     }
                 }
                 PatchManager.XmlDocs.Add(docName, doc);
             }
             else
             {
-                XmlDocument doc = PatchManager.XmlDocs[docName];
+                XmlDocument doc = PatchManager.XmlDocs.Get(docName);
                 if (!emptyDocument)
                 {
                     foreach (XmlNode node in nodes)
                     {
                         XmlNode newNode = doc.ImportNode(node, true);
                         doc.DocumentElement.AppendChild(newNode);
-                        PatchManager.nodeMap[docName].Add(newNode, node);
+                        PatchManager.XmlDocs.AddNodesToMap(docName, newNode, node);
                     }
                 }
             }

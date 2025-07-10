@@ -5,9 +5,12 @@ namespace XmlExtensions.Source.Core
 {
     internal class PatchCoordinator
     {
-        public bool IsApplyingPatches { get; set; }
+        public bool IsApplyingPatches { get; set; } = false;
         public ModContentPack ActiveMod { get; set; }
+
         public Dictionary<PatchOperation, ModContentPack> PatchModDict { get; } = [];
+
+        // For DefDatabase Operations
         public List<PatchOperationExtended> DelayedPatches { get; } = [];
 
         public void SetActiveMod(ModContentPack mod) { ActiveMod = mod; }

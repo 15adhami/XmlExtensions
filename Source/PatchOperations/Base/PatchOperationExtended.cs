@@ -18,24 +18,24 @@ namespace XmlExtensions
             try
             {
                 Initialize();
-                if (PatchManager.applyingPatches && requiresDelay)
+                if (PatchManager.Coordinator.IsApplyingPatches && requiresDelay)
                 {
-                    if (!PatchManager.PatchModDict.ContainsKey(this) && PatchManager.ActiveMod != null)
-                        PatchManager.PatchModDict.Add(this, PatchManager.ActiveMod);
-                    PatchManager.delayedPatches.Add(this);
+                    if (!PatchManager.Coordinator.PatchModDict.ContainsKey(this) && PatchManager.Coordinator.ActiveMod != null)
+                        PatchManager.Coordinator.PatchModDict.Add(this, PatchManager.Coordinator.ActiveMod);
+                    PatchManager.Coordinator.DelayedPatches.Add(this);
                     return true;
                 }
                 XmlDocument doc = xml;
                 if (xmlDoc != null)
                 {
-                    if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
+                    if (!PatchManager.XmlDocs.Contains(xmlDoc))
                     {
                         Error("No XML document exists with docName=\"" + xmlDoc + "\"");
                         return false;
                     }
                     else
                     {
-                        doc = PatchManager.XmlDocs[xmlDoc];
+                        doc = PatchManager.XmlDocs.Get(xmlDoc);
                     }
                 }
                 if (!PreCheck(doc))

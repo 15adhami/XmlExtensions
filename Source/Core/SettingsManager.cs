@@ -166,5 +166,8 @@ namespace XmlExtensions
                 XmlMod.settingsPerMod[modId].defValues = new Dictionary<string, string>();
             }
         }
+
+        // Required to id range sliders
+        internal static int rangeCount = 1;
     }
 }

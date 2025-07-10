@@ -33,13 +33,13 @@ namespace XmlExtensions.Boolean
             b = findNode(defNode, xpathLocal, xml);
             if (!b)
             {
-                if (xml == PatchManager.XmlDocs["Defs"])
+                if (xml == PatchManager.XmlDocs.MainDocument)
                 {
                     return true;
                 }
                 else
                 {
-                    b = findNode(defNode, xpathLocal, PatchManager.XmlDocs["Defs"]);
+                    b = findNode(defNode, xpathLocal, PatchManager.XmlDocs.MainDocument);
                     return true;
                 }
             }

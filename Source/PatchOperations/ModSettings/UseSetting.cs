@@ -37,7 +37,7 @@ namespace XmlExtensions
             bool didContain = SettingsManager.TryGetSetting(modId, key, out string value);
             if (!didContain)
             {
-                if (!PatchManager.applyingPatches)
+                if (!PatchManager.Coordinator.IsApplyingPatches)
                 {
                     Error("No such key exists");
                     return false;

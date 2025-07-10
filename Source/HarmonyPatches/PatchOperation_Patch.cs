@@ -12,10 +12,10 @@ namespace XmlExtensions
         {
             try
             {
-                if (ErrorManager.depth == 0 && PatchManager.PatchModDict.ContainsKey(__instance))
+                if (ErrorManager.depth == 0 && PatchManager.Coordinator.PatchModDict.ContainsKey(__instance))
                 {
-                    ModContentPack pack = PatchManager.PatchModDict[__instance];
-                    if (pack != null && PatchManager.ActiveMod != pack)
+                    ModContentPack pack = PatchManager.Coordinator.PatchModDict[__instance];
+                    if (pack != null && PatchManager.Coordinator.ActiveMod != pack)
                     {
                         PatchManager.SetActivePatchingMod(pack);
                     }
@@ -25,9 +25,9 @@ namespace XmlExtensions
             { //TODO: Catch exceptions for DefDatabaseOperations
             }
             ErrorManager.depth += 1;
-            if (PatchManager.applyingPatches)
+            if (PatchManager.Coordinator.IsApplyingPatches)
             {
-                PatchManager.PatchCount++;
+                PatchManager.Profiler.TotalPatches++;
             }
         }
 
@@ -36,10 +36,10 @@ namespace XmlExtensions
             ErrorManager.depth -= 1;
             if (ErrorManager.depth == 0 && ErrorManager.ErrorCount() > 0 && !__result)
             {
-                PatchManager.FailedPatchCount++;
-                if (PatchManager.PatchModDict.ContainsKey(__instance))
+                PatchManager.Profiler.FailedPatches++;
+                if (PatchManager.Coordinator.PatchModDict.ContainsKey(__instance))
                 {
-                    ErrorManager.PrintErrors(__instance.sourceFile, PatchManager.PatchModDict[__instance]);
+                    ErrorManager.PrintErrors(__instance.sourceFile, PatchManager.Coordinator.PatchModDict[__instance]);
                 }
                 else
                 {

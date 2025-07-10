@@ -10,27 +10,26 @@ namespace XmlExtensions
     {
         private static void Prefix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup, List<ModContentPack> ___runningMods)
         {
-            PatchManager.xmlDoc = xmlDoc;
-            PatchManager.defaultDoc = xmlDoc;
+            PatchManager.XmlDocs.MainDocument = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
             foreach (ModContentPack mod in ___runningMods)
             {
                 foreach (PatchOperation patch in mod.Patches)
                 {
-                    PatchManager.PatchModDict.Add(patch, mod);
+                    PatchManager.Coordinator.PatchModDict.Add(patch, mod);
                 }
             }
-            PatchManager.applyingPatches = true;
-            PatchManager.watch2.Start();
+            PatchManager.Coordinator.IsApplyingPatches = true;
+            PatchManager.Profiler.globalWatch.Start();
         }
 
         private static void Postfix(XmlDocument xmlDoc, Dictionary<XmlNode, LoadableXmlAsset> assetlookup)
         {
-            PatchManager.watch2.Stop();
-            PatchManager.applyingPatches = false;
+            PatchManager.Profiler.globalWatch.Stop();
+            PatchManager.Coordinator.IsApplyingPatches = false;
             PatchManager.XmlDocs.Clear();
-            PatchManager.nodeMap.Clear();
-            PatchManager.watch.Reset();
+            PatchManager.XmlDocs.ClearNodeMaps();
+            PatchManager.Profiler.ResetWatch();
             PatchManager.SetActivePatchingMod(null);
 
             //Add defNames to the menus

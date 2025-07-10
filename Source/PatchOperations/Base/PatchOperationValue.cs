@@ -16,13 +16,13 @@ namespace XmlExtensions
             XmlDocument doc = xml;
             if (xmlDoc != null)
             {
-                if (!PatchManager.XmlDocs.ContainsKey(xmlDoc))
+                if (!PatchManager.XmlDocs.Contains(xmlDoc))
                 {
                     Error(new string[] { xmlDoc }, new string[] { "xmlDoc" }, "No document exists with the given name");
                     return false;
                 }
                 else
-                    doc = PatchManager.XmlDocs[xmlDoc];
+                    doc = PatchManager.XmlDocs.Get(xmlDoc);
             }
             try
             {

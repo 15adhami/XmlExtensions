@@ -4,16 +4,16 @@ namespace XmlExtensions.Source.Core
 {
     internal class PatchProfiler
     {
-        private Stopwatch globalWatch = new();
-        private Stopwatch patchWatch = new();
-        public int TotalPatches { get; private set; }
-        public int FailedPatches { get; private set; }
+        public Stopwatch globalWatch = new();
+        public Stopwatch patchWatch = new();
+        public int TotalPatches { get; set; } = 0;
+        public int FailedPatches { get; set; } = 0;
 
-        public void Start() { patchWatch.Start(); }
-        public void Stop() { patchWatch.Stop(); }
-        public void Reset() { patchWatch.Reset(); }
-        public void Resume() { patchWatch.Resume(); }
-        public void Pause() { patchWatch.Pause(); }
+        public void StartWatch() { patchWatch.Start(); }
+        public void StopWatch() { patchWatch.Stop(); }
+        public void ResetWatch() { patchWatch.Reset(); }
+        public bool IsRunning() { return patchWatch.IsRunning; }
+        public long ElapsedMilliseconds() { return patchWatch.ElapsedMilliseconds; }
         public void CountPatch(bool success) { /* ... */ }
     }
 }

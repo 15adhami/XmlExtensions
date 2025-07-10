@@ -34,9 +34,9 @@ namespace XmlExtensions
                 return false;
             }
             bool b = findNode(defNode, xpathLocal, xml);
-            if (xml != PatchManager.defaultDoc && !b)
+            if (xml != PatchManager.XmlDocs.MainDocument && !b)
             {
-                b = findNode(defNode, xpathLocal, PatchManager.defaultDoc);
+                b = findNode(defNode, xpathLocal, PatchManager.XmlDocs.MainDocument);
             }
             return RunPatchesConditional(b, caseTrue, caseFalse, xml);
         }

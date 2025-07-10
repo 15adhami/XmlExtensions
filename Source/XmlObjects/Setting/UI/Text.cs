@@ -59,7 +59,7 @@ namespace XmlExtensions.Setting
         {
             if (xpath != null)
             {
-                text = PatchManager.defaultDoc.SelectSingleNode(xpath).InnerText;
+                text = PatchManager.XmlDocs.MainDocument.SelectSingleNode(xpath).InnerText;
             }
             return true;
         }

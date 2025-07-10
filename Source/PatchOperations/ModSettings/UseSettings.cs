@@ -25,7 +25,7 @@ namespace XmlExtensions
                 NullError("modId");
                 return false;
             }
-            if (PatchManager.applyingPatches)
+            if (PatchManager.Coordinator.IsApplyingPatches)
             {
                 if (keys.Count > defaultValues.Count)
                 {
@@ -45,7 +45,7 @@ namespace XmlExtensions
                 bool didContain = SettingsManager.TryGetSetting(modId, keys[i], out string value);
                 if (!didContain)
                 {
-                    if (!PatchManager.applyingPatches)
+                    if (!PatchManager.Coordinator.IsApplyingPatches)
                     {
                         Error("No such key exists");
                         return false;
