@@ -250,6 +250,11 @@
             If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
             </summary>
         </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.addDefaultSpacing">
+            <summary>
+            Determines whether or not the default setting should be added after drawing the setting
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting

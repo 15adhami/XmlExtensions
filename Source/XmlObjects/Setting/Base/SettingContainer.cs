@@ -16,6 +16,11 @@ namespace XmlExtensions.Setting
         /// </summary>
         public SettingContainer ParentContainer = null;
 
+        /// <summary>
+        /// Determines whether or not the default setting should be added after drawing the setting
+        /// </summary>
+        protected bool addDefaultSpacing = true;
+
         private float cachedHeight = -1f;
         private int errHeight = -1;
         private string tag;
@@ -71,7 +76,7 @@ namespace XmlExtensions.Setting
                 {
                     cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
                 }
-                return cachedHeight;
+                return cachedHeight + (addDefaultSpacing ? GetDefaultSpacing() : 0);
             }
             catch
             {
@@ -106,7 +111,10 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        DrawSettingContents(inRect, selectedMod);
+                        Rect drawRect = inRect;
+                        if (addDefaultSpacing)
+                            drawRect = inRect.TopPartPixels(inRect.height - GetDefaultSpacing());
+                        DrawSettingContents(drawRect, selectedMod);
                     }
                 }
             }
