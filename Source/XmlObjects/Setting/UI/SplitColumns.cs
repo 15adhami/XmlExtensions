@@ -18,7 +18,8 @@ namespace XmlExtensions.Setting
         {
             Top,
             Middle,
-            Bottom
+            Bottom,
+            Aligned
         }
 
         private List<float> cachedHeights = new();
@@ -39,25 +40,121 @@ namespace XmlExtensions.Setting
         protected override bool Init(string selectedMod)
         {
             addDefaultSpacing = false;
-            int c = 0;
-            foreach (List<SettingContainer> list in settings)
+
+            if (anchors != null && anchors.Contains(Anchor.Aligned))
             {
-                c++;
-                if (!InitializeSettingsList(selectedMod, list, c.ToString()))
+                int alignedCount = 0;
+                for (int i = 0; i < anchors.Count; i++)
+                {
+                    if (anchors[i] == Anchor.Aligned)
+                        alignedCount++;
+                }
+
+                if (alignedCount < 2 && settings.Count >= 2)
+                {
+                    Error("At least two columns must use 'Aligned' if alignment is to be applied.");
+                    return false;
+                }
+            }
+
+            for (int i = 0; i < settings.Count; i++)
+            {
+                if (!InitializeSettingsList(selectedMod, settings[i], i.ToString()))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
             cachedHeights.Clear();
-            float offset = 0;
-            float maxHeight = 0;
+            float offset = 0f;
 
             List<float> activeSplits = GetActiveSplits();
+            bool anyAligned = anchors != null && anchors.Contains(Anchor.Aligned);
+
+            if (anyAligned)
+            {
+                // Determine column widths
+                List<float> columnWidths = new();
+                for (int i = 0; i < settings.Count; i++)
+                {
+                    float colWidth = GetColumnWidth(i, width, offset, activeSplits);
+                    columnWidths.Add(colWidth);
+                    offset += colWidth + gapSize;
+                }
+
+                // Determine maximum number of rows (longest column)
+                int maxRowCount = 0;
+                foreach (var column in settings)
+                {
+                    maxRowCount = Math.Max(maxRowCount, column?.Count ?? 0);
+                }
+
+                // Determine per-row max height
+                List<float> rowHeights = new();
+                for (int row = 0; row < maxRowCount; row++)
+                {
+                    float maxRowHeight = 0f;
+                    for (int col = 0; col < settings.Count; col++)
+                    {
+                        if (anchors[col] == Anchor.Aligned && row < (settings[col]?.Count ?? 0))
+                        {
+                            float h = settings[col][row].GetHeight(columnWidths[col], selectedMod);
+                            maxRowHeight = Math.Max(maxRowHeight, h);
+                        }
+                    }
+                    rowHeights.Add(maxRowHeight);
+                }
+
+                // Accumulate per-column total heights
+                for (int col = 0; col < settings.Count; col++)
+                {
+                    float totalColHeight = 0f;
+                    if (anchors[col] == Anchor.Aligned)
+                    {
+                        // Use rowHeights for aligned columns
+                        for (int row = 0; row < rowHeights.Count; row++)
+                        {
+                            if (row < (settings[col]?.Count ?? 0))
+                            {
+                                totalColHeight += rowHeights[row];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Use standard stacked height
+                        float colHeight = CalculateHeightSettingsList(columnWidths[col], selectedMod, settings[col]);
+                        totalColHeight = colHeight;
+                    }
+                    cachedHeights.Add(totalColHeight);
+                }
+
+                totalHeight = 0f;
+                foreach (float rowH in rowHeights)
+                {
+                    totalHeight += rowH;
+                }
+
+                // Include unaligned columns that might be taller
+                for (int col = 0; col < settings.Count; col++)
+                {
+                    if (anchors[col] != Anchor.Aligned)
+                    {
+                        totalHeight = Math.Max(totalHeight, cachedHeights[col]);
+                    }
+                }
+
+                return totalHeight;
+            }
+
+            // If no aligned anchors, fallback to default stacked mode
+            float maxHeight = 0;
+            offset = 0;
 
             for (int i = 0; i < settings.Count; i++)
             {
