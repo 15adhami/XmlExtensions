@@ -24,9 +24,9 @@ namespace XmlExtensions.Setting
             Aligned
         }
 
-        private float leftHeight = 0;
-        private float rightHeight = 0;
-        private float totalHeight = 0;
+        private float cachedLeftHeight, cachedRightHeight, cachedTotalHeight;
+        private float cachedLeftWidth, cachedRightWidth;
+        private List<float> cachedRowHeights = new();
 
         protected override bool Init(string selectedMod)
         {
@@ -44,6 +44,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
+            cachedRowHeights.Clear();
             float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
             float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
 
@@ -61,7 +62,8 @@ namespace XmlExtensions.Setting
                     leftWidth = width * split - gapSize / 2f;
                     rightWidth = width * (1 - split) - gapSize / 2f;
                 }
-
+                cachedLeftWidth = leftWidth;
+                cachedRightWidth = rightWidth;
                 int count = Math.Max(leftCol?.Count ?? 0, rightCol?.Count ?? 0);
                 float height = 0f;
 
@@ -69,39 +71,41 @@ namespace XmlExtensions.Setting
                 {
                     float lh = (i < (leftCol?.Count ?? 0)) ? leftCol[i].GetHeight(leftWidth, selectedMod) : 0f;
                     float rh = (i < (rightCol?.Count ?? 0)) ? rightCol[i].GetHeight(rightWidth, selectedMod) : 0f;
-                    height += Math.Max(lh, rh);
+                    float rowHeight = Math.Max(lh, rh);
+                    height += rowHeight;
+                    cachedRowHeights.Add(rowHeight);
                 }
 
-                leftHeight = height;
-                rightHeight = height;
+                cachedLeftHeight = height;
+                cachedRightHeight = height;
 
-                // Only apply pad to totalHeight depending on anchor
-                float leftTotal = anchor == Anchor.Bottom ? leftHeight + leftPad : leftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
-                float rightTotal = anchor == Anchor.Bottom ? rightHeight + rightPad : rightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
+                // Only apply pad to cachedTotalHeight depending on anchor
+                float leftTotal = anchor == Anchor.Bottom ? cachedLeftHeight + leftPad : cachedLeftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
+                float rightTotal = anchor == Anchor.Bottom ? cachedRightHeight + rightPad : cachedRightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
 
-                totalHeight = Math.Max(leftTotal, rightTotal);
-                return totalHeight;
+                cachedTotalHeight = Math.Max(leftTotal, rightTotal);
+                return cachedTotalHeight;
             }
             else
             {
                 if (this.width >= 0)
                 {
                     float leftSize = Math.Min(width, this.width - gapSize / 2f);
-                    leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
-                    rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
+                    cachedLeftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
+                    cachedRightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
                 }
                 else
                 {
-                    leftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol);
-                    rightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol);
+                    cachedLeftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol);
+                    cachedRightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol);
                 }
 
-                // Don't include pad in column height — only for totalHeight if anchored Bottom
-                float leftTotal = anchor == Anchor.Bottom ? leftHeight + leftPad : leftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
-                float rightTotal = anchor == Anchor.Bottom ? rightHeight + rightPad : rightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
+                // Don't include pad in column height — only for cachedTotalHeight if anchored Bottom
+                float leftTotal = anchor == Anchor.Bottom ? cachedLeftHeight + leftPad : cachedLeftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
+                float rightTotal = anchor == Anchor.Bottom ? cachedRightHeight + rightPad : cachedRightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
 
-                totalHeight = Math.Max(leftTotal, rightTotal);
-                return totalHeight;
+                cachedTotalHeight = Math.Max(leftTotal, rightTotal);
+                return cachedTotalHeight;
             }
         }
 
@@ -113,7 +117,8 @@ namespace XmlExtensions.Setting
             float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
             float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
 
-            float leftWidth, rightWidth;
+            float leftWidth = cachedLeftWidth;
+            float rightWidth = cachedRightWidth;
 
             if (width >= 0)
             {
@@ -132,14 +137,14 @@ namespace XmlExtensions.Setting
                 float rightY = inRect.y + rightPad;
                 int count = Math.Max(leftCol?.Count ?? 0, rightCol?.Count ?? 0);
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < cachedRowHeights.Count; i++)
                 {
                     SettingContainer left = (i < (leftCol?.Count ?? 0)) ? leftCol[i] : null;
                     SettingContainer right = (i < (rightCol?.Count ?? 0)) ? rightCol[i] : null;
 
                     float lh = left?.GetHeight(leftWidth, selectedMod) ?? 0f;
                     float rh = right?.GetHeight(rightWidth, selectedMod) ?? 0f;
-                    float pairHeight = Math.Max(lh, rh);
+                    float pairHeight = cachedRowHeights[i];
 
                     if (left != null)
                     {
@@ -163,20 +168,20 @@ namespace XmlExtensions.Setting
                 {
                     Color color = GUI.color;
                     GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
+                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, cachedTotalHeight), BaseContent.WhiteTex);
                     GUI.color = color;
                 }
             }
             else
             {
-                float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight);
-                float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight);
+                float leftYOffset = GetYOffset(anchor, cachedTotalHeight, cachedLeftHeight);
+                float rightYOffset = GetYOffset(anchor, cachedTotalHeight, cachedRightHeight);
 
                 if (anchor != Anchor.Bottom) leftYOffset += leftPad;
                 if (anchor != Anchor.Bottom) rightYOffset += rightPad;
 
-                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight);
-                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight);
+                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, cachedLeftHeight);
+                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, cachedRightHeight);
 
                 DrawSettingsList(leftRect, selectedMod, leftCol);
 
@@ -184,7 +189,7 @@ namespace XmlExtensions.Setting
                 {
                     Color color = GUI.color;
                     GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
+                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, cachedTotalHeight), BaseContent.WhiteTex);
                     GUI.color = color;
                 }
 
