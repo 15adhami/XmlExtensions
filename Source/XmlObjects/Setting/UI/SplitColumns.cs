@@ -135,11 +135,21 @@ namespace XmlExtensions.Setting
                     cachedHeights.Add(totalColHeight + pad);  // apply pad to individual column height
                 }
 
-                // Compute final total height from padded column heights
+                // Compute final total height accounting for bottom-anchored padding
                 totalHeight = 0f;
                 for (int col = 0; col < settings.Count; col++)
                 {
-                    totalHeight = Math.Max(totalHeight, cachedHeights[col]);
+                    float pad = padColumns?.Count > col ? padColumns[col] : 0f;
+                    float rawHeight = cachedHeights[col];
+
+                    if (anchors[col] == Anchor.Bottom)
+                    {
+                        totalHeight = Math.Max(totalHeight, rawHeight + pad);
+                    }
+                    else
+                    {
+                        totalHeight = Math.Max(totalHeight, rawHeight);
+                    }
                 }
 
                 return totalHeight;
@@ -256,7 +266,12 @@ namespace XmlExtensions.Setting
                 float colWidth = columnWidths[col];
                 float colHeight = cachedHeights[col];
                 float pad = padColumns?.Count > col ? padColumns[col] : 0f;
-                float yOffset = GetYOffset(anchors[col], totalHeight, colHeight) + pad;
+                Anchor anchor = anchors[col];
+                float yOffset = GetYOffset(anchor, totalHeight, colHeight);
+                if (anchor == Anchor.Bottom)
+                    yOffset += pad;
+                else
+                    yOffset += 0f; // top/middle already account for pad in height
 
                 Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, colWidth, colHeight);
                 DrawSettingsList(colRect, selectedMod, settings[col]);
