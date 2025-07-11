@@ -120,17 +120,6 @@ namespace XmlExtensions.Setting
             float leftWidth = cachedLeftWidth;
             float rightWidth = cachedRightWidth;
 
-            if (width >= 0)
-            {
-                leftWidth = Math.Min(inRect.width, width - gapSize / 2f);
-                rightWidth = Math.Max(inRect.width - leftWidth - gapSize, 0);
-            }
-            else
-            {
-                leftWidth = inRect.width * split - gapSize / 2f;
-                rightWidth = inRect.width * (1 - split) - gapSize / 2f;
-            }
-
             if (anchor == Anchor.Aligned)
             {
                 float leftY = inRect.y + leftPad;

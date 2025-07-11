@@ -23,8 +23,12 @@ namespace XmlExtensions.Setting
             Aligned
         }
 
+        // Caches for optimization
         private List<float> cachedHeights = new();
         private float totalHeight = 0f;
+        private List<float> columnWidths = [];
+        private List<float> rowHeights = [];
+        private List<float> colPads = [];
 
         internal override bool PreOpen(string selectedMod)
         {
@@ -72,31 +76,35 @@ namespace XmlExtensions.Setting
         protected override float CalculateHeight(float width, string selectedMod)
         {
             cachedHeights.Clear();
-            float offset = 0f;
+            columnWidths.Clear();
+            rowHeights.Clear();
+            colPads.Clear();
 
+            float offset = 0f;
             List<float> activeSplits = GetActiveSplits();
             bool anyAligned = anchors != null && anchors.Contains(Anchor.Aligned);
 
+            // Precompute column widths and padding
+            for (int i = 0; i < settings.Count; i++)
+            {
+                float colWidth = GetColumnWidth(i, width, offset, activeSplits);
+                columnWidths.Add(colWidth);
+                offset += colWidth + gapSize;
+
+                float pad = padColumns?.Count > i ? padColumns[i] : 0f;
+                colPads.Add(pad);
+            }
+
             if (anyAligned)
             {
-                // Determine column widths
-                List<float> columnWidths = new();
-                for (int i = 0; i < settings.Count; i++)
-                {
-                    float colWidth = GetColumnWidth(i, width, offset, activeSplits);
-                    columnWidths.Add(colWidth);
-                    offset += colWidth + gapSize;
-                }
-
-                // Determine maximum number of rows (longest column)
+                // Determine max row count
                 int maxRowCount = 0;
                 foreach (var column in settings)
                 {
                     maxRowCount = Math.Max(maxRowCount, column?.Count ?? 0);
                 }
 
-                // Determine per-row max height across aligned columns
-                List<float> rowHeights = new();
+                // Calculate max height for each row
                 for (int row = 0; row < maxRowCount; row++)
                 {
                     float maxRowHeight = 0f;
@@ -111,20 +119,16 @@ namespace XmlExtensions.Setting
                     rowHeights.Add(maxRowHeight);
                 }
 
-                // Per-column accumulated heights
+                // Calculate per-column height
                 for (int col = 0; col < settings.Count; col++)
                 {
-                    float pad = padColumns?.Count > col ? padColumns[col] : 0f;
                     float totalColHeight = 0f;
-
                     if (anchors[col] == Anchor.Aligned)
                     {
                         for (int row = 0; row < rowHeights.Count; row++)
                         {
                             if (row < (settings[col]?.Count ?? 0))
-                            {
                                 totalColHeight += rowHeights[row];
-                            }
                         }
                     }
                     else
@@ -132,42 +136,35 @@ namespace XmlExtensions.Setting
                         totalColHeight = CalculateHeightSettingsList(columnWidths[col], selectedMod, settings[col]);
                     }
 
-                    cachedHeights.Add(totalColHeight + pad);  // apply pad to individual column height
+                    float pad = colPads[col];
+                    cachedHeights.Add(totalColHeight + pad);
                 }
 
-                // Compute final total height accounting for bottom-anchored padding
+                // Final layout height considering bottom padding
                 totalHeight = 0f;
                 for (int col = 0; col < settings.Count; col++)
                 {
-                    float pad = padColumns?.Count > col ? padColumns[col] : 0f;
+                    float pad = colPads[col];
                     float rawHeight = cachedHeights[col];
 
                     if (anchors[col] == Anchor.Bottom)
-                    {
                         totalHeight = Math.Max(totalHeight, rawHeight + pad);
-                    }
                     else
-                    {
                         totalHeight = Math.Max(totalHeight, rawHeight);
-                    }
                 }
 
                 return totalHeight;
             }
 
-            // Non-aligned fallback
+            // Fallback for non-aligned layout
             float maxHeight = 0f;
             offset = 0f;
 
             for (int i = 0; i < settings.Count; i++)
             {
-                float colWidth = GetColumnWidth(i, width, offset, activeSplits);
-                float pad = padColumns?.Count > i ? padColumns[i] : 0f;
-                float colHeight = CalculateHeightSettingsList(colWidth, selectedMod, settings[i]) + pad;
-
+                float colHeight = CalculateHeightSettingsList(columnWidths[i], selectedMod, settings[i]) + colPads[i];
                 cachedHeights.Add(colHeight);
                 maxHeight = Math.Max(maxHeight, colHeight);
-                offset += colWidth + gapSize;
             }
 
             totalHeight = maxHeight;
@@ -175,55 +172,27 @@ namespace XmlExtensions.Setting
         }
 
 
+
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
             float offsetX = 0f;
-            float totalWidth = inRect.width;
-            List<float> activeSplits = GetActiveSplits();
-
-            // Precompute column widths
-            List<float> columnWidths = new(settings.Count);
-            for (int i = 0; i < settings.Count; i++)
-            {
-                columnWidths.Add(GetColumnWidth(i, totalWidth, offsetX, activeSplits));
-                offsetX += columnWidths[i] + gapSize;
-            }
-
             bool anyAligned = anchors.Contains(Anchor.Aligned);
+
             if (anyAligned)
             {
-                int maxRows = 0;
-                foreach (var col in settings)
-                {
-                    maxRows = Math.Max(maxRows, col?.Count ?? 0);
-                }
-
-                List<float> rowHeights = new(maxRows);
-                for (int row = 0; row < maxRows; row++)
-                {
-                    float maxRowHeight = 0f;
-                    for (int col = 0; col < settings.Count; col++)
-                    {
-                        if (anchors[col] == Anchor.Aligned && row < (settings[col]?.Count ?? 0))
-                        {
-                            float h = settings[col][row].GetHeight(columnWidths[col], selectedMod);
-                            maxRowHeight = Math.Max(maxRowHeight, h);
-                        }
-                    }
-                    rowHeights.Add(maxRowHeight);
-                }
+                int maxRows = rowHeights.Count;
 
                 offsetX = 0f;
                 for (int col = 0; col < settings.Count; col++)
                 {
                     float x = inRect.x + offsetX;
                     float w = columnWidths[col];
-                    float pad = padColumns?.Count > col ? padColumns[col] : 0f;
+                    float pad = colPads[col];
 
                     if (anchors[col] == Anchor.Aligned)
                     {
                         float y = inRect.y + pad;
-                        for (int row = 0; row < rowHeights.Count; row++)
+                        for (int row = 0; row < maxRows; row++)
                         {
                             if (row < (settings[col]?.Count ?? 0))
                             {
@@ -239,7 +208,10 @@ namespace XmlExtensions.Setting
                     else
                     {
                         float h = cachedHeights[col];
-                        float yOffset = GetYOffset(anchors[col], totalHeight, h) + pad;
+                        float yOffset = GetYOffset(anchors[col], totalHeight, h);
+                        if (anchors[col] == Anchor.Bottom)
+                            yOffset += pad;
+
                         Rect r = new Rect(x, inRect.y + yOffset, w, h);
                         DrawSettingsList(r, selectedMod, settings[col]);
                     }
@@ -263,32 +235,29 @@ namespace XmlExtensions.Setting
             offsetX = 0f;
             for (int col = 0; col < settings.Count; col++)
             {
-                float colWidth = columnWidths[col];
-                float colHeight = cachedHeights[col];
-                float pad = padColumns?.Count > col ? padColumns[col] : 0f;
+                float w = columnWidths[col];
+                float h = cachedHeights[col];
+                float pad = colPads[col];
                 Anchor anchor = anchors[col];
-                float yOffset = GetYOffset(anchor, totalHeight, colHeight);
+
+                float yOffset = GetYOffset(anchor, totalHeight, h);
                 if (anchor == Anchor.Bottom)
                     yOffset += pad;
-                else
-                    yOffset += 0f; // top/middle already account for pad in height
 
-                Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, colWidth, colHeight);
+                Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, w, h);
                 DrawSettingsList(colRect, selectedMod, settings[col]);
 
                 if (drawLine && col < settings.Count - 1)
                 {
                     Color old = GUI.color;
                     GUI.color = old * new Color(1f, 1f, 1f, 0.4f);
-                    GUI.DrawTexture(new Rect(inRect.x + offsetX + colWidth + gapSize / 2f, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
+                    GUI.DrawTexture(new Rect(inRect.x + offsetX + w + gapSize / 2f, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
                     GUI.color = old;
                 }
 
-                offsetX += colWidth + gapSize;
+                offsetX += w + gapSize;
             }
         }
-
-
 
 
         private float GetColumnWidth(int index, float totalWidth, float offset, List<float> activeSplits)
@@ -305,15 +274,6 @@ namespace XmlExtensions.Setting
             {
                 return totalWidth - offset - gapSize;
             }
-        }
-
-        private Anchor GetPosition(int index)
-        {
-            if (anchors != null && index < anchors.Count)
-            {
-                return anchors[index];
-            }
-            return Anchor.Top;
         }
 
         private float GetYOffset(Anchor pos, float total, float col)
