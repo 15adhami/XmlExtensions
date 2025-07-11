@@ -11,8 +11,15 @@ namespace XmlExtensions
         public string defaultValue;
         public List<string> keys;
         public List<string> defaultValues;
+        public Logic logic = Logic.And;
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
+
+        public enum Logic
+        {
+            And,
+            Or
+        }
 
         protected override void SetException()
         {
@@ -77,7 +84,20 @@ namespace XmlExtensions
                         settingValue = defaultValues[i];
                         SettingsManager.SetSetting(modId, keys[i], defaultValues[i]);
                     }
-                    flag = flag && bool.Parse(settingValue);
+                    bool val = bool.Parse(settingValue);
+                    if (logic == Logic.And)
+                    {
+                        flag = flag && val;
+                    }
+                    else if (val)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
                 }
             }
             else
