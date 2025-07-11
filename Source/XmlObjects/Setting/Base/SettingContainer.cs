@@ -41,10 +41,18 @@ namespace XmlExtensions.Setting
         /// </summary>
         protected float padRight = 0f;
 
+        /// <summary>
+        /// Set to true to display the dimensions of the setting
+        /// </summary>
+        protected bool showDimensions = false;
+
+        /// <summary>
+        /// Used to help reference the setting via xpath
+        /// </summary>
+        protected string tag;
+
         private float cachedHeight = -1f;
         private int errHeight = -1;
-        private string tag;
-        private bool showDimensions = false;
 
         // Public methods
 

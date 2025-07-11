@@ -275,6 +275,16 @@
             How many pixels to pad to the right of the setting
             </summary>
         </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.showDimensions">
+            <summary>
+            Set to true to display the dimensions of the setting
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.tag">
+            <summary>
+            Used to help reference the setting via xpath
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
