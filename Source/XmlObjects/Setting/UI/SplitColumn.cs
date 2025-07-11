@@ -72,9 +72,14 @@ namespace XmlExtensions.Setting
                     height += Math.Max(lh, rh);
                 }
 
-                leftHeight = height + leftPad;
-                rightHeight = height + rightPad;
-                totalHeight = Math.Max(leftHeight, rightHeight);
+                leftHeight = height;
+                rightHeight = height;
+
+                // Only apply pad to totalHeight depending on anchor
+                float leftTotal = anchor == Anchor.Bottom ? leftHeight + leftPad : leftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
+                float rightTotal = anchor == Anchor.Bottom ? rightHeight + rightPad : rightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
+
+                totalHeight = Math.Max(leftTotal, rightTotal);
                 return totalHeight;
             }
             else
@@ -82,19 +87,24 @@ namespace XmlExtensions.Setting
                 if (this.width >= 0)
                 {
                     float leftSize = Math.Min(width, this.width - gapSize / 2f);
-                    leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol) + leftPad;
-                    rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol) + rightPad;
+                    leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
+                    rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
                 }
                 else
                 {
-                    leftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol) + leftPad;
-                    rightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol) + rightPad;
+                    leftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol);
+                    rightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol);
                 }
 
-                totalHeight = Math.Max(leftHeight, rightHeight);
+                // Don't include pad in column height — only for totalHeight if anchored Bottom
+                float leftTotal = anchor == Anchor.Bottom ? leftHeight + leftPad : leftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
+                float rightTotal = anchor == Anchor.Bottom ? rightHeight + rightPad : rightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
+
+                totalHeight = Math.Max(leftTotal, rightTotal);
                 return totalHeight;
             }
         }
+
 
 
 
@@ -159,11 +169,14 @@ namespace XmlExtensions.Setting
             }
             else
             {
-                float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight) + leftPad;
-                float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight) + rightPad;
+                float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight);
+                float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight);
 
-                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight - leftPad);
-                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight - rightPad);
+                if (anchor != Anchor.Bottom) leftYOffset += leftPad;
+                if (anchor != Anchor.Bottom) rightYOffset += rightPad;
+
+                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight);
+                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight);
 
                 DrawSettingsList(leftRect, selectedMod, leftCol);
 
@@ -178,6 +191,7 @@ namespace XmlExtensions.Setting
                 DrawSettingsList(rightRect, selectedMod, rightCol);
             }
         }
+
 
 
         private float GetYOffset(Anchor pos, float total, float col)
