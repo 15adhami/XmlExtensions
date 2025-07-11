@@ -9,11 +9,12 @@ namespace XmlExtensions.Setting
     {
         public float split = 0.50f;
         public float width = -1f;
+        public int gapSize = 6;
+        public bool drawLine = false;
+        public Anchor anchor = Anchor.Top;
         public List<SettingContainer> leftCol;
         public List<SettingContainer> rightCol;
-        public Anchor anchor = Anchor.Top;
-        public bool drawLine = false;
-        public int gapSize = 6;
+        public List<float> padColumns;
 
         public enum Anchor
         {
@@ -43,6 +44,9 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width, string selectedMod)
         {
+            float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
+            float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
+
             if (anchor == Anchor.Aligned)
             {
                 float leftWidth, rightWidth;
@@ -68,7 +72,9 @@ namespace XmlExtensions.Setting
                     height += Math.Max(lh, rh);
                 }
 
-                leftHeight = rightHeight = totalHeight = height;
+                leftHeight = height + leftPad;
+                rightHeight = height + rightPad;
+                totalHeight = Math.Max(leftHeight, rightHeight);
                 return totalHeight;
             }
             else
@@ -76,13 +82,13 @@ namespace XmlExtensions.Setting
                 if (this.width >= 0)
                 {
                     float leftSize = Math.Min(width, this.width - gapSize / 2f);
-                    leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
-                    rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
+                    leftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol) + leftPad;
+                    rightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol) + rightPad;
                 }
                 else
                 {
-                    leftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol);
-                    rightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol);
+                    leftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol) + leftPad;
+                    rightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol) + rightPad;
                 }
 
                 totalHeight = Math.Max(leftHeight, rightHeight);
@@ -91,8 +97,12 @@ namespace XmlExtensions.Setting
         }
 
 
+
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
+            float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
+            float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
+
             float leftWidth, rightWidth;
 
             if (width >= 0)
@@ -108,7 +118,8 @@ namespace XmlExtensions.Setting
 
             if (anchor == Anchor.Aligned)
             {
-                float yOffset = inRect.y;
+                float leftY = inRect.y + leftPad;
+                float rightY = inRect.y + rightPad;
                 int count = Math.Max(leftCol?.Count ?? 0, rightCol?.Count ?? 0);
 
                 for (int i = 0; i < count; i++)
@@ -123,35 +134,36 @@ namespace XmlExtensions.Setting
                     if (left != null)
                     {
                         float yOff = (pairHeight - lh) / 2f;
-                        Rect rect = new Rect(inRect.x, yOffset + yOff, leftWidth, lh);
+                        Rect rect = new Rect(inRect.x, leftY + yOff, leftWidth, lh);
                         left.DrawSetting(rect, selectedMod);
                     }
 
                     if (right != null)
                     {
                         float yOff = (pairHeight - rh) / 2f;
-                        Rect rect = new Rect(inRect.x + inRect.width - rightWidth, yOffset + yOff, rightWidth, rh);
+                        Rect rect = new Rect(inRect.x + inRect.width - rightWidth, rightY + yOff, rightWidth, rh);
                         right.DrawSetting(rect, selectedMod);
                     }
 
-                    yOffset += pairHeight;
+                    leftY += pairHeight;
+                    rightY += pairHeight;
                 }
 
                 if (drawLine)
                 {
                     Color color = GUI.color;
                     GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
-                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, yOffset - inRect.y), BaseContent.WhiteTex);
+                    GUI.DrawTexture(new Rect(inRect.center.x, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
                     GUI.color = color;
                 }
             }
             else
             {
-                float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight);
-                float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight);
+                float leftYOffset = GetYOffset(anchor, totalHeight, leftHeight) + leftPad;
+                float rightYOffset = GetYOffset(anchor, totalHeight, rightHeight) + rightPad;
 
-                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight);
-                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight);
+                Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, leftHeight - leftPad);
+                Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, rightHeight - rightPad);
 
                 DrawSettingsList(leftRect, selectedMod, leftCol);
 
@@ -166,6 +178,7 @@ namespace XmlExtensions.Setting
                 DrawSettingsList(rightRect, selectedMod, rightCol);
             }
         }
+
 
         private float GetYOffset(Anchor pos, float total, float col)
         {
