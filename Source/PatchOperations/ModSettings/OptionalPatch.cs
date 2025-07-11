@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -8,17 +9,27 @@ namespace XmlExtensions
         public string key;
         public string modId;
         public string defaultValue;
+        public List<string> keys;
+        public List<string> defaultValues;
         public XmlContainer caseTrue;
         public XmlContainer caseFalse;
 
         protected override void SetException()
         {
-            CreateExceptions(key, "key", defaultValue, "defaultValue");
+            if (keys == null)
+            {
+                CreateExceptions(key, "key", defaultValue, "defaultValue");
+            }
+            else
+            {
+                CreateExceptions("[list]", "keys", "[list]", "defaultValues");
+            }
         }
 
         protected override bool Patch(XmlDocument xml)
         {
-            if (key == null)
+            // Default case
+            if (key == null && keys == null)
             {
                 NullError("key");
                 return false;
@@ -28,20 +39,64 @@ namespace XmlExtensions
                 NullError("modId");
                 return false;
             }
-            if (defaultValue == null)
+            if (defaultValue == null && defaultValues == null)
             {
                 NullError("defaultValue");
                 return false;
             }
             SettingsManager.AddMod(modId);
-            SettingsManager.SetDefaultValue(modId, key, defaultValue);
-            bool didContain = SettingsManager.TryGetSetting(modId, key, out string value);
-            if (!didContain)
+            string settingValue;
+            bool didContain;
+            bool flag = true;
+
+            // Handle case of multiple keys first
+            if (keys != null)
             {
-                value = defaultValue;
-                SettingsManager.SetSetting(modId, key, defaultValue);
+                
+                if (keys.Count > defaultValues.Count)
+                {
+                    Error("There are more keys than defaultValues");
+                    return false;
+                }
+                else if (keys.Count < defaultValues.Count)
+                {
+                    Error("There are more defaultValues than keys");
+                    return false;
+                }
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    SettingsManager.SetDefaultValue(modId, keys[i], defaultValues[i]);
+                    didContain = SettingsManager.TryGetSetting(modId, keys[i], out settingValue);
+                    if (!didContain)
+                    {
+                        if (!PatchManager.Coordinator.IsApplyingPatches)
+                        {
+                            Error("No such key exists");
+                            return false;
+                        }
+                        settingValue = defaultValues[i];
+                        SettingsManager.SetSetting(modId, keys[i], defaultValues[i]);
+                    }
+                    flag = flag && bool.Parse(settingValue);
+                }
             }
-            return RunPatchesConditional(bool.Parse(value), caseTrue, caseFalse, xml);
+            else
+            { // Standard case
+                SettingsManager.SetDefaultValue(modId, key, defaultValue);
+                didContain = SettingsManager.TryGetSetting(modId, key, out settingValue);
+                if (!didContain)
+                {
+                    if (!PatchManager.Coordinator.IsApplyingPatches)
+                    {
+                        Error("No such key exists");
+                        return false;
+                    }
+                    settingValue = defaultValue;
+                    SettingsManager.SetSetting(modId, key, defaultValue);
+                }
+                flag = bool.Parse(settingValue);
+            }
+            return RunPatchesConditional(flag, caseTrue, caseFalse, xml);
         }
     }
 }
