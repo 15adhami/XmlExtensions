@@ -265,6 +265,16 @@
             How many pixels to pad below the setting
             </summary>
         </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.padLeft">
+            <summary>
+            How many pixels to pad to the left of the setting
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.padRight">
+            <summary>
+            How many pixels to pad to the right of the setting
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting

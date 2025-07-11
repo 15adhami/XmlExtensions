@@ -31,6 +31,16 @@ namespace XmlExtensions.Setting
         /// </summary>
         protected float padBelow = 0f;
 
+        /// <summary>
+        /// How many pixels to pad to the left of the setting
+        /// </summary>
+        protected float padLeft = 0f;
+
+        /// <summary>
+        /// How many pixels to pad to the right of the setting
+        /// </summary>
+        protected float padRight = 0f;
+
         private float cachedHeight = -1f;
         private int errHeight = -1;
         private string tag;
@@ -82,13 +92,20 @@ namespace XmlExtensions.Setting
                 {
                     return errHeight;
                 }
+
                 if (cachedHeight < 0)
                 {
-                    cachedHeight = errHeight < 0 ? CalculateHeight(width, selectedMod) : errHeight;
+                    float effectiveWidth = width - (padLeft > 0 ? padLeft : 0f) - (padRight > 0 ? padRight : 0f);
+
+                    cachedHeight = errHeight;
+                    if (errHeight < 0)
+                    {
+                        cachedHeight = CalculateHeight(effectiveWidth, selectedMod);
+                        cachedHeight += padAbove > 0 ? padAbove : 0f;
+                        cachedHeight += padBelow > 0 ? padBelow : 0f;
+                        cachedHeight += addDefaultSpacing ? GetDefaultSpacing() : 0f;
+                    }
                 }
-                cachedHeight += addDefaultSpacing ? GetDefaultSpacing() : 0f;
-                cachedHeight += padAbove > 0 ? padAbove : 0f;
-                cachedHeight += padBelow > 0 ? padBelow : 0f;
                 return cachedHeight;
             }
             catch
@@ -117,26 +134,40 @@ namespace XmlExtensions.Setting
                 }
                 else
                 {
+                    float topPad = padAbove > 0 ? padAbove : 0f;
+                    float bottomPad = padBelow > 0 ? padBelow : 0f;
+                    float leftPad = padLeft > 0 ? padLeft : 0f;
+                    float rightPad = padRight > 0 ? padRight : 0f;
+                    float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
+
+                    Rect drawRect = new Rect(
+                        inRect.x + leftPad,
+                        inRect.y + topPad,
+                        inRect.width - leftPad - rightPad,
+                        inRect.height - topPad - bottomPad - spacing
+                    );
+
                     if (showDimensions)
                     {
+                        Color originalColor = GUI.color;
+
+                        // Outer full rectangle
+                        GUI.color = Color.gray;
                         Widgets.DrawBox(inRect);
-                        Widgets.Label(inRect, " " + inRect.width.ToString() + "x" + ((int)GetHeight(inRect.width, selectedMod)).ToString());
+
+                        // Inner padded rectangle
+                        GUI.color = Color.white;
+                        Widgets.DrawBox(drawRect);
+
+                        // Label dimensions inside drawRect
+                        Widgets.Label(drawRect, $" {drawRect.width:0}x{drawRect.height:0}");
+
+                        GUI.color = originalColor;
                     }
                     else
                     {
-                        float topPad = padAbove > 0 ? padAbove : 0f;
-                        float bottomPad = padBelow > 0 ? padBelow : 0f;
-                        float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
-
-                        Rect drawRect = new Rect(
-                            inRect.x,
-                            inRect.y + topPad,
-                            inRect.width,
-                            inRect.height - topPad - bottomPad - spacing
-                        );
-
                         DrawSettingContents(drawRect, selectedMod);
-                    }
+                    } 
                 }
             }
             catch
@@ -146,8 +177,10 @@ namespace XmlExtensions.Setting
                 errHeight = 22;
                 GUI.color = Color.white;
             }
+
             cachedHeight = -1f;
         }
+
 
         // Methods to override
 
