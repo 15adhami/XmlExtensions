@@ -47,30 +47,32 @@ namespace XmlExtensions.Setting
             cachedRowHeights.Clear();
             float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
             float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
+            float leftWidth, rightWidth;
 
+            // Compute and cache column widths
+            if (this.width >= 0)
+            {
+                leftWidth = Math.Min(width, this.width - gapSize / 2f);
+                rightWidth = Math.Max(width - leftWidth - gapSize, 0);
+            }
+            else
+            {
+                leftWidth = width * split - gapSize / 2f;
+                rightWidth = width * (1 - split) - gapSize / 2f;
+            }
+            cachedLeftWidth = leftWidth;
+            cachedRightWidth = rightWidth;
+
+            // Compute and cache column heights
             if (anchor == Anchor.Aligned)
             {
-                float leftWidth, rightWidth;
-
-                if (this.width >= 0)
-                {
-                    leftWidth = Math.Min(width, this.width - gapSize / 2f);
-                    rightWidth = Math.Max(width - leftWidth - gapSize, 0);
-                }
-                else
-                {
-                    leftWidth = width * split - gapSize / 2f;
-                    rightWidth = width * (1 - split) - gapSize / 2f;
-                }
-                cachedLeftWidth = leftWidth;
-                cachedRightWidth = rightWidth;
                 int count = Math.Max(leftCol?.Count ?? 0, rightCol?.Count ?? 0);
                 float height = 0f;
 
                 for (int i = 0; i < count; i++)
                 {
-                    float lh = (i < (leftCol?.Count ?? 0)) ? leftCol[i].GetHeight(leftWidth, selectedMod) : 0f;
-                    float rh = (i < (rightCol?.Count ?? 0)) ? rightCol[i].GetHeight(rightWidth, selectedMod) : 0f;
+                    float lh = (i < (leftCol?.Count ?? 0)) ? leftCol[i].GetHeight(cachedLeftWidth, selectedMod) : 0f;
+                    float rh = (i < (rightCol?.Count ?? 0)) ? rightCol[i].GetHeight(cachedRightWidth, selectedMod) : 0f;
                     float rowHeight = Math.Max(lh, rh);
                     height += rowHeight;
                     cachedRowHeights.Add(rowHeight);
@@ -78,35 +80,20 @@ namespace XmlExtensions.Setting
 
                 cachedLeftHeight = height;
                 cachedRightHeight = height;
-
-                // Only apply pad to cachedTotalHeight depending on anchor
-                float leftTotal = anchor == Anchor.Bottom ? cachedLeftHeight + leftPad : cachedLeftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
-                float rightTotal = anchor == Anchor.Bottom ? cachedRightHeight + rightPad : cachedRightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
-
-                cachedTotalHeight = Math.Max(leftTotal, rightTotal);
-                return cachedTotalHeight;
             }
             else
             {
-                if (this.width >= 0)
-                {
-                    float leftSize = Math.Min(width, this.width - gapSize / 2f);
-                    cachedLeftHeight = CalculateHeightSettingsList(leftSize, selectedMod, leftCol);
-                    cachedRightHeight = CalculateHeightSettingsList(Math.Max(width - leftSize - gapSize, 0), selectedMod, rightCol);
-                }
-                else
-                {
-                    cachedLeftHeight = CalculateHeightSettingsList(width * split - gapSize / 2f, selectedMod, leftCol);
-                    cachedRightHeight = CalculateHeightSettingsList(width * (1 - split) - gapSize / 2f, selectedMod, rightCol);
-                }
-
-                // Don't include pad in column height — only for cachedTotalHeight if anchored Bottom
-                float leftTotal = anchor == Anchor.Bottom ? cachedLeftHeight + leftPad : cachedLeftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
-                float rightTotal = anchor == Anchor.Bottom ? cachedRightHeight + rightPad : cachedRightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
-
-                cachedTotalHeight = Math.Max(leftTotal, rightTotal);
-                return cachedTotalHeight;
+                cachedLeftHeight = CalculateHeightSettingsList(cachedLeftWidth, selectedMod, leftCol);
+                cachedRightHeight = CalculateHeightSettingsList(cachedRightWidth, selectedMod, rightCol);
             }
+
+            // Add padding
+            float leftTotal = anchor == Anchor.Bottom ? cachedLeftHeight + leftPad : cachedLeftHeight + (anchor == Anchor.Aligned ? leftPad : 0f);
+            float rightTotal = anchor == Anchor.Bottom ? cachedRightHeight + rightPad : cachedRightHeight + (anchor == Anchor.Aligned ? rightPad : 0f);
+
+            // Compute and cache overall height
+            cachedTotalHeight = Math.Max(leftTotal, rightTotal);
+            return cachedTotalHeight;
         }
 
 
