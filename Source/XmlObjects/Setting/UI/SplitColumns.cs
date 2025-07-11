@@ -171,22 +171,102 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect, string selectedMod)
         {
-            float offsetX = 0;
+            float offsetX = 0f;
             float totalWidth = inRect.width;
-
             List<float> activeSplits = GetActiveSplits();
 
+            // Precompute column widths
+            List<float> columnWidths = new(settings.Count);
             for (int i = 0; i < settings.Count; i++)
             {
-                float colWidth = GetColumnWidth(i, totalWidth, offsetX, activeSplits);
-                float colHeight = cachedHeights[i];
-                Anchor colPosition = GetPosition(i);
-                float yOffset = GetYOffset(colPosition, totalHeight, colHeight);
+                columnWidths.Add(GetColumnWidth(i, totalWidth, offsetX, activeSplits));
+                offsetX += columnWidths[i] + gapSize;
+            }
+
+            // Check for aligned layout
+            bool anyAligned = anchors.Contains(Anchor.Aligned);
+            if (anyAligned)
+            {
+                int maxRows = 0;
+                foreach (var col in settings)
+                {
+                    maxRows = Math.Max(maxRows, col?.Count ?? 0);
+                }
+
+                // Compute max height per row (only across aligned columns)
+                List<float> rowHeights = new(maxRows);
+                for (int row = 0; row < maxRows; row++)
+                {
+                    float maxRowHeight = 0f;
+                    for (int col = 0; col < settings.Count; col++)
+                    {
+                        if (anchors[col] == Anchor.Aligned && row < (settings[col]?.Count ?? 0))
+                        {
+                            float h = settings[col][row].GetHeight(columnWidths[col], selectedMod);
+                            maxRowHeight = Math.Max(maxRowHeight, h);
+                        }
+                    }
+                    rowHeights.Add(maxRowHeight);
+                }
+
+                // Draw each column
+                offsetX = 0f;
+                for (int col = 0; col < settings.Count; col++)
+                {
+                    float x = inRect.x + offsetX;
+                    float w = columnWidths[col];
+                    float y = inRect.y;
+
+                    if (anchors[col] == Anchor.Aligned)
+                    {
+                        for (int row = 0; row < rowHeights.Count; row++)
+                        {
+                            if (row < (settings[col]?.Count ?? 0))
+                            {
+                                SettingContainer setting = settings[col][row];
+                                float h = setting.GetHeight(w, selectedMod);
+                                float yOffset = (rowHeights[row] - h) / 2f;
+                                Rect r = new Rect(x, y + yOffset, w, h);
+                                setting.DrawSetting(r, selectedMod);
+                            }
+                            y += rowHeights[row];
+                        }
+                    }
+                    else
+                    {
+                        float h = cachedHeights[col];
+                        float yOffset = GetYOffset(anchors[col], totalHeight, h);
+                        Rect r = new Rect(x, inRect.y + yOffset, w, h);
+                        DrawSettingsList(r, selectedMod, settings[col]);
+                    }
+
+                    // Divider
+                    if (drawLine && col < settings.Count - 1)
+                    {
+                        Color old = GUI.color;
+                        GUI.color = old * new Color(1f, 1f, 1f, 0.4f);
+                        GUI.DrawTexture(new Rect(x + w + gapSize / 2f, inRect.y, 1f, totalHeight), BaseContent.WhiteTex);
+                        GUI.color = old;
+                    }
+
+                    offsetX += w + gapSize;
+                }
+
+                return;
+            }
+
+            // Fallback: all columns non-aligned
+            offsetX = 0f;
+            for (int col = 0; col < settings.Count; col++)
+            {
+                float colWidth = columnWidths[col];
+                float colHeight = cachedHeights[col];
+                float yOffset = GetYOffset(anchors[col], totalHeight, colHeight);
 
                 Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, colWidth, colHeight);
-                DrawSettingsList(colRect, selectedMod, settings[i]);
+                DrawSettingsList(colRect, selectedMod, settings[col]);
 
-                if (drawLine && i < settings.Count - 1)
+                if (drawLine && col < settings.Count - 1)
                 {
                     Color old = GUI.color;
                     GUI.color = old * new Color(1f, 1f, 1f, 0.4f);
@@ -197,6 +277,7 @@ namespace XmlExtensions.Setting
                 offsetX += colWidth + gapSize;
             }
         }
+
 
         private float GetColumnWidth(int index, float totalWidth, float offset, List<float> activeSplits)
         {
