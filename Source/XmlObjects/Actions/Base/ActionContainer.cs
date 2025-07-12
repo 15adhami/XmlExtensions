@@ -1,4 +1,5 @@
 ﻿using System;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions.Action
 {
@@ -19,6 +20,24 @@ namespace XmlExtensions.Action
 
         private protected sealed override void SetException()
         {
+        }
+
+        public bool Initialize()
+        {
+            try
+            {
+                return Init();
+            }
+            catch (Exception e)
+            {
+                Error("Failed to initialize:\n" + e.Message);
+                return false;
+            }
+        }
+
+        protected virtual bool Init()
+        {
+            return true;
         }
 
         /// <summary>

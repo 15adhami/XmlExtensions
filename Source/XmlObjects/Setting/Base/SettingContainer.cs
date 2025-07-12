@@ -53,6 +53,7 @@ namespace XmlExtensions.Setting
 
         private float cachedHeight = -1f;
         private int errHeight = -1;
+        private bool initialized = false;
 
         // Public methods
 
@@ -62,28 +63,33 @@ namespace XmlExtensions.Setting
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         public bool Initialize(string selectedMod, SettingContainer parent = null)
         {
-            ParentContainer = parent;
-            try
+            if (!initialized)
             {
-                if (!SetDefaultValue(selectedMod))
+                initialized = true;
+                ParentContainer = parent;
+                try
                 {
+                    if (!SetDefaultValue(selectedMod))
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Error("Failed to set the default value:\n" + e.Message);
+                    return false;
+                }
+                try
+                {
+                    return Init(selectedMod);
+                }
+                catch (Exception e)
+                {
+                    Error("Failed to initialize:\n" + e.Message);
                     return false;
                 }
             }
-            catch (Exception e)
-            {
-                Error("Failed to set the default value:\n" + e.Message);
-                return false;
-            }
-            try
-            {
-                return Init(selectedMod);
-            }
-            catch (Exception e)
-            {
-                Error("Failed to initialize:\n" + e.Message);
-                return false;
-            }
+            return true;
         }
 
         /// <summary>

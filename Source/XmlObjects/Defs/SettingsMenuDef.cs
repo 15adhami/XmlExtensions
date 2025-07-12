@@ -103,6 +103,7 @@ namespace XmlExtensions
                     foreach (KeyedAction action in keyedActions)
                     {
                         action.modId = modId;
+                        action.Initialize();
                         XmlMod.AddKeyedAction(modId, action.key, action);
                     }
                 }
@@ -111,6 +112,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in preOpenActions)
                     {
                         action.modId = modId;
+                        action.Initialize();
                     }
                 }
                 if (postCloseActions != null)
@@ -118,6 +120,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in postCloseActions)
                     {
                         action.modId = modId;
+                        action.Initialize();
                     }
                 }
                 if (onFrameActions != null)
@@ -125,6 +128,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in onFrameActions)
                     {
                         action.modId = modId;
+                        action.Initialize();
                     }
                 }
             }
