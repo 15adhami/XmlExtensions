@@ -8,13 +8,13 @@ namespace XmlExtensions.Setting
     {
         private int h = 22;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             addDefaultSpacing = false;
             return Math.Max(22, h);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Widgets.DrawBox(inRect);
             Rect numericRect = inRect.LeftPartPixels(120).TopPartPixels(22);

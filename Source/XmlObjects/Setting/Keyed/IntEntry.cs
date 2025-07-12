@@ -11,14 +11,14 @@ namespace XmlExtensions.Setting
         public string min;
         public string max;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 24;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            int f = int.Parse(SettingsManager.GetSetting(selectedMod, key));
+            int f = int.Parse(SettingsManager.GetSetting(modId, key));
 
             if (min != null && f < int.Parse(min))
                 f = int.Parse(min);
@@ -53,7 +53,7 @@ namespace XmlExtensions.Setting
                 SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera(null);
             }
             Widgets.TextFieldNumeric<int>(new Rect(rect.xMin + (float)(num * 2), rect.yMin, rect.width - (float)(num * 4), rect.height), ref value, ref editBuffer, -9999999f, 1E+09f);
-            SettingsManager.SetSetting(selectedMod, key, value.ToString());
+            SettingsManager.SetSetting(modId, key, value.ToString());
         }
     }
 }

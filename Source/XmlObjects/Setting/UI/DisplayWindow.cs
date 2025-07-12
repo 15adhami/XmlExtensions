@@ -63,14 +63,14 @@ namespace XmlExtensions.Setting
                     listing.Begin(inRect);
                     foreach (SettingContainer setting in settings)
                     {
-                        setting.DrawSetting(listing.GetRect(setting.GetHeight(inRect.width, modId)), modId);
+                        setting.DrawSetting(listing.GetRect(setting.GetHeight(inRect.width)));
                     }
                     listing.End();
                 }
             }
         }
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (label == null)
             {
@@ -80,22 +80,22 @@ namespace XmlExtensions.Setting
             if (menu != null)
             {
                 ScrollView scrollView = new() { settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings };
-                settings = new List<SettingContainer>() { scrollView };
+                settings = [ scrollView ];
             }
             else if (settings != null)
             {
                 ScrollView scrollView = new() { settings = settings };
-                settings = new List<SettingContainer>() { scrollView };
+                settings = [ scrollView ];
             }
-            return InitializeSettingsList(selectedMod, settings);
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 30;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
             {
@@ -103,7 +103,7 @@ namespace XmlExtensions.Setting
                 window.initSize.x = size.x + 36 + 16;
                 window.initSize.y = size.y + 36;
                 window.settings = settings;
-                window.modId = selectedMod;
+                window.modId = modId;
                 window.resizeable = resizeable;
                 window.doCloseButton = doCloseButton;
                 window.doCloseX = doCloseX;
@@ -122,9 +122,14 @@ namespace XmlExtensions.Setting
             }
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            return PreOpenSettingsList(selectedMod, settings);
+            return PreOpenContainers(settings);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(settings);
         }
     }
 }

@@ -11,27 +11,32 @@ namespace XmlExtensions.Setting
 
         private Vector2 scrollPos = Vector2.zero;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
-            return InitializeSettingsList(selectedMod, settings);
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return height;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            Rect scrollRect = new Rect(0, 0, inRect.width - 16f, CalculateHeightSettingsList(inRect.width - 16f, selectedMod, settings));
+            Rect scrollRect = new Rect(0, 0, inRect.width - 16f, CalculateHeightSettingsList(inRect.width - 16f, settings));
             Widgets.BeginScrollView(inRect, ref scrollPos, scrollRect);
-            DrawSettingsList(scrollRect, selectedMod, settings);
+            DrawSettingsList(scrollRect, settings);
             Widgets.EndScrollView();
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            return PreOpenSettingsList(selectedMod, settings);
+            return PreOpenContainers(settings);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(settings);
         }
     }
 }

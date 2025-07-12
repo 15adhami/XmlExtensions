@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
         public string menu;
         public string tKey;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (label == null)
             {
@@ -19,12 +19,12 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 30;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
             {

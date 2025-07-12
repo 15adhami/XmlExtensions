@@ -5,12 +5,12 @@ namespace XmlExtensions.Setting
 {
     internal class AltRect : SettingContainer
     {
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Widgets.DrawAltRect(inRect);
         }

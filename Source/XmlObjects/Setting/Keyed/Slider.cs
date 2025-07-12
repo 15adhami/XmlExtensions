@@ -11,17 +11,17 @@ namespace XmlExtensions.Setting
         public string tKey;
         public int decimals = 6;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return (label == null ? 0 : 22) + 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.verticalSpacing = 0;
             listingStandard.Begin(inRect);
-            float currFloat = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            float currFloat = float.Parse(SettingsManager.GetSetting(modId, key));
             float newFloat;
             if (label != null)
             {
@@ -29,7 +29,7 @@ namespace XmlExtensions.Setting
             }
             newFloat = listingStandard.Slider(currFloat, min, max);
             listingStandard.End();
-            SettingsManager.SetSetting(selectedMod, key, Math.Round(newFloat, decimals).ToString());
+            SettingsManager.SetSetting(modId, key, Math.Round(newFloat, decimals).ToString());
         }
     }
 }

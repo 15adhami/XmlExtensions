@@ -10,7 +10,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip;
         public bool highlight = true;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (tooltip != null)
             {
@@ -19,14 +19,14 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            bool currBool = bool.Parse(SettingsManager.GetSetting(selectedMod, key));
+            bool currBool = bool.Parse(SettingsManager.GetSetting(modId, key));
             if (highlight && Mouse.IsOver(inRect))
             {
                 Widgets.DrawHighlight(inRect);
@@ -36,7 +36,7 @@ namespace XmlExtensions.Setting
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
             Widgets.CheckboxLabeled(inRect, Helpers.TryTranslate(label, tKey), ref currBool);
-            SettingsManager.SetSetting(selectedMod, key, currBool.ToString());
+            SettingsManager.SetSetting(modId, key, currBool.ToString());
         }
     }
 }

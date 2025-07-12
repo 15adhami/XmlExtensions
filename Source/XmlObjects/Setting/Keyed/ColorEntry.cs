@@ -13,17 +13,17 @@ namespace XmlExtensions.Setting
         private int r, g, b;
         private string rBuf = "", gBuf = "", bBuf = "";
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             float boxHeight = 24;
             return 3 * boxHeight + 2 * spacing;
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
             try
             {
-                Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+                Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(modId, key));
                 r = Mathf.RoundToInt(color.r * 255f);
                 g = Mathf.RoundToInt(color.g * 255f);
                 b = Mathf.RoundToInt(color.b * 255f);
@@ -38,7 +38,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             float boxHeight = 24;
 
@@ -52,17 +52,17 @@ namespace XmlExtensions.Setting
             float labelWidth = Verse.Text.CalcSize("R:").x;
 
             // Define rects
-            Rect rRow = new Rect(inRect.x, inRect.y, inRect.width, boxHeight);
-            Rect gRow = new Rect(inRect.x, rRow.yMax + spacing, inRect.width, boxHeight);
-            Rect bRow = new Rect(inRect.x, gRow.yMax + spacing, inRect.width, boxHeight);
+            Rect rRow = new(inRect.x, inRect.y, inRect.width, boxHeight);
+            Rect gRow = new(inRect.x, rRow.yMax + spacing, inRect.width, boxHeight);
+            Rect bRow = new(inRect.x, gRow.yMax + spacing, inRect.width, boxHeight);
 
-            Rect rLabel = new Rect(rRow.x, rRow.y + 2, labelWidth, boxHeight);
-            Rect gLabel = new Rect(gRow.x, gRow.y + 2, labelWidth, boxHeight);
-            Rect bLabel = new Rect(bRow.x, bRow.y + 2, labelWidth, boxHeight);
+            Rect rLabel = new(rRow.x, rRow.y + 2, labelWidth, boxHeight);
+            Rect gLabel = new(gRow.x, gRow.y + 2, labelWidth, boxHeight);
+            Rect bLabel = new(bRow.x, bRow.y + 2, labelWidth, boxHeight);
 
-            Rect rField = new Rect(rLabel.xMax + textGap, rRow.y, inRect.width - (labelWidth + textGap), boxHeight);
-            Rect gField = new Rect(gLabel.xMax + textGap, gRow.y, inRect.width - (labelWidth + textGap), boxHeight);
-            Rect bField = new Rect(bLabel.xMax + textGap, bRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+            Rect rField = new(rLabel.xMax + textGap, rRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+            Rect gField = new(gLabel.xMax + textGap, gRow.y, inRect.width - (labelWidth + textGap), boxHeight);
+            Rect bField = new(bLabel.xMax + textGap, bRow.y, inRect.width - (labelWidth + textGap), boxHeight);
 
             int rPrev = r, gPrev = g, bPrev = b;
 
@@ -105,11 +105,11 @@ namespace XmlExtensions.Setting
                 {
                     newColor = ParseHelper.FromString<Color>(defaultValue);
                 }
-                SettingsManager.SetSetting(selectedMod, key, newColor.ToString());
+                SettingsManager.SetSetting(modId, key, newColor.ToString());
             }
 
             // Sync buffers in case external value was updated
-            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(modId, key));
             r = Mathf.RoundToInt(color.r * 255f);
             g = Mathf.RoundToInt(color.g * 255f);
             b = Mathf.RoundToInt(color.b * 255f);

@@ -8,19 +8,15 @@ namespace XmlExtensions.Setting
         protected Color color = Color.white;
         public string key;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
             return true;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            if (key != null)
-            {
-                color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
-            }
-            GUI.color = color;
+            GUI.color = (key != null) ? ParseHelper.FromString<Color>(SettingsManager.GetSetting(modId, key)) : color;
         }
     }
 }

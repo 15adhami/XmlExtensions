@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
             public bool highlight = true;
         }
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
             foreach (RadioButton button in buttons)
@@ -38,23 +38,23 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return buttons.Count * (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing) + buttons.Count * 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
             listingStandard.verticalSpacing = (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing);
             foreach (RadioButton button in buttons)
             {
-                bool selected = SettingsManager.GetSetting(selectedMod, key) == button.value;
+                bool selected = SettingsManager.GetSetting(modId, key) == button.value;
                 Rect rect = listingStandard.GetRect(22f);
                 if (DrawRadioButton(rect, Helpers.TryTranslate(button.label, button.tKey), selected, button.highlight, Helpers.TryTranslate(button.tooltip, button.tKeyTip)))
                 {
-                    SettingsManager.SetSetting(selectedMod, key, button.value);
+                    SettingsManager.SetSetting(modId, key, button.value);
                 }
                 listingStandard.GetRect(GetDefaultSpacing());
             }

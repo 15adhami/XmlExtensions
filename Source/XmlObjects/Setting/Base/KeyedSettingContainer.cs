@@ -27,9 +27,8 @@
         /// <summary>
         /// Automatically sets the default value of the key.
         /// </summary>
-        /// <param name="selectedMod">The modId</param>
         /// <returns></returns>
-        protected override bool SetDefaultValue(string selectedMod)
+        protected override bool SetDefaultValue()
         {
             if (key == null)
             {
@@ -38,7 +37,7 @@
             }
             if (defaultValue != null)
             {
-                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue);
+                SettingsManager.SetDefaultValue(modId, key, defaultValue);
             }
             return true;
         }

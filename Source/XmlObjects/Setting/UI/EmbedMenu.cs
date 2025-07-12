@@ -10,26 +10,31 @@ namespace XmlExtensions.Setting
 
         private List<SettingContainer> settings;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
             settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings;
-            return true;
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
-            return CalculateHeightSettingsList(width, selectedMod, settings);
+            return CalculateHeightSettingsList(width, settings);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            DrawSettingsList(inRect, selectedMod, settings);
+            DrawSettingsList(inRect, settings);
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            return PreOpenSettingsList(selectedMod, settings);
+            return PreOpenContainers(settings);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(settings);
         }
     }
 }

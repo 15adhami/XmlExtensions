@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
 
         private float height = -1;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             if (height == -1 && colors != null)
             {
@@ -35,11 +35,11 @@ namespace XmlExtensions.Setting
             return height;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Rect draw_rect = inRect.TopPartPixels(height);
             float height_temp = height;
-            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(modId, key));
             int row_num = 0;
             foreach (List<Color> row in colors)
             {
@@ -61,7 +61,7 @@ namespace XmlExtensions.Setting
                 }
                 Widgets.ColorSelector(rect, ref color, row, out height_temp, null, colorSize, spacing);
             }
-            SettingsManager.SetSetting(selectedMod, key, color.ToString());
+            SettingsManager.SetSetting(modId, key, color.ToString());
         }
     }
 }

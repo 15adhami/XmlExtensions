@@ -28,21 +28,21 @@ namespace XmlExtensions.Setting
         private float cachedLeftWidth, cachedRightWidth;
         private List<float> cachedRowHeights = new();
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeSettingsList(selectedMod, leftCol, "leftCol"))
+            if (!InitializeContainers(modId, leftCol, "leftCol"))
             {
                 return false;
             }
-            if (!InitializeSettingsList(selectedMod, rightCol, "rightCol"))
+            if (!InitializeContainers(modId, rightCol, "rightCol"))
             {
                 return false;
             }
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             cachedRowHeights.Clear();
             float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
@@ -71,8 +71,8 @@ namespace XmlExtensions.Setting
 
                 for (int i = 0; i < count; i++)
                 {
-                    float lh = (i < (leftCol?.Count ?? 0)) ? leftCol[i].GetHeight(cachedLeftWidth, selectedMod) : 0f;
-                    float rh = (i < (rightCol?.Count ?? 0)) ? rightCol[i].GetHeight(cachedRightWidth, selectedMod) : 0f;
+                    float lh = (i < (leftCol?.Count ?? 0)) ? leftCol[i].GetHeight(cachedLeftWidth) : 0f;
+                    float rh = (i < (rightCol?.Count ?? 0)) ? rightCol[i].GetHeight(cachedRightWidth) : 0f;
                     float rowHeight = Math.Max(lh, rh);
                     height += rowHeight;
                     cachedRowHeights.Add(rowHeight);
@@ -83,8 +83,8 @@ namespace XmlExtensions.Setting
             }
             else
             {
-                cachedLeftHeight = CalculateHeightSettingsList(cachedLeftWidth, selectedMod, leftCol);
-                cachedRightHeight = CalculateHeightSettingsList(cachedRightWidth, selectedMod, rightCol);
+                cachedLeftHeight = CalculateHeightSettingsList(cachedLeftWidth, leftCol);
+                cachedRightHeight = CalculateHeightSettingsList(cachedRightWidth, rightCol);
             }
 
             // Add padding
@@ -99,7 +99,7 @@ namespace XmlExtensions.Setting
 
 
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             float leftPad = padColumns?.Count > 0 ? padColumns[0] : 0f;
             float rightPad = padColumns?.Count > 1 ? padColumns[1] : 0f;
@@ -118,22 +118,22 @@ namespace XmlExtensions.Setting
                     SettingContainer left = (i < (leftCol?.Count ?? 0)) ? leftCol[i] : null;
                     SettingContainer right = (i < (rightCol?.Count ?? 0)) ? rightCol[i] : null;
 
-                    float lh = left?.GetHeight(leftWidth, selectedMod) ?? 0f;
-                    float rh = right?.GetHeight(rightWidth, selectedMod) ?? 0f;
+                    float lh = left?.GetHeight(leftWidth) ?? 0f;
+                    float rh = right?.GetHeight(rightWidth) ?? 0f;
                     float pairHeight = cachedRowHeights[i];
 
                     if (left != null)
                     {
                         float yOff = (pairHeight - lh) / 2f;
                         Rect rect = new Rect(inRect.x, leftY + yOff, leftWidth, lh);
-                        left.DrawSetting(rect, selectedMod);
+                        left.DrawSetting(rect);
                     }
 
                     if (right != null)
                     {
                         float yOff = (pairHeight - rh) / 2f;
                         Rect rect = new Rect(inRect.x + inRect.width - rightWidth, rightY + yOff, rightWidth, rh);
-                        right.DrawSetting(rect, selectedMod);
+                        right.DrawSetting(rect);
                     }
 
                     leftY += pairHeight;
@@ -159,7 +159,7 @@ namespace XmlExtensions.Setting
                 Rect leftRect = new Rect(inRect.x, inRect.y + leftYOffset, leftWidth, cachedLeftHeight);
                 Rect rightRect = new Rect(inRect.x + inRect.width - rightWidth, inRect.y + rightYOffset, rightWidth, cachedRightHeight);
 
-                DrawSettingsList(leftRect, selectedMod, leftCol);
+                DrawSettingsList(leftRect, leftCol);
 
                 if (drawLine)
                 {
@@ -169,7 +169,7 @@ namespace XmlExtensions.Setting
                     GUI.color = color;
                 }
 
-                DrawSettingsList(rightRect, selectedMod, rightCol);
+                DrawSettingsList(rightRect, rightCol);
             }
         }
 
@@ -187,14 +187,24 @@ namespace XmlExtensions.Setting
         }
 
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            if (!PreOpenSettingsList(selectedMod, leftCol, "leftCol"))
+            if (!PreOpenContainers(leftCol, "leftCol"))
             {
                 return false;
             }
             else
-                return PreOpenSettingsList(selectedMod, rightCol, "rightCol");
+                return PreOpenContainers(rightCol, "rightCol");
+        }
+
+        internal override bool PostClose()
+        {
+            if (!PostCloseContainers(leftCol, "leftCol"))
+            {
+                return false;
+            }
+            else
+                return PostCloseContainers(rightCol, "rightCol");
         }
     }
 }

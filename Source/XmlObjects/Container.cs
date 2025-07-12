@@ -5,10 +5,9 @@ namespace XmlExtensions
 {
     public class Container : ErrorHandler
     { // TODO: Add proper stack traces
+
         protected bool initialized = false;
         internal string modId;
-
-        public Container() { }
 
         /// <summary>
         /// This method gets called right when the user open the settings menu
@@ -42,8 +41,8 @@ namespace XmlExtensions
         {
             if (!initialized)
             {
-                this.modId = modId;
                 initialized = true;
+                this.modId ??= modId;
                 try
                 {
                     return Init();
@@ -60,11 +59,11 @@ namespace XmlExtensions
         /// <summary>
         /// Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
         /// </summary>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        /// <param name="settings">The list of settings</param>
+        /// <param name="modId">The modId of the active mod in the settings menu</param>
+        /// <param name="containers">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeContainerList(string modId, List<Container> containers, string name = null)
+        protected bool InitializeContainers(string modId, IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
@@ -89,7 +88,7 @@ namespace XmlExtensions
             return true;
         }
 
-        protected bool PreOpenSettingsList(List<Container> containers, string name = null)
+        protected bool PreOpenContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
@@ -114,7 +113,7 @@ namespace XmlExtensions
             return true;
         }
 
-        protected bool PostCloseSettingsList(List<Container> containers, string name = null)
+        protected bool PostCloseContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {

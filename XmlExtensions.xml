@@ -125,11 +125,6 @@
             Inherit from this class in order to embed C# code into XML
             </summary>
         </member>
-        <member name="F:XmlExtensions.Action.ActionContainer.modId">
-            <summary>
-            If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
-            </summary>
-        </member>
         <member name="F:XmlExtensions.Action.ActionContainer.output">
             <summary>
             If you want to return a value to be used by the XML, set this field to that value
@@ -178,6 +173,34 @@
             <param name="oldValue">The previous value of the key</param>
             <param name="newValue">The current value of the key</param>
             <returns>Return true if successful, false is there was an error</returns>
+        </member>
+        <member name="M:XmlExtensions.Container.PreOpen">
+            <summary>
+            This method gets called right when the user open the settings menu
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlExtensions.Container.PostClose">
+            <summary>
+            This method gets called right when the user closes the settings menu
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlExtensions.Container.Init">
+            <summary>
+            This method will be run exactly one time after the game finishes booting
+            You may run any initialization or pre-computation code here
+            </summary>
+            <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
+        </member>
+        <member name="M:XmlExtensions.Container.InitializeContainers(System.String,System.Collections.Generic.IEnumerable{XmlExtensions.Container},System.String)">
+            <summary>
+            Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
+            </summary>
+            <param name="modId">The modId of the active mod in the settings menu</param>
+            <param name="containers">The list of settings</param>
+            <param name="name">The name of the list (for error reporting purposes)</param>
+            <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
         <member name="T:XmlExtensions.PatchDef">
             <summary>
@@ -232,22 +255,15 @@
             The default value of the key
             </summary>
         </member>
-        <member name="M:XmlExtensions.Setting.KeyedSettingContainer.SetDefaultValue(System.String)">
+        <member name="M:XmlExtensions.Setting.KeyedSettingContainer.SetDefaultValue">
             <summary>
             Automatically sets the default value of the key.
             </summary>
-            <param name="selectedMod">The modId</param>
             <returns></returns>
         </member>
         <member name="T:XmlExtensions.Setting.SettingContainer">
             <summary>
             Inherit from this class in order to create a new setting.
-            </summary>
-        </member>
-        <member name="F:XmlExtensions.Setting.SettingContainer.ParentContainer">
-            <summary>
-            The SettingContainer that this SettingContainer is contained in.<br/>
-            If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
             </summary>
         </member>
         <member name="F:XmlExtensions.Setting.SettingContainer.addDefaultSpacing">
@@ -285,13 +301,13 @@
             Used to help reference the setting via xpath
             </summary>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String,XmlExtensions.Setting.SettingContainer)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
             </summary>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single,System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single)">
             <summary>
             Returns the height of the setting for the current frame
             </summary>
@@ -299,21 +315,13 @@
             <param name="selectedMod">The modId of the active mod in the settings menu</param>
             <returns>The height of the setting, in pixels</returns>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect,System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect)">
             <summary>
             Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
             </summary>
             <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-            <param name="selectedMod">The modId of the active mod in the settings menu</param>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.PreOpen(System.String)">
-            <summary>
-            This method gets called right when the user open the settings menu
-            </summary>
-            <param name="selectedMod"></param>
-            <returns></returns>
-        </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.SetDefaultValue(System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.SetDefaultValue">
             <summary>
             Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
             You may skip this if your setting doesn't contain other settings, or doesn't require a special method
@@ -321,27 +329,18 @@
             <param name="selectedMod"></param>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.Init(System.String)">
-            <summary>
-            This method will be run exactly one time after the game finishes booting and after running <c>SetDefaultValue()</c><br/>
-            You may run any initialization or pre-computation code here
-            </summary>
-            <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
-        </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeight(System.Single,System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeight(System.Single)">
             <summary>
             Returns the height of the setting for the current frame
             </summary>
             <param name="width">The width of the column the setting is contaiend in</param>
-            <param name="selectedMod">The modId of the active mod in the settings menu</param>
             <returns>The height of the setting, in pixels</returns>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingContents(UnityEngine.Rect,System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingContents(UnityEngine.Rect)">
             <summary>
             Draw the setting in the given <c>Rect</c>
             </summary>
             <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-            <param name="selectedMod">The modId of the active mod in the settings menu</param>
         </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.GetDefaultSpacing">
             <summary>
@@ -355,31 +354,20 @@
             </summary>
             <param name="defName">the defName of the SettingsMenuDef you want to display</param>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingsList(UnityEngine.Rect,System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingsList(UnityEngine.Rect,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
             <summary>
             Draws a list of SettingsContainer, error handling is done automatically
             </summary>
             <param name="rect">The <c>Rect</c> to draw in, should be the same height as the height of the list of settings</param>
-            <param name="selectedMod">The <c>modId</c> of the selected mod in the menu</param>
             <param name="settings">The list of settings to draw</param>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeightSettingsList(System.Single,System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
+        <member name="M:XmlExtensions.Setting.SettingContainer.CalculateHeightSettingsList(System.Single,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
             <summary>
             Calculates the total height of every setting in the list
             </summary>
             <param name="width">The width of the column the settings will be placed in</param>
-            <param name="selectedMod">The modId of the active mod in the settings menu</param>
             <param name="settings">The list of settings</param>
             <returns>The total height of the settings</returns>
-        </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.InitializeSettingsList(System.String,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer},System.String)">
-            <summary>
-            Applies the <c>Init()</c> method on every setting in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
-            </summary>
-            <param name="selectedMod">The modId of the active mod in the settings menu</param>
-            <param name="settings">The list of settings</param>
-            <param name="name">The name of the list (for error reporting purposes)</param>
-            <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
         <member name="T:XmlExtensions.SettingsManager">
             <summary>

@@ -61,7 +61,8 @@ namespace XmlExtensions.Setting
             {
                 try
                 {
-                    if (!SetDefaultValue(modId))
+                    this.modId = modId;
+                    if (!SetDefaultValue())
                     {
                         return false;
                     }
@@ -82,7 +83,7 @@ namespace XmlExtensions.Setting
         /// <param name="width">The width of the column the setting is contaiend in</param>
         /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <returns>The height of the setting, in pixels</returns>
-        public float GetHeight(float width, string selectedMod)
+        public float GetHeight(float width)
         {
             try
             {
@@ -98,7 +99,7 @@ namespace XmlExtensions.Setting
                     cachedHeight = errHeight;
                     if (errHeight < 0)
                     {
-                        cachedHeight = CalculateHeight(effectiveWidth, selectedMod);
+                        cachedHeight = CalculateHeight(effectiveWidth);
                         cachedHeight += padAbove > 0 ? padAbove : 0f;
                         cachedHeight += padBelow > 0 ? padBelow : 0f;
                         cachedHeight += addDefaultSpacing ? GetDefaultSpacing() : 0f;
@@ -118,8 +119,7 @@ namespace XmlExtensions.Setting
         /// Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        public virtual void DrawSetting(Rect inRect, string selectedMod)
+        public virtual void DrawSetting(Rect inRect)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        DrawSettingContents(drawRect, selectedMod);
+                        DrawSettingContents(drawRect);
                     } 
                 }
             }
@@ -188,7 +188,7 @@ namespace XmlExtensions.Setting
         /// </summary>
         /// <param name="selectedMod"></param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected virtual bool SetDefaultValue(string selectedMod)
+        protected virtual bool SetDefaultValue()
         {
             return true;
         }
@@ -197,9 +197,8 @@ namespace XmlExtensions.Setting
         /// Returns the height of the setting for the current frame
         /// </summary>
         /// <param name="width">The width of the column the setting is contaiend in</param>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <returns>The height of the setting, in pixels</returns>
-        protected virtual float CalculateHeight(float width, string selectedMod)
+        protected virtual float CalculateHeight(float width)
         {
             return 0;
         }
@@ -208,8 +207,7 @@ namespace XmlExtensions.Setting
         /// Draw the setting in the given <c>Rect</c>
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        protected abstract void DrawSettingContents(Rect inRect, string selectedMod);
+        protected abstract void DrawSettingContents(Rect inRect);
 
         // Helpers
 
@@ -250,9 +248,8 @@ namespace XmlExtensions.Setting
         /// Draws a list of SettingsContainer, error handling is done automatically
         /// </summary>
         /// <param name="rect">The <c>Rect</c> to draw in, should be the same height as the height of the list of settings</param>
-        /// <param name="selectedMod">The <c>modId</c> of the selected mod in the menu</param>
         /// <param name="settings">The list of settings to draw</param>
-        protected void DrawSettingsList(Rect rect, string selectedMod, List<SettingContainer> settings)
+        protected void DrawSettingsList(Rect rect, List<SettingContainer> settings)
         {
             if (settings != null)
             {
@@ -261,7 +258,7 @@ namespace XmlExtensions.Setting
                 listing.Begin(rect);
                 foreach (SettingContainer setting in settings)
                 {
-                    setting.DrawSetting(listing.GetRect(setting.GetHeight(rect.width, selectedMod)), selectedMod);
+                    setting.DrawSetting(listing.GetRect(setting.GetHeight(rect.width)));
                 }
                 listing.End();
             }
@@ -271,17 +268,16 @@ namespace XmlExtensions.Setting
         /// Calculates the total height of every setting in the list
         /// </summary>
         /// <param name="width">The width of the column the settings will be placed in</param>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
         /// <param name="settings">The list of settings</param>
         /// <returns>The total height of the settings</returns>
-        protected float CalculateHeightSettingsList(float width, string selectedMod, List<SettingContainer> settings)
+        protected float CalculateHeightSettingsList(float width, List<SettingContainer> settings)
         {
             float h = 0;
             if (settings != null)
             {
                 foreach (SettingContainer setting in settings)
                 {
-                    h += setting.GetHeight(width, selectedMod);
+                    h += setting.GetHeight(width);
                 }
             }
             return h;

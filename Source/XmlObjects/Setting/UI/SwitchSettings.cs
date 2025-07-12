@@ -16,7 +16,7 @@ namespace XmlExtensions.Setting
 
         private Dictionary<string, List<SettingContainer>> valSettingDict;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
             if (cases != null)
@@ -24,7 +24,7 @@ namespace XmlExtensions.Setting
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();
                 foreach (SwitchSetting switchSetting in cases)
                 {
-                    if (!InitializeSettingsList(selectedMod, switchSetting.settings, switchSetting.value.ToString()))
+                    if (!InitializeContainers(modId, switchSetting.settings, switchSetting.value.ToString()))
                     {
                         return false;
                     }
@@ -34,21 +34,33 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
-            return CalculateHeightSettingsList(width, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
+            return CalculateHeightSettingsList(width, valSettingDict[SettingsManager.GetSetting(modId, key)]);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            DrawSettingsList(inRect, selectedMod, valSettingDict[SettingsManager.GetSetting(selectedMod, key)]);
+            DrawSettingsList(inRect, valSettingDict[SettingsManager.GetSetting(modId, key)]);
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
             foreach (SwitchSetting switch_setting in cases)
             {
-                if (!PreOpenSettingsList(selectedMod, switch_setting.settings))
+                if (!PreOpenContainers(switch_setting.settings))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        internal override bool PostClose()
+        {
+            foreach (SwitchSetting switch_setting in cases)
+            {
+                if (!PostCloseContainers(switch_setting.settings))
                 {
                     return false;
                 }

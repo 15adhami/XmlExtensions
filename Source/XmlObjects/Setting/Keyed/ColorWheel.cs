@@ -30,7 +30,7 @@ namespace XmlExtensions.Setting
         private bool currentlyDraggingWheel = false;
         private bool currentlyDraggingBar = false;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             float size = wheelSize;
             if (brightnessLocation == Location.Top || brightnessLocation == Location.Bottom)
@@ -40,10 +40,10 @@ namespace XmlExtensions.Setting
             return size;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Color color_temp = GUI.color;
-            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(selectedMod, key));
+            Color color = ParseHelper.FromString<Color>(SettingsManager.GetSetting(modId, key));
 
             Rect rectWheel, rectBrightness;
 
@@ -97,7 +97,7 @@ namespace XmlExtensions.Setting
             else
                 BrightnessBar(rectBrightness, ref color, ref currentlyDraggingBar);
 
-            SettingsManager.SetSetting(selectedMod, key, color.ToString());
+            SettingsManager.SetSetting(modId, key, color.ToString());
             GUI.color = color_temp;
         }
 

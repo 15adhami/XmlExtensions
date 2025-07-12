@@ -25,7 +25,7 @@ namespace XmlExtensions.Setting
 
         private string cachedText;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
@@ -34,7 +34,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (string key in keys)
                 {
-                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(selectedMod, key), "{}");
+                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
                 }
             }
             cachedText = str;
@@ -44,7 +44,7 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {//M: 29 S: 22 T:18
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
@@ -58,7 +58,7 @@ namespace XmlExtensions.Setting
             cachedText = "";
         }
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (xpath != null)
             {

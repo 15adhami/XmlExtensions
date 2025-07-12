@@ -16,24 +16,24 @@ namespace XmlExtensions.Setting
         private Texture2D RadioButOnTex;
         private Texture2D RadioButOffTex;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             RadioButOnTex = ContentFinder<Texture2D>.Get("UI/Widgets/RadioButOn");
             RadioButOffTex = ContentFinder<Texture2D>.Get("UI/Widgets/RadioButOff");
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            bool selected = SettingsManager.GetSetting(selectedMod, key) == value;
+            bool selected = SettingsManager.GetSetting(modId, key) == value;
             if (DrawRadioButton(inRect, Helpers.TryTranslate(label, tKey), selected, highlight, Helpers.TryTranslate(tooltip, tKeyTip)))
             {
-                SettingsManager.SetSetting(selectedMod, key, value);
+                SettingsManager.SetSetting(modId, key, value);
             }
         }
 

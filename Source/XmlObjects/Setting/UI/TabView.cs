@@ -21,14 +21,14 @@ namespace XmlExtensions.Setting
         private float tabHeight = 31;
         private float maxTabWidth = 200;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
             if (tabs != null)
             {
                 foreach (Tab tab in tabs)
                 {
-                    if (!InitializeSettingsList(selectedMod, tab.settings, tab.label))
+                    if (!InitializeContainers(modId, tab.settings, tab.label))
                     {
                         return false;
                     }
@@ -48,23 +48,35 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
-            return CalculateHeightSettingsList(width, selectedMod, tabs[selectedTab].settings) + rows*((int)tabHeight);
+            return CalculateHeightSettingsList(width, tabs[selectedTab].settings) + rows*((int)tabHeight);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             inRect.yMin += rows*tabHeight;
             TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
-            DrawSettingsList(inRect, selectedMod, tabs[selectedTab].settings);
+            DrawSettingsList(inRect, tabs[selectedTab].settings);
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
             foreach (Tab tab in tabs)
             {
-                if (!PreOpenSettingsList(selectedMod, tab.settings))
+                if (!PreOpenContainers(tab.settings))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        internal override bool PostClose()
+        {
+            foreach (Tab tab in tabs)
+            {
+                if (!PostCloseContainers(tab.settings))
                 {
                     return false;
                 }

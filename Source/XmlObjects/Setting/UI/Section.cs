@@ -10,13 +10,13 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> settings;
         public float padding = 4f;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
-            return InitializeSettingsList(selectedMod, settings);
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             if (settings.Count == 0)
                 return 0;
@@ -27,7 +27,7 @@ namespace XmlExtensions.Setting
                 {
                     foreach (SettingContainer setting in settings)
                     {
-                        h += setting.GetHeight(width - padding * 2f, selectedMod);
+                        h += setting.GetHeight(width - padding * 2f);
                     }
                 }
                 return h + padding * 2;
@@ -38,7 +38,7 @@ namespace XmlExtensions.Setting
             }
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             if (settings.Count > 0)
             {
@@ -49,13 +49,18 @@ namespace XmlExtensions.Setting
                 Widgets.DrawBox(inRect, 1, null);
                 GUI.color = curColor;
                 Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
-                DrawSettingsList(rect2, selectedMod, settings);
+                DrawSettingsList(rect2, settings);
             }
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            return PreOpenSettingsList(selectedMod, settings);
+            return PreOpenContainers(settings);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(settings);
         }
     }
 }

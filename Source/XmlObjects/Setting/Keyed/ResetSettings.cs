@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions.Setting
 {
     internal class ResetSettings : SettingContainer
-    {
+    { // Add list of values to set to
         protected string label;
         protected List<string> keys = null;
         protected bool confirm = true;
@@ -15,7 +15,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip;
         public string tooltip;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (label == null)
             {
@@ -30,12 +30,12 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 30;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             if (!confirm)
             {
@@ -47,8 +47,8 @@ namespace XmlExtensions.Setting
                     }
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
-                        foreach (string key in SettingsManager.GetKeys(selectedMod))
-                            SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
+                        foreach (string key in SettingsManager.GetKeys(modId))
+                            SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                     }
                 }
                 else
@@ -60,7 +60,7 @@ namespace XmlExtensions.Setting
                     if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                     {
                         foreach (string key in keys)
-                            SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
+                            SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                     }
                 }
             }
@@ -76,10 +76,10 @@ namespace XmlExtensions.Setting
                     {
                         Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
                         {
-                            foreach (string key in SettingsManager.GetKeys(selectedMod))
+                            foreach (string key in SettingsManager.GetKeys(modId))
                             {
-                                if (XmlMod.allSettings.dataDict.ContainsKey(selectedMod + ";" + key))
-                                    SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
+                                if (XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
+                                    SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                             }
                         }, "No".Translate(), null, null, false, null, null));
                     }
@@ -96,8 +96,8 @@ namespace XmlExtensions.Setting
                         {
                             foreach (string key in keys)
                             {
-                                if (SettingsManager.ContainsKey(selectedMod, key))
-                                    SettingsManager.SetSetting(selectedMod, key, SettingsManager.GetDefaultValue(selectedMod, key));
+                                if (SettingsManager.ContainsKey(modId, key))
+                                    SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                             }
                         }, "No".Translate(), null, null, false, null, null));
                     }

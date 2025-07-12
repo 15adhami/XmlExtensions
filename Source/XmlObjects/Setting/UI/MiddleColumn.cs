@@ -11,41 +11,46 @@ namespace XmlExtensions.Setting
         public float pixels = -1f;
         public List<SettingContainer> settings;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
-            return InitializeSettingsList(selectedMod, settings);
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             if (pixels > 0)
             {
-                return CalculateHeightSettingsList(pixels, selectedMod, settings);
+                return CalculateHeightSettingsList(pixels, settings);
             }
             else
             {
-                return CalculateHeightSettingsList(width * split, selectedMod, settings);
+                return CalculateHeightSettingsList(width * split, settings);
             }
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             if (pixels > 0)
             {
                 Rect middleRect = inRect.MiddlePartPixels(pixels, inRect.height);
-                DrawSettingsList(middleRect, selectedMod, settings);
+                DrawSettingsList(middleRect, settings);
             }
             else
             {
                 Rect middleRect = inRect.MiddlePartPixels(inRect.width * split, inRect.height);
-                DrawSettingsList(middleRect, selectedMod, settings);
+                DrawSettingsList(middleRect, settings);
             }
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            return PreOpenSettingsList(selectedMod, settings);
+            return PreOpenContainers(settings);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(settings);
         }
     }
 }

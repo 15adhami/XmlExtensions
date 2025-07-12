@@ -8,13 +8,13 @@ namespace XmlExtensions.Setting
         public int spacing = 24;
         protected int thickness = 1;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             addDefaultSpacing = false;
             return spacing;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             float y = inRect.y + spacing / 2f - thickness / 2f;
             Color color = GUI.color;

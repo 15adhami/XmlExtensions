@@ -15,19 +15,19 @@ namespace XmlExtensions.Setting
         public List<DropdownOption> options;
         public string tKey;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 30;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
-            if (Widgets.ButtonText(inRect, label != null ? Helpers.TryTranslate(label, tKey) : SettingsManager.GetSetting(selectedMod, key)))
+            if (Widgets.ButtonText(inRect, label != null ? Helpers.TryTranslate(label, tKey) : SettingsManager.GetSetting(modId, key)))
             {
                 var newOptions = new List<FloatMenuOption>();
                 foreach (DropdownOption option in options)
                 {
-                    newOptions.Add(new FloatMenuOption(option.label, () => SettingsManager.SetSetting(selectedMod, key, option.value) ));
+                    newOptions.Add(new FloatMenuOption(option.label, () => SettingsManager.SetSetting(modId, key, option.value) ));
                 }
                 Find.WindowStack.Add(new FloatMenu(newOptions));
             }

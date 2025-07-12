@@ -103,7 +103,7 @@ namespace XmlExtensions
                     foreach (KeyedAction action in keyedActions)
                     {
                         action.modId = modId;
-                        action.Initialize();
+                        action.Initialize(modId);
                         XmlMod.AddKeyedAction(modId, action.key, action);
                     }
                 }
@@ -112,7 +112,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in preOpenActions)
                     {
                         action.modId = modId;
-                        action.Initialize();
+                        action.Initialize(modId);
                     }
                 }
                 if (postCloseActions != null)
@@ -120,7 +120,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in postCloseActions)
                     {
                         action.modId = modId;
-                        action.Initialize();
+                        action.Initialize(modId);
                     }
                 }
                 if (onFrameActions != null)
@@ -128,7 +128,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in onFrameActions)
                     {
                         action.modId = modId;
-                        action.Initialize();
+                        action.Initialize(modId);
                     }
                 }
             }
@@ -140,12 +140,12 @@ namespace XmlExtensions
             return true;
         }
 
-        internal float CalculateHeight(float width, string selectedMod)
+        internal float CalculateHeight(float width)
         {
             float h = 0;
             foreach (SettingContainer setting in settings)
             {
-                h += setting.GetHeight(width, selectedMod);
+                h += setting.GetHeight(width);
             }
             return h;
         }
@@ -158,7 +158,7 @@ namespace XmlExtensions
             float width = listingStandard.ColumnWidth;
             foreach (SettingContainer setting in settings)
             {
-                setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width, modId)), modId);
+                setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width)));
             }
             listingStandard.End();
         }

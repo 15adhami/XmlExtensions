@@ -30,11 +30,11 @@ namespace XmlExtensions.Setting
         private List<float> rowHeights = [];
         private List<float> colPads = [];
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
             foreach (List<SettingContainer> list in settings)
             {
-                if (!PreOpenSettingsList(selectedMod, list))
+                if (!PreOpenContainers(list))
                 {
                     return false;
                 }
@@ -42,7 +42,19 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override bool Init(string selectedMod)
+        internal override bool PostClose()
+        {
+            foreach (List<SettingContainer> list in settings)
+            {
+                if (!PostCloseContainers(list))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected override bool Init()
         {
             addDefaultSpacing = false;
 
@@ -64,7 +76,7 @@ namespace XmlExtensions.Setting
 
             for (int i = 0; i < settings.Count; i++)
             {
-                if (!InitializeSettingsList(selectedMod, settings[i], i.ToString()))
+                if (!InitializeContainers(modId, settings[i], i.ToString()))
                 {
                     return false;
                 }
@@ -73,7 +85,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             cachedHeights.Clear();
             columnWidths.Clear();
@@ -112,7 +124,7 @@ namespace XmlExtensions.Setting
                     {
                         if (anchors[col] == Anchor.Aligned && row < (settings[col]?.Count ?? 0))
                         {
-                            float h = settings[col][row].GetHeight(columnWidths[col], selectedMod);
+                            float h = settings[col][row].GetHeight(columnWidths[col]);
                             maxRowHeight = Math.Max(maxRowHeight, h);
                         }
                     }
@@ -133,7 +145,7 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        totalColHeight = CalculateHeightSettingsList(columnWidths[col], selectedMod, settings[col]);
+                        totalColHeight = CalculateHeightSettingsList(columnWidths[col], settings[col]);
                     }
 
                     float pad = colPads[col];
@@ -162,7 +174,7 @@ namespace XmlExtensions.Setting
 
             for (int i = 0; i < settings.Count; i++)
             {
-                float colHeight = CalculateHeightSettingsList(columnWidths[i], selectedMod, settings[i]) + colPads[i];
+                float colHeight = CalculateHeightSettingsList(columnWidths[i], settings[i]) + colPads[i];
                 cachedHeights.Add(colHeight);
                 maxHeight = Math.Max(maxHeight, colHeight);
             }
@@ -173,7 +185,7 @@ namespace XmlExtensions.Setting
 
 
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             float offsetX = 0f;
             bool anyAligned = anchors.Contains(Anchor.Aligned);
@@ -197,10 +209,10 @@ namespace XmlExtensions.Setting
                             if (row < (settings[col]?.Count ?? 0))
                             {
                                 SettingContainer setting = settings[col][row];
-                                float h = setting.GetHeight(w, selectedMod);
+                                float h = setting.GetHeight(w);
                                 float yOffset = (rowHeights[row] - h) / 2f;
                                 Rect r = new Rect(x, y + yOffset, w, h);
-                                setting.DrawSetting(r, selectedMod);
+                                setting.DrawSetting(r);
                             }
                             y += rowHeights[row];
                         }
@@ -213,7 +225,7 @@ namespace XmlExtensions.Setting
                             yOffset += pad;
 
                         Rect r = new Rect(x, inRect.y + yOffset, w, h);
-                        DrawSettingsList(r, selectedMod, settings[col]);
+                        DrawSettingsList(r, settings[col]);
                     }
 
                     // Divider
@@ -245,7 +257,7 @@ namespace XmlExtensions.Setting
                     yOffset += pad;
 
                 Rect colRect = new Rect(inRect.x + offsetX, inRect.y + yOffset, w, h);
-                DrawSettingsList(colRect, selectedMod, settings[col]);
+                DrawSettingsList(colRect, settings[col]);
 
                 if (drawLine && col < settings.Count - 1)
                 {

@@ -6,14 +6,12 @@ namespace XmlExtensions.Setting
     {
         public int spacing = 24;
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             addDefaultSpacing = false;
             return spacing;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
-        {
-        }
+        protected override void DrawSettingContents(Rect inRect) { }
     }
 }

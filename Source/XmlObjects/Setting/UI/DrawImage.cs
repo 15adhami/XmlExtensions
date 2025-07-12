@@ -4,7 +4,7 @@ using Verse;
 namespace XmlExtensions.Setting
 {
     internal class DrawImage : SettingContainer
-    {
+    { // Add Actiom on click
         public string texPath;
         public string anchor = "Middle";
         public Vector2 dimensions = new Vector2(-1, -1);
@@ -12,7 +12,7 @@ namespace XmlExtensions.Setting
 
         private Texture2D img;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             img = ContentFinder<Texture2D>.Get(texPath, false);
             if (img == null)
@@ -23,7 +23,7 @@ namespace XmlExtensions.Setting
             return true;
         }
 
-        protected override float CalculateHeight(float width2, string selectedMod)
+        protected override float CalculateHeight(float width2)
         {
             Texture2D img = ContentFinder<Texture2D>.Get(texPath);
             int height = img.height;
@@ -51,7 +51,7 @@ namespace XmlExtensions.Setting
             return height;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             int height = img.height;
             int width = img.width;

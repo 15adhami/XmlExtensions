@@ -23,24 +23,24 @@ namespace XmlExtensions.Setting
             Right = TextAnchor.MiddleRight
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            cachedValue = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            cachedValue = float.Parse(SettingsManager.GetSetting(modId, key));
             buf = Math.Round(cachedValue, decimals).ToString();
             if (buf == "" || buf == null)
                 buf = ((float)Math.Round(double.Parse(defaultValue), decimals)).ToString();
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 22;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             float f = (float)Math.Round(double.Parse(defaultValue), decimals);
-            float currentValue = float.Parse(SettingsManager.GetSetting(selectedMod, key));
+            float currentValue = float.Parse(SettingsManager.GetSetting(modId, key));
             if (cachedValue != currentValue)
             {
                 cachedValue = currentValue;
@@ -93,7 +93,7 @@ namespace XmlExtensions.Setting
                 f = (float)Math.Round(double.Parse(buf), decimals);
             }
             catch { }
-            SettingsManager.SetSetting(selectedMod, key, f.ToString());
+            SettingsManager.SetSetting(modId, key, f.ToString());
         }
     }
 }

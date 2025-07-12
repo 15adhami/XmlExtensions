@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
@@ -21,22 +20,17 @@ namespace XmlExtensions.Setting
             Right
         }
 
-        protected override bool Init(string selectedMod)
-        {
-            return true;
-        }
-
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return colorSize + border * 2;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             Color drawColor = color;
             if (!string.IsNullOrEmpty(key))
             {
-                string settingValue = SettingsManager.GetSetting(selectedMod, key);
+                string settingValue = SettingsManager.GetSetting(modId, key);
                 if (!string.IsNullOrEmpty(settingValue))
                 {
                     try
@@ -72,7 +66,7 @@ namespace XmlExtensions.Setting
                 TooltipHandler.TipRegion(alignedRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
 
-            Rect inner = new Rect(alignedRect.x + border, alignedRect.y + border, colorSize, colorSize);
+            Rect inner = new(alignedRect.x + border, alignedRect.y + border, colorSize, colorSize);
             Widgets.DrawBoxSolid(inner, drawColor);
         }
     }

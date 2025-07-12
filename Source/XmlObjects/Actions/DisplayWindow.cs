@@ -5,9 +5,9 @@ using XmlExtensions.Setting;
 
 namespace XmlExtensions.Action
 {
-    internal class DisplayWindow
+    internal class DisplayWindow : ActionContainer
     {
-        public Vector2 size = new Vector2(500, 500);
+        public Vector2 size = new(500, 500);
         public string menu;
         public List<SettingContainer> settings;
 
@@ -62,67 +62,60 @@ namespace XmlExtensions.Action
                     listing.Begin(inRect);
                     foreach (SettingContainer setting in settings)
                     {
-                        setting.DrawSetting(listing.GetRect(setting.GetHeight(inRect.width, modId)), modId);
+                        setting.DrawSetting(listing.GetRect(setting.GetHeight(inRect.width)));
                     }
                     listing.End();
                 }
             }
         }
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             if (menu != null)
             {
                 ScrollView scrollView = new() { settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings };
-                settings = new List<SettingContainer>() { scrollView };
+                settings = [ scrollView ];
             }
             else if (settings != null)
             {
                 ScrollView scrollView = new() { settings = settings };
-                settings = new List<SettingContainer>() { scrollView };
+                settings = [scrollView];
             }
-            return InitializeSettingsList(selectedMod, settings);
+            return InitializeContainers(modId, settings);
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        internal override bool PreOpen()
         {
-            return 30;
+            return PreOpenContainers(settings);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
-        {
-            if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
-            {
-                SettingsWindow window = new SettingsWindow();
-                window.initSize.x = size.x + 36 + 16;
-                window.initSize.y = size.y + 36;
-                window.settings = settings;
-                window.modId = selectedMod;
-                window.resizeable = resizeable;
-                window.doCloseButton = doCloseButton;
-                window.doCloseX = doCloseX;
-                window.draggable = draggable;
-                window.absorbInputAroundWindow = absorbInputAroundWindow;
-                window.onlyOneOfTypeAllowed = !allowMultipleWindows;
-                if (doCloseButton)
-                {
-                    window.initSize.y += 50;
-                }
-                if (doCloseX)
-                {
-                    window.initSize.y += 5;
-                }
-                Find.WindowStack.Add(window);
-            }
-        }
-
-        internal override bool PreOpen(string selectedMod)
-        {
-            return PreOpenSettingsList(selectedMod, settings);
+        internal override bool PostClose()
+        { 
+            return PostCloseContainers(settings);
         }
         protected override bool ApplyAction()
         {
-            return false;
+            SettingsWindow window = new();
+            window.initSize.x = size.x + 36 + 16;
+            window.initSize.y = size.y + 36;
+            window.settings = settings;
+            window.modId = modId;
+            window.resizeable = resizeable;
+            window.doCloseButton = doCloseButton;
+            window.doCloseX = doCloseX;
+            window.draggable = draggable;
+            window.absorbInputAroundWindow = absorbInputAroundWindow;
+            window.onlyOneOfTypeAllowed = !allowMultipleWindows;
+            if (doCloseButton)
+            {
+                window.initSize.y += 50;
+            }
+            if (doCloseX)
+            {
+                window.initSize.y += 5;
+            }
+            Find.WindowStack.Add(window);
+            return true;
         }
     }
 }

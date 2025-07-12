@@ -14,14 +14,14 @@ namespace XmlExtensions.Setting
 
         private Color cColor;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             id = SettingsManager.rangeCount;
             SettingsManager.rangeCount++;
             return true;
         }
 
-        protected override bool SetDefaultValue(string selectedMod)
+        protected override bool SetDefaultValue()
         {
             if (key == null)
             {
@@ -30,36 +30,36 @@ namespace XmlExtensions.Setting
             }
             if (key2 == null)
             {
-                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue);
+                SettingsManager.SetDefaultValue(modId, key, defaultValue);
             }
             else
             {
-                SettingsManager.SetDefaultValue(selectedMod, key, defaultValue.Split('~')[0]);
-                SettingsManager.SetDefaultValue(selectedMod, key2, defaultValue.Split('~')[1]);
+                SettingsManager.SetDefaultValue(modId, key, defaultValue.Split('~')[0]);
+                SettingsManager.SetDefaultValue(modId, key2, defaultValue.Split('~')[1]);
             }
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
             return 28;
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             cColor = GUI.color;
             if (key2 == null)
             {
-                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key));
+                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(modId, key));
                 Widgets.FloatRange(inRect, id, ref range, min, max, null);
-                SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString() + "~" + Math.Round(range.max, decimals).ToString());
+                SettingsManager.SetSetting(modId, key, Math.Round(range.min, decimals).ToString() + "~" + Math.Round(range.max, decimals).ToString());
             }
             else
             {
-                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(selectedMod, key) + "~" + SettingsManager.GetSetting(selectedMod, key2));
+                FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(modId, key) + "~" + SettingsManager.GetSetting(modId, key2));
                 Widgets.FloatRange(inRect, id, ref range, min, max, null);
-                SettingsManager.SetSetting(selectedMod, key, Math.Round(range.min, decimals).ToString());
-                SettingsManager.SetSetting(selectedMod, key2, Math.Round(range.max, decimals).ToString());
+                SettingsManager.SetSetting(modId, key, Math.Round(range.min, decimals).ToString());
+                SettingsManager.SetSetting(modId, key2, Math.Round(range.max, decimals).ToString());
             }
             GUI.color = cColor;
         }

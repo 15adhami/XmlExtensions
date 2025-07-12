@@ -9,29 +9,29 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> caseTrue;
         public List<SettingContainer> caseFalse;
 
-        protected override bool Init(string selectedMod)
+        protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeSettingsList(selectedMod, caseTrue, "caseTrue"))
+            if (!InitializeContainers(modId, caseTrue, "caseTrue"))
             {
                 return false;
             }
-            if (!InitializeSettingsList(selectedMod, caseFalse, "caseFalse"))
+            if (!InitializeContainers(modId, caseFalse, "caseFalse"))
             {
                 return false;
             }
             return true;
         }
 
-        protected override float CalculateHeight(float width, string selectedMod)
+        protected override float CalculateHeight(float width)
         {
-            return bool.Parse(SettingsManager.GetSetting(selectedMod, key)) ? CalculateHeightSettingsList(width, selectedMod, caseTrue) : CalculateHeightSettingsList(width, selectedMod, caseFalse);
+            return bool.Parse(SettingsManager.GetSetting(modId, key)) ? CalculateHeightSettingsList(width, caseTrue) : CalculateHeightSettingsList(width, caseFalse);
         }
 
-        protected override void DrawSettingContents(Rect inRect, string selectedMod)
+        protected override void DrawSettingContents(Rect inRect)
         {
             List<SettingContainer> settings;
-            if (bool.Parse(SettingsManager.GetSetting(selectedMod, key)))
+            if (bool.Parse(SettingsManager.GetSetting(modId, key)))
             {
                 settings = caseTrue;
             }
@@ -41,18 +41,28 @@ namespace XmlExtensions.Setting
             }
             if (settings != null)
             {
-                DrawSettingsList(inRect, selectedMod, settings);
+                DrawSettingsList(inRect, settings);
             }
         }
 
-        internal override bool PreOpen(string selectedMod)
+        internal override bool PreOpen()
         {
-            if (!PreOpenSettingsList(selectedMod, caseTrue, "caseTrue"))
+            if (!PreOpenContainers(caseTrue, "caseTrue"))
             {
                 return false;
             }
             else
-                return PreOpenSettingsList(selectedMod, caseFalse, "caseFalse");
+                return PreOpenContainers(caseFalse, "caseFalse");
+        }
+
+        internal override bool PostClose()
+        {
+            if (!PostCloseContainers(caseTrue, "caseTrue"))
+            {
+                return false;
+            }
+            else
+                return PostCloseContainers(caseFalse, "caseFalse");
         }
     }
 }
