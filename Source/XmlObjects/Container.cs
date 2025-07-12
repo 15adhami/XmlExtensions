@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace XmlExtensions
+{
+    public class Container : ErrorHandler
+    { // TODO: Add proper stack traces
+        protected bool initialized = false;
+        internal string modId;
+
+        public Container() { }
+
+        /// <summary>
+        /// This method gets called right when the user open the settings menu
+        /// </summary>
+        /// <returns></returns>
+        internal virtual bool PreOpen()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// This method gets called right when the user closes the settings menu
+        /// </summary>
+        /// <returns></returns>
+        internal virtual bool PostClose()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// This method will be run exactly one time after the game finishes booting
+        /// You may run any initialization or pre-computation code here
+        /// </summary>
+        /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
+        protected virtual bool Init()
+        {
+            return true;
+        }
+
+        public virtual bool Initialize(string modId)
+        {
+            if (!initialized)
+            {
+                this.modId = modId;
+                initialized = true;
+                try
+                {
+                    return Init();
+                }
+                catch (Exception e)
+                {
+                    Error("Failed to initialize:\n" + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
+        /// </summary>
+        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
+        /// <param name="settings">The list of settings</param>
+        /// <param name="name">The name of the list (for error reporting purposes)</param>
+        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
+        protected bool InitializeContainerList(string modId, List<Container> containers, string name = null)
+        {
+            if (containers != null)
+            {
+                int c = 0;
+                foreach (Container container in containers)
+                {
+                    c++;
+                    if (!container.Initialize(modId))
+                    {
+                        if (name != null)
+                        {
+                            Error("Failed to initialize a " + container.GetType().ToString() + " in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            Error("Failed to initialize a " + container.GetType().ToString() + " at position = " + c.ToString());
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected bool PreOpenSettingsList(List<Container> containers, string name = null)
+        {
+            if (containers != null)
+            {
+                int c = 0;
+                foreach (Container container in containers)
+                {
+                    c++;
+                    if (!container.PreOpen())
+                    {
+                        if (name != null)
+                        {
+                            Error("Failed to preopen a " + container.GetType().ToString() + " in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            Error("Failed to preopen a " + container.GetType().ToString() + " at position = " + c.ToString());
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected bool PostCloseSettingsList(List<Container> containers, string name = null)
+        {
+            if (containers != null)
+            {
+                int c = 0;
+                foreach (Container container in containers)
+                {
+                    c++;
+                    if (!container.PostClose())
+                    {
+                        if (name != null)
+                        {
+                            Error("Failed to postclose a " + container.GetType().ToString() + " in <" + name + "> at position=" + c.ToString());
+                        }
+                        else
+                        {
+                            Error("Failed to postclose a " + container.GetType().ToString() + " at position = " + c.ToString());
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+}

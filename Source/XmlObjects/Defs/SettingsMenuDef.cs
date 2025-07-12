@@ -11,7 +11,7 @@ namespace XmlExtensions
     /// A Def that defines a settings menu
     /// </summary>
     public class SettingsMenuDef : Def
-    {
+    { //TODO: Add stack traces to SettingsMenuDef
         /// <summary>
         /// Translation key for the label
         /// </summary>
@@ -193,7 +193,7 @@ namespace XmlExtensions
             }
         }
 
-        internal void PreOpenSettings()
+        internal void PreOpen()
         {
             if (settings != null)
             {
@@ -204,7 +204,7 @@ namespace XmlExtensions
                     try
                     {
                         c++;
-                        if (!setting.PreOpen(modId))
+                        if (!setting.PreOpen())
                         {
                             ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in preopening a setting at position=" + c.ToString());
                             ErrorManager.PrintErrors();

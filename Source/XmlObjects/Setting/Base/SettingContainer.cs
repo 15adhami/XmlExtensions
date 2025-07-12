@@ -8,13 +8,8 @@ namespace XmlExtensions.Setting
     /// <summary>
     /// Inherit from this class in order to create a new setting.
     /// </summary>
-    public abstract class SettingContainer : ErrorHandler
-    {// TODO: Add translate parameters to SettingContainer
-        /// <summary>
-        /// The SettingContainer that this SettingContainer is contained in.<br/>
-        /// If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.
-        /// </summary>
-        public SettingContainer ParentContainer = null;
+    public abstract class SettingContainer : Container
+    {// TODO: Add translateLeft parameters to SettingContainer
 
         /// <summary>
         /// Determines whether or not the default setting should be added after drawing the setting
@@ -53,7 +48,6 @@ namespace XmlExtensions.Setting
 
         private float cachedHeight = -1f;
         private int errHeight = -1;
-        private bool initialized = false;
 
         // Public methods
 
@@ -61,33 +55,23 @@ namespace XmlExtensions.Setting
         /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public bool Initialize(string selectedMod, SettingContainer parent = null)
+        public override bool Initialize(string modId)
         {
             if (!initialized)
             {
-                initialized = true;
-                ParentContainer = parent;
                 try
                 {
-                    if (!SetDefaultValue(selectedMod))
+                    if (!SetDefaultValue(modId))
                     {
                         return false;
                     }
                 }
                 catch (Exception e)
                 {
-                    Error("Failed to set the default value:\n" + e.Message);
+                    Error("Failed to set default value:\n" + e.Message);
                     return false;
                 }
-                try
-                {
-                    return Init(selectedMod);
-                }
-                catch (Exception e)
-                {
-                    Error("Failed to initialize:\n" + e.Message);
-                    return false;
-                }
+                return base.Initialize(modId);
             }
             return true;
         }
@@ -199,32 +183,12 @@ namespace XmlExtensions.Setting
         // Methods to override
 
         /// <summary>
-        /// This method gets called right when the user open the settings menu
-        /// </summary>
-        /// <param name="selectedMod"></param>
-        /// <returns></returns>
-        internal virtual bool PreOpen(string selectedMod)
-        {
-            return true;
-        }
-
-        /// <summary>
         /// Sets the defaultValue of this setting, it is run immediately after the game finishes loading<br/>
         /// You may skip this if your setting doesn't contain other settings, or doesn't require a special method
         /// </summary>
         /// <param name="selectedMod"></param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected virtual bool SetDefaultValue(string selectedMod)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// This method will be run exactly one time after the game finishes booting and after running <c>SetDefaultValue()</c><br/>
-        /// You may run any initialization or pre-computation code here
-        /// </summary>
-        /// <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
-        protected virtual bool Init(string selectedMod)
         {
             return true;
         }
@@ -321,63 +285,6 @@ namespace XmlExtensions.Setting
                 }
             }
             return h;
-        }
-
-        /// <summary>
-        /// Applies the <c>Init()</c> method on every setting in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
-        /// </summary>
-        /// <param name="selectedMod">The modId of the active mod in the settings menu</param>
-        /// <param name="settings">The list of settings</param>
-        /// <param name="name">The name of the list (for error reporting purposes)</param>
-        /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.Initialize(selectedMod, this))
-                    {
-                        if (name != null)
-                        {
-                            Error("Failed to initialize a setting in <" + name + "> at position=" + c.ToString());
-                        }
-                        else
-                        {
-                            Error("Failed to initialize a setting at position = " + c.ToString());
-                        }
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        protected bool PreOpenSettingsList(string selectedMod, List<SettingContainer> settings, string name = null)
-        {
-            if (settings != null)
-            {
-                int c = 0;
-                foreach (SettingContainer setting in settings)
-                {
-                    c++;
-                    if (!setting.PreOpen(selectedMod))
-                    {
-                        if (name != null)
-                        {
-                            Error("Failed to preopen a setting in <" + name + "> at position=" + c.ToString());
-                        }
-                        else
-                        {
-                            Error("Failed to preopen a setting at position = " + c.ToString());
-                        }
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
     }
 }

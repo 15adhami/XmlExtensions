@@ -149,7 +149,7 @@ namespace XmlExtensions
             {
                 activeMenu = DefDatabase<SettingsMenuDef>.GetNamed(defName);
                 activeMenu.RunPreOpenActions();
-                activeMenu.PreOpenSettings();
+                activeMenu.PreOpen();
             }
             else
             {

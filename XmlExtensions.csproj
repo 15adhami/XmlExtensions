@@ -194,6 +194,7 @@
     <Compile Include="Source\XmlObjects\Actions\RestartGame.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Actions\SetSetting.cs" />
+    <Compile Include="Source\XmlObjects\Container.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
     <Compile Include="Source\Core\PatchManager\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />

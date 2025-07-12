@@ -6,39 +6,14 @@ namespace XmlExtensions.Action
     /// <summary>
     /// Inherit from this class in order to embed C# code into XML
     /// </summary>
-    public abstract class ActionContainer : ErrorHandler
+    public abstract class ActionContainer : Container
     {
-        /// <summary>
-        /// If the Action is applied in a SettingsMenuDef, then this field will automatically be set to the correct modId
-        /// </summary>
-        public string modId;
-
         /// <summary>
         /// If you want to return a value to be used by the XML, set this field to that value
         /// </summary>
         public object output = null;
 
-        private protected sealed override void SetException()
-        {
-        }
-
-        public bool Initialize()
-        {
-            try
-            {
-                return Init();
-            }
-            catch (Exception e)
-            {
-                Error("Failed to initialize:\n" + e.Message);
-                return false;
-            }
-        }
-
-        protected virtual bool Init()
-        {
-            return true;
-        }
+        private protected sealed override void SetException() { }
 
         /// <summary>
         /// Runs the ApplyAction() method of the ActionContainer
