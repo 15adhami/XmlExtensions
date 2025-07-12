@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
     /// Inherit from this class in order to create a new setting.
     /// </summary>
     public abstract class SettingContainer : ErrorHandler
-    {
+    {// TODO: Add translate parameters to SettingContainer
         /// <summary>
         /// The SettingContainer that this SettingContainer is contained in.<br/>
         /// If this SettingContainer is stored directly in a SettingsMenuDef, this will be null.

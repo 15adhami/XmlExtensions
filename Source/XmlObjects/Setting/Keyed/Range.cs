@@ -3,7 +3,7 @@ using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
-{
+{ // TODO: Allow Range to be colored
     internal class Range : KeyedSettingContainer
     {
         public int min;
