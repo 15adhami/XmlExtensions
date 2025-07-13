@@ -15,6 +15,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip = null;
         public List<string> keys;
         public string xpath;
+        public string url;
 
         public enum Anchor
         {
@@ -24,6 +25,8 @@ namespace XmlExtensions.Setting
         }
 
         private string cachedText;
+        private float cachedHeight;
+        private Vector2 cachedSize;
 
         protected override float CalculateHeight(float width)
         {
@@ -38,10 +41,15 @@ namespace XmlExtensions.Setting
                 }
             }
             cachedText = str;
-            float h = (float)Math.Ceiling(Verse.Text.CalcHeight(str, width));
+            cachedHeight = Verse.Text.CalcHeight(str, width);
+            if (url != null)
+            {
+                cachedSize = Verse.Text.CalcSize(str);
+                cachedSize.x = Math.Min(cachedSize.x, width);
+            }
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-            return h;
+            return cachedHeight;
         }
 
         protected override void DrawSettingContents(Rect inRect)
