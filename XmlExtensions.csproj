@@ -187,14 +187,14 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
-    <Compile Include="Source\XmlObjects\Actions\Base\ActionContainer.cs" />
+    <Compile Include="Source\XmlObjects\Containers\ActionContainer.cs" />
     <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
-    <Compile Include="Source\XmlObjects\Actions\Base\KeyedAction.cs" />
+    <Compile Include="Source\XmlObjects\Containers\KeyedAction.cs" />
     <Compile Include="Source\XmlObjects\Actions\DisplayWindow.cs" />
     <Compile Include="Source\XmlObjects\Actions\RestartGame.cs" />
     <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
     <Compile Include="Source\XmlObjects\Actions\SetSetting.cs" />
-    <Compile Include="Source\XmlObjects\Container.cs" />
+    <Compile Include="Source\XmlObjects\Containers\Container.cs" />
     <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
     <Compile Include="Source\Core\PatchManager\PatchManager.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />
@@ -222,7 +222,7 @@
     <Compile Include="Source\XmlObjects\Setting\UI\HeightTool.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\HorizontalScrollView.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\IntEntry.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Base\KeyedSettingContainer.cs" />
+    <Compile Include="Source\XmlObjects\Containers\KeyedSettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\IfStatement.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\MiddleColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\Numeric.cs" />
@@ -242,7 +242,7 @@
     <Compile Include="Source\Mod\XmlMod.cs" />
     <Compile Include="Source\Mod\XmlModBaseSettings.cs" />
     <Compile Include="Source\Mod\XmlModSettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Base\SettingContainer.cs" />
+    <Compile Include="Source\XmlObjects\Containers\SettingContainer.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\Slider.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SplitColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SplitColumns.cs" />
