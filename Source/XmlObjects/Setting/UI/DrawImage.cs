@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
+using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
 {
     internal class DrawImage : SettingContainer
-    { // Add Actiom on click
+    {
         public string texPath;
         public string anchor = "Middle";
         public Vector2 dimensions = new Vector2(-1, -1);
         public float scale = -1;
+        public List<ActionContainer> actions;
 
         private Texture2D img;
 
@@ -20,7 +23,7 @@ namespace XmlExtensions.Setting
                 Error("Failed to find a texture with texpath=\"" + texPath + "\"");
                 return false;
             }
-            return true;
+            return InitializeContainers(modId, actions);
         }
 
         protected override float CalculateHeight(float width2)
@@ -118,6 +121,39 @@ namespace XmlExtensions.Setting
                     drawRect = tempRect.LeftPartPixels(width);
             }
             GUI.DrawTexture(drawRect, img);
+            if (ClickedInsideRect(drawRect))
+            {
+                int i = 0;
+                foreach (ActionContainer action in actions)
+                {
+                    i++;
+                    if (!action.DoAction())
+                    {
+                        Error("Failed action at index="+i.ToString());
+                        ErrorManager.PrintErrors();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static bool ClickedInsideRect(Rect rect)
+        {
+            if (Event.current.type == EventType.MouseDown)
+            {
+                return rect.Contains(Event.current.mousePosition);
+            }
+            return false;
+        }
+
+        internal override bool PreOpen()
+        {
+            return PreOpenContainers(actions);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(actions);
         }
     }
 }
