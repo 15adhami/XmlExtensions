@@ -18,7 +18,7 @@
         </member>
         <member name="T:XmlExtensions.ModEmitter">
             <summary>
-            Class for emitting a Mod subclass with given SettignsMEnuDef
+            Class for emitting a Mod subclass with given SettignsMenuDef
             </summary>
         </member>
         <member name="T:XmlExtensions.ErrorHandler">

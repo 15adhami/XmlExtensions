@@ -7,16 +7,16 @@ using Verse;
 namespace XmlExtensions
 {
     /// <summary>
-    /// Class for emitting a Mod subclass with given SettignsMEnuDef
+    /// Class for emitting a Mod subclass with given SettignsMenuDef
     /// </summary>
-    public static class ModEmitter
+    internal static class ModEmitter
     {
-        public static Type EmitModSubclass(SettingsMenuDef menu)
+        internal static Type EmitMod(SettingsMenuDef menu)
         {
             ModContentPack content = menu.modContentPack;
             if (content == null)
             {
-                Verse.Log.Error("[XML Extensions] EmitModSubclass called with null ModContentPack");
+                Verse.Log.Error("[XML Extensions] SettingsMenuDef " + menu.defName + " ModContentPack is null");
                 return null;
             }
             string modName = "XmlExtensions_Mod_" + menu.defName;

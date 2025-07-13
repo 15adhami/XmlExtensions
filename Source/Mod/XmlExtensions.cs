@@ -94,7 +94,7 @@ namespace XmlExtensions
             int emiitedMods = 0;
             foreach (SettingsMenuDef menu in modsForMenu)
             {
-                Type emittedModType = ModEmitter.EmitModSubclass(menu);
+                Type emittedModType = ModEmitter.EmitMod(menu);
                 LoadedModManager.runningModClasses[emittedModType] = (Mod)Activator.CreateInstance(emittedModType, menu.modContentPack);
                 emiitedMods += 1;
             }
