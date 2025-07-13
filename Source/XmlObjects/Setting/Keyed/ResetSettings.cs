@@ -5,7 +5,7 @@ using Verse;
 namespace XmlExtensions.Setting
 {
     internal class ResetSettings : SettingContainer
-    { // Add list of values to set to
+    {
         protected string label = "Reset Settings";
         protected bool confirm = true;
         protected List<string> keys = null;
@@ -31,48 +31,39 @@ namespace XmlExtensions.Setting
             {
                 if (!confirm)
                 {
-                    if (keys == null)
-                    {
-                        foreach (string key in SettingsManager.GetKeys(modId))
-                            SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
-                    }
-                    else if (values != null)
-                    {
-                        for (int i = 0; i < keys.Count; i++)
-                            SettingsManager.SetSetting(modId, keys[i], values[i]);
-                    }
-                    else
-                    {
-                        foreach (string key in keys)
-                            SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
-                    }
+                    DoResetSettings();
                 }
                 else
                 {
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
                     {
-                        if (keys == null)
-                        {
-                            foreach (string key in SettingsManager.GetKeys(modId))
-                            {
-                                SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
-                            }
-                        }
-                        else if (values != null)
-                        {
-                            for (int i = 0; i < keys.Count; i++)
-                            {
-                                SettingsManager.SetSetting(modId, keys[i], values[i]);
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 0; i < keys.Count; i++)
-                            {
-                                SettingsManager.SetSetting(modId, keys[i], SettingsManager.GetDefaultValue(modId, keys[i]));
-                            }
-                        }
+                        DoResetSettings();
                     }, "No".Translate(), null, null, false, null, null));
+                }
+            }
+        }
+
+        private void DoResetSettings()
+        {
+            if (keys == null)
+            {
+                foreach (string key in SettingsManager.GetKeys(modId))
+                {
+                    SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
+                }
+            }
+            else if (values != null)
+            {
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    SettingsManager.SetSetting(modId, keys[i], values[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    SettingsManager.SetSetting(modId, keys[i], SettingsManager.GetDefaultValue(modId, keys[i]));
                 }
             }
         }

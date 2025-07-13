@@ -227,14 +227,6 @@
             Whether or not the PatchDef returns a value
             </summary>
         </member>
-        <member name="M:XmlExtensions.PatchDef.ApplyPatch(System.Collections.Generic.List{System.String},System.Xml.XmlDocument)">
-            <summary>
-            Run the patches in the PatchDef. Error handling is done automatically
-            </summary>
-            <param name="arguments">The input arguments</param>
-            <param name="xml">The XML document to run the patches on. Set to null if applying in-game</param>
-            <returns>Reeturns false if there was an error, true otherwise</returns>
-        </member>
         <member name="T:XmlExtensions.Setting.KeyedSettingContainer">
             <summary>
             Inherit from this class in order to create a new setting that manages a key.

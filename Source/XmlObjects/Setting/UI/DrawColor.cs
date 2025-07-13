@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Verse.AI;
 using Verse.Sound;
 using XmlExtensions.Action;
 
@@ -109,14 +108,6 @@ namespace XmlExtensions.Setting
             }
 
             Widgets.DrawBoxSolid(inner, drawColor);
-        }
-        private static bool ClickedInsideRect(Rect rect)
-        {
-            if (Event.current.type == EventType.MouseDown)
-            {
-                return rect.Contains(Event.current.mousePosition);
-            }
-            return false;
         }
     }
 }
