@@ -8,10 +8,17 @@ namespace XmlExtensions.Setting
     internal class DrawImage : SettingContainer
     {
         public string texPath;
-        public string anchor = "Middle";
+        public Anchor anchor = Anchor.Middle;
         public Vector2 dimensions = new Vector2(-1, -1);
         public float scale = -1;
         public List<ActionContainer> actions;
+
+        public enum Anchor
+        {
+            Left,
+            Middle,
+            Right
+        }
 
         private Texture2D img;
 
@@ -67,12 +74,12 @@ namespace XmlExtensions.Setting
                     width = (int)inRect.width;
                 }
                 Rect tempRect = inRect.TopPartPixels(height);
-                if (anchor == "Middle")
+                if (anchor == Anchor.Middle)
                 {
                     drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
                     drawRect = drawRect.RightPartPixels(width);
                 }
-                else if (anchor == "Right")
+                else if (anchor == Anchor.Right)
                     drawRect = tempRect.RightPartPixels(width);
                 else
                     drawRect = tempRect.LeftPartPixels(width);
@@ -90,12 +97,12 @@ namespace XmlExtensions.Setting
                 }
                 height = (int)dimensions.y;
                 Rect tempRect = inRect.TopPartPixels(height);
-                if (anchor == "Middle")
+                if (anchor == Anchor.Middle)
                 {
                     drawRect = tempRect.LeftPartPixels((tempRect.width + width2) / 2);
                     drawRect = drawRect.RightPartPixels(width2);
                 }
-                else if (anchor == "Right")
+                else if (anchor == Anchor.Right)
                     drawRect = tempRect.RightPartPixels(width2);
                 else
                     drawRect = tempRect.LeftPartPixels(width2);
@@ -110,12 +117,12 @@ namespace XmlExtensions.Setting
                     width = (int)inRect.width;
                 }
                 Rect tempRect = inRect.TopPartPixels(height);
-                if (anchor == "Middle")
+                if (anchor == Anchor.Middle)
                 {
                     drawRect = tempRect.LeftPartPixels((tempRect.width + width) / 2);
                     drawRect = drawRect.RightPartPixels(width);
                 }
-                else if (anchor == "Right")
+                else if (anchor == Anchor.Right)
                     drawRect = tempRect.RightPartPixels(width);
                 else
                     drawRect = tempRect.LeftPartPixels(width);
