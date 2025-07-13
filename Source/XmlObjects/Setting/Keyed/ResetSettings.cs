@@ -6,30 +6,15 @@ namespace XmlExtensions.Setting
 {
     internal class ResetSettings : SettingContainer
     { // Add list of values to set to
-        protected string label;
+        protected string label = "Reset Settings";
         protected bool confirm = true;
         protected List<string> keys = null;
         protected List<string> values = null;
-        public string message;
-        public string tKeyMessage;
-        public string tKey;
+        public string message = "Are you sure?";
+        public string tKeyMessage = "XmlExtensions_Confirmation";
+        public string tKey = "XmlExtensions_ResetSettings";
         public string tKeyTip;
         public string tooltip;
-
-        protected override bool Init()
-        {
-            if (label == null)
-            {
-                label = "Reset Settings";
-                tKey = "XmlExtensions_ResetSettings";
-            }
-            if (message == null)
-            {
-                tKeyMessage = "XmlExtensions_Confirmation";
-                message = "Are you sure?";
-            }
-            return true;
-        }
 
         protected override float CalculateHeight(float width)
         {
@@ -42,9 +27,9 @@ namespace XmlExtensions.Setting
             {
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
             }
-            if (!confirm)
+            if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
             {
-                if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+                if (!confirm)
                 {
                     if (keys == null)
                     {
@@ -62,10 +47,7 @@ namespace XmlExtensions.Setting
                             SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                     }
                 }
-            }
-            else
-            {
-                if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+                else
                 {
                     Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
                     {

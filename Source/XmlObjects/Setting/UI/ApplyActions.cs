@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime;
 using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
@@ -8,17 +7,17 @@ namespace XmlExtensions.Setting
 {
     internal class ApplyActions : SettingContainer
     {
-        public string label;
-        public string tKey;
+        public string label = "Apply";
+        public string tKey = "XmlExtensions_Apply";
+        protected bool confirm = false;
         public List<ActionContainer> actions;
+        public string message;
+        public string tKeyMessage;
+        public string tKeyTip;
+        public string tooltip;
 
         protected override bool Init()
         {
-            if (label == null)
-            {
-                label = "Apply";
-                tKey = "XmlExtensions_Apply";
-            }
             return InitializeContainers(modId, actions);
         }
 
@@ -29,19 +28,42 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
+            if (!tooltip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+            }
             if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
             {
                 if (actions != null)
                 {
-                    int c = 0;
-                    foreach (ActionContainer action in actions)
+                    if (!confirm)
                     {
-                        c++;
-                        if (!action.DoAction())
+                        int c = 0;
+                        foreach (ActionContainer action in actions)
                         {
-                            Error("Error in the action at position=" + c.ToString());
-                            break;
+                            c++;
+                            if (!action.DoAction())
+                            {
+                                Error("Error in the action at position=" + c.ToString());
+                                break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
+                        {
+                            int c = 0;
+                            foreach (ActionContainer action in actions)
+                            {
+                                c++;
+                                if (!action.DoAction())
+                                {
+                                    Error("Error in the action at position=" + c.ToString());
+                                    break;
+                                }
+                            }
+                        }, "No".Translate(), null, null, false, null, null));
                     }
                 }
             }
