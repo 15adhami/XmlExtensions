@@ -9,8 +9,7 @@ namespace XmlExtensions.Setting
     /// Inherit from this class in order to create a new setting.
     /// </summary>
     public abstract class SettingContainer : Container
-    {// TODO: Add translateLeft parameters to SettingContainer
-
+    {
         /// <summary>
         /// Determines whether or not the default setting should be added after drawing the setting
         /// </summary>
@@ -52,6 +51,7 @@ namespace XmlExtensions.Setting
 
         private float cachedHeight = -1f;
         private int errHeight = -1;
+        private bool needsDraw = false;
 
         // Public methods
 
@@ -123,66 +123,68 @@ namespace XmlExtensions.Setting
         /// Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-        public virtual void DrawSetting(Rect inRect)
+        public virtual void DrawSetting(Rect inRect, bool isVisible = true) // TODO: Complete optimization based on visibility
         {
-            try
+            if (isVisible || needsDraw)
             {
-                if (errHeight > 0)
+                try
+                {
+                    if (errHeight > 0)
+                    {
+                        GUI.color = Color.red;
+                        Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
+                        errHeight = 22;
+                        GUI.color = Color.white;
+                    }
+                    else
+                    {
+                        float topPad = padAbove > 0 ? padAbove : 0f;
+                        float bottomPad = padBelow > 0 ? padBelow : 0f;
+                        float leftPad = padLeft > 0 ? padLeft : 0f;
+                        float rightPad = padRight > 0 ? padRight : 0f;
+                        float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
+
+                        inRect.x += translateX;
+                        inRect.y += translateY;
+
+                        Rect drawRect = new(
+                            inRect.x + leftPad,
+                            inRect.y + topPad,
+                            inRect.width - leftPad - rightPad,
+                            inRect.height - topPad - bottomPad - spacing
+                        );
+
+                        if (showDimensions)
+                        {
+                            Color originalColor = GUI.color;
+
+                            // Outer full rectangle
+                            GUI.color = Color.gray;
+                            Widgets.DrawBox(inRect);
+
+                            // Inner padded rectangle
+                            GUI.color = Color.white;
+                            Widgets.DrawBox(drawRect);
+
+                            // Label dimensions inside drawRect
+                            Widgets.Label(drawRect, $" {drawRect.width:0}x{drawRect.height:0}");
+
+                            GUI.color = originalColor;
+                        }
+                        else
+                        {
+                            DrawSettingContents(drawRect);
+                        }
+                    }
+                }
+                catch
                 {
                     GUI.color = Color.red;
                     Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
                     errHeight = 22;
                     GUI.color = Color.white;
                 }
-                else
-                {
-                    float topPad = padAbove > 0 ? padAbove : 0f;
-                    float bottomPad = padBelow > 0 ? padBelow : 0f;
-                    float leftPad = padLeft > 0 ? padLeft : 0f;
-                    float rightPad = padRight > 0 ? padRight : 0f;
-                    float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
-
-                    inRect.x += translateX;
-                    inRect.y += translateY;
-
-                    Rect drawRect = new Rect(
-                        inRect.x + leftPad,
-                        inRect.y + topPad,
-                        inRect.width - leftPad - rightPad,
-                        inRect.height - topPad - bottomPad - spacing
-                    );
-
-                    if (showDimensions)
-                    {
-                        Color originalColor = GUI.color;
-
-                        // Outer full rectangle
-                        GUI.color = Color.gray;
-                        Widgets.DrawBox(inRect);
-
-                        // Inner padded rectangle
-                        GUI.color = Color.white;
-                        Widgets.DrawBox(drawRect);
-
-                        // Label dimensions inside drawRect
-                        Widgets.Label(drawRect, $" {drawRect.width:0}x{drawRect.height:0}");
-
-                        GUI.color = originalColor;
-                    }
-                    else
-                    {
-                        DrawSettingContents(drawRect);
-                    } 
-                }
             }
-            catch
-            {
-                GUI.color = Color.red;
-                Widgets.Label(inRect, "Error drawing setting: " + GetType().ToString().Split('.')[GetType().ToString().Split('.').Length - 1]);
-                errHeight = 22;
-                GUI.color = Color.white;
-            }
-
             cachedHeight = -1f;
         }
 
