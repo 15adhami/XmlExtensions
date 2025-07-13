@@ -8,7 +8,7 @@ namespace XmlExtensions.Setting
     internal class ApplyActions : SettingContainer
     {
         public string label = "Apply";
-        public string tKey = "XmlExtensions_Apply";
+        public string tKey;
         protected bool confirm = false;
         public List<ActionContainer> actions;
         public string message;
