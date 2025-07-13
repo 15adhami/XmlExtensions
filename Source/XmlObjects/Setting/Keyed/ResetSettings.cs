@@ -7,8 +7,9 @@ namespace XmlExtensions.Setting
     internal class ResetSettings : SettingContainer
     { // Add list of values to set to
         protected string label;
-        protected List<string> keys = null;
         protected bool confirm = true;
+        protected List<string> keys = null;
+        protected List<string> values = null;
         public string message;
         public string tKeyMessage;
         public string tKey;
@@ -37,27 +38,25 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
+            if (!tooltip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+            }
             if (!confirm)
             {
-                if (keys == null)
+                if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                 {
-                    if (!tooltip.NullOrEmpty())
-                    {
-                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
-                    }
-                    if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+                    if (keys == null)
                     {
                         foreach (string key in SettingsManager.GetKeys(modId))
                             SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                     }
-                }
-                else
-                {
-                    if (!tooltip.NullOrEmpty())
+                    else if (values != null)
                     {
-                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                        for (int i = 0; i < keys.Count; i++)
+                            SettingsManager.SetSetting(modId, keys[i], values[i]);
                     }
-                    if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+                    else
                     {
                         foreach (string key in keys)
                             SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
@@ -66,41 +65,32 @@ namespace XmlExtensions.Setting
             }
             else
             {
-                if (keys == null)
+                if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
                 {
-                    if (!tooltip.NullOrEmpty())
+                    Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
                     {
-                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
-                    }
-                    if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
-                    {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
+                        if (keys == null)
                         {
                             foreach (string key in SettingsManager.GetKeys(modId))
                             {
-                                if (XmlMod.allSettings.dataDict.ContainsKey(modId + ";" + key))
-                                    SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
+                                SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
                             }
-                        }, "No".Translate(), null, null, false, null, null));
-                    }
-                }
-                else
-                {
-                    if (!tooltip.NullOrEmpty())
-                    {
-                        TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
-                    }
-                    if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
-                    {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
+                        }
+                        else if (values != null)
                         {
-                            foreach (string key in keys)
+                            for (int i = 0; i < keys.Count; i++)
                             {
-                                if (SettingsManager.ContainsKey(modId, key))
-                                    SettingsManager.SetSetting(modId, key, SettingsManager.GetDefaultValue(modId, key));
+                                SettingsManager.SetSetting(modId, keys[i], values[i]);
                             }
-                        }, "No".Translate(), null, null, false, null, null));
-                    }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < keys.Count; i++)
+                            {
+                                SettingsManager.SetSetting(modId, keys[i], SettingsManager.GetDefaultValue(modId, keys[i]));
+                            }
+                        }
+                    }, "No".Translate(), null, null, false, null, null));
                 }
             }
         }
