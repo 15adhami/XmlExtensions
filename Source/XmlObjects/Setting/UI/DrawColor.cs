@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Verse.Sound;
 using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
@@ -86,21 +88,27 @@ namespace XmlExtensions.Setting
             }
 
             Rect inner = new(alignedRect.x + border, alignedRect.y + border, colorSize, colorSize);
-            Widgets.DrawBoxSolid(inner, drawColor);
-            if (ClickedInsideRect(inner) && actions != null)
+            if (actions != null)
             {
-                int i = 0;
-                foreach (ActionContainer action in actions)
+                Widgets.DrawHighlightIfMouseover(alignedRect);
+                if (Widgets.ButtonInvisible(alignedRect))
                 {
-                    i++;
-                    if (!action.DoAction())
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    int i = 0;
+                    foreach (ActionContainer action in actions)
                     {
-                        Error("Failed action at index=" + i.ToString());
-                        ErrorManager.PrintErrors();
-                        break;
+                        i++;
+                        if (!action.DoAction())
+                        {
+                            Error("Failed action at index=" + i.ToString());
+                            ErrorManager.PrintErrors();
+                            break;
+                        }
                     }
                 }
             }
+
+            Widgets.DrawBoxSolid(inner, drawColor);
         }
         private static bool ClickedInsideRect(Rect rect)
         {

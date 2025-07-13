@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
@@ -127,21 +129,22 @@ namespace XmlExtensions.Setting
                 else
                     drawRect = tempRect.LeftPartPixels(width);
             }
-            GUI.DrawTexture(drawRect, img);
-            if (ClickedInsideRect(drawRect) && actions != null)
+            if (actions != null && Widgets.ClickedInsideRect(drawRect))
             {
+                SoundDefOf.Tick_High.PlayOneShotOnCamera();
                 int i = 0;
                 foreach (ActionContainer action in actions)
                 {
                     i++;
                     if (!action.DoAction())
                     {
-                        Error("Failed action at index="+i.ToString());
+                        Error("Failed action at index=" + i.ToString());
                         ErrorManager.PrintErrors();
                         break;
                     }
                 }
             }
+            GUI.DrawTexture(drawRect, img);
         }
 
         private static bool ClickedInsideRect(Rect rect)
