@@ -87,7 +87,7 @@ namespace XmlExtensions.Setting
 
             Rect inner = new(alignedRect.x + border, alignedRect.y + border, colorSize, colorSize);
             Widgets.DrawBoxSolid(inner, drawColor);
-            if (ClickedInsideRect(inner))
+            if (ClickedInsideRect(inner) && actions != null)
             {
                 int i = 0;
                 foreach (ActionContainer action in actions)

@@ -128,7 +128,7 @@ namespace XmlExtensions.Setting
                     drawRect = tempRect.LeftPartPixels(width);
             }
             GUI.DrawTexture(drawRect, img);
-            if (ClickedInsideRect(drawRect))
+            if (ClickedInsideRect(drawRect) && actions != null)
             {
                 int i = 0;
                 foreach (ActionContainer action in actions)
