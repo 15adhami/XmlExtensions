@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
@@ -44,6 +45,16 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
+        }
+
+        internal override bool PreOpen()
+        {
+            return PreOpenContainers(actions);
+        }
+
+        internal override bool PostClose()
+        {
+            return PostCloseContainers(actions);
         }
     }
 }
