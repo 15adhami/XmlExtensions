@@ -36,6 +36,10 @@ namespace XmlExtensions.Setting
         /// </summary>
         protected float padRight = 0f;
 
+        protected float translateX = 0;
+
+        protected float translateY = 0;
+
         /// <summary>
         /// Set to true to display the dimensions of the setting
         /// </summary>
@@ -137,6 +141,9 @@ namespace XmlExtensions.Setting
                     float leftPad = padLeft > 0 ? padLeft : 0f;
                     float rightPad = padRight > 0 ? padRight : 0f;
                     float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
+
+                    inRect.x += translateX;
+                    inRect.y += translateY;
 
                     Rect drawRect = new Rect(
                         inRect.x + leftPad,
