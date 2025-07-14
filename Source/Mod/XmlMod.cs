@@ -78,11 +78,8 @@ namespace XmlExtensions
         }
 
         /// <summary>
-        /// Throw the given warning if the mod has not thrown a warning before.
-        /// Appends the modId and a whitespace before the warning.
+        /// Throws a warning and offers alternatives. Appends the modId before the warning.
         /// </summary>
-        /// <param name="modId"></param>
-        /// <param name="warning"></param>
         internal static void WarnUsingObselete(string modId, object obsoleteObj, Type[] alternatives)
         {
             string id = modId ?? "";
