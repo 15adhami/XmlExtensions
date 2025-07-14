@@ -489,5 +489,13 @@
             Class containing internal data and obsolete methods (for backwards compatability).
             </summary>
         </member>
+        <member name="M:XmlExtensions.XmlMod.WarnUsingObselete(System.String,System.String)">
+            <summary>
+            Throw the given warning if the mod has not thrown a warning before.
+            Appends the modId and a whitespace before the warning.
+            </summary>
+            <param name="modId"></param>
+            <param name="warning"></param>
+        </member>
     </members>
 </doc>

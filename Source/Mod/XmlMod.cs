@@ -25,6 +25,8 @@ namespace XmlExtensions
         internal static List<string> unusedMods;
         internal static Dictionary<string, Dictionary<string, List<KeyedAction>>> keyedActionListDict;
 
+        internal static HashSet<string> usingObsolete;
+
        public XmlMod(ModContentPack content) : base(content)
         {
             allSettings = GetSettings<XmlModBaseSettings>();
@@ -38,8 +40,9 @@ namespace XmlExtensions
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
             menus = new Dictionary<string, SettingsMenuDef>();
-            loadedXmlMods = new List<string>();
-            modsWithSettings = new();
+            loadedXmlMods = [];
+            modsWithSettings = [];
+            usingObsolete = [];
             foreach (string fullKey in allSettings.dataDict.Keys)
             {
                 string modId = fullKey.Split(';')[0];
@@ -72,6 +75,21 @@ namespace XmlExtensions
                 }
             }
             return flag;
+        }
+
+        /// <summary>
+        /// Throw the given warning if the mod has not thrown a warning before.
+        /// Appends the modId and a whitespace before the warning.
+        /// </summary>
+        /// <param name="modId"></param>
+        /// <param name="warning"></param>
+        internal static void WarnUsingObselete(string modId, string warning)
+        {
+            if (!usingObsolete.Contains(modId))
+            {
+                usingObsolete.Add(modId);
+                Verse.Log.Warning("[XML Extensions]: " + modId + " " + warning);
+            }
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

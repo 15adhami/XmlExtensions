@@ -15,7 +15,7 @@ namespace XmlExtensions
 
         public override bool ApplyWorker(XmlDocument xml)
         {
-            Verse.Log.Warning("[XML Extensions]: " + modId + " is using the obsolete operation XmlExtensions.CreateSettings. Please use LoadFolders instead.");
+            XmlMod.WarnUsingObselete(modId, "is using the obsolete operation XmlExtensions.CreateSettings. Please use a SettingsMenuDef instead.");
             if (modId == null)
             {
                 ErrorManager.AddError("XmlExtensions.CreateSettings: <modId>=null");

@@ -13,6 +13,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            XmlMod.WarnUsingObselete(modId, "");
             if (label == null)
             {
                 label = "Open";
