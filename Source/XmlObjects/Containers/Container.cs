@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -152,6 +153,10 @@ namespace XmlExtensions
             {
                 ModSettings_Window.SetActiveMenu(defName);
             }
+        }
+        protected void WarnUsingObselete(Type[] alternatives)
+        {
+            XmlMod.WarnUsingObselete(modId, this, alternatives);
         }
     }
 }

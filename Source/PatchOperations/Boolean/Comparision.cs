@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions.Boolean
 {
@@ -18,6 +19,7 @@ namespace XmlExtensions.Boolean
 
         private protected override void SetException()
         {
+            XmlMod.WarnUsingObselete(null, this, [typeof(Button), typeof(Action.SetActiveMenu)]);
             CreateExceptions(value1, "value1", value2, "value2", relation, "relation");
         }
 

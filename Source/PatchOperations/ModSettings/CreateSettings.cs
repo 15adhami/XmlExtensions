@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using Verse;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -15,7 +16,7 @@ namespace XmlExtensions
 
         public override bool ApplyWorker(XmlDocument xml)
         {
-            XmlMod.WarnUsingObselete(modId, "is using the obsolete operation XmlExtensions.CreateSettings. Please use a SettingsMenuDef instead.");
+            XmlMod.WarnUsingObselete(modId, this, [typeof(SettingsMenuDef)]);
             if (modId == null)
             {
                 ErrorManager.AddError("XmlExtensions.CreateSettings: <modId>=null");
