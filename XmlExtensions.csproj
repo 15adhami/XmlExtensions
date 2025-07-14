@@ -189,6 +189,7 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
     <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />
+    <Compile Include="Source\XmlObjects\Actions\SetActiveMenu.cs" />
     <Compile Include="Source\XmlObjects\Containers\ActionContainer.cs" />
     <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
     <Compile Include="Source\XmlObjects\Containers\KeyedAction.cs" />

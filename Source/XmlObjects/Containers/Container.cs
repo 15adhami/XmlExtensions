@@ -137,5 +137,21 @@ namespace XmlExtensions
             }
             return true;
         }
+
+        /// <summary>
+        /// Sets the currently displayed menu to the one given
+        /// </summary>
+        /// <param name="defName">the defName of the SettingsMenuDef you want to display</param>
+        protected void SetActiveMenu(string defName)
+        {
+            if (XmlExtensions_MenuModSettings.activeMenu != null)
+            {
+                XmlExtensions_MenuModSettings.SetActiveMenu(defName);
+            }
+            else if (ModSettings_Window.activeMenu != null)
+            {
+                ModSettings_Window.SetActiveMenu(defName);
+            }
+        }
     }
 }

@@ -202,6 +202,12 @@
             <param name="name">The name of the list (for error reporting purposes)</param>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
+        <member name="M:XmlExtensions.Container.SetActiveMenu(System.String)">
+            <summary>
+            Sets the currently displayed menu to the one given
+            </summary>
+            <param name="defName">the defName of the SettingsMenuDef you want to display</param>
+        </member>
         <member name="T:XmlExtensions.PatchDef">
             <summary>
             A Def that contains a patch
@@ -339,12 +345,6 @@
             Gets the defaultSpacing of the currently open <c>SettingsMenuDef</c>.
             </summary>
             <returns>The spacing of the current <c>SettingsMenuDef</c>.</returns>
-        </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.SetActiveMenu(System.String)">
-            <summary>
-            Sets the currently displayed menu to the one given
-            </summary>
-            <param name="defName">the defName of the SettingsMenuDef you want to display</param>
         </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingsList(UnityEngine.Rect,System.Collections.Generic.List{XmlExtensions.Setting.SettingContainer})">
             <summary>

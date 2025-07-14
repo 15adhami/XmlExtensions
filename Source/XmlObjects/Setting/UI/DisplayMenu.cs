@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
 {
+    [Obsolete]
     internal class DisplayMenu : SettingContainer
     {
         public string label;
