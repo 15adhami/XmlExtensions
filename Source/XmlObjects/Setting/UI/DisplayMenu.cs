@@ -13,7 +13,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            XmlMod.WarnUsingObselete(modId, "");
+            XmlMod.WarnUsingObselete(modId, " is using the obsolete Setting.DisplayMenu. Use Action.SetActiveMenu instead.");
             if (label == null)
             {
                 label = "Open";
