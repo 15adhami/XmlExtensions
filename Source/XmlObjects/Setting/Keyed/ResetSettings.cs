@@ -6,15 +6,30 @@ namespace XmlExtensions.Setting
 {
     internal class ResetSettings : SettingContainer
     {
-        protected string label = "Reset Settings";
+        protected string label;
         protected bool confirm = true;
         protected List<string> keys = null;
         protected List<string> values = null;
-        public string message = "Are you sure?";
-        public string tKeyMessage = "XmlExtensions_Confirmation";
-        public string tKey = "XmlExtensions_ResetSettings";
+        public string message;
+        public string tKeyMessage;
+        public string tKey;
         public string tKeyTip;
         public string tooltip;
+
+        protected override bool Init()
+        {
+            if (message == null)
+            {
+                message = "Are you sure?";
+                tKeyMessage ??= "XmlExtensions_Confirmation";
+            }
+            if (label == null)
+            {
+                label = "Reset Settings";
+                tKey ??= "XmlExtensions_ResetSettings";
+            }
+            return true;
+        }
 
         protected override float CalculateHeight(float width)
         {
