@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
 {
-    [Obsolete]
-    internal class ApplyActions : SettingContainer
+    internal class Button : SettingContainer
     {
         public string label = "Apply";
         public string tKey;
@@ -21,7 +19,6 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            XmlMod.WarnUsingObselete(modId, "is using the obsolete Setting.ApplyActions. Use Setting.Button instead.");
             return InitializeContainers(modId, actions);
         }
 
