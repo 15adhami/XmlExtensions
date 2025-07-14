@@ -147,15 +147,6 @@ namespace XmlExtensions.Setting
             GUI.DrawTexture(drawRect, img);
         }
 
-        private static bool ClickedInsideRect(Rect rect)
-        {
-            if (Event.current.type == EventType.MouseDown)
-            {
-                return rect.Contains(Event.current.mousePosition);
-            }
-            return false;
-        }
-
         internal override bool PreOpen()
         {
             return PreOpenContainers(actions);
