@@ -74,7 +74,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            XmlMod.WarnUsingObselete(modId, " is using the obsolete Setting.DisplayWindow. Use Setting.Button and Action.DisplayWindow instead.");
+            WarnUsingObselete([typeof(Button), typeof(Action.DisplayWindow)]);
             if (label == null)
             {
                 label = "Open";

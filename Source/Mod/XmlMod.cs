@@ -83,12 +83,31 @@ namespace XmlExtensions
         /// </summary>
         /// <param name="modId"></param>
         /// <param name="warning"></param>
-        internal static void WarnUsingObselete(string modId, string warning)
+        internal static void WarnUsingObselete(string modId, object obsoleteObj, Type[] alternatives)
         {
-            if (!usingObsolete.Contains(modId))
+            if (!usingObsolete.Contains(modId + obsoleteObj.GetType().ToString()))
             {
-                usingObsolete.Add(modId);
-                Verse.Log.Warning("[XML Extensions]: " + modId + " " + warning);
+                usingObsolete.Add(modId + obsoleteObj.GetType().ToString());
+                string warning = "[XML Extensions]: " + modId +
+                    " is using the obsolete " + obsoleteObj.GetType().ToString().Remove(0, 14) + ". Use ";
+                if (alternatives.Length == 1)
+                {
+                    warning += alternatives[0].ToString().Remove(0, 14);
+                }
+                else if (alternatives.Length == 2)
+                {
+                    warning += alternatives[0].ToString().Remove(0, 14) + " and " + alternatives[1].ToString().Remove(0, 14);
+                }
+                else
+                {
+                    for (int i = 0; i < alternatives.Length - 1; i++)
+                    {
+                        warning += alternatives[i].ToString().Remove(0, 14) + ", ";
+                    }
+                    warning += "and " + alternatives[alternatives.Length - 1].ToString().Remove(0, 14);
+                }
+                warning += " instead.";
+                Verse.Log.Warning(warning);
             }
         }
 

@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            XmlMod.WarnUsingObselete(modId, "is using the obsolete Setting.ApplyActions. Use Setting.Button instead.");
+            WarnUsingObselete([typeof(Button)]);
             return InitializeContainers(modId, actions);
         }
 
