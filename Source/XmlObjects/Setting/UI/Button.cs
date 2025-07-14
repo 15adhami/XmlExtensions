@@ -7,7 +7,7 @@ namespace XmlExtensions.Setting
 {
     internal class Button : SettingContainer
     {
-        public string label = "Apply";
+        public string label;
         public string tKey;
         protected bool confirm = false;
         public float height = 30;
@@ -19,6 +19,16 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            if (label == null)
+            {
+                label = "Apply";
+                tKey ??= "XmlExtensions_Apply";
+            }
+            if (message == null)
+            {
+                message = "Are you sure?";
+                tKeyMessage ??= "XmlExtensions_Confirmation";
+            }
             return InitializeContainers(modId, actions);
         }
 
