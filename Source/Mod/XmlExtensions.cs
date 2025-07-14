@@ -92,11 +92,19 @@ namespace XmlExtensions
             // Emit Mod classes
             Dictionary<string, ModContentPack> contentLookup = LoadedModManager.RunningMods.ToDictionary(b => b.PackageId.ToLower());
             int emiitedMods = 0;
+
             foreach (SettingsMenuDef menu in modsForMenu)
             {
-                Type emittedModType = ModEmitter.EmitMod(menu);
-                LoadedModManager.runningModClasses[emittedModType] = (Mod)Activator.CreateInstance(emittedModType, menu.modContentPack);
-                emiitedMods += 1;
+                try
+                {
+                    Type emittedModType = ModEmitter.EmitMod(menu);
+                    LoadedModManager.runningModClasses[emittedModType] = (Mod)Activator.CreateInstance(emittedModType, menu.modContentPack);
+                    emiitedMods += 1;
+                }
+                catch
+                {
+                    Verse.Log.Error("[XML Extensions] Failed to emit " + menu.defName + " Mod class");
+                }
             }
             Verse.Log.Message("[XML Extensions] Emitted " + emiitedMods.ToString() + " mod class(es)");
         }

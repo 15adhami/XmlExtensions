@@ -89,11 +89,11 @@ namespace XmlExtensions
                 usingObsolete.Add(id + obsoleteObj.GetType().ToString());
                 if (modId == null)
                 {
-                    warning = "[XML Extensions]: A mod is using the obsolete " + obsoleteObj.GetType().ToString().Remove(0, 14) + ". Use ";
+                    warning = "[XML Extensions] A mod is using the obsolete " + obsoleteObj.GetType().ToString().Remove(0, 14) + ". Use ";
                 }
                 else
                 {
-                    warning = "[XML Extensions]: " + id +
+                    warning = "[XML Extensions] " + id +
                         " is using the obsolete " + obsoleteObj.GetType().ToString().Remove(0, 14) + ". Use ";
                 }
                 if (alternatives.Length == 1)
