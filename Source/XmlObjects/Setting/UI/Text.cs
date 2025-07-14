@@ -1,7 +1,10 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
+using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
 {
@@ -15,7 +18,7 @@ namespace XmlExtensions.Setting
         public string tKeyTip = null;
         public List<string> keys;
         public string xpath;
-        public string url;
+        public List<ActionContainer> actions;
 
         public enum Anchor
         {
@@ -42,7 +45,7 @@ namespace XmlExtensions.Setting
             }
             cachedText = str;
             cachedHeight = Verse.Text.CalcHeight(str, width);
-            if (url != null)
+            if (actions != null)
             {
                 cachedSize = Verse.Text.CalcSize(str);
                 cachedSize.x = Math.Min(cachedSize.x, width);
@@ -59,6 +62,38 @@ namespace XmlExtensions.Setting
             if (!tooltip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+            }
+            Rect alignedRect;
+            if (anchor == Anchor.Left)
+            {
+                alignedRect = inRect.LeftPartPixels(cachedSize.x);
+            }
+            else if (anchor == Anchor.Right)
+            {
+                alignedRect = inRect.RightPartPixels(cachedSize.x);
+            }
+            else
+            {
+                alignedRect = inRect.MiddlePartPixels(cachedSize.x, cachedHeight);
+            }
+            if (actions != null)
+            {
+                Widgets.DrawHighlightIfMouseover(alignedRect);
+                if (Widgets.ButtonInvisible(alignedRect))
+                {
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    int i = 0;
+                    foreach (ActionContainer action in actions)
+                    {
+                        i++;
+                        if (!action.DoAction())
+                        {
+                            Error("Failed action at index=" + i.ToString());
+                            ErrorManager.PrintErrors();
+                            break;
+                        }
+                    }
+                }
             }
             Widgets.Label(inRect, cachedText);
             Verse.Text.Font = GameFont.Small;
