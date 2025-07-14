@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
 {
+    [Obsolete]
     internal class DisplayWindow : SettingContainer
     {
         public string label;
@@ -72,6 +74,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            XmlMod.WarnUsingObselete(modId, " is using the obsolete Setting.DisplayWindow. Use Setting.Button and Action.DisplayWindow instead.");
             if (label == null)
             {
                 label = "Open";
