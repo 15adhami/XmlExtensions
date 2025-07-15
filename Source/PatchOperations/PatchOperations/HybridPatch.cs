@@ -8,6 +8,7 @@ namespace XmlExtensions
     internal class HybridPatch : PatchOperationSafe
     {
         protected XmlContainer value;
+        public string xpathLocal;
 
         protected override bool Patch(XmlDocument xml)
         {
@@ -32,11 +33,29 @@ namespace XmlExtensions
                 child.Attributes.Remove(attributeCompare);
                 compare = (Compare)Compare.Parse(typeof(Compare), attributeCompare.InnerText);
             }
+            else
+            {
+                compare = Compare.Name;
+            }
             XmlAttribute attributeCheckAttributes = child.Attributes["CheckAttributes"];
             if (attributeCheckAttributes != null)
             {
                 child.Attributes.Remove(attributeCheckAttributes);
                 checkAttributes = bool.Parse(attributeCheckAttributes.InnerText);
+            }
+            else
+            {
+                checkAttributes = false;
+            }
+            XmlAttribute attributeXPathLocal = child.Attributes["XPathLocal"];
+            if (attributeXPathLocal != null)
+            {
+                child.Attributes.Remove(attributeXPathLocal);
+                xpathLocal = attributeXPathLocal.InnerText;
+            }
+            else
+            {
+                xpathLocal = null;
             }
             if (attributeOperation == null)
             {
@@ -115,7 +134,7 @@ namespace XmlExtensions
                 XmlNode foundNode = null;
                 if (!ContainsNode(parent, child, ref foundNode))
                 {
-                    AddNode(parent, child, false);
+                    foundNode = AddNode(parent, child, false);
                 }
 
                 if (!SafeRecurse(foundNode, child))
@@ -133,9 +152,11 @@ namespace XmlExtensions
             parent.RemoveChild(foundNode);
         }
 
-        protected void AddNode(XmlNode parent, XmlNode child, bool deep = true)
+        protected XmlNode AddNode(XmlNode parent, XmlNode child, bool deep = true)
         {
-            parent.AppendChild(parent.OwnerDocument.ImportNode(child, deep));
+            XmlNode node = parent.OwnerDocument.ImportNode(child, deep);
+            parent.AppendChild(node);
+            return node;
         }
 
         protected bool SafeRecurse(XmlNode parent, XmlNode child)
@@ -150,51 +171,92 @@ namespace XmlExtensions
             return true;
         }
 
-        protected override bool ContainsNode(XmlNode parent, XmlNode node, ref XmlNode foundNode)
+        protected override bool ContainsNode(XmlNode parent, XmlNode nodeToAdd, ref XmlNode foundNode)
         {
-            XmlAttributeCollection attrs = node.Attributes;
-            foreach (XmlNode childNode in parent.ChildNodes)
+            try
             {
-                if ((childNode.Name == node.Name && (compare == Compare.Name || (node.HasChildNodes && node.FirstChild.HasChildNodes))) || (childNode.InnerText == node.InnerText && compare == Compare.InnerText) || (childNode.InnerText == node.InnerText && childNode.Name == node.Name && compare == Compare.Both))
+
+                XmlAttributeCollection attrs = nodeToAdd.Attributes;
+                XmlNode nodeToCheck = nodeToAdd;
+
+                if (xpathLocal != null)
                 {
-                    if (!checkAttributes)
+                    nodeToCheck = nodeToAdd.SelectSingleNode(xpathLocal);
+                }
+
+                foreach (XmlNode childNode in parent.ChildNodes)
+                {
+                    XmlNode nodeToCheckParent = childNode;
+                    if (xpathLocal != null)
                     {
-                        foundNode = childNode;
-                        return true;
+                        nodeToCheckParent = childNode.SelectSingleNode(xpathLocal);
                     }
-                    XmlAttributeCollection attrsChild = childNode.Attributes;
-                    if (attrs == null && attrsChild == null)
+
+                    if ((nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Name)
+                        || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && compare == Compare.InnerText)
+                        || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Both))
                     {
-                        foundNode = childNode;
-                        return true;
-                    }
-                    if (attrs != null && attrsChild != null && attrs.Count == attrsChild.Count)
-                    {
-                        bool b = true;
-                        foreach (XmlAttribute attr in attrs)
-                        {
-                            XmlNode attrChild = attrsChild.GetNamedItem(attr.Name);
-                            if (attrChild == null)
-                            {
-                                b = false;
-                                break;
-                            }
-                            if (attrChild.Value != attr.Value)
-                            {
-                                b = false;
-                                break;
-                            }
-                        }
-                        if (b)
+                        if (!checkAttributes)
                         {
                             foundNode = childNode;
                             return true;
                         }
+
+                        // Checking attributes
+                        XmlAttributeCollection attrsChild = childNode.Attributes;
+                        if (attrs == null && attrsChild == null)
+                        {
+                            foundNode = childNode;
+                            return true;
+                        }
+
+                        if (attrs != null && attrsChild != null)
+                        {
+                            // Filter attributes to ignore
+                            static bool IsIgnorable(string name) =>
+                                name == "Operation" || name == "Compare" || name == "XPathLocal";
+
+                            int filteredCount = 0;
+                            foreach (XmlAttribute attr in attrs)
+                            {
+                                if (IsIgnorable(attr.Name)) continue;
+                                filteredCount++;
+                            }
+
+                            if (filteredCount != attrsChild.Count)
+                                continue;
+
+                            bool matches = true;
+                            foreach (XmlAttribute attr in attrs)
+                            {
+                                if (IsIgnorable(attr.Name)) continue;
+
+                                XmlNode attrChild = attrsChild.GetNamedItem(attr.Name);
+                                if (attrChild == null || attrChild.Value != attr.Value)
+                                {
+                                    matches = false;
+                                    break;
+                                }
+                            }
+
+                            if (matches)
+                            {
+                                foundNode = childNode;
+                                return true;
+                            }
+                        }
                     }
                 }
+
+                foundNode = null;
+                return false;
             }
-            foundNode = null;
-            return false;
+            catch
+            {
+                Verse.Log.Error("errroror");
+                return false;
+            }
         }
+
     }
 }
