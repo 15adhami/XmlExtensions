@@ -26,36 +26,32 @@ namespace XmlExtensions
         private bool DoHybridPatch(XmlNode parent, XmlNode child)
         {
             XmlAttribute attributeOperation = child.Attributes["Operation"];
-            if (attributeOperation != null) { child.Attributes.Remove(attributeOperation); }
+            string operation = "Add";
+            if (attributeOperation != null)
+            {
+                child.Attributes.Remove(attributeOperation);
+                operation = child.Attributes["Operation"].InnerText;
+            }
             XmlAttribute attributeCompare = child.Attributes["Compare"];
+            compare = Compare.Name;
             if (attributeCompare != null) 
             { 
                 child.Attributes.Remove(attributeCompare);
                 compare = (Compare)Compare.Parse(typeof(Compare), attributeCompare.InnerText);
             }
-            else
-            {
-                compare = Compare.Name;
-            }
             XmlAttribute attributeCheckAttributes = child.Attributes["CheckAttributes"];
+            checkAttributes = false;
             if (attributeCheckAttributes != null)
             {
                 child.Attributes.Remove(attributeCheckAttributes);
                 checkAttributes = bool.Parse(attributeCheckAttributes.InnerText);
             }
-            else
-            {
-                checkAttributes = false;
-            }
             XmlAttribute attributeXPathLocal = child.Attributes["XPathLocal"];
+            xpathLocal = null;
             if (attributeXPathLocal != null)
             {
                 child.Attributes.Remove(attributeXPathLocal);
                 xpathLocal = attributeXPathLocal.InnerText;
-            }
-            else
-            {
-                xpathLocal = null;
             }
             if (attributeOperation == null)
             {
