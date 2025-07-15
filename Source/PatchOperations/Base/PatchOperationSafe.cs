@@ -40,7 +40,7 @@ namespace XmlExtensions
             return ContainsNode(parent, node, ref temp);
         }
 
-        protected bool ContainsNode(XmlNode parent, XmlNode node, ref XmlNode foundNode)
+        protected virtual bool ContainsNode(XmlNode parent, XmlNode node, ref XmlNode foundNode)
         {
             XmlAttributeCollection attrs = node.Attributes;
             foreach (XmlNode childNode in parent.ChildNodes)
