@@ -42,7 +42,7 @@ namespace XmlExtensions
             {
                 AddNode(parent, child);
             }
-            else if (attributeOperation.InnerText != "SafeRecurse")
+            else if (attributeOperation.InnerText != "Safe")
             {
                 if (attributeOperation.InnerText == "Add")
                 {
@@ -134,7 +134,7 @@ namespace XmlExtensions
         }
 
         protected override bool ContainsNode(XmlNode parent, XmlNode node, ref XmlNode foundNode)
-        { // TODO: Add XPathLocal
+        {
             XmlAttributeCollection attrs = node.Attributes;
             foreach (XmlNode childNode in parent.ChildNodes)
             {
