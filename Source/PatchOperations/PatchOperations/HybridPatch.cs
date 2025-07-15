@@ -214,7 +214,7 @@ namespace XmlExtensions
                         {
                             // Filter attributes to ignore
                             static bool IsIgnorable(string name) =>
-                                name == "Operation" || name == "Compare" || name == "XPathLocal";
+                                name == "Operation" || name == "Compare" || name == "CheckAttributes" || name == "XPathLocal";
 
                             int filteredCount = 0;
                             foreach (XmlAttribute attr in attrs)
