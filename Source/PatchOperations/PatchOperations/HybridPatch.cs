@@ -48,6 +48,26 @@ namespace XmlExtensions
                 {
                     AddNode(parent, child);
                 }
+                else if (attributeOperation.InnerText == "Replace")
+                {
+                    XmlNode foundNode = null;
+                    if (!ContainsNode(parent, child, ref foundNode))
+                    {
+                        Error("No matching node found for <" + child.Name + "> with Operation=Replace");
+                        return false;
+                    }
+                    ReplaceNode(parent, child, foundNode);
+                }
+                else if (attributeOperation.InnerText == "Remove")
+                {
+                    XmlNode foundNode = null;
+                    if (!ContainsNode(parent, child, ref foundNode))
+                    {
+                        Error("No matching node found for <" + child.Name + "> with Operation=Remove");
+                        return false;
+                    }
+                    parent.RemoveChild(foundNode);
+                }
                 else if (attributeOperation.InnerText == "AddOrReplace")
                 {
                     XmlNode foundNode = null;
@@ -95,8 +115,7 @@ namespace XmlExtensions
                 XmlNode foundNode = null;
                 if (!ContainsNode(parent, child, ref foundNode))
                 {
-                    foundNode = parent.OwnerDocument.ImportNode(child, false);
-                    parent.AppendChild(foundNode);
+                    AddNode(parent, child, false);
                 }
 
                 if (!SafeRecurse(foundNode, child))
@@ -114,9 +133,9 @@ namespace XmlExtensions
             parent.RemoveChild(foundNode);
         }
 
-        protected void AddNode(XmlNode parent, XmlNode child)
+        protected void AddNode(XmlNode parent, XmlNode child, bool deep = true)
         {
-            parent.AppendChild(parent.OwnerDocument.ImportNode(child, true));
+            parent.AppendChild(parent.OwnerDocument.ImportNode(child, deep));
         }
 
         protected bool SafeRecurse(XmlNode parent, XmlNode child)
