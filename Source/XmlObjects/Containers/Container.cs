@@ -8,7 +8,7 @@ namespace XmlExtensions
     { // TODO: Add proper stack traces
 
         protected bool initialized = false;
-        internal string modId;
+        public string modId;
 
         /// <summary>
         /// This method gets called right when the user open the settings menu
