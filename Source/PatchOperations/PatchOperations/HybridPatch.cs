@@ -1,7 +1,5 @@
 ﻿using System.Xml;
-using System.Xml.Linq;
 using Verse;
-using static RimWorld.IdeoFoundation_Deity;
 
 namespace XmlExtensions
 {
@@ -30,7 +28,7 @@ namespace XmlExtensions
             if (attributeOperation != null)
             {
                 child.Attributes.Remove(attributeOperation);
-                operation = child.Attributes["Operation"].InnerText;
+                operation = attributeOperation.InnerText;
             }
             XmlAttribute attributeCompare = child.Attributes["Compare"];
             compare = Compare.Name;
