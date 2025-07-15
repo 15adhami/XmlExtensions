@@ -48,16 +48,6 @@ namespace XmlExtensions
                 {
                     AddNode(parent, child);
                 }
-                else if (attributeOperation.InnerText == "Replace")
-                {
-                    XmlNode foundNode = null;
-                    if (!ContainsNode(parent, child, ref foundNode))
-                    {
-                        Error("No matching node found for <" + child.Name + "> with Operation=Replace");
-                        return false;
-                    }
-                    ReplaceNode(parent, child, foundNode);
-                }
                 else if (attributeOperation.InnerText == "AddOrReplace")
                 {
                     XmlNode foundNode = null;
@@ -84,6 +74,14 @@ namespace XmlExtensions
                     if (ContainsNode(parent, child, ref foundNode))
                     {
                         ReplaceNode(parent, child, foundNode);
+                    }
+                }
+                else if (attributeOperation.InnerText == "SafeRemove")
+                {
+                    XmlNode foundNode = null;
+                    if (ContainsNode(parent, child, ref foundNode))
+                    {
+                        parent.RemoveChild(foundNode);
                     }
                 }
                 else
