@@ -12,11 +12,22 @@ namespace XmlExtensions.Source.HarmonyPatches
     {
         private static IEnumerable<MethodBase> TargetMethods()
         {
-            foreach (Type T in typeof(PatchOperationPathed).AllSubclassesNonAbstract())
+            Type[] patchTypes =
             {
-                if (PatchManager.CheckTypePathed(T))
+                typeof(Verse.PatchOperationAdd),
+                typeof(Verse.PatchOperationAddModExtension),
+                typeof(Verse.PatchOperationInsert),
+                typeof(Verse.PatchOperationRemove),
+                typeof(Verse.PatchOperationReplace),
+            };
+
+            foreach (Type T in patchTypes)
+            {
+                if (T != null)
                 {
-                    yield return AccessTools.Method(T, "ApplyWorker");
+                    MethodInfo method = AccessTools.Method(T, "ApplyWorker");
+                    if (method != null)
+                        yield return method;
                 }
             }
         }
@@ -42,5 +53,7 @@ namespace XmlExtensions.Source.HarmonyPatches
             }
             return null;
         }
+
+
     }
 }

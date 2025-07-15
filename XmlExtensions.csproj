@@ -92,7 +92,6 @@
     <Compile Include="Source\HarmonyPatches\PatchOperationFindMod_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationPathed_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperation_DefaultPatches.cs" />
     <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
     <Compile Include="Source\Core\MainButtonWorker_OpenMoreModSettings.cs" />
     <Compile Include="Source\Core\ModContainer.cs" />
