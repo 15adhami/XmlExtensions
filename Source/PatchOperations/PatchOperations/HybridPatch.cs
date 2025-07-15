@@ -26,48 +26,44 @@ namespace XmlExtensions
         private bool DoHybridPatch(XmlNode parent, XmlNode child)
         {
             XmlAttribute attributeOperation = child.Attributes["Operation"];
-            if (attributeOperation != null) { child.Attributes.Remove(attributeOperation); }
+            string operation = "Add";
+            if (attributeOperation != null)
+            {
+                child.Attributes.Remove(attributeOperation);
+                operation = child.Attributes["Operation"].InnerText;
+            }
             XmlAttribute attributeCompare = child.Attributes["Compare"];
+            compare = Compare.Name;
             if (attributeCompare != null) 
             { 
                 child.Attributes.Remove(attributeCompare);
                 compare = (Compare)Compare.Parse(typeof(Compare), attributeCompare.InnerText);
             }
-            else
-            {
-                compare = Compare.Name;
-            }
             XmlAttribute attributeCheckAttributes = child.Attributes["CheckAttributes"];
+            checkAttributes = false;
             if (attributeCheckAttributes != null)
             {
                 child.Attributes.Remove(attributeCheckAttributes);
                 checkAttributes = bool.Parse(attributeCheckAttributes.InnerText);
             }
-            else
-            {
-                checkAttributes = false;
-            }
             XmlAttribute attributeXPathLocal = child.Attributes["XPathLocal"];
+            xpathLocal = null;
             if (attributeXPathLocal != null)
             {
                 child.Attributes.Remove(attributeXPathLocal);
                 xpathLocal = attributeXPathLocal.InnerText;
             }
-            else
-            {
-                xpathLocal = null;
-            }
             if (attributeOperation == null)
             {
                 AddNode(parent, child);
             }
-            else if (attributeOperation.InnerText != "Safe")
+            else if (operation != "Safe")
             {
-                if (attributeOperation.InnerText == "Add")
+                if (operation == "Add")
                 {
                     AddNode(parent, child);
                 }
-                else if (attributeOperation.InnerText == "Replace")
+                else if (operation == "Replace")
                 {
                     XmlNode foundNode = null;
                     if (!ContainsNode(parent, child, ref foundNode))
@@ -77,7 +73,7 @@ namespace XmlExtensions
                     }
                     ReplaceNode(parent, child, foundNode);
                 }
-                else if (attributeOperation.InnerText == "Remove")
+                else if (operation == "Remove")
                 {
                     XmlNode foundNode = null;
                     if (!ContainsNode(parent, child, ref foundNode))
@@ -87,7 +83,7 @@ namespace XmlExtensions
                     }
                     parent.RemoveChild(foundNode);
                 }
-                else if (attributeOperation.InnerText == "AddOrReplace")
+                else if (operation == "AddOrReplace")
                 {
                     XmlNode foundNode = null;
                     if (!ContainsNode(parent, child, ref foundNode))
@@ -99,7 +95,7 @@ namespace XmlExtensions
                         ReplaceNode(parent, child, foundNode);
                     }
                 }
-                else if (attributeOperation.InnerText == "SafeAdd")
+                else if (operation == "SafeAdd")
                 {
                     XmlNode foundNode = null;
                     if (!ContainsNode(parent, child, ref foundNode))
@@ -107,7 +103,7 @@ namespace XmlExtensions
                         AddNode(parent, child);
                     }
                 }
-                else if (attributeOperation.InnerText == "SafeReplace")
+                else if (operation == "SafeReplace")
                 {
                     XmlNode foundNode = null;
                     if (ContainsNode(parent, child, ref foundNode))
@@ -115,7 +111,7 @@ namespace XmlExtensions
                         ReplaceNode(parent, child, foundNode);
                     }
                 }
-                else if (attributeOperation.InnerText == "SafeRemove")
+                else if (operation == "SafeRemove")
                 {
                     XmlNode foundNode = null;
                     if (ContainsNode(parent, child, ref foundNode))
@@ -125,7 +121,7 @@ namespace XmlExtensions
                 }
                 else
                 {
-                    Error("<" + child.Name + "> using invalid Operation: " + attributeOperation.InnerText);
+                    Error("<" + child.Name + "> using invalid Operation: " + operation);
                     return false;
                 }
             }
