@@ -173,90 +173,79 @@ namespace XmlExtensions
 
         protected override bool ContainsNode(XmlNode parent, XmlNode nodeToAdd, ref XmlNode foundNode)
         {
-            try
+            XmlAttributeCollection attrs = nodeToAdd.Attributes;
+            XmlNode nodeToCheck = nodeToAdd;
+
+            if (xpathLocal != null)
             {
+                nodeToCheck = nodeToAdd.SelectSingleNode(xpathLocal);
+            }
 
-                XmlAttributeCollection attrs = nodeToAdd.Attributes;
-                XmlNode nodeToCheck = nodeToAdd;
-
+            foreach (XmlNode childNode in parent.ChildNodes)
+            {
+                XmlNode nodeToCheckParent = childNode;
                 if (xpathLocal != null)
                 {
-                    nodeToCheck = nodeToAdd.SelectSingleNode(xpathLocal);
+                    nodeToCheckParent = childNode.SelectSingleNode(xpathLocal);
                 }
 
-                foreach (XmlNode childNode in parent.ChildNodes)
+                if ((nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Name)
+                    || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && compare == Compare.InnerText)
+                    || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Both))
                 {
-                    XmlNode nodeToCheckParent = childNode;
-                    if (xpathLocal != null)
+                    if (!checkAttributes)
                     {
-                        nodeToCheckParent = childNode.SelectSingleNode(xpathLocal);
+                        foundNode = childNode;
+                        return true;
                     }
 
-                    if ((nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Name)
-                        || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && compare == Compare.InnerText)
-                        || (nodeToCheckParent.InnerText == nodeToCheck.InnerText && nodeToCheckParent.Name == nodeToCheck.Name && compare == Compare.Both))
+                    // Checking attributes
+                    XmlAttributeCollection attrsChild = childNode.Attributes;
+                    if (attrs == null && attrsChild == null)
                     {
-                        if (!checkAttributes)
+                        foundNode = childNode;
+                        return true;
+                    }
+
+                    if (attrs != null && attrsChild != null)
+                    {
+                        // Filter attributes to ignore
+                        static bool IsIgnorable(string name) =>
+                            name == "Operation" || name == "Compare" || name == "CheckAttributes" || name == "XPathLocal";
+
+                        int filteredCount = 0;
+                        foreach (XmlAttribute attr in attrs)
+                        {
+                            if (IsIgnorable(attr.Name)) continue;
+                            filteredCount++;
+                        }
+
+                        if (filteredCount != attrsChild.Count)
+                            continue;
+
+                        bool matches = true;
+                        foreach (XmlAttribute attr in attrs)
+                        {
+                            if (IsIgnorable(attr.Name)) continue;
+
+                            XmlNode attrChild = attrsChild.GetNamedItem(attr.Name);
+                            if (attrChild == null || attrChild.Value != attr.Value)
+                            {
+                                matches = false;
+                                break;
+                            }
+                        }
+
+                        if (matches)
                         {
                             foundNode = childNode;
                             return true;
-                        }
-
-                        // Checking attributes
-                        XmlAttributeCollection attrsChild = childNode.Attributes;
-                        if (attrs == null && attrsChild == null)
-                        {
-                            foundNode = childNode;
-                            return true;
-                        }
-
-                        if (attrs != null && attrsChild != null)
-                        {
-                            // Filter attributes to ignore
-                            static bool IsIgnorable(string name) =>
-                                name == "Operation" || name == "Compare" || name == "XPathLocal";
-
-                            int filteredCount = 0;
-                            foreach (XmlAttribute attr in attrs)
-                            {
-                                if (IsIgnorable(attr.Name)) continue;
-                                filteredCount++;
-                            }
-
-                            if (filteredCount != attrsChild.Count)
-                                continue;
-
-                            bool matches = true;
-                            foreach (XmlAttribute attr in attrs)
-                            {
-                                if (IsIgnorable(attr.Name)) continue;
-
-                                XmlNode attrChild = attrsChild.GetNamedItem(attr.Name);
-                                if (attrChild == null || attrChild.Value != attr.Value)
-                                {
-                                    matches = false;
-                                    break;
-                                }
-                            }
-
-                            if (matches)
-                            {
-                                foundNode = childNode;
-                                return true;
-                            }
                         }
                     }
                 }
-
-                foundNode = null;
-                return false;
             }
-            catch
-            {
-                Verse.Log.Error("errroror");
-                return false;
-            }
+            foundNode = null;
+            return false;
         }
-
     }
 }
