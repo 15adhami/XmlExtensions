@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Verse;
+using static RimWorld.BaseGen.SymbolResolver_BasePart_Outdoors_Division_Grid;
 
 namespace XmlExtensions
 {
@@ -27,28 +28,24 @@ namespace XmlExtensions
             string operation = "Add";
             if (attributeOperation != null)
             {
-                child.Attributes.Remove(attributeOperation);
                 operation = attributeOperation.InnerText;
             }
             XmlAttribute attributeCompare = child.Attributes["Compare"];
             compare = Compare.Name;
             if (attributeCompare != null) 
             { 
-                child.Attributes.Remove(attributeCompare);
                 compare = (Compare)Compare.Parse(typeof(Compare), attributeCompare.InnerText);
             }
             XmlAttribute attributeCheckAttributes = child.Attributes["CheckAttributes"];
             checkAttributes = false;
             if (attributeCheckAttributes != null)
             {
-                child.Attributes.Remove(attributeCheckAttributes);
                 checkAttributes = bool.Parse(attributeCheckAttributes.InnerText);
             }
             XmlAttribute attributeXPathLocal = child.Attributes["XPathLocal"];
             xpathLocal = null;
             if (attributeXPathLocal != null)
             {
-                child.Attributes.Remove(attributeXPathLocal);
                 xpathLocal = attributeXPathLocal.InnerText;
             }
             if (attributeOperation == null)
@@ -140,20 +137,23 @@ namespace XmlExtensions
             return true;
         }
 
-        protected void ReplaceNode(XmlNode parent, XmlNode child, XmlNode foundNode)
+        private void ReplaceNode(XmlNode parent, XmlNode child, XmlNode foundNode)
         {
-            parent.InsertAfter(parent.OwnerDocument.ImportNode(child, true), foundNode);
+            XmlNode node = parent.OwnerDocument.ImportNode(child, true);
+            RemoveOperationAttributes(node);
+            parent.InsertAfter(node, foundNode);
             parent.RemoveChild(foundNode);
         }
 
-        protected XmlNode AddNode(XmlNode parent, XmlNode child, bool deep = true)
+        private XmlNode AddNode(XmlNode parent, XmlNode child, bool deep = true)
         {
             XmlNode node = parent.OwnerDocument.ImportNode(child, deep);
+            RemoveOperationAttributes(node);
             parent.AppendChild(node);
             return node;
         }
 
-        protected bool SafeRecurse(XmlNode parent, XmlNode child)
+        private bool SafeRecurse(XmlNode parent, XmlNode child)
         {
             if (child.HasChildNodes && child.FirstChild.HasChildNodes)
             {
@@ -163,6 +163,30 @@ namespace XmlExtensions
                 }
             }
             return true;
+        }
+
+        private void RemoveOperationAttributes(XmlNode node)
+        {
+            XmlAttribute attributeOperation = node.Attributes["Operation"];
+            if (attributeOperation != null)
+            {
+                node.Attributes.Remove(attributeOperation);
+            }
+            XmlAttribute attributeCompare = node.Attributes["Compare"];
+            if (attributeCompare != null)
+            {
+                node.Attributes.Remove(attributeCompare);
+            }
+            XmlAttribute attributeCheckAttributes = node.Attributes["CheckAttributes"];
+            if (attributeCheckAttributes != null)
+            {
+                node.Attributes.Remove(attributeCheckAttributes);
+            }
+            XmlAttribute attributeXPathLocal = node.Attributes["XPathLocal"];
+            if (attributeXPathLocal != null)
+            {
+                node.Attributes.Remove(attributeXPathLocal);
+            }
         }
 
         protected override bool ContainsNode(XmlNode parent, XmlNode nodeToAdd, ref XmlNode foundNode)
