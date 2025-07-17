@@ -57,6 +57,11 @@ namespace XmlExtensions
         /// </summary>
         public bool submenu = false;
 
+        /// <summary>
+        /// Used to identify a Setting based on its tag
+        /// </summary>
+        public Dictionary<string, KeyedSettingContainer> tagSettingDict;
+
         internal bool Init()
         {
             if (label == null)
@@ -70,6 +75,7 @@ namespace XmlExtensions
             }
             try
             {
+                tagSettingDict = [];
                 if (submenu)
                     SettingsManager.AddMod(modId);
                 else
@@ -86,7 +92,7 @@ namespace XmlExtensions
                     try
                     {
                         c++;
-                        if (!setting.Initialize(modId))
+                        if (!setting.Initialize(this))
                         {
                             ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in initializing a setting at position=" + c.ToString());
                             return false;
@@ -103,7 +109,7 @@ namespace XmlExtensions
                     foreach (KeyedAction action in keyedActions)
                     {
                         action.modId = modId;
-                        action.Initialize(modId);
+                        action.Initialize(this);
                         XmlMod.AddKeyedAction(modId, action.key, action);
                     }
                 }
@@ -112,7 +118,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in preOpenActions)
                     {
                         action.modId = modId;
-                        action.Initialize(modId);
+                        action.Initialize(this);
                     }
                 }
                 if (postCloseActions != null)
@@ -120,7 +126,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in postCloseActions)
                     {
                         action.modId = modId;
-                        action.Initialize(modId);
+                        action.Initialize(this);
                     }
                 }
                 if (onFrameActions != null)
@@ -128,7 +134,7 @@ namespace XmlExtensions
                     foreach (ActionContainer action in onFrameActions)
                     {
                         action.modId = modId;
-                        action.Initialize(modId);
+                        action.Initialize(this);
                     }
                 }
             }

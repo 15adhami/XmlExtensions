@@ -10,7 +10,7 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            return InitializeContainers(modId, settings);
+            return InitializeContainers(menuDef, settings);
         }
 
         protected override float CalculateHeight(float width)

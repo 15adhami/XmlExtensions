@@ -90,7 +90,7 @@ namespace XmlExtensions.Setting
                 ScrollView scrollView = new() { settings = settings };
                 settings = [ scrollView ];
             }
-            return InitializeContainers(modId, settings);
+            return InitializeContainers(menuDef, settings);
         }
 
         protected override float CalculateHeight(float width)

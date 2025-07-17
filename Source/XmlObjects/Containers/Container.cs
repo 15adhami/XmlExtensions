@@ -10,6 +10,8 @@ namespace XmlExtensions
         protected bool initialized = false;
         public string modId;
 
+        protected SettingsMenuDef menuDef;
+
         /// <summary>
         /// This method gets called right when the user open the settings menu
         /// </summary>
@@ -38,12 +40,13 @@ namespace XmlExtensions
             return true;
         }
 
-        public virtual bool Initialize(string modId)
+        public virtual bool Initialize(SettingsMenuDef menuDef)
         {
             if (!initialized)
             {
                 initialized = true;
-                this.modId ??= modId;
+                this.menuDef ??= menuDef;
+                modId = menuDef.modId;
                 try
                 {
                     return Init();
@@ -64,7 +67,7 @@ namespace XmlExtensions
         /// <param name="containers">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeContainers(string modId, IEnumerable<Container> containers, string name = null)
+        protected bool InitializeContainers(SettingsMenuDef menuDef, IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
@@ -72,7 +75,7 @@ namespace XmlExtensions
                 foreach (Container container in containers)
                 {
                     c++;
-                    if (!container.Initialize(modId))
+                    if (!container.Initialize(menuDef))
                     {
                         if (name != null)
                         {

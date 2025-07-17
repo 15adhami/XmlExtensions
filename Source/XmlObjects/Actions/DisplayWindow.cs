@@ -81,7 +81,7 @@ namespace XmlExtensions.Action
                 ScrollView scrollView = new() { settings = settings };
                 settings = [scrollView];
             }
-            return InitializeContainers(modId, settings);
+            return InitializeContainers(menuDef, settings);
         }
 
         internal override bool PreOpen()

@@ -76,7 +76,7 @@ namespace XmlExtensions.Setting
 
             for (int i = 0; i < settings.Count; i++)
             {
-                if (!InitializeContainers(modId, settings[i], i.ToString()))
+                if (!InitializeContainers(menuDef, settings[i], i.ToString()))
                 {
                     return false;
                 }

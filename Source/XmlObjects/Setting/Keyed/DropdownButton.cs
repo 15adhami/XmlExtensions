@@ -11,7 +11,7 @@ namespace XmlExtensions.Setting
     }
 
     internal class DropdownButton : KeyedSettingContainer
-    {
+    { // TODO: Add dropdown actions
         public List<DropdownOption> options;
         public string tKey;
 

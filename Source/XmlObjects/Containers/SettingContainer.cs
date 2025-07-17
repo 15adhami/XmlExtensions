@@ -59,13 +59,14 @@ namespace XmlExtensions.Setting
         /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public override bool Initialize(string modId)
+        public override bool Initialize(SettingsMenuDef menuDef)
         {
             if (!initialized)
             {
                 try
                 {
-                    this.modId = modId;
+                    this.menuDef ??= menuDef;
+                    this.modId = menuDef.modId;
                     if (!SetDefaultValue())
                     {
                         return false;
@@ -76,7 +77,7 @@ namespace XmlExtensions.Setting
                     Error("Failed to set default value:\n" + e.Message);
                     return false;
                 }
-                return base.Initialize(modId);
+                return base.Initialize(menuDef);
             }
             return true;
         }

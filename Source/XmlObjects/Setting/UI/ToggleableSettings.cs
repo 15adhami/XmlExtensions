@@ -12,11 +12,11 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeContainers(modId, caseTrue, "caseTrue"))
+            if (!InitializeContainers(menuDef, caseTrue, "caseTrue"))
             {
                 return false;
             }
-            if (!InitializeContainers(modId, caseFalse, "caseFalse"))
+            if (!InitializeContainers(menuDef, caseFalse, "caseFalse"))
             {
                 return false;
             }

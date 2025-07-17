@@ -190,6 +190,7 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
+    <Compile Include="Source\XmlObjects\Actions\ChangeKey.cs" />
     <Compile Include="Source\XmlObjects\Actions\Log.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
     <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />

@@ -193,7 +193,7 @@
             </summary>
             <returns>Return <c>false</c> if there was an error, <c>true</c> otherwise.</returns>
         </member>
-        <member name="M:XmlExtensions.Container.InitializeContainers(System.String,System.Collections.Generic.IEnumerable{XmlExtensions.Container},System.String)">
+        <member name="M:XmlExtensions.Container.InitializeContainers(XmlExtensions.SettingsMenuDef,System.Collections.Generic.IEnumerable{XmlExtensions.Container},System.String)">
             <summary>
             Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
             </summary>
@@ -299,7 +299,7 @@
             Used to help reference the setting via xpath
             </summary>
         </member>
-        <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(System.String)">
+        <member name="M:XmlExtensions.Setting.SettingContainer.Initialize(XmlExtensions.SettingsMenuDef)">
             <summary>
             This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
             </summary>
@@ -477,6 +477,11 @@
         <member name="F:XmlExtensions.SettingsMenuDef.submenu">
             <summary>
             Whether or not the menu is a submenu
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.tagSettingDict">
+            <summary>
+            Used to identify a Setting based on its tag
             </summary>
         </member>
         <member name="T:XmlExtensions.SlateDef">

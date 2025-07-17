@@ -31,11 +31,11 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeContainers(modId, leftCol, "leftCol"))
+            if (!InitializeContainers(menuDef, leftCol, "leftCol"))
             {
                 return false;
             }
-            if (!InitializeContainers(modId, rightCol, "rightCol"))
+            if (!InitializeContainers(menuDef, rightCol, "rightCol"))
             {
                 return false;
             }

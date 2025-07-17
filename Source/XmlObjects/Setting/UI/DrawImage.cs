@@ -32,7 +32,7 @@ namespace XmlExtensions.Setting
                 Error("Failed to find a texture with texpath=\"" + texPath + "\"");
                 return false;
             }
-            return InitializeContainers(modId, actions);
+            return InitializeContainers(menuDef, actions);
         }
 
         protected override float CalculateHeight(float width2)

@@ -14,7 +14,7 @@ namespace XmlExtensions.Setting
         {
             addDefaultSpacing = false;
             settings = DefDatabase<SettingsMenuDef>.GetNamed(menu).settings;
-            return InitializeContainers(modId, settings);
+            return InitializeContainers(menuDef, settings);
         }
 
         protected override float CalculateHeight(float width)

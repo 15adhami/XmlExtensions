@@ -28,7 +28,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (Tab tab in tabs)
                 {
-                    if (!InitializeContainers(modId, tab.settings, tab.label))
+                    if (!InitializeContainers(menuDef, tab.settings, tab.label))
                     {
                         return false;
                     }

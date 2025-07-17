@@ -27,7 +27,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            return InitializeContainers(modId, actions);
+            return InitializeContainers(menuDef, actions);
         }
 
         internal override bool PreOpen()

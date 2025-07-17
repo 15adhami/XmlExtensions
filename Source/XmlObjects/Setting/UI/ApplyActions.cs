@@ -22,7 +22,7 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             WarnUsingObselete([typeof(Button)]);
-            return InitializeContainers(modId, actions);
+            return InitializeContainers(menuDef, actions);
         }
 
         protected override float CalculateHeight(float width)

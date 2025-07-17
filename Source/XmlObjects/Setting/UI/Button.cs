@@ -29,7 +29,7 @@ namespace XmlExtensions.Setting
                 message = "Are you sure?";
                 tKeyMessage ??= "XmlExtensions_Confirmation";
             }
-            return InitializeContainers(modId, actions);
+            return InitializeContainers(menuDef, actions);
         }
 
         protected override float CalculateHeight(float width)

@@ -24,7 +24,7 @@ namespace XmlExtensions.Setting
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();
                 foreach (SwitchSetting switchSetting in cases)
                 {
-                    if (!InitializeContainers(modId, switchSetting.settings, switchSetting.value.ToString()))
+                    if (!InitializeContainers(menuDef, switchSetting.settings, switchSetting.value.ToString()))
                     {
                         return false;
                     }
