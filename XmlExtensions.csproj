@@ -101,6 +101,7 @@
     <Compile Include="Source\Core\ModContainer.cs" />
     <Compile Include="Source\Core\ObjectContainer.cs" />
     <Compile Include="Source\PatchOperations\Boolean\HasModBeenUsed.cs" />
+    <Compile Include="Source\PatchOperations\Control\ForEachLoop.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\HybridPatch.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationEditString.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />

@@ -151,12 +151,12 @@ namespace XmlExtensions
             return true;
         }
 
-        protected bool RunPatches(XmlContainer container, XmlDocument xml)
+        protected bool RunPatches(XmlContainer container, XmlDocument xml, bool throwError = true)
         {
-            return RunPatches(container, "apply", xml);
+            return RunPatches(container, "apply", xml, throwError);
         }
 
-        protected bool RunPatches(XmlContainer container, string name, XmlDocument xml)
+        protected bool RunPatches(XmlContainer container, string name, XmlDocument xml, bool throwError = true)
         {
             try
             {
@@ -169,12 +169,14 @@ namespace XmlExtensions
                     }
                     catch (Exception e)
                     {
-                        Error("Failed to create patch in <" + name + "> from the operation at position=" + (j + 1).ToString() + ":\n" + e.Message);
+                        if (throwError)
+                            Error("Failed to create patch in <" + name + "> from the operation at position=" + (j + 1).ToString() + ":\n" + e.Message);
                         return false;
                     }
                     if (!patch.Apply(xml))
                     {
-                        Error("Error in <" + name + "> in the operation at position=" + (j + 1).ToString());
+                        if (throwError)
+                            Error("Error in <" + name + "> in the operation at position=" + (j + 1).ToString());
                         return false;
                     }
                 }

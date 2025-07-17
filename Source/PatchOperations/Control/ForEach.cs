@@ -1,8 +1,10 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
 {
+    [Obsolete]
     internal class ForEach : PatchOperationExtended
     {
         public string xpath;
