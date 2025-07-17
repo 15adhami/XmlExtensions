@@ -20,7 +20,6 @@ namespace XmlExtensions
         internal static Dictionary<string, XmlModSettings> settingsPerMod;
         internal static HashSet<string> modsWithSettings;
 
-        internal static Dictionary<string, SettingsMenuDef> menus;
         internal static Dictionary<string, List<string>> unusedSettings;
         internal static List<string> unusedMods;
         internal static Dictionary<string, Dictionary<string, List<KeyedAction>>> keyedActionListDict;
@@ -39,7 +38,6 @@ namespace XmlExtensions
             keyedActionListDict = new Dictionary<string, Dictionary<string, List<KeyedAction>>>();
             unusedMods = new List<string>();
             unusedSettings = new Dictionary<string, List<string>>();
-            menus = new Dictionary<string, SettingsMenuDef>();
             loadedXmlMods = [];
             modsWithSettings = [];
             usingObsolete = [];

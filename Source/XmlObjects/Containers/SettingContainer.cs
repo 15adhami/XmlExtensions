@@ -66,7 +66,7 @@ namespace XmlExtensions.Setting
                 try
                 {
                     this.menuDef ??= menuDef;
-                    this.modId = menuDef.modId;
+                    modId = menuDef.modId;
                     if (!SetDefaultValue())
                     {
                         return false;

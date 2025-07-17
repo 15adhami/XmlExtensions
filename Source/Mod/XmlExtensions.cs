@@ -23,18 +23,14 @@ namespace XmlExtensions
             int i = 0;
             foreach (SettingsMenuDef menuDef in DefDatabase<SettingsMenuDef>.AllDefsListForReading)
             {
-                XmlMod.menus.Add(menuDef.defName, menuDef);
-                if (!menuDef.Init())
+                if (!menuDef.submenu && !menuDef.Init())
                 {
                     ErrorManager.PrintErrors();
                 }
-                else
+                else if (!menuDef.submenu)
                 {
-                    if (!menuDef.submenu)
-                    {
-                        modsForMenu.Add(menuDef);
-                        i++;
-                    }
+                    modsForMenu.Add(menuDef);
+                    i++;
                 }
                 if (XmlMod.settingsPerMod[menuDef.modId].menus == null)
                 {
