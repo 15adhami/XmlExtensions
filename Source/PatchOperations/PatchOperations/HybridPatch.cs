@@ -137,12 +137,12 @@ namespace XmlExtensions
             return true;
         }
 
-        private void ReplaceNode(XmlNode parent, XmlNode child, XmlNode foundNode)
+        private void ReplaceNode(XmlNode parent, XmlNode child, XmlNode targetNode)
         {
             XmlNode node = parent.OwnerDocument.ImportNode(child, true);
             RemoveOperationAttributes(node);
-            parent.InsertAfter(node, foundNode);
-            parent.RemoveChild(foundNode);
+            parent.InsertAfter(node, targetNode);
+            parent.RemoveChild(targetNode);
         }
 
         private XmlNode AddNode(XmlNode parent, XmlNode child, bool deep = true)
