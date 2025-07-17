@@ -12,8 +12,6 @@ namespace XmlExtensions.Setting
         public int id = 0;
         public int decimals = 0;
 
-        private Color cColor;
-
         protected override bool Init()
         {
             id = SettingsManager.rangeCount;
@@ -47,7 +45,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            cColor = GUI.color;
+            Color color = GUI.color;
             if (key2 == null)
             {
                 FloatRange range = Verse.FloatRange.FromString(SettingsManager.GetSetting(modId, key));
@@ -61,7 +59,7 @@ namespace XmlExtensions.Setting
                 SettingsManager.SetSetting(modId, key, Math.Round(range.min, decimals).ToString());
                 SettingsManager.SetSetting(modId, key2, Math.Round(range.max, decimals).ToString());
             }
-            GUI.color = cColor;
+            GUI.color = color;
         }
     }
 }

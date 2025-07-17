@@ -18,6 +18,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
+            Color color = GUI.color;
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.verticalSpacing = 0;
             listingStandard.Begin(inRect);
@@ -30,6 +31,7 @@ namespace XmlExtensions.Setting
             newFloat = listingStandard.Slider(currFloat, min, max);
             listingStandard.End();
             SettingsManager.SetSetting(modId, key, Math.Round(newFloat, decimals).ToString());
+            GUI.color = color;
         }
     }
 }

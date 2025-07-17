@@ -41,7 +41,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            if (settings.Count > 0)
+            if (CalculateHeight(inRect.width) > 0)
             {
                 Color curColor = GUI.color;
                 GUI.color = Widgets.MenuSectionBGFillColor * curColor;
