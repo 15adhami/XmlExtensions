@@ -39,6 +39,10 @@
             {
                 SettingsManager.SetDefaultValue(modId, key, defaultValue);
             }
+            if (tag != null)
+            {
+                menuDef.tagSettingDict.Add(tag, this);
+            }
             return true;
         }
     }

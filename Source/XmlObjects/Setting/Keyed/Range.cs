@@ -26,6 +26,10 @@ namespace XmlExtensions.Setting
                 Error("<key> is null");
                 return false;
             }
+            else if (tag != null)
+            {
+                menuDef.tagSettingDict.Add(tag, this);
+            }
             if (key2 == null)
             {
                 SettingsManager.SetDefaultValue(modId, key, defaultValue);
