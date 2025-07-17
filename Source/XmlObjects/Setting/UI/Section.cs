@@ -9,6 +9,7 @@ namespace XmlExtensions.Setting
         public float height = -1f;
         public List<SettingContainer> settings;
         public float padding = 4f;
+        public bool drawBorder = true;
 
         protected override bool Init()
         {
@@ -45,8 +46,11 @@ namespace XmlExtensions.Setting
                 Color curColor = GUI.color;
                 GUI.color = Widgets.MenuSectionBGFillColor * curColor;
                 GUI.DrawTexture(inRect, BaseContent.WhiteTex);
-                GUI.color = new ColorInt(135, 135, 135).ToColor * curColor;
-                Widgets.DrawBox(inRect, 1, null);
+                if (drawBorder)
+                {
+                    GUI.color = new ColorInt(135, 135, 135).ToColor * curColor;
+                    Widgets.DrawBox(inRect, 1, null);
+                }
                 GUI.color = curColor;
                 Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
                 DrawSettingsList(rect2, settings);
