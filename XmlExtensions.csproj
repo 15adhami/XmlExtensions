@@ -193,7 +193,7 @@
     <Compile Include="Source\Windows\BaseSettingsWindow.cs" />
     <Compile Include="Source\XmlObjects\Actions\ChangeKey.cs" />
     <Compile Include="Source\XmlObjects\Actions\CloseMenu.cs" />
-    <Compile Include="Source\XmlObjects\Actions\DropdownMenu.cs" />
+    <Compile Include="Source\XmlObjects\Actions\FloatMenu.cs" />
     <Compile Include="Source\XmlObjects\Actions\Log.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
     <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />

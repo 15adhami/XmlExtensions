@@ -19,7 +19,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            WarnUsingObselete([typeof(Button), typeof(Action.DropdownMenu)]);
+            WarnUsingObselete([typeof(Button), typeof(Action.FloatMenu)]);
             return true;
         }
 

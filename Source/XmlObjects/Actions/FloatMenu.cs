@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Action
 {
-    internal class DropdownMenu : ActionContainer
+    internal class FloatMenu : ActionContainer
     {
         public string key;
         public string defaultValue;
@@ -37,7 +37,7 @@ namespace XmlExtensions.Action
             {
                 newOptions.Add(new FloatMenuOption(Helpers.TryTranslate(option.label, option.tKey), () => SettingsManager.SetSetting(modId, key, option.value)));
             }
-            Find.WindowStack.Add(new FloatMenu(newOptions));
+            Find.WindowStack.Add(new Verse.FloatMenu(newOptions));
             return true;
         }
     }

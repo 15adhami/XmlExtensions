@@ -168,7 +168,7 @@ namespace XmlExtensions
                                     XmlMod.allSettings.PinnedMods.Add(mod.ToString());
                                 }));
                             }
-                            Find.WindowStack.Add(new FloatMenu(newOptions));
+                            Find.WindowStack.Add(new Verse.FloatMenu(newOptions));
                         }
                         else
                         {
