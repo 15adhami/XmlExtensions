@@ -41,9 +41,13 @@ namespace XmlExtensions.Setting
         {
             if (!tooltip.NullOrEmpty())
             {
-                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                string tooltipLabel = Helpers.TryTranslate(tooltip, tKeyTip);
+                tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
+                TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
-            if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+            string buttonLabel = Helpers.TryTranslate(label, tKey);
+            buttonLabel = Helpers.SubstituteVariable(buttonLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
+            if (Widgets.ButtonText(inRect, buttonLabel))
             {
                 if (actions != null)
                 {
