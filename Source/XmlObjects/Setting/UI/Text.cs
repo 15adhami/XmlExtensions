@@ -65,7 +65,19 @@ namespace XmlExtensions.Setting
             Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())
             {
-                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                string tooltipLabel = Helpers.TryTranslate(tooltip, tKeyTip);
+                if (keys != null)
+                {
+                    foreach (string key in keys)
+                    {
+                        tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, key, SettingsManager.GetSetting(modId, key), "{}");
+                    }
+                }
+                if (key != null)
+                {
+                    tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
+                }
+                TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
             Rect alignedRect;
             if (anchor == Anchor.Left)
