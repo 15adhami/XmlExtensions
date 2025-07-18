@@ -4,7 +4,7 @@ using XmlExtensions.Setting;
 namespace XmlExtensions.Action
 {
     internal class ChangeKey : ActionContainer
-    { // TOD: Make sure this works for settings in EmbedMenu
+    {
         protected string key;
         protected string defaultValue;
         protected List<string> tags = null;
