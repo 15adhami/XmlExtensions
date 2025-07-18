@@ -8,7 +8,7 @@ namespace XmlExtensions
     {
         public string xpath;
         protected XmlContainer apply;
-        protected string storeIn = "DEF";
+        protected string storeIn = "path";
         protected string brackets = "{}";
         protected List<string> values;
 
