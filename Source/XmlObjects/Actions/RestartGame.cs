@@ -6,9 +6,11 @@ namespace XmlExtensions.Action
     {
         protected override bool ApplyAction()
         {
-            Find.WindowStack.TryRemove(typeof(ModSettingsWindow));
-            Find.WindowStack.TryRemove(typeof(XmlExtensionsMenuModSettings));
-            GenCommandLine.Restart();
+            Find.WindowStack.TryGetWindow(out BaseSettingsWindow window);
+            if (window != null)
+            {
+                window.shouldClose = 2;
+            }
             return true;
         }
     }

@@ -17,7 +17,7 @@ namespace XmlExtensions
         // For KeyedActions
         protected static Dictionary<string, string> oldValuesCache;
 
-        public bool shouldClose = false;
+        public int shouldClose = 0;
 
         public BaseSettingsWindow(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
@@ -53,10 +53,10 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (shouldClose)
-            {
+            if (shouldClose > 0)
                 Close();
-            }
+            if (shouldClose == 2)
+                GenCommandLine.Restart();
         }
 
         public static void SetActiveMenu(string defName)

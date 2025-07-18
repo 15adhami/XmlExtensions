@@ -9,7 +9,7 @@ namespace XmlExtensions.Action
             Find.WindowStack.TryGetWindow(out BaseSettingsWindow window);
             if (window != null)
             {
-                window.shouldClose = true;
+                window.shouldClose = 1;
             }
             return true;
         }

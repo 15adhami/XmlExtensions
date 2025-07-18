@@ -149,15 +149,13 @@ namespace XmlExtensions
         /// <param name="defName">the defName of the SettingsMenuDef you want to display</param>
         protected void SetActiveMenu(string defName)
         {
-            if (XmlExtensionsMenuModSettings.activeMenu != null)
+            if (BaseSettingsWindow.activeMenu != null)
             {
-                XmlExtensionsMenuModSettings.SetActiveMenu(defName);
-            }
-            else if (ModSettingsWindow.activeMenu != null)
-            {
-                ModSettingsWindow.SetActiveMenu(defName);
+                BaseSettingsWindow.SetActiveMenu(defName);
             }
         }
+
+
         protected void WarnUsingObselete(Type[] alternatives)
         {
             XmlMod.WarnUsingObselete(modId, this, alternatives);
