@@ -238,11 +238,6 @@
             Inherit from this class in order to create a new setting that manages a key.
             </summary>
         </member>
-        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.key">
-            <summary>
-            They key that this setting manages
-            </summary>
-        </member>
         <member name="F:XmlExtensions.Setting.KeyedSettingContainer.label">
             <summary>
             The label to print (optional)
@@ -262,6 +257,11 @@
         <member name="T:XmlExtensions.Setting.SettingContainer">
             <summary>
             Inherit from this class in order to create a new setting.
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.Setting.SettingContainer.key">
+            <summary>
+            The key that this setting manages (if needed)
             </summary>
         </member>
         <member name="F:XmlExtensions.Setting.SettingContainer.addDefaultSpacing">
@@ -479,7 +479,7 @@
             Whether or not the menu is a submenu
             </summary>
         </member>
-        <member name="F:XmlExtensions.SettingsMenuDef.tagSettingDict">
+        <member name="F:XmlExtensions.SettingsMenuDef.tagMap">
             <summary>
             Used to identify a Setting based on its tag
             </summary>

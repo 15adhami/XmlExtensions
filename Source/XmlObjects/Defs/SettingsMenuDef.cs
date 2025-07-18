@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -60,7 +61,7 @@ namespace XmlExtensions
         /// <summary>
         /// Used to identify a Setting based on its tag
         /// </summary>
-        public Dictionary<string, KeyedSettingContainer> tagSettingDict;
+        public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
         internal bool Init()
         {
@@ -75,7 +76,7 @@ namespace XmlExtensions
             }
             try
             {
-                tagSettingDict = [];
+                tagMap = [];
                 if (submenu)
                     SettingsManager.AddMod(modId);
                 else
@@ -222,6 +223,16 @@ namespace XmlExtensions
                         ErrorManager.PrintErrors();
                     }
                 }
+            }
+        }
+
+        internal void AddTag(string tag, SettingContainer setting)
+        {
+            if (tag != null)
+            {
+                if (!tagMap.ContainsKey(tag))
+                    tagMap.Add(tag, new());
+                tagMap[tag].Add(setting);
             }
         }
     }

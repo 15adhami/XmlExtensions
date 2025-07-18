@@ -28,7 +28,7 @@ namespace XmlExtensions.Setting
             }
             else if (tag != null)
             {
-                menuDef.tagSettingDict.Add(tag, this);
+                menuDef.AddTag(tag, this);
             }
             if (key2 == null)
             {

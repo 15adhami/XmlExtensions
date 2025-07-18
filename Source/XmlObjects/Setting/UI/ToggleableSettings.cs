@@ -5,7 +5,6 @@ namespace XmlExtensions.Setting
 {
     internal class ToggleableSettings : SettingContainer
     {
-        public string key;
         public List<SettingContainer> caseTrue;
         public List<SettingContainer> caseFalse;
 

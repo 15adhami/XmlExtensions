@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions.Action
 {
@@ -27,7 +28,8 @@ namespace XmlExtensions.Action
         {
             foreach (string tag in tags)
             {
-                menuDef.tagSettingDict[tag].key=key;
+                foreach (SettingContainer setting in menuDef.tagMap[tag])
+                    setting.key=key;
             }
             return true;
         }

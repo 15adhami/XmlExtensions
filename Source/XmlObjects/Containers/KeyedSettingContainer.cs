@@ -6,11 +6,6 @@
     public abstract class KeyedSettingContainer : SettingContainer
     {
         /// <summary>
-        /// They key that this setting manages
-        /// </summary>
-        public string key = null;
-
-        /// <summary>
         /// The label to print (optional)
         /// </summary>
         public string label = null;
@@ -41,7 +36,7 @@
             }
             if (tag != null)
             {
-                menuDef.tagSettingDict.Add(tag, this);
+                menuDef.AddTag(tag, this);
             }
             return true;
         }

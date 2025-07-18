@@ -11,6 +11,11 @@ namespace XmlExtensions.Setting
     public abstract class SettingContainer : Container
     {
         /// <summary>
+        /// The key that this setting manages (if needed)
+        /// </summary>
+        public string key = null;
+
+        /// <summary>
         /// Determines whether or not the default setting should be added after drawing the setting
         /// </summary>
         protected bool addDefaultSpacing = true;

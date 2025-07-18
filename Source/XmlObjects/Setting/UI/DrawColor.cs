@@ -10,10 +10,10 @@ namespace XmlExtensions.Setting
     internal class DrawColor : SettingContainer
     {
         public Color color = new();
-        public string key;
         public int colorSize = 22;
         public int border = 2;
         public Anchor anchor = Anchor.Middle;
+        public bool drawSelection = false;
         public string tooltip;
         public string tKeyTip;
         public List<ActionContainer> actions;
@@ -76,7 +76,16 @@ namespace XmlExtensions.Setting
             };
 
             Widgets.DrawLightHighlight(alignedRect);
-            if (drawColor.IndistinguishableFrom(color))
+            Color selectColor = new();
+            if (color != null)
+            {
+                selectColor = color;
+            }
+            else if (key != null)
+            {
+                selectColor = drawColor;
+            }
+            if (drawSelection && drawColor.IndistinguishableFrom(selectColor))
             {
                 Widgets.DrawBox(alignedRect);
             }

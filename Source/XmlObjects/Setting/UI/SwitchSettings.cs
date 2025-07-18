@@ -11,7 +11,6 @@ namespace XmlExtensions.Setting
             public List<SettingContainer> settings;
         }
 
-        public string key;
         public List<SwitchSetting> cases;
 
         private Dictionary<string, List<SettingContainer>> valSettingDict;

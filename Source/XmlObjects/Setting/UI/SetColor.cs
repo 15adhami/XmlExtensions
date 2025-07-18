@@ -6,7 +6,6 @@ namespace XmlExtensions.Setting
     internal class SetColor : SettingContainer
     {
         protected Color color = Color.white;
-        public string key;
 
         protected override bool Init()
         {
