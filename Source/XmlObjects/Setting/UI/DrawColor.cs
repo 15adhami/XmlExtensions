@@ -84,11 +84,11 @@ namespace XmlExtensions.Setting
             else if (key != null)
             {
                 selectColor = drawColor;
-            }
+            }/*
             if (drawSelection && drawColor.IndistinguishableFrom(selectColor))
             {
                 Widgets.DrawBox(alignedRect);
-            }
+            }*/
 
             if (!tooltip.NullOrEmpty())
             {
