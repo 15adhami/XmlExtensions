@@ -12,7 +12,7 @@ namespace XmlExtensions
         {
             if (this.OpenTab != null)
                 Find.WindowStack.TryRemove((Window) this.OpenTab.TabWindow, false);
-            Find.WindowStack.Add(new XmlExtensions_MenuModSettings());
+            Find.WindowStack.Add(new XmlExtensionsMenuModSettings());
             SoundDefOf.TabOpen.PlayOneShotOnCamera();
         }
     }

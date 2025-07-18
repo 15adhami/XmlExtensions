@@ -105,7 +105,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\HybridPatch.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationEditString.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />
-    <Compile Include="Source\Windows\ModSettings_Window.cs" />
+    <Compile Include="Source\Windows\ModSettingsWindow.cs" />
     <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
     <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
@@ -190,7 +190,9 @@
     <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
     <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
+    <Compile Include="Source\Windows\BaseSettingsWindow.cs" />
     <Compile Include="Source\XmlObjects\Actions\ChangeKey.cs" />
+    <Compile Include="Source\XmlObjects\Actions\CloseMenu.cs" />
     <Compile Include="Source\XmlObjects\Actions\Log.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
     <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />
@@ -246,7 +248,7 @@
     <Compile Include="Source\XmlObjects\Defs\SettingsMenuDef.cs" />
     <Compile Include="Source\XmlObjects\Defs\SlateDef.cs" />
     <Compile Include="Source\Mod\XmlExtensions.cs" />
-    <Compile Include="Source\Windows\XmlExtensions_MenuModSettings.cs" />
+    <Compile Include="Source\Windows\XmlExtensionsMenuModSettings.cs" />
     <Compile Include="Source\Mod\XmlMod.cs" />
     <Compile Include="Source\Mod\XmlModBaseSettings.cs" />
     <Compile Include="Source\Mod\XmlModSettings.cs" />

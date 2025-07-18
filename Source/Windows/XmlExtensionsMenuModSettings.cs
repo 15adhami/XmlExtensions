@@ -9,54 +9,26 @@ using XmlExtensions.Action;
 namespace XmlExtensions
 {
     // Window that appears when you press More Mod Settings
-    public class XmlExtensions_MenuModSettings : Window
+    public class XmlExtensionsMenuModSettings : BaseSettingsWindow
     {
-        public static SettingsMenuDef activeMenu = null;
-
-        public static Vector2 settingsPosition;
         public static Vector2 modListPosition;
-        public static ModContainer SelectedMod = null;
 
         private readonly List<ModContainer> loadedMods;
         private readonly List<ModContainer> cachedFilteredList;
         private bool pinned = false;
         private static ModContainer prevMod = null;
         private string searchText = "";
-        private static Dictionary<string, string> oldValuesCache;
         private bool focusSearchBox = false;
         private readonly float ListWidth = 256f;
 
         private Texture2D pinTex;
 
-        public XmlExtensions_MenuModSettings(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
+        public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
+
+        public XmlExtensionsMenuModSettings(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false) : base(initialMenu, isXmlExtensions)
         {
-            soundAmbient = null;
-            soundAppear = null;
             loadedMods = new();
             cachedFilteredList = new();
-            oldValuesCache = new();
-            doCloseButton = true;
-            forcePause = true;
-            absorbInputAroundWindow = true;
-            closeOnClickedOutside = true;
-            doCloseX = true;
-            closeOnAccept = false;
-
-            // Close other mod dialgue windows
-            XmlExtensions_MenuModSettings xmlModDialogue;
-            bool foundXmlModWindow = Find.WindowStack.TryGetWindow(out xmlModDialogue);
-            if (foundXmlModWindow)
-            {
-                xmlModDialogue.soundClose = null;
-                xmlModDialogue.Close(false);
-            }
-            Dialog_ModSettings modDialogue;
-            bool foundModWindow = Find.WindowStack.TryGetWindow(out modDialogue);
-            if (foundModWindow)
-            {
-                modDialogue.soundClose = null;
-                modDialogue.Close(false);
-            }
 
             // Set initial menu
             if (initialMenu != null)
@@ -68,8 +40,6 @@ namespace XmlExtensions
                 prevMod = null;
             }
         }
-
-        public override Vector2 InitialSize => new Vector2(900f + ListWidth + 6f, 700f);
 
         public override void PreOpen()
         {
@@ -96,7 +66,6 @@ namespace XmlExtensions
 
         public override void DoWindowContents(Rect inRect)
         {
-            
             Rect rectSettings = inRect.RightPartPixels(864f).TopPartPixels(inRect.height - 40);
             Rect headerRect = rectSettings.TopPartPixels(40f);
             Listing_Standard listing = new Listing_Standard();
@@ -146,6 +115,7 @@ namespace XmlExtensions
                 focusSearchBox = false;
             }
             DrawXmlModList(rectMods.BottomPartPixels(rectMods.height - 24));
+            base.DoWindowContents(inRect);
         }
 
         private void DrawXmlModList(Rect rect)
@@ -233,46 +203,6 @@ namespace XmlExtensions
             Widgets.EndScrollView();
         }
 
-        public void SetSelectedMod(ModContainer mod)
-        {
-            // Run KeyedActions
-            if (SelectedMod != null && SelectedMod.IsXmlMod() && XmlMod.keyedActionListDict.ContainsKey(SelectedMod.modId))
-            {
-                foreach (string key in XmlMod.keyedActionListDict[SelectedMod.modId].Keys)
-                {
-                    foreach (KeyedAction action in XmlMod.keyedActionListDict[SelectedMod.modId][key])
-                    {
-                        if (!action.DoKeyedAction(oldValuesCache[key], SettingsManager.GetSetting(SelectedMod.modId, key)))
-                        {
-                            ErrorManager.PrintErrors();
-                        }
-                    }
-                }
-            }
-            oldValuesCache.Clear();
-            if (mod != null && mod.IsXmlMod())
-            {
-                // Cache values for next mod
-                if (XmlMod.keyedActionListDict.ContainsKey(mod.modId))
-                {
-                    foreach (string key in XmlMod.keyedActionListDict[mod.modId].Keys)
-                    {
-                        oldValuesCache.Add(key, SettingsManager.GetSetting(mod.modId, key));
-                    }
-                }
-                SetActiveMenu(XmlMod.settingsPerMod[mod.modId].homeMenu);
-            }
-            else
-            {
-                SetActiveMenu(null);
-            }
-            if (SelectedMod != null)
-            {
-                SelectedMod.WriteSettings();
-            }
-            SelectedMod = mod;
-        }
-
         private void DrawXmlModSettings(Rect rect)
         {
             rect.x = 0;
@@ -281,23 +211,7 @@ namespace XmlExtensions
             {
                 if (SelectedMod.IsXmlMod())
                 {
-                    Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f));
-                    Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
-                    Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-                    activeMenu.DrawSettings(rect2);
-                    if (activeMenu.onFrameActions != null)
-                    {
-                        ErrorManager.ClearErrors();
-                        foreach (ActionContainer action in activeMenu.onFrameActions)
-                        {
-                            if (!action.DoAction())
-                            {
-                                ErrorManager.PrintErrors();
-                            }
-                        }
-                    }
-                    GUI.color = Color.white;
-                    Widgets.EndScrollView();
+                    DrawModSettings(rect);
                 }
                 else
                 {
@@ -353,22 +267,6 @@ namespace XmlExtensions
                         cachedFilteredList.Add(mod);
                     }
                 }
-            }
-        }
-
-        public static void SetActiveMenu(string defName)
-        {
-            if (activeMenu != null)
-            {
-                SettingsMenuDef tempMenu = activeMenu;
-                activeMenu = null;
-                tempMenu.RunPostCloseActions();
-            }
-            if (defName != null)
-            {
-                activeMenu = DefDatabase<SettingsMenuDef>.GetNamed(defName);
-                activeMenu.RunPreOpenActions();
-                activeMenu.PreOpen();
             }
         }
 

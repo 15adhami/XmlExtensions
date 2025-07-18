@@ -6,8 +6,8 @@ namespace XmlExtensions.Action
     {
         protected override bool ApplyAction()
         {
-            Find.WindowStack.TryRemove(typeof(ModSettings_Window));
-            Find.WindowStack.TryRemove(typeof(XmlExtensions_MenuModSettings));
+            Find.WindowStack.TryRemove(typeof(ModSettingsWindow));
+            Find.WindowStack.TryRemove(typeof(XmlExtensionsMenuModSettings));
             GenCommandLine.Restart();
             return true;
         }

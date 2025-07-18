@@ -117,7 +117,7 @@ namespace XmlExtensions
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            Find.WindowStack.Add(new XmlExtensions_MenuModSettings(null, true));
+            Find.WindowStack.Add(new XmlExtensionsMenuModSettings(null, true));
         }
 
         public override string SettingsCategory()
