@@ -34,11 +34,7 @@
             {
                 SettingsManager.SetDefaultValue(modId, key, defaultValue);
             }
-            if (tag != null)
-            {
-                menuDef.AddTag(tag, this);
-            }
-            return true;
+            return base.SetDefaultValue();
         }
     }
 }

@@ -205,6 +205,10 @@ namespace XmlExtensions.Setting
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected virtual bool SetDefaultValue()
         {
+            if (tag != null)
+            {
+                menuDef.AddTag(tag, this);
+            }
             return true;
         }
 

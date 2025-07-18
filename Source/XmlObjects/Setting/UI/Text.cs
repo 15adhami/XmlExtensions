@@ -42,6 +42,9 @@ namespace XmlExtensions.Setting
                 {
                     str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
                 }
+            }
+            if (key != null)
+            {
                 str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, key), "{}");
             }
             cachedText = str;
