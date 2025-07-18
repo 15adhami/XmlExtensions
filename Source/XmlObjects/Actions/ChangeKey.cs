@@ -29,7 +29,9 @@ namespace XmlExtensions.Action
             foreach (string tag in tags)
             {
                 foreach (SettingContainer setting in menuDef.tagMap[tag])
-                    setting.key=key;
+                {
+                    setting.key = key;
+                }
             }
             return true;
         }
