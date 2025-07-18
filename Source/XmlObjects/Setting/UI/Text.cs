@@ -42,6 +42,7 @@ namespace XmlExtensions.Setting
                 {
                     str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
                 }
+                str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, keys[0]), "{}");
             }
             cachedText = str;
             cachedHeight = Verse.Text.CalcHeight(str, width);
