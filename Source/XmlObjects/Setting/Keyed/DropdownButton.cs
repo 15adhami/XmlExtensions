@@ -1,19 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
 namespace XmlExtensions.Setting
 {
-    internal class DropdownOption
-    {
-        public string label;
-        public string value;
-    }
-
+    [Obsolete]
     internal class DropdownButton : KeyedSettingContainer
-    { // TODO: Add dropdown actions
+    {
         public List<DropdownOption> options;
         public string tKey;
+
+        internal class DropdownOption
+        {
+            public string label;
+            public string value;
+        }
+
+        protected override bool Init()
+        {
+            WarnUsingObselete([typeof(Button), typeof(Action.DropdownMenu)]);
+            return true;
+        }
 
         protected override float CalculateHeight(float width)
         {
