@@ -26,7 +26,8 @@ namespace XmlExtensions.Setting
             float newFloat;
             if (label != null)
             {
-                listingStandard.Label(Helpers.SubstituteVariable(Helpers.TryTranslate(label, tKey), key, currFloat.ToString(), "{}"));
+                string substiteLegacy = Helpers.SubstituteVariable(Helpers.TryTranslate(label, tKey), key, currFloat.ToString(), "{}");
+                listingStandard.Label(Helpers.SubstituteVariable(substiteLegacy, "key", currFloat.ToString(), "{}"));
             }
             newFloat = listingStandard.Slider(currFloat, min, max);
             listingStandard.End();
