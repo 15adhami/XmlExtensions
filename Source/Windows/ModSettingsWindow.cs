@@ -16,7 +16,7 @@ namespace XmlExtensions
             // Set initial menu
             if (initialMenu != null)
             {
-                SetSelectedMod(new ModContainer(initialMenu.defName));
+                SetSelectedMod(new ModContainer(initialMenu.modId));
             }
         }
 
