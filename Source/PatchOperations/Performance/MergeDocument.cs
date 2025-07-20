@@ -22,21 +22,22 @@ namespace XmlExtensions
                 {
                     if (PatchManager.XmlDocs.NodeMapContainsKey(docName, node))
                     {
-                        // Replace the given node
-                        XmlNode oldNode = PatchManager.XmlDocs.GetNodeFromNodeMap(docName, node);
-                        XmlNode parentNode = oldNode.ParentNode;
-                        if (parentNode != null) // Delete all parent nodes, replace with child nodes
+                        XmlNode existingNode = PatchManager.XmlDocs.GetNodeFromNodeMap(docName, node);
+
+                        // Remove child nodes
+                        for (int i = existingNode.ChildNodes.Count - 1; i >= 0; i--)
                         {
-                            parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(node, true), oldNode);
-                            parentNode.RemoveChild(oldNode);
+                            existingNode.RemoveChild(existingNode.ChildNodes[i]);
                         }
-                        PatchManager.XmlDocs.RemoveNodeFromNodeMap(docName, node);
-                        /*
-                        LoadableXmlAsset value = null;
-                        if(PatchManager.Coordinator.assetlookup.TryGetValue(node, out value))
+
+                        // Import and append all children from the temp node
+                        foreach (XmlNode child in node.ChildNodes)
                         {
-                            XmlInheritance.TryRegister(node, value?.mod);
-                        }*/
+                            XmlNode imported = existingNode.OwnerDocument.ImportNode(child, true);
+                            existingNode.AppendChild(imported);
+                        }
+
+                        PatchManager.XmlDocs.RemoveNodeFromNodeMap(docName, node);
                     }
                     else
                     {
