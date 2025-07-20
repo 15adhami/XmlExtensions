@@ -17,7 +17,5 @@ namespace XmlExtensions
         public List<PatchOperationExtended> DelayedPatches { get; } = [];
 
         public void SetActiveMod(ModContentPack mod) { ActiveMod = mod; }
-
-        public Dictionary<XmlNode, LoadableXmlAsset> assetlookup;
     }
 }

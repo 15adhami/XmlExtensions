@@ -12,7 +12,6 @@ namespace XmlExtensions
         {
             PatchManager.XmlDocs.MainDocument = xmlDoc;
             PatchManager.XmlDocs.Add("Defs", xmlDoc);
-            //PatchManager.Coordinator.assetlookup = assetlookup;
             foreach (ModContentPack mod in ___runningMods)
             {
                 foreach (PatchOperation patch in mod.Patches)
@@ -38,7 +37,6 @@ namespace XmlExtensions
             PatchManager.Profiler.globalWatch.Stop();
             PatchManager.Coordinator.IsApplyingPatches = false;
             PatchManager.Coordinator.PatchDefs.Clear();
-            //PatchManager.Coordinator.assetlookup.Clear();
             PatchManager.XmlDocs.Clear();
             PatchManager.XmlDocs.ClearNodeMaps();
             PatchManager.Profiler.ResetWatch();
