@@ -27,21 +27,11 @@ namespace XmlExtensions
             PatchDef patchDef;
             if (PatchManager.Coordinator.IsApplyingPatches)
             {
-                XmlNode node;
-                if (patchName != null)
-                {
-                    node = xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[@Name=\"" + patchName + "\"]");
-                }
-                else
-                {
-                    node = xml.SelectSingleNode("Defs/XmlExtensions.PatchDef[defName=\"" + defName + "\"]");
-                }
-                if (node == null)
+                if (!PatchManager.Coordinator.PatchDefs.TryGetValue(patchName, out patchDef))
                 {
                     Error("No such PatchDef exists");
                     return false;
                 }
-                patchDef = DirectXmlToObject.ObjectFromXml<PatchDef>(node, false);
             }
             else
             {

@@ -25,12 +25,18 @@ namespace XmlExtensions
                         // Replace the given node
                         XmlNode oldNode = PatchManager.XmlDocs.GetNodeFromNodeMap(docName, node);
                         XmlNode parentNode = oldNode.ParentNode;
-                        if (parentNode != null)
+                        if (parentNode != null) // Delete all parent nodes, replace with child nodes
                         {
                             parentNode.InsertBefore(parentNode.OwnerDocument.ImportNode(node, true), oldNode);
                             parentNode.RemoveChild(oldNode);
                         }
                         PatchManager.XmlDocs.RemoveNodeFromNodeMap(docName, node);
+                        /*
+                        LoadableXmlAsset value = null;
+                        if(PatchManager.Coordinator.assetlookup.TryGetValue(node, out value))
+                        {
+                            XmlInheritance.TryRegister(node, value?.mod);
+                        }*/
                     }
                     else
                     {

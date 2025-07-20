@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -10,9 +11,13 @@ namespace XmlExtensions
 
         public Dictionary<PatchOperation, ModContentPack> PatchModDict { get; } = [];
 
+        public Dictionary<string, PatchDef> PatchDefs = [];
+
         // For DefDatabase Operations
         public List<PatchOperationExtended> DelayedPatches { get; } = [];
 
         public void SetActiveMod(ModContentPack mod) { ActiveMod = mod; }
+
+        public Dictionary<XmlNode, LoadableXmlAsset> assetlookup;
     }
 }
