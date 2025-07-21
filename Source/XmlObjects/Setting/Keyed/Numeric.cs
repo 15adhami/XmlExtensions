@@ -6,8 +6,8 @@ namespace XmlExtensions.Setting
 {
     internal class Numeric : KeyedSettingContainer
     {
-        public float min;
-        public float max;
+        public float min = -1000000000;
+        public float max = 1000000000;
         public string tKey;
         public int decimals = 0;
         public bool percent = false;
