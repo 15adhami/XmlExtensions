@@ -48,7 +48,19 @@ namespace XmlExtensions.Setting
                 str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, key), "{}");
             }
             cachedText = str;
-            cachedHeight = Verse.Text.CalcHeight(str, width);
+
+            // Workaround for Unity UI scaling bug
+            float num = Prefs.UIScale / 2f;
+            if (Prefs.UIScale > 1f && Math.Abs(num - Mathf.Floor(num)) > float.Epsilon)
+            {
+                float rawHeight = Verse.Text.CalcHeight(str, width);
+                cachedHeight = Mathf.Ceil(rawHeight + 1f); // 1px fudge factor
+            }
+            else
+            {
+                cachedHeight = Verse.Text.CalcHeight(str, width);
+            }
+
             if (actions != null)
             {
                 cachedSize = Verse.Text.CalcSize(str);
@@ -111,7 +123,8 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
-            Widgets.Label(inRect, cachedText);
+            Rect drawRect = new Rect(inRect.x, inRect.y, inRect.width, Mathf.Ceil(cachedHeight));
+            Widgets.Label(drawRect, cachedText);
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
             cachedText = "";
