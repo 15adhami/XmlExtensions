@@ -25,7 +25,7 @@ namespace XmlExtensions
             {
                 if (!menuDef.submenu && !menuDef.Init())
                 {
-                    ErrorManager.PrintErrors();
+                    ErrorManager.PrintErrors(menuDef.label, menuDef.modContentPack);
                 }
                 else if (!menuDef.submenu)
                 {
