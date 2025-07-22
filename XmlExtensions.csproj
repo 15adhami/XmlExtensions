@@ -66,6 +66,9 @@
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
@@ -196,6 +199,7 @@
     <Compile Include="Source\XmlObjects\Actions\FloatMenu.cs" />
     <Compile Include="Source\XmlObjects\Actions\Log.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
+    <Compile Include="Source\XmlObjects\Actions\PlayMusic.cs" />
     <Compile Include="Source\XmlObjects\Actions\PlaySound.cs" />
     <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />
     <Compile Include="Source\XmlObjects\Actions\SetActiveMenu.cs" />

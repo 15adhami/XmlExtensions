@@ -1,4 +1,6 @@
-﻿using Verse;
+﻿using RimWorld;
+using UnityEngine;
+using Verse;
 using Verse.Sound;
 
 namespace XmlExtensions.Action
@@ -31,11 +33,17 @@ namespace XmlExtensions.Action
         {
             if (cachedSound == null)
             {
-                Error("Cached SoundDef is null (this should not happen if Init succeeded)");
+                Error("Cached SoundDef is null");
                 return false;
             }
-
-            cachedSound.PlayOneShotOnCamera();
+            if (cachedSound.subSounds.Any((SubSoundDef sub) => sub.onCamera))
+            {
+                cachedSound.PlayOneShotOnCamera();
+            }
+            else
+            {
+                cachedSound.PlayOneShot(SoundInfo.InMap(new TargetInfo(Find.CameraDriver.MapPosition, Find.CurrentMap, true)));
+            }
             return true;
         }
     }
