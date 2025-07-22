@@ -20,7 +20,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return height + 16;
+            return height + GenUI.ScrollBarWidth;
         }
 
         protected override void DrawSettingContents(Rect inRect)

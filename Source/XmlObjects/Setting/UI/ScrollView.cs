@@ -23,7 +23,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            Rect scrollRect = new Rect(0, 0, inRect.width - 16f, CalculateHeightSettingsList(inRect.width - 16f, settings));
+            Rect scrollRect = new Rect(0, 0, inRect.width - GenUI.ScrollBarWidth, CalculateHeightSettingsList(inRect.width - GenUI.ScrollBarWidth, settings));
             Widgets.BeginScrollView(inRect, ref scrollPos, scrollRect);
             DrawSettingsList(scrollRect, settings);
             Widgets.EndScrollView();

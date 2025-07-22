@@ -18,12 +18,12 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return CalculateHeightSettingsList(innerWidth, settings) + 16f;
+            return CalculateHeightSettingsList(innerWidth, settings) + GenUI.ScrollBarWidth;
         }
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            Rect scrollRect = new Rect(0, 0, innerWidth, inRect.height - 16f);
+            Rect scrollRect = new Rect(0, 0, innerWidth, inRect.height - GenUI.ScrollBarWidth);
             Widgets.BeginScrollView(inRect, ref horPos, scrollRect);
             Widgets.ScrollHorizontal(inRect, ref horPos, scrollRect);
             DrawSettingsList(scrollRect, settings);
