@@ -257,6 +257,7 @@
     <Compile Include="Source\XmlObjects\Setting\Keyed\Slider.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SplitColumn.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SplitColumns.cs" />
+    <Compile Include="Source\XmlObjects\Setting\UI\OverlaySettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SwitchSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\TabView.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\Text.cs" />
