@@ -6,15 +6,24 @@ using Verse.Sound;
 namespace XmlExtensions.Setting
 {
     internal class RadioButton : KeyedSettingContainer
-    {
+    { // TODO: Add actions to RadioButton
         public string value;
         public string tooltip;
         public string tKey;
         public string tKeyTip;
         public bool highlight = true;
+        public Anchor anchor = Anchor.Middle;
 
         private Texture2D RadioButOnTex;
         private Texture2D RadioButOffTex;
+
+        // Used if label is null
+        public enum Anchor
+        {
+            Left,
+            Right,
+            Middle
+        }
 
         protected override bool Init()
         {
@@ -31,9 +40,45 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect)
         {
             bool selected = SettingsManager.GetSetting(modId, key) == value;
-            if (DrawRadioButton(inRect, Helpers.TryTranslate(label, tKey), selected, highlight, Helpers.TryTranslate(tooltip, tKeyTip)))
+            string resolvedLabel = Helpers.TryTranslate(label, tKey);
+            string resolvedTooltip = Helpers.TryTranslate(tooltip, tKeyTip);
+
+            if (resolvedLabel == null)
             {
-                SettingsManager.SetSetting(modId, key, value);
+                Rect buttonRect = new(inRect.x, inRect.y + inRect.height / 2f - 11f, 22f, 22f);
+
+                // Handle tooltip on icon only
+                if (!resolvedTooltip.NullOrEmpty() && Mouse.IsOver(buttonRect))
+                {
+                    TooltipHandler.TipRegion(buttonRect, resolvedTooltip);
+                }
+
+                // Anchor alignment
+                float iconX = anchor switch
+                {
+                    Anchor.Left => inRect.x,
+                    Anchor.Right => inRect.xMax - 22f,
+                    _ => inRect.x + (inRect.width - 22f) / 2f,
+                };
+                buttonRect.x = iconX;
+
+                bool clicked = Widgets.ButtonImage(buttonRect, selected ? RadioButOnTex : RadioButOffTex);
+                if (clicked && !selected)
+                {
+                    SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+                }
+
+                if (clicked)
+                {
+                    SettingsManager.SetSetting(modId, key, value);
+                }
+            }
+            else
+            {
+                if (DrawRadioButton(inRect, resolvedLabel, selected, highlight, resolvedTooltip))
+                {
+                    SettingsManager.SetSetting(modId, key, value);
+                }
             }
         }
 
@@ -45,23 +90,30 @@ namespace XmlExtensions.Setting
             }
             if (!tooltip.NullOrEmpty())
             {
-                TipSignal tip = (tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip));
+                TipSignal tip = tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip);
                 TooltipHandler.TipRegion(rect, tip);
             }
-            TextAnchor anchor = Verse.Text.Anchor;
+
+            TextAnchor prevAnchor = Verse.Text.Anchor;
             Verse.Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(rect, label);
-            Verse.Text.Anchor = anchor;
-            bool num = Widgets.ButtonInvisible(rect);
-            if (num && !active)
+            Verse.Text.Anchor = prevAnchor;
+
+            bool clicked = Widgets.ButtonInvisible(rect);
+            if (clicked && !active)
             {
                 SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
             }
-            Color colorTemp = GUI.color;
+
+            Color prevColor = GUI.color;
             GUI.color = Color.white;
-            GUI.DrawTexture(image: (!active) ? RadioButOffTex : RadioButOnTex, position: new Rect(rect.x + rect.width - 24f, rect.y + rect.height / 2f - 12f, 24f, 24f));
-            GUI.color = colorTemp;
-            return num;
+            GUI.DrawTexture(
+                new Rect(rect.x + rect.width - 22f, rect.y + rect.height / 2f - 11f, 22f, 22f),
+                active ? RadioButOnTex : RadioButOffTex
+            );
+            GUI.color = prevColor;
+
+            return clicked;
         }
     }
 }
