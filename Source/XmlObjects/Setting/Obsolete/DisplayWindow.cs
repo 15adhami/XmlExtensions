@@ -74,7 +74,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            WarnUsingObselete([typeof(Button), typeof(Action.DisplayWindow)]);
+            //WarnUsingObselete([typeof(Button), typeof(Action.DisplayWindow)]);
             if (label == null)
             {
                 label = "Open";

@@ -16,7 +16,7 @@ namespace XmlExtensions
 
         public override bool ApplyWorker(XmlDocument xml)
         {
-            XmlMod.WarnUsingObselete(modId, this, [typeof(SettingsMenuDef)]);
+            //XmlMod.WarnUsingObselete(modId, this, [typeof(SettingsMenuDef)]);
             if (modId == null)
             {
                 ErrorManager.AddError("XmlExtensions.CreateSettings: <modId>=null");

@@ -13,7 +13,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            WarnUsingObselete([typeof(Button), typeof(Action.SetActiveMenu)]);
+            //WarnUsingObselete([typeof(Button), typeof(Action.SetActiveMenu)]);
             if (label == null)
             {
                 label = "Open";
