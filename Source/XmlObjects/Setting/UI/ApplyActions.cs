@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            WarnUsingObselete([typeof(Button)]);
+            //WarnUsingObselete([typeof(Button)]);
             return InitializeContainers(menuDef, actions);
         }
 
