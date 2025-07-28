@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Core\CustomXmlLoader.cs" />
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\ErrorManager\ErrorContext.cs" />
     <Compile Include="Source\Core\ErrorManager\ErrorManager.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Source\Core\PatchManager\PatchProfiler.cs" />
     <Compile Include="Source\Core\PatchManager\XmlDocumentManager.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
+    <Compile Include="Source\HarmonyPatches\CheckForDuplicateNodes_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeSet_Patch.cs" />
