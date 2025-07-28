@@ -22,7 +22,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>1.6\Assemblies\</OutputPath>
+    <OutputPath>1.5\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -284,10 +284,6 @@
     <Content Include="1.5\Assemblies\XmlExtensions.xml" />
     <Content Include="1.5\Defs\MainButtonDefs.xml" />
     <Content Include="1.5\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.6\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.6\Assemblies\XmlExtensions.xml" />
-    <Content Include="1.6\Defs\MainButtonDefs.xml" />
-    <Content Include="1.6\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
     <Content Include="About\About.xml" />
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
