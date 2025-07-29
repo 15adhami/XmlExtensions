@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
+using Verse.Sound;
 using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
@@ -11,11 +15,19 @@ namespace XmlExtensions.Setting
         public string tKey;
         protected bool confirm = false;
         public float height = 30;
+        public Style style = Style.Standard;
         public List<ActionContainer> actions;
         public string message;
         public string tKeyMessage;
         public string tKeyTip;
         public string tooltip;
+
+        public enum Style
+        {
+            Standard,
+            OptionButton,
+            MainButton
+        }
 
         protected override bool Init()
         {
@@ -47,7 +59,7 @@ namespace XmlExtensions.Setting
             }
             string buttonLabel = Helpers.TryTranslate(label, tKey);
             buttonLabel = Helpers.SubstituteVariable(buttonLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
-            if (Widgets.ButtonText(inRect, buttonLabel))
+            if (DrawButton(inRect, buttonLabel))
             {
                 if (actions != null)
                 {
@@ -92,6 +104,31 @@ namespace XmlExtensions.Setting
         internal override bool PostClose()
         {
             return PostCloseContainers(actions);
+        }
+
+        private bool DrawButton(Rect rect, string label)
+        {
+            bool clicked = false;
+            if (style == Style.Standard)
+            {
+                clicked = Widgets.ButtonText(rect, label);
+            }
+            else if (style == Style.OptionButton)
+            {
+                Widgets.DrawOptionBackground(rect, false);
+                Verse.Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(rect, label);
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
+                clicked = Widgets.ButtonInvisible(rect);
+            }
+            else if (style == Style.MainButton)
+            {
+                clicked = Widgets.ButtonTextSubtle(rect, null, 0f, -1f, SoundDefOf.Mouseover_Category);
+                Verse.Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(rect, label);
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
+            }
+            return clicked;
         }
     }
 }
