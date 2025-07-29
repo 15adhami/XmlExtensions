@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using System;
 using UnityEngine;
-using Verse;
 using XmlExtensions.Boolean;
 
 namespace XmlExtensions.Setting

@@ -1,10 +1,7 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
-using Verse.Sound;
 using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting

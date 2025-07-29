@@ -1,5 +1,4 @@
 ﻿using System;
-using XmlExtensions.Setting;
 
 namespace XmlExtensions.Action
 {
