@@ -100,17 +100,17 @@ namespace XmlExtensions.Setting
 
         private bool DrawRadioButton(Rect rect, string label, bool active, bool highlight, string tooltip = null, float? tooltipDelay = null)
         {
+            if (!tooltip.NullOrEmpty())
+            {
+                TipSignal tip = (tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip));
+                TooltipHandler.TipRegion(rect, tip);
+            }
             bool clicked = false;
             if (style == Style.RadioButton)
             {
                 if (highlight && Mouse.IsOver(rect))
                 {
                     Widgets.DrawHighlight(rect);
-                }
-                if (!tooltip.NullOrEmpty())
-                {
-                    TipSignal tip = (tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip));
-                    TooltipHandler.TipRegion(rect, tip);
                 }
                 clicked = Widgets.RadioButtonLabeled(rect, label, active);
             }
