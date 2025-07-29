@@ -47,7 +47,7 @@ namespace XmlExtensions.Setting
             {
                 if (style == Style.OptionButton || style == Style.MainButton)
                 {
-                    spacing = 4f;
+                    spacing = 3f;
                 }
                 else
                 {
@@ -144,7 +144,7 @@ namespace XmlExtensions.Setting
             }
             else if (style == Style.OptionButton)
             {
-                Widgets.DrawOptionBackground(rect.MiddlePartPixels(rect.width - 8f, rect.height), active);
+                Widgets.DrawOptionBackground(rect.MiddlePartPixels(rect.width - 6f, rect.height), active);
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect, label);
                 Verse.Text.Anchor = TextAnchor.UpperLeft;

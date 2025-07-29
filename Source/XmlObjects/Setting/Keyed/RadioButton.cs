@@ -52,7 +52,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return style == Style.OptionButton ? height + 8f : height;
+            return style == Style.OptionButton ? height + 6f : height;
         }
 
         protected override void DrawSettingContents(Rect inRect)
@@ -61,7 +61,7 @@ namespace XmlExtensions.Setting
             string resolvedLabel = Helpers.TryTranslate(label, tKey);
             string resolvedTooltip = Helpers.TryTranslate(tooltip, tKeyTip);
 
-            if (resolvedLabel == null)
+            if (resolvedLabel == null && style == Style.RadioButton)
             {
                 Rect buttonRect = new(inRect.x, inRect.y + inRect.height / 2f - 11f, 22f, 22f);
 
@@ -93,7 +93,12 @@ namespace XmlExtensions.Setting
             }
             else
             {
-                if (DrawRadioButton(inRect, resolvedLabel, selected, highlight, resolvedTooltip))
+                Rect drawRect = inRect;
+                if (style == Style.OptionButton)
+                { // Add extra space for this style
+                    drawRect = inRect.TopPartPixels(inRect.height - 3f).BottomPartPixels(inRect.height - 6f);
+                }
+                if (DrawRadioButton(drawRect, resolvedLabel, selected, highlight, resolvedTooltip))
                 {
                     SettingsManager.SetSetting(modId, key, value);
                 }
@@ -163,7 +168,7 @@ namespace XmlExtensions.Setting
             }
             else if (style == Style.OptionButton)
             {
-                Widgets.DrawOptionBackground(rect.MiddlePartPixels(rect.width - 8f, rect.height), active);
+                Widgets.DrawOptionBackground(rect.MiddlePartPixels(rect.width - 6f, rect.height), active);
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect, label);
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
