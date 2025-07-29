@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 using Verse;
 using XmlExtensions.Action;
 
@@ -43,7 +44,7 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return height;
+            return style == Style.OptionButton ? height + 6f : height;
         }
 
         protected override void DrawSettingContents(Rect inRect)
@@ -56,7 +57,12 @@ namespace XmlExtensions.Setting
             }
             string buttonLabel = Helpers.TryTranslate(label, tKey);
             buttonLabel = Helpers.SubstituteVariable(buttonLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
-            if (DrawButton(inRect, buttonLabel))
+            Rect drawRect = inRect;
+            if (style == Style.OptionButton)
+            { // Add extra space for this style
+                drawRect = inRect.TopPartPixels(inRect.height - 3f).BottomPartPixels(inRect.height - 6f);
+            }
+            if (DrawButton(drawRect, buttonLabel))
             {
                 if (actions != null)
                 {
@@ -112,11 +118,12 @@ namespace XmlExtensions.Setting
             }
             else if (style == Style.OptionButton)
             {
-                Widgets.DrawOptionBackground(rect, false);
+                Rect drawRect = rect.MiddlePartPixels(rect.width - 6f, rect.height);
+                clicked = Widgets.ButtonInvisible(drawRect);
+                Widgets.DrawOptionBackground(drawRect, Mouse.IsOver(drawRect) && UnityEngine.Input.GetMouseButton(0));
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect, label);
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
-                clicked = Widgets.ButtonInvisible(rect);
             }
             else if (style == Style.MainButton)
             {
@@ -124,6 +131,13 @@ namespace XmlExtensions.Setting
                 Verse.Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(rect, label);
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
+                if (Mouse.IsOver(rect) && UnityEngine.Input.GetMouseButton(0))
+                {
+                    Color colorTemp = GUI.color;
+                    GUI.color = Color.grey;
+                    Widgets.DrawBox(rect, 2);
+                    GUI.color = colorTemp;
+                }
             }
             return clicked;
         }
