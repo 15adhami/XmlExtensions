@@ -12,7 +12,7 @@ namespace XmlExtensions.Setting
         public string tKey;
         protected bool confirm = false;
         public float height = 30;
-        public Style style = Style.Standard;
+        public Style style = Style.UIButton;
         public List<ActionContainer> actions;
         public string message;
         public string tKeyMessage;
@@ -21,7 +21,7 @@ namespace XmlExtensions.Setting
 
         public enum Style
         {
-            Standard,
+            UIButton,
             OptionButton,
             MainButton
         }
@@ -106,7 +106,7 @@ namespace XmlExtensions.Setting
         private bool DrawButton(Rect rect, string label)
         {
             bool clicked = false;
-            if (style == Style.Standard)
+            if (style == Style.UIButton)
             {
                 clicked = Widgets.ButtonText(rect, label);
             }

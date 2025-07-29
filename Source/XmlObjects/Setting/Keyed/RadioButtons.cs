@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 
 namespace XmlExtensions.Setting
 {
@@ -8,7 +11,17 @@ namespace XmlExtensions.Setting
     {
         public List<RadioButton> buttons;
         public bool highlight = true;
-        public int spacing = -1;
+        public float spacing = -1f;
+        public float height = -1f;
+        public Style style = Style.RadioButton;
+
+        public enum Style
+        {
+            RadioButton,
+            UIButton,
+            OptionButton,
+            MainButton
+        }
 
         public class RadioButton
         {
@@ -22,6 +35,25 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            if (style != Style.RadioButton && height < 0f)
+            {
+                height = 30f;
+            }
+            else if (style == Style.RadioButton)
+            {
+                height = 22f;
+            }
+            if (spacing < 0f)
+            {
+                if (style == Style.OptionButton || style == Style.MainButton)
+                {
+                    spacing = 4f;
+                }
+                else
+                {
+                    spacing = 2f;
+                }
+            }
             addDefaultSpacing = false;
             foreach (RadioButton button in buttons)
             {
@@ -39,40 +71,120 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return buttons.Count * (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing) + buttons.Count * 22;
+            float verticalSpacing = (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing);
+            float settingHeight = buttons.Count * verticalSpacing + buttons.Count * height;
+            return style == Style.OptionButton ? settingHeight + verticalSpacing : settingHeight;
         }
 
         protected override void DrawSettingContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
-            listingStandard.verticalSpacing = (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing);
+            float verticalSpacing = (spacing < 0 ? (addDefaultSpacing ? GetDefaultSpacing() : 0) : spacing);
+            if (style == Style.OptionButton)
+            { // Add extra space for this style
+                listingStandard.GetRect(verticalSpacing);
+            }
             foreach (RadioButton button in buttons)
             {
                 bool selected = SettingsManager.GetSetting(modId, key) == button.value;
-                Rect rect = listingStandard.GetRect(22f);
-                if (DrawRadioButton(rect, Helpers.TryTranslate(button.label, button.tKey), selected, button.highlight, Helpers.TryTranslate(button.tooltip, button.tKeyTip)))
+                Rect rect = listingStandard.GetRect(height);
+                if (DrawRadioButton(rect, Helpers.TryTranslate(button.label, button.tKey), selected, highlight, Helpers.TryTranslate(button.tooltip, button.tKeyTip)))
                 {
                     SettingsManager.SetSetting(modId, key, button.value);
                 }
-                listingStandard.GetRect(GetDefaultSpacing());
+                listingStandard.GetRect(verticalSpacing);
             }
             listingStandard.End();
         }
 
         private bool DrawRadioButton(Rect rect, string label, bool active, bool highlight, string tooltip = null, float? tooltipDelay = null)
         {
-            if (highlight && Mouse.IsOver(rect))
+            bool clicked = false;
+            if (style == Style.RadioButton)
             {
-                Widgets.DrawHighlight(rect);
+                if (highlight && Mouse.IsOver(rect))
+                {
+                    Widgets.DrawHighlight(rect);
+                }
+                if (!tooltip.NullOrEmpty())
+                {
+                    TipSignal tip = (tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip));
+                    TooltipHandler.TipRegion(rect, tip);
+                }
+                clicked = Widgets.RadioButtonLabeled(rect, label, active);
             }
-            if (!tooltip.NullOrEmpty())
+            else if (style == Style.UIButton)
             {
-                TipSignal tip = (tooltipDelay.HasValue ? new TipSignal(tooltip, tooltipDelay.Value) : new TipSignal(tooltip));
-                TooltipHandler.TipRegion(rect, tip);
+                if (!active)
+                {
+                    clicked = Widgets.ButtonText(rect, label);
+                    if (clicked)
+                    {
+                        SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+                    }
+                }
+                else
+                {
+                    Widgets.DrawAtlas(rect, Widgets.ButtonBGAtlasClick);
+                    Verse.Text.Anchor = TextAnchor.MiddleCenter;
+                    Color tempColor = GUI.color;
+                    GUI.color = Color.white;
+                    bool wordWrap = Verse.Text.WordWrap;
+                    if (rect.height < Verse.Text.LineHeight * 2f)
+                    {
+                        Verse.Text.WordWrap = false;
+                    }
+                    Widgets.Label(rect, label);
+                    Verse.Text.WordWrap = wordWrap;
+                    GUI.color = tempColor;
+                    Verse.Text.Anchor = TextAnchor.UpperLeft;
+                    clicked = Widgets.ButtonInvisible(rect);
+                }
             }
-            bool result = Widgets.RadioButtonLabeled(rect, label, active);
-            return result;
+            else if (style == Style.OptionButton)
+            {
+                Widgets.DrawOptionBackground(rect.MiddlePartPixels(rect.width - 8f, rect.height), active);
+                Verse.Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(rect, label);
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
+                clicked = Widgets.ButtonInvisible(rect);
+                if (clicked && !active)
+                {
+                    SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+                }
+            }
+            else if (style == Style.MainButton)
+            {
+                if (!active)
+                {
+                    clicked = Widgets.ButtonTextSubtle(rect, null, 0f, -1f, SoundDefOf.Mouseover_Category);
+                    if (clicked)
+                    {
+                        SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+                    }
+                }
+                else
+                {
+                    Color colorTemp = GUI.color;
+                    GUI.color = GenUI.MouseoverColor;
+                    Widgets.DrawAtlas(rect, Widgets.ButtonSubtleAtlas);
+                    GUI.color = Color.grey;
+                    Widgets.DrawBox(rect, 2);
+                    GUI.color = colorTemp;
+                }
+                Rect labelRect = rect;
+                if (Mouse.IsOver(rect) || active)
+                {
+                    labelRect.x += 2f;
+                    labelRect.y -= 2f;
+                }
+                Verse.Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(labelRect, label);
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
+
+            }
+            return clicked;
         }
     }
 }
