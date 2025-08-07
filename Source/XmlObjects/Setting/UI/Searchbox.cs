@@ -3,7 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Setting
 {
-    internal class Searchbar : SettingContainer
+    internal class Searchbox : SettingContainer
     {
         internal bool useLabels = true;
         internal bool useText = false;

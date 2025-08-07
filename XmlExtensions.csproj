@@ -253,7 +253,7 @@
     <Compile Include="Source\XmlObjects\Setting\Keyed\ResetSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\ScrollArea.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\ScrollView.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Searchbar.cs" />
+    <Compile Include="Source\XmlObjects\Setting\UI\Searchbox.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\Section.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\SetColor.cs" />
     <Compile Include="Source\Core\SettingsManager.cs" />

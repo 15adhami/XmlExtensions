@@ -9,7 +9,7 @@ namespace XmlExtensions.Setting
 {
     internal class DrawColor : SettingContainer
     {
-        public Color color = new();
+        public new Color color = new();
         public int colorSize = 22;
         public int border = 2;
         public Anchor anchor = Anchor.Middle;

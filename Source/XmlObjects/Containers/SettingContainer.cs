@@ -179,7 +179,17 @@ namespace XmlExtensions.Setting
                         }
                         else
                         {
-                            DrawSettingContents(drawRect);
+                            if (color != null)
+                            {
+                                Color originalColor = GUI.color;
+                                GUI.color = color;
+                                DrawSettingContents(drawRect);
+                                GUI.color = originalColor;
+                            }
+                            else
+                            {
+                                DrawSettingContents(drawRect);
+                            } 
                             if (filtered && allowSearch)
                             {
                                 Color originalColor = GUI.color;

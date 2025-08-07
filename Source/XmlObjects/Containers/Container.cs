@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using XmlExtensions.Setting;
 
 namespace XmlExtensions
@@ -13,6 +14,8 @@ namespace XmlExtensions
 
         protected bool allowSearch = true;
         protected List<string> searchTags;
+
+        protected Color color;
 
         protected SettingsMenuDef menuDef;
 
@@ -94,6 +97,10 @@ namespace XmlExtensions
                 foreach (Container container in containers)
                 {
                     c++;
+                    if (color != null && container.color == null)
+                    {
+                        container.color = color;
+                    }
                     if (searchTags != null)
                     {
                         if (container.searchTags == null)
