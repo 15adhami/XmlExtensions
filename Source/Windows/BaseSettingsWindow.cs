@@ -70,7 +70,6 @@ namespace XmlExtensions
             if (defName != null)
             {
                 activeMenu = DefDatabase<SettingsMenuDef>.GetNamed(defName);
-                activeMenu.RunPreOpenActions();
                 activeMenu.PreOpen();
             }
             else

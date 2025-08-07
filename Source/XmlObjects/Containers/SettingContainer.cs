@@ -180,6 +180,13 @@ namespace XmlExtensions.Setting
                         else
                         {
                             DrawSettingContents(drawRect);
+                            if (filtered && allowSearch)
+                            {
+                                Color originalColor = GUI.color;
+                                GUI.color = Color.white;
+                                Widgets.DrawBox(drawRect);
+                                GUI.color = originalColor;
+                            }
                         }
                     }
                 }

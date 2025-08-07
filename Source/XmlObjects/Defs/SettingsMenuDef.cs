@@ -63,6 +63,10 @@ namespace XmlExtensions
         /// </summary>
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
+        internal string searchText = "";
+        internal bool useText;
+        internal bool useLabels;
+
         internal bool Init()
         {
             if (label == null)
@@ -202,6 +206,7 @@ namespace XmlExtensions
 
         internal void PreOpen()
         {
+            searchText = "";
             if (settings != null)
             {
                 ErrorManager.ClearErrors();
@@ -211,7 +216,7 @@ namespace XmlExtensions
                     try
                     {
                         c++;
-                        if (!setting.PreOpen())
+                        if (!setting.PreOpenContainer())
                         {
                             ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in preopening a setting at position=" + c.ToString());
                             ErrorManager.PrintErrors();
@@ -224,6 +229,7 @@ namespace XmlExtensions
                     }
                 }
             }
+            RunPreOpenActions();
         }
 
         internal void AddTag(string tag, SettingContainer setting)

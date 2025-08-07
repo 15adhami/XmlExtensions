@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
+using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -9,7 +11,24 @@ namespace XmlExtensions
         protected bool initialized = false;
         public string modId;
 
+        protected bool allowSearch = true;
+        protected List<string> searchTags;
+
         protected SettingsMenuDef menuDef;
+
+        protected internal bool filtered = false;
+
+        internal bool PreOpenContainer()
+        {
+            filtered = false;
+            return PreOpen();
+        }
+
+        internal bool PostCloseContainer()
+        {
+            filtered = false;
+            return PostClose();
+        }
 
         /// <summary>
         /// This method gets called right when the user open the settings menu
@@ -62,6 +81,7 @@ namespace XmlExtensions
         /// <summary>
         /// Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
         /// </summary>
+        /// <param name="menuDef">The SettingsMenuDef that this caontiner is stored in</param>
         /// <param name="modId">The modId of the active mod in the settings menu</param>
         /// <param name="containers">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
@@ -74,6 +94,17 @@ namespace XmlExtensions
                 foreach (Container container in containers)
                 {
                     c++;
+                    if (searchTags != null)
+                    {
+                        if (container.searchTags == null)
+                        {
+                            searchTags = [];
+                        }
+                        foreach (string searchTag in searchTags)
+                        {
+                            container.searchTags.Add(searchTag);
+                        }
+                    }
                     if (!container.Initialize(menuDef))
                     {
                         if (name != null)
@@ -99,7 +130,7 @@ namespace XmlExtensions
                 foreach (Container container in containers)
                 {
                     c++;
-                    if (!container.PreOpen())
+                    if (!container.PreOpenContainer())
                     {
                         if (name != null)
                         {
@@ -124,7 +155,7 @@ namespace XmlExtensions
                 foreach (Container container in containers)
                 {
                     c++;
-                    if (!container.PostClose())
+                    if (!container.PostCloseContainer())
                     {
                         if (name != null)
                         {
