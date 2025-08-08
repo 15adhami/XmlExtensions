@@ -22,7 +22,7 @@ namespace XmlExtensions.Setting
             Right = TextAnchor.MiddleRight
         }
 
-        internal override bool PreOpen()
+        protected override bool PreOpen()
         {
             cachedValue = float.Parse(SettingsManager.GetSetting(modId, key));
             buf = Math.Round(cachedValue, decimals).ToString();

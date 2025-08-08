@@ -19,7 +19,7 @@ namespace XmlExtensions.Setting
             return 3 * boxHeight + 2 * spacing;
         }
 
-        internal override bool PreOpen()
+        protected override bool PreOpen()
         {
             try
             {

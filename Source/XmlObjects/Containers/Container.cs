@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime;
 using UnityEngine;
-using XmlExtensions.Setting;
 
 namespace XmlExtensions
 {
@@ -62,7 +59,7 @@ namespace XmlExtensions
         /// This method gets called right when the user open the settings menu
         /// </summary>
         /// <returns></returns>
-        internal virtual bool PreOpen()
+        protected virtual bool PreOpen()
         {
             return true;
         }
@@ -71,7 +68,7 @@ namespace XmlExtensions
         /// This method gets called right when the user closes the settings menu
         /// </summary>
         /// <returns></returns>
-        internal virtual bool PostClose()
+        protected virtual bool PostClose()
         {
             return true;
         }
@@ -86,7 +83,7 @@ namespace XmlExtensions
             return true;
         }
 
-        public virtual bool Initialize(SettingsMenuDef menuDef)
+        internal virtual bool Initialize(SettingsMenuDef menuDef)
         {
             if (!initialized)
             {
@@ -155,7 +152,7 @@ namespace XmlExtensions
             return true;
         }
 
-        protected bool PreOpenContainers(IEnumerable<Container> containers, string name = null)
+        private bool PreOpenContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
@@ -180,7 +177,7 @@ namespace XmlExtensions
             return true;
         }
 
-        protected bool PostCloseContainers(IEnumerable<Container> containers, string name = null)
+        private bool PostCloseContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
@@ -209,7 +206,7 @@ namespace XmlExtensions
         /// Sets the currently displayed menu to the one given
         /// </summary>
         /// <param name="defName">the defName of the SettingsMenuDef you want to display</param>
-        protected void SetActiveMenu(string defName)
+        protected internal void SetActiveMenu(string defName)
         {
             if (BaseSettingsWindow.activeMenu != null)
             {
@@ -218,7 +215,7 @@ namespace XmlExtensions
         }
 
 
-        protected void WarnUsingObselete(Type[] alternatives)
+        protected internal void WarnUsingObselete(Type[] alternatives)
         {
             XmlMod.WarnUsingObselete(modId, this, alternatives);
         }

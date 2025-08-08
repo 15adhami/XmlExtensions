@@ -56,7 +56,7 @@ namespace XmlExtensions.Setting
             if (settings != null) { DrawSettingsList(inRect, settings); }
         }
 
-        internal override bool PreOpen()
+        protected override bool PreOpen()
         {
             if (evalFrequency == Frequency.PreOpen && !condition.Evaluate(ref cachedResult, null))
             {

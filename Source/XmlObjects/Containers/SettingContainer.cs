@@ -69,7 +69,7 @@ namespace XmlExtensions.Setting
         /// This method will be run exactly one time after the game finishes booting and after running <c>DefaultValue()</c>, it is used to initialize the setting
         /// </summary>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        public override bool Initialize(SettingsMenuDef menuDef)
+        internal override bool Initialize(SettingsMenuDef menuDef)
         {
             if (!initialized)
             {
