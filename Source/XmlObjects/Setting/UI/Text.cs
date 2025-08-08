@@ -13,9 +13,6 @@ namespace XmlExtensions.Setting
         public string text;
         public GameFont font = GameFont.Small;
         public Anchor anchor = Anchor.Left;
-        public string tooltip = null;
-        public string tKey = null;
-        public string tKeyTip = null;
         public List<string> keys;
         public string xpath;
         public List<ActionContainer> actions;
@@ -73,6 +70,17 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {//M: 29 S: 22 T:18
+            if (!menuDef.searchText.NullOrEmpty() && allowSearch)
+            {
+                if (text != null && menuDef.searchTexts && Helpers.TryTranslate(text, tKey).ToLower().Contains(menuDef.searchText.ToLower()))
+                {
+                    if (!filtered)
+                    {
+                        menuDef.foundResults += 1;
+                    }
+                    filtered = true;
+                }
+            }
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())

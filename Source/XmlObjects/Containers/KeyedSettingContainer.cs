@@ -1,14 +1,13 @@
-﻿namespace XmlExtensions.Setting
+﻿using UnityEngine;
+using Verse;
+
+namespace XmlExtensions.Setting
 {
     /// <summary>
     /// Inherit from this class in order to create a new setting that manages a key.
     /// </summary>
     public abstract class KeyedSettingContainer : SettingContainer
     {
-        /// <summary>
-        /// The label to print (optional)
-        /// </summary>
-        public string label = null;
         
         /// <summary>
         /// The default value of the key

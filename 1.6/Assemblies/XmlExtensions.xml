@@ -239,11 +239,6 @@
             Inherit from this class in order to create a new setting that manages a key.
             </summary>
         </member>
-        <member name="F:XmlExtensions.Setting.KeyedSettingContainer.label">
-            <summary>
-            The label to print (optional)
-            </summary>
-        </member>
         <member name="F:XmlExtensions.Setting.KeyedSettingContainer.defaultValue">
             <summary>
             The default value of the key

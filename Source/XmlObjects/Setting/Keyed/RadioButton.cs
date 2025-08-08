@@ -8,9 +8,6 @@ namespace XmlExtensions.Setting
     internal class RadioButton : KeyedSettingContainer
     { // TODO: Add actions to RadioButton
         public string value;
-        public string tooltip;
-        public string tKey;
-        public string tKeyTip;
         public bool highlight = true;
         public float height = -1f;
         public Anchor anchor = Anchor.Middle;

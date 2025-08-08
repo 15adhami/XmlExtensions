@@ -5,7 +5,6 @@ namespace XmlExtensions.Setting
 {
     internal class Textbox : KeyedSettingContainer
     { // TODO: Add max char limit
-        public string tKey;
         public int lines = 1;
         public Anchor anchor = Anchor.Left;
 

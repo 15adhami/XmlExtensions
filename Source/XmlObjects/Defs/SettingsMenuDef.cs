@@ -63,9 +63,13 @@ namespace XmlExtensions
         /// </summary>
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
+        internal HashSet<(SettingContainer, Rect)> postDrawSettings = [];
+
         internal string searchText = "";
-        internal bool useText;
-        internal bool useLabels;
+        internal bool searchTexts;
+        internal bool searchLabels;
+        internal bool searchToolTips;
+        internal int foundResults = 0;
 
         internal bool Init()
         {
@@ -163,6 +167,8 @@ namespace XmlExtensions
 
         internal void DrawSettings(Rect rect)
         {
+            foundResults = 0;
+            postDrawSettings.Clear();
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
             listingStandard.verticalSpacing = 0;
@@ -172,6 +178,10 @@ namespace XmlExtensions
                 setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width)));
             }
             listingStandard.End();
+            foreach((SettingContainer setting, Rect inRect) in postDrawSettings)
+            {
+                setting.PostDrawSettingContents(inRect);
+            }
         }
 
         internal void RunPostCloseActions()
@@ -207,6 +217,7 @@ namespace XmlExtensions
         internal void PreOpen()
         {
             searchText = "";
+            foundResults = 0;
             if (settings != null)
             {
                 ErrorManager.ClearErrors();

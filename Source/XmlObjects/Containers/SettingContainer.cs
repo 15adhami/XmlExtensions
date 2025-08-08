@@ -15,6 +15,11 @@ namespace XmlExtensions.Setting
         /// </summary>
         public string key = null;
 
+        public string label = null;
+        public string tKey = null;
+        public string tKeyTip = null;
+        public string tooltip = null;
+
         /// <summary>
         /// Determines whether or not the default setting should be added after drawing the setting
         /// </summary>
@@ -133,6 +138,20 @@ namespace XmlExtensions.Setting
         {
             if (isVisible || needsDraw)
             {
+                if (!menuDef.searchText.NullOrEmpty() && allowSearch)
+                {
+                    filtered = false;
+                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.searchText.ToLower()))
+                    {
+                        filtered = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.searchText.ToLower()))
+                    {
+                        filtered = true;
+                        menuDef.foundResults += 1;
+                    }
+                }
                 try
                 {
                     if (errHeight > 0)
@@ -179,18 +198,19 @@ namespace XmlExtensions.Setting
                         }
                         else
                         {
+                            //DrawSettingContents(drawRect);
                             if (color != null)
                             {
                                 Color originalColor = GUI.color;
-                                GUI.color = color;
+                                GUI.color = (Color)color;
                                 DrawSettingContents(drawRect);
                                 GUI.color = originalColor;
                             }
                             else
                             {
                                 DrawSettingContents(drawRect);
-                            } 
-                            if (filtered && allowSearch)
+                            }
+                            if (filtered && allowSearch && !menuDef.searchText.NullOrEmpty())
                             {
                                 Color originalColor = GUI.color;
                                 GUI.color = Color.white;
@@ -297,6 +317,13 @@ namespace XmlExtensions.Setting
                 }
             }
             return h;
+        }
+
+        internal virtual void PostDrawSettingContents(Rect inRect) { }
+
+        protected void RequestPostDraw(Rect inRect)
+        {
+            menuDef.postDrawSettings.Add((this, inRect));
         }
     }
 }

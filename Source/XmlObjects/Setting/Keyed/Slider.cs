@@ -8,7 +8,6 @@ namespace XmlExtensions.Setting
     {
         public float min;
         public float max;
-        public string tKey;
         public int decimals = 6;
 
         protected override float CalculateHeight(float width)

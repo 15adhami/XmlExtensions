@@ -9,16 +9,12 @@ namespace XmlExtensions.Setting
 {
     public class Button : SettingContainer
     {
-        public string label;
-        public string tKey;
         protected bool confirm = false;
         public float height = 30;
         public Style style = Style.UIButton;
         public List<ActionContainer> actions;
         public string message;
         public string tKeyMessage;
-        public string tKeyTip;
-        public string tooltip;
 
         public enum Style
         {

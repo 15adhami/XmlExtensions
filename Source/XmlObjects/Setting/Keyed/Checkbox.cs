@@ -8,9 +8,6 @@ namespace XmlExtensions.Setting
 {
     internal class Checkbox : KeyedSettingContainer
     {
-        public string tooltip;
-        public string tKey;
-        public string tKeyTip;
         public bool highlight = true;
         public Style style = Style.Checkbox;
         public float height = -1f;

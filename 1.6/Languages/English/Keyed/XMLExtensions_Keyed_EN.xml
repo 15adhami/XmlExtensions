@@ -25,4 +25,5 @@
 	<XmlExtensions_R>R</XmlExtensions_R>
 	<XmlExtensions_G>G</XmlExtensions_G>
 	<XmlExtensions_B>B</XmlExtensions_B>
+	<XmlExtensions_SearchResults>{0} Result(s)</XmlExtensions_SearchResults>
 </LanguageData>

@@ -6,15 +6,11 @@ namespace XmlExtensions.Setting
 {
     internal class ResetSettings : SettingContainer
     {
-        protected string label;
         protected bool confirm = true;
         protected List<string> keys = null;
         protected List<string> values = null;
         public string message;
         public string tKeyMessage;
-        public string tKey;
-        public string tKeyTip;
-        public string tooltip;
 
         protected override bool Init()
         {

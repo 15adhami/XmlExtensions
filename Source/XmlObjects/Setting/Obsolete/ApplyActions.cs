@@ -9,18 +9,18 @@ namespace XmlExtensions.Setting
     [Obsolete]
     internal class ApplyActions : SettingContainer
     {
-        public string label = "Apply";
-        public string tKey;
         protected bool confirm = false;
         public float height = 30;
         public List<ActionContainer> actions;
         public string message;
         public string tKeyMessage;
-        public string tKeyTip;
-        public string tooltip;
 
         protected override bool Init()
         {
+            if (label == null)
+            {
+                label = "Apply";
+            }
             WarnUsingObselete([typeof(Button)]);
             return InitializeContainers(menuDef, actions);
         }

@@ -5,14 +5,17 @@ namespace XmlExtensions.Setting
 {
     internal class Searchbox : SettingContainer
     {
-        internal bool useLabels = true;
-        internal bool useText = false;
+        internal bool searchLabels = true;
+        internal bool searchToolTips = true;
+        internal bool searchTexts = true;
+        internal bool showCount = true;
 
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            menuDef.useLabels = useLabels;
-            menuDef.useText = useText;
+            menuDef.searchLabels = searchLabels;
+            menuDef.searchToolTips = searchToolTips;
+            menuDef.searchTexts = searchTexts;
             return true;
         }
         protected override float CalculateHeight(float width)
@@ -25,6 +28,25 @@ namespace XmlExtensions.Setting
             string searchText = menuDef.searchText;
             string newSearchText = Widgets.TextField(inRect, searchText);
             menuDef.searchText = newSearchText;
+            RequestPostDraw(inRect);
+        }
+
+        internal override void PostDrawSettingContents(Rect inRect)
+        {
+            Color colorTemp = GUI.color;
+            GUI.color = new Color(0.5f, 0.5f, 0.5f);
+            if (menuDef.searchText.NullOrEmpty() || !showCount)
+            {
+                GUI.DrawTexture(inRect.RightPartPixels(22), TexButton.Search);
+            }
+            else
+            {
+                Verse.Text.Anchor = TextAnchor.UpperRight;
+                string translatedResults = Helpers.TryTranslate("{0} Result(s)", "XmlExtensions_SearchResults");
+                Widgets.Label(inRect, translatedResults.Replace("{0}", menuDef.foundResults.ToString()));
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
+            }
+            GUI.color = colorTemp;
         }
     }
 }

@@ -14,8 +14,6 @@ namespace XmlExtensions.Setting
         public int border = 2;
         public Anchor anchor = Anchor.Middle;
         public bool drawSelection = false;
-        public string tooltip;
-        public string tKeyTip;
         public List<ActionContainer> actions;
 
         public enum Anchor

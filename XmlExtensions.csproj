@@ -226,7 +226,7 @@
     <Compile Include="Source\PatchOperations\Performance\MergeDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorEntry.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\ApplyActions.cs" />
+    <Compile Include="Source\XmlObjects\Setting\Obsolete\ApplyActions.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\Checkbox.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorPalette.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorWheel.cs" />

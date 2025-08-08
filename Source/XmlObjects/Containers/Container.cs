@@ -15,7 +15,7 @@ namespace XmlExtensions
         protected bool allowSearch = true;
         protected List<string> searchTags;
 
-        protected Color color;
+        protected Color? color = null;
 
         protected SettingsMenuDef menuDef;
 

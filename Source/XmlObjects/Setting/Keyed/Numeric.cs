@@ -8,7 +8,6 @@ namespace XmlExtensions.Setting
     {
         public float min = -1000000000;
         public float max = 1000000000;
-        public string tKey;
         public int decimals = 0;
         public bool percent = false;
         public Anchor anchor = Anchor.Left;
