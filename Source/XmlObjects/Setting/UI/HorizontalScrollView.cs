@@ -13,7 +13,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            return InitializeContainers(menuDef, settings);
+            return InitializeContainers(settings);
         }
 
         protected override float CalculateHeight(float width)
@@ -28,16 +28,6 @@ namespace XmlExtensions.Setting
             Widgets.ScrollHorizontal(inRect, ref horPos, scrollRect);
             DrawSettingsList(scrollRect, settings);
             Widgets.EndScrollView();
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(settings);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(settings);
         }
     }
 }

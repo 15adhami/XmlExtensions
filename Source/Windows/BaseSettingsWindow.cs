@@ -65,7 +65,7 @@ namespace XmlExtensions
             {
                 SettingsMenuDef tempMenu = activeMenu;
                 activeMenu = null;
-                tempMenu.RunPostCloseActions();
+                tempMenu.PostClose();
             }
             if (defName != null)
             {

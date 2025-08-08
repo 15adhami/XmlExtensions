@@ -81,18 +81,9 @@ namespace XmlExtensions.Action
                 ScrollView scrollView = new() { settings = settings };
                 settings = [scrollView];
             }
-            return InitializeContainers(menuDef, settings);
+            return InitializeContainers(settings);
         }
 
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(settings);
-        }
-
-        internal override bool PostClose()
-        { 
-            return PostCloseContainers(settings);
-        }
         protected override bool ApplyAction()
         {
             SettingsWindow window = new();

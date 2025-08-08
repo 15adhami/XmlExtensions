@@ -25,17 +25,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            return InitializeContainers(menuDef, actions);
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(actions);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(actions);
+            return InitializeContainers(actions);
         }
 
         protected override float CalculateHeight(float width)

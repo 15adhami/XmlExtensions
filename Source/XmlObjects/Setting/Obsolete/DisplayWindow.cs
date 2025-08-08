@@ -90,7 +90,7 @@ namespace XmlExtensions.Setting
                 ScrollView scrollView = new() { settings = settings };
                 settings = [ scrollView ];
             }
-            return InitializeContainers(menuDef, settings);
+            return InitializeContainers(settings);
         }
 
         protected override float CalculateHeight(float width)
@@ -123,16 +123,6 @@ namespace XmlExtensions.Setting
                 }
                 Find.WindowStack.Add(window);
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(settings);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(settings);
         }
     }
 }

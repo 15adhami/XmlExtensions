@@ -28,11 +28,11 @@ namespace XmlExtensions.Setting
             {
                 return false;
             }
-            if (!InitializeContainers(menuDef, caseTrue, "caseTrue"))
+            if (!InitializeContainers(caseTrue, "caseTrue"))
             {
                 return false;
             }
-            if (!InitializeContainers(menuDef, caseFalse, "caseFalse"))
+            if (!InitializeContainers(caseFalse, "caseFalse"))
             {
                 return false;
             }
@@ -62,26 +62,7 @@ namespace XmlExtensions.Setting
             {
                 throw new Exception("Error in evaluating <condition>");
             }
-            if (!PreOpenContainers(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            else
-                return PreOpenContainers(caseFalse, "caseFalse");
-        }
-
-        internal override bool PostClose()
-        {
-            if (evalFrequency == Frequency.PreOpen && !condition.Evaluate(ref cachedResult, null))
-            {
-                throw new Exception("Error in evaluating <condition>");
-            }
-            if (!PostCloseContainers(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            else
-                return PostCloseContainers(caseFalse, "caseFalse");
+            return true;
         }
     }
 }

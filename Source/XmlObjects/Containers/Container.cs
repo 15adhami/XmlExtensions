@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 using XmlExtensions.Setting;
 
@@ -21,16 +22,40 @@ namespace XmlExtensions
 
         protected internal bool filtered = false;
 
+        protected internal HashSet<IEnumerable<Container>> initializedContainerLists = [];
+
         internal bool PreOpenContainer()
-        {
+        { // TODO: Add stacktraces
             filtered = false;
-            return PreOpen();
+            if (!PreOpen())
+            {
+                return false;
+            }
+            foreach (IEnumerable<Container> containerList in initializedContainerLists)
+            {
+                if (!PreOpenContainers(containerList))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         internal bool PostCloseContainer()
-        {
+        { // TODO: Add stacktraces
             filtered = false;
-            return PostClose();
+            if (!PostClose())
+            {
+                return false;
+            }
+            foreach (IEnumerable<Container> containerList in initializedContainerLists)
+            {
+                if (!PostCloseContainers(containerList))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -89,10 +114,11 @@ namespace XmlExtensions
         /// <param name="containers">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeContainers(SettingsMenuDef menuDef, IEnumerable<Container> containers, string name = null)
+        protected bool InitializeContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {
+                initializedContainerLists.Add(containers);
                 int c = 0;
                 foreach (Container container in containers)
                 {

@@ -30,30 +30,6 @@ namespace XmlExtensions.Setting
         private List<float> rowHeights = [];
         private List<float> colPads = [];
 
-        internal override bool PreOpen()
-        {
-            foreach (List<SettingContainer> list in settings)
-            {
-                if (!PreOpenContainers(list))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        internal override bool PostClose()
-        {
-            foreach (List<SettingContainer> list in settings)
-            {
-                if (!PostCloseContainers(list))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         protected override bool Init()
         {
             addDefaultSpacing = false;
@@ -76,7 +52,7 @@ namespace XmlExtensions.Setting
 
             for (int i = 0; i < settings.Count; i++)
             {
-                if (!InitializeContainers(menuDef, settings[i], i.ToString()))
+                if (!InitializeContainers(settings[i], i.ToString()))
                 {
                     return false;
                 }

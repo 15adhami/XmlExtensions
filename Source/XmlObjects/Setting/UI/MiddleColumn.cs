@@ -13,7 +13,7 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            return InitializeContainers(menuDef, settings);
+            return InitializeContainers(settings);
         }
 
         protected override float CalculateHeight(float width)
@@ -40,16 +40,6 @@ namespace XmlExtensions.Setting
                 Rect middleRect = inRect.MiddlePartPixels(inRect.width * split, inRect.height);
                 DrawSettingsList(middleRect, settings);
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(settings);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(settings);
         }
     }
 }

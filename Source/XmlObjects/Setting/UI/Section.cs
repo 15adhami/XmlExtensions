@@ -14,7 +14,7 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            return InitializeContainers(menuDef, settings);
+            return InitializeContainers(settings);
         }
 
         protected override float CalculateHeight(float width)
@@ -55,16 +55,6 @@ namespace XmlExtensions.Setting
                 Rect rect2 = new Rect(inRect.x + padding, inRect.y + padding, inRect.width - padding * 2f, inRect.height - padding * 2f);
                 DrawSettingsList(rect2, settings);
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(settings);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(settings);
         }
     }
 }

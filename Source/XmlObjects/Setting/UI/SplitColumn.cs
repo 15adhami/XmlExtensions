@@ -31,11 +31,11 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeContainers(menuDef, leftCol, "leftCol"))
+            if (!InitializeContainers(leftCol, "leftCol"))
             {
                 return false;
             }
-            if (!InitializeContainers(menuDef, rightCol, "rightCol"))
+            if (!InitializeContainers(rightCol, "rightCol"))
             {
                 return false;
             }
@@ -184,27 +184,6 @@ namespace XmlExtensions.Setting
                 Anchor.Bottom => total - col,
                 _ => 0f
             };
-        }
-
-
-        internal override bool PreOpen()
-        {
-            if (!PreOpenContainers(leftCol, "leftCol"))
-            {
-                return false;
-            }
-            else
-                return PreOpenContainers(rightCol, "rightCol");
-        }
-
-        internal override bool PostClose()
-        {
-            if (!PostCloseContainers(leftCol, "leftCol"))
-            {
-                return false;
-            }
-            else
-                return PostCloseContainers(rightCol, "rightCol");
         }
     }
 }

@@ -243,6 +243,35 @@ namespace XmlExtensions
             RunPreOpenActions();
         }
 
+        internal void PostClose()
+        {
+            searchText = "";
+            foundResults = 0;
+            if (settings != null)
+            {
+                ErrorManager.ClearErrors();
+                int c = 0;
+                foreach (SettingContainer setting in settings)
+                {
+                    try
+                    {
+                        c++;
+                        if (!setting.PostCloseContainer())
+                        {
+                            ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in postclosing a setting at position=" + c.ToString());
+                            ErrorManager.PrintErrors();
+                        }
+                    }
+                    catch
+                    {
+                        ErrorManager.AddError("XmlExtensions.SettingsMenuDef(" + defName + "): Error in postclosing a setting at position=" + c.ToString());
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+            RunPostCloseActions();
+        }
+
         internal void AddTag(string tag, SettingContainer setting)
         {
             if (tag != null)

@@ -35,7 +35,7 @@ namespace XmlExtensions.Setting
                 message = "Are you sure?";
                 tKeyMessage ??= "XmlExtensions_Confirmation";
             }
-            return InitializeContainers(menuDef, actions);
+            return InitializeContainers(actions);
         }
 
         protected override float CalculateHeight(float width)
@@ -93,16 +93,6 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(actions);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(actions);
         }
 
         private bool DrawButton(Rect rect, string label)

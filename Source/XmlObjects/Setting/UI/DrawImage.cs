@@ -32,7 +32,7 @@ namespace XmlExtensions.Setting
                 Error("Failed to find a texture with texpath=\"" + texPath + "\"");
                 return false;
             }
-            return InitializeContainers(menuDef, actions);
+            return InitializeContainers(actions);
         }
 
         protected override float CalculateHeight(float width2)
@@ -145,16 +145,6 @@ namespace XmlExtensions.Setting
                 }
             }
             GUI.DrawTexture(drawRect, img);
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(actions);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(actions);
         }
     }
 }

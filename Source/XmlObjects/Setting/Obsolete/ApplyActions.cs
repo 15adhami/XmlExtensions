@@ -22,7 +22,7 @@ namespace XmlExtensions.Setting
                 label = "Apply";
             }
             WarnUsingObselete([typeof(Button)]);
-            return InitializeContainers(menuDef, actions);
+            return InitializeContainers(actions);
         }
 
         protected override float CalculateHeight(float width)
@@ -71,16 +71,6 @@ namespace XmlExtensions.Setting
                     }
                 }
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            return PreOpenContainers(actions);
-        }
-
-        internal override bool PostClose()
-        {
-            return PostCloseContainers(actions);
         }
     }
 }

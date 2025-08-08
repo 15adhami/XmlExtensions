@@ -23,7 +23,7 @@ namespace XmlExtensions.Setting
                 valSettingDict = new Dictionary<string, List<SettingContainer>>();
                 foreach (SwitchSetting switchSetting in cases)
                 {
-                    if (!InitializeContainers(menuDef, switchSetting.settings, switchSetting.value.ToString()))
+                    if (!InitializeContainers(switchSetting.settings, switchSetting.value.ToString()))
                     {
                         return false;
                     }
@@ -41,30 +41,6 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect)
         {
             DrawSettingsList(inRect, valSettingDict[SettingsManager.GetSetting(modId, key)]);
-        }
-
-        internal override bool PreOpen()
-        {
-            foreach (SwitchSetting switch_setting in cases)
-            {
-                if (!PreOpenContainers(switch_setting.settings))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        internal override bool PostClose()
-        {
-            foreach (SwitchSetting switch_setting in cases)
-            {
-                if (!PostCloseContainers(switch_setting.settings))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }

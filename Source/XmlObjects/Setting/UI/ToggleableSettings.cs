@@ -11,11 +11,11 @@ namespace XmlExtensions.Setting
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeContainers(menuDef, caseTrue, "caseTrue"))
+            if (!InitializeContainers(caseTrue, "caseTrue"))
             {
                 return false;
             }
-            if (!InitializeContainers(menuDef, caseFalse, "caseFalse"))
+            if (!InitializeContainers(caseFalse, "caseFalse"))
             {
                 return false;
             }
@@ -42,26 +42,6 @@ namespace XmlExtensions.Setting
             {
                 DrawSettingsList(inRect, settings);
             }
-        }
-
-        internal override bool PreOpen()
-        {
-            if (!PreOpenContainers(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            else
-                return PreOpenContainers(caseFalse, "caseFalse");
-        }
-
-        internal override bool PostClose()
-        {
-            if (!PostCloseContainers(caseTrue, "caseTrue"))
-            {
-                return false;
-            }
-            else
-                return PostCloseContainers(caseFalse, "caseFalse");
         }
     }
 }

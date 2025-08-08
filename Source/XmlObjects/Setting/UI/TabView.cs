@@ -28,7 +28,7 @@ namespace XmlExtensions.Setting
             {
                 foreach (Tab tab in tabs)
                 {
-                    if (!InitializeContainers(menuDef, tab.settings, tab.label))
+                    if (!InitializeContainers(tab.settings, tab.label))
                     {
                         return false;
                     }
@@ -58,30 +58,6 @@ namespace XmlExtensions.Setting
             inRect.yMin += rows*tabHeight;
             TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
             DrawSettingsList(inRect, tabs[selectedTab].settings);
-        }
-
-        internal override bool PreOpen()
-        {
-            foreach (Tab tab in tabs)
-            {
-                if (!PreOpenContainers(tab.settings))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        internal override bool PostClose()
-        {
-            foreach (Tab tab in tabs)
-            {
-                if (!PostCloseContainers(tab.settings))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }
