@@ -64,11 +64,11 @@ namespace XmlExtensions
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
         internal HashSet<(SettingContainer, Rect)> postDrawSettings = [];
-
         internal string searchText = "";
         internal bool searchTexts;
         internal bool searchLabels;
         internal bool searchToolTips;
+        internal Color highlightColor = Color.white;
         internal int foundResults = 0;
 
         internal bool Init()

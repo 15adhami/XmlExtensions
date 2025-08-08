@@ -213,7 +213,7 @@ namespace XmlExtensions.Setting
                             if (filtered && allowSearch && !menuDef.searchText.NullOrEmpty())
                             {
                                 Color originalColor = GUI.color;
-                                GUI.color = Color.white;
+                                GUI.color = menuDef.highlightColor;
                                 Widgets.DrawBox(drawRect);
                                 GUI.color = originalColor;
                             }
