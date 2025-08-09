@@ -10,20 +10,14 @@ namespace XmlExtensions
         protected bool initialized = false;
         public string modId;
 
-        protected bool allowSearch = true;
-        protected List<string> searchTags;
-
         protected Color? color = null;
 
         protected SettingsMenuDef menuDef;
 
-        protected internal bool filtered = false;
-
         protected internal HashSet<IEnumerable<Container>> initializedContainerLists = [];
 
-        internal bool PreOpenContainer()
+        internal virtual bool PreOpenContainer()
         { // TODO: Add stacktraces
-            filtered = false;
             if (!PreOpen())
             {
                 return false;
@@ -38,9 +32,8 @@ namespace XmlExtensions
             return true;
         }
 
-        internal bool PostCloseContainer()
+        internal virtual bool PostCloseContainer()
         { // TODO: Add stacktraces
-            filtered = false;
             if (!PostClose())
             {
                 return false;
@@ -123,17 +116,6 @@ namespace XmlExtensions
                     if (color != null && container.color == null)
                     {
                         container.color = color;
-                    }
-                    if (searchTags != null)
-                    {
-                        if (container.searchTags == null)
-                        {
-                            searchTags = [];
-                        }
-                        foreach (string searchTag in searchTags)
-                        {
-                            container.searchTags.Add(searchTag);
-                        }
                     }
                     if (!container.Initialize(menuDef))
                     {

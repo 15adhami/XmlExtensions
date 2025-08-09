@@ -63,6 +63,18 @@ namespace XmlExtensions.Setting
         private int errHeight = -1;
         private bool needsDraw = false;
 
+        protected internal bool filtered = false;
+        protected bool allowSearch = true;
+        protected SearchType searchType = SearchType.SearchAll;
+
+        protected enum SearchType
+        {
+            SearchAllAndHighlight,
+            SearchDrawnAndHighlight,
+            SearchAll,
+            SearchDrawn,
+        }
+
         // Public methods
 
         /// <summary>
@@ -210,14 +222,8 @@ namespace XmlExtensions.Setting
                             {
                                 DrawSettingContents(drawRect);
                             }
-                            if (filtered && allowSearch && !menuDef.searchText.NullOrEmpty())
-                            {
-                                Color originalColor = GUI.color;
-                                GUI.color = menuDef.highlightColor;
-                                Widgets.DrawBox(drawRect);
-                                GUI.color = originalColor;
-                            }
                         }
+                        PostDrawSetting(inRect);
                     }
                 }
                 catch
@@ -229,6 +235,50 @@ namespace XmlExtensions.Setting
                 }
             }
             cachedHeight = -1f;
+        }
+
+        protected internal bool FilterSetting(string searchText)
+        {
+            return true;
+        }
+        private bool FilterSettings(IEnumerable<SettingContainer> settings, string searchtext)
+        {
+            bool flag = false;
+            if (settings != null)
+            {
+                foreach (SettingContainer setting in settings)
+                {
+                    if (setting.FilterSetting(searchtext))
+                    {
+                        flag =  true;
+                    }
+                }
+            }
+            return flag;
+        }
+
+        internal void PostDrawSetting(Rect inRect, bool isVisible = true)
+        {
+            if (filtered && allowSearch && !menuDef.searchText.NullOrEmpty())
+            {
+                Color originalColor = GUI.color;
+                GUI.color = menuDef.highlightColor;
+                Widgets.DrawBox(inRect);
+                GUI.color = originalColor;
+            }
+            PostDrawSettingContents(inRect);
+        }
+
+        internal override bool PreOpenContainer()
+        {
+            filtered = false;
+            return base.PreOpenContainer();
+        }
+
+        internal override bool PostCloseContainer()
+        {
+            filtered = false;
+            return base.PostCloseContainer();
         }
 
 

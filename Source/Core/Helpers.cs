@@ -233,11 +233,25 @@ namespace XmlExtensions
             }
             else if (operation == "concat")
             {
-                result = str1 + str2;
+                if (IsCData(str1) && IsCData(str2))
+                    result = WrapCData(UnwrapCData(str1) + UnwrapCData(str2));
+                else if (IsCData(str1))
+                    result = WrapCData(UnwrapCData(str1) + str2);
+                else if (IsCData(str2))
+                    result = WrapCData(str1 + UnwrapCData(str2));
+                else
+                    result = str1 + str2;
             }
             else if (operation == "concat2")
             {
-                result = str2 + str1;
+                if (IsCData(str1) && IsCData(str2))
+                    result = WrapCData(UnwrapCData(str2) + UnwrapCData(str1));
+                else if (IsCData(str2))
+                    result = WrapCData(UnwrapCData(str2) + str1);
+                else if (IsCData(str1))
+                    result = WrapCData(str2 + UnwrapCData(str1));
+                else
+                    result = str2 + str1;
             }
             else if (operation == "roundup")
             {
@@ -397,5 +411,11 @@ namespace XmlExtensions
             XmlNode node = xml.SelectSingleNode(path);
             return node;
         }
+
+        private static bool IsCData(string s) => s != null && s.StartsWith("<![CDATA[") && s.EndsWith("]]>");
+
+        private static string UnwrapCData(string s) => s.Substring(9, s.Length - 12);
+
+        private static string WrapCData(string s) => $"<![CDATA[{s}]]>";
     }
 }
