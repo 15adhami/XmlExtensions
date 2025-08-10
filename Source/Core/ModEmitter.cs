@@ -79,7 +79,7 @@ namespace XmlExtensions
             // Emit Mod Type
             Type emittedType = typeBuilder.CreateType();
 
-            // Set settingsMenuDefFieldInfo field value
+            // Set settingsMenuDefField field value
             FieldInfo settingsMenuDefFieldInfo = emittedType.GetField("settingsMenuDef", BindingFlags.Public | BindingFlags.Static);
             settingsMenuDefFieldInfo.SetValue(null, settingsMenuDef);
 
