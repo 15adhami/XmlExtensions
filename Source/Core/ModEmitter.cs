@@ -7,89 +7,82 @@ using Verse;
 namespace XmlExtensions
 {
     /// <summary>
-    /// Class for emitting a Mod subclass with given SettignsMenuDef
+    /// Class for emitting a Mod subclass with given SettingsMenuDef
     /// </summary>
-    internal static class ModEmitter
+    internal static class ModTypeEmitter
     {
-        internal static Type EmitMod(SettingsMenuDef menu)
+        internal static Type EmitModType(SettingsMenuDef settingsMenuDef)
         {
-            ModContentPack content = menu.modContentPack;
+            // Get ModContentPack
+            ModContentPack content = settingsMenuDef.modContentPack;
             if (content == null)
             {
-                Verse.Log.Error("[XML Extensions] SettingsMenuDef " + menu.defName + " ModContentPack is null");
+                Verse.Log.Error("[XML Extensions] SettingsMenuDef " + settingsMenuDef.defName + " ModContentPack is null");
                 return null;
             }
-            string modName = "XmlExtensions_Mod_" + menu.defName;
+
+            // Define dynamic assembly
+            string modName = "XmlExtensions_Mod_" + settingsMenuDef.defName;
             var asmName = new AssemblyName(modName);
             var asmBuilder = AssemblyBuilder.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
             var moduleBuilder = asmBuilder.DefineDynamicModule(modName + "Module");
+
             // Define the Mod subclass
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(
-                modName,
-                TypeAttributes.Public | TypeAttributes.Class,
-                typeof(Mod)
-            );
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(modName, TypeAttributes.Public | TypeAttributes.Class, typeof(Mod));
+
             // Define constructor
-            ConstructorInfo baseCtor = typeof(Mod).GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(ModContentPack) }, null);
-            if (baseCtor == null)
-                throw new Exception("Base constructor not found!");
-            ConstructorBuilder ctorBuilder = typeBuilder.DefineConstructor(
-                MethodAttributes.Public,
-                CallingConventions.Standard,
-                new[] { typeof(ModContentPack) }
-            );
+            ConstructorInfo baseCtor = typeof(Mod).GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, [typeof(ModContentPack)], null);
+            ConstructorBuilder ctorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, [typeof(ModContentPack)]);
             ILGenerator ilCtor = ctorBuilder.GetILGenerator();
-            ilCtor.Emit(OpCodes.Ldarg_0); // this
-            ilCtor.Emit(OpCodes.Ldarg_1); // content
-            ilCtor.Emit(OpCodes.Call, baseCtor); // base(content)
+            ilCtor.Emit(OpCodes.Ldarg_0);        // load this
+            ilCtor.Emit(OpCodes.Ldarg_1);        // load content
+            ilCtor.Emit(OpCodes.Call, baseCtor); // call base(content)
             ilCtor.Emit(OpCodes.Ret);
 
-            // Override DoSettingsWindowContents(Rect)
-            MethodInfo baseDrawMethod = typeof(Mod).GetMethod("DoSettingsWindowContents", BindingFlags.Public | BindingFlags.Instance);
-            MethodBuilder drawMethod = typeBuilder.DefineMethod(
-                "DoSettingsWindowContents",
-                MethodAttributes.Public | MethodAttributes.Virtual,
-                typeof(void),
-                new[] { typeof(Rect) }
-            );
-            FieldBuilder menuField = typeBuilder.DefineField(
-                "menuDef",
-                typeof(SettingsMenuDef),
-                FieldAttributes.Public | FieldAttributes.Static
-            );
-            MethodInfo findWindowStack = typeof(Find).GetProperty("WindowStack").GetGetMethod();
-            MethodInfo addWindowMethod = typeof(WindowStack).GetMethod("Add", new[] { typeof(Window) });
-            ConstructorInfo ctor = typeof(ModSettingsWindow).GetConstructor(
-                new[] { typeof(SettingsMenuDef), typeof(bool) }
-            );
+            // Define settingsMenuDefField field
+            FieldBuilder settingsMenuDefField = typeBuilder.DefineField("settingsMenuDef", typeof(SettingsMenuDef), FieldAttributes.Public | FieldAttributes.Static);
 
-            // Create Find.WindowStack.Add(new XmlExtensions_MenuModSettings(menu))
+            // Define DoSettingsWindowContents(Rect) method
+            MethodBuilder drawMethod = typeBuilder.DefineMethod("DoSettingsWindowContents", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), [typeof(Rect)]);
+
+            // Implement DoSettingsWindowContents(Rect) method
+            // Create call to Find.WindowStack.Add(new XmlExtensions_MenuModSettings(settingsMenuDef, false))
+            MethodInfo findWindowStack = typeof(Find).GetProperty("WindowStack").GetGetMethod();
+            MethodInfo addWindowMethod = typeof(WindowStack).GetMethod("Add", [typeof(Window)]);
+            ConstructorInfo settingsWindowCtor = typeof(ModSettingsWindow).GetConstructor([typeof(SettingsMenuDef), typeof(bool)]);
+
+            // Emit IL of DoSettingsWindowContents(Rect) method
             ILGenerator ilDraw = drawMethod.GetILGenerator();
-            ilDraw.Emit(OpCodes.Call, findWindowStack);      // -> push Find.WindowStack
-            ilDraw.Emit(OpCodes.Ldsfld, menuField);          // -> push SettingsMenuDef (menuDef)
-            ilDraw.Emit(OpCodes.Ldc_I4_0);                   // -> push 'false' (bool is nested = false)
-            ilDraw.Emit(OpCodes.Newobj, ctor);               // -> call ctor(SettingsMenuDef, bool)
-            ilDraw.Emit(OpCodes.Callvirt, addWindowMethod);  // -> call WindowStack.Add(Window)
-            ilDraw.Emit(OpCodes.Ret);
+            ilDraw.Emit(OpCodes.Call, findWindowStack);        // call Find.WindowStack
+            ilDraw.Emit(OpCodes.Ldsfld, settingsMenuDefField); // load settingsMenuDef field
+            ilDraw.Emit(OpCodes.Ldc_I4_0);                     // load 'false'
+            ilDraw.Emit(OpCodes.Newobj, settingsWindowCtor);   // create XmlExtensions_MenuModSettings object
+            ilDraw.Emit(OpCodes.Callvirt, addWindowMethod);    // call Find.WindowStack.Add(Window)
+            ilDraw.Emit(OpCodes.Ret);                          // return
+
+            // Override DoSettingsWindowContents(Rect) method
+            MethodInfo baseDrawMethod = typeof(Mod).GetMethod("DoSettingsWindowContents", BindingFlags.Public | BindingFlags.Instance);
             typeBuilder.DefineMethodOverride(drawMethod, baseDrawMethod);
 
-            // Override SettingsCategory()
-            MethodInfo baseCategoryMethod = typeof(Mod).GetMethod("SettingsCategory", BindingFlags.Public | BindingFlags.Instance);
-            MethodBuilder catMethod = typeBuilder.DefineMethod(
-                "SettingsCategory",
-                MethodAttributes.Public | MethodAttributes.Virtual,
-                typeof(string),
-                Type.EmptyTypes
-            );
+            // Define SettingsCategory() method
+            MethodBuilder catMethod = typeBuilder.DefineMethod("SettingsCategory", MethodAttributes.Public | MethodAttributes.Virtual, typeof(string), Type.EmptyTypes);
 
+            // Emit IL of SettingsCategory() method
             ILGenerator ilCat = catMethod.GetILGenerator();
-            ilCat.Emit(OpCodes.Ldstr, Helpers.TryTranslate(menu.label, menu.tKey));
+            ilCat.Emit(OpCodes.Ldstr, Helpers.TryTranslate(settingsMenuDef.label, settingsMenuDef.tKey));
             ilCat.Emit(OpCodes.Ret);
+
+            // Override SettingsCategory() method
+            MethodInfo baseCategoryMethod = typeof(Mod).GetMethod("SettingsCategory", BindingFlags.Public | BindingFlags.Instance);
             typeBuilder.DefineMethodOverride(catMethod, baseCategoryMethod);
 
+            // Emit Mod Type
             Type emittedType = typeBuilder.CreateType();
-            FieldInfo menuInfo = emittedType.GetField("menuDef", BindingFlags.Public | BindingFlags.Static);
-            menuInfo.SetValue(null, menu);
+
+            // Set settingsMenuDefFieldInfo field value
+            FieldInfo settingsMenuDefFieldInfo = emittedType.GetField("settingsMenuDef", BindingFlags.Public | BindingFlags.Static);
+            settingsMenuDefFieldInfo.SetValue(null, settingsMenuDef);
+
             return emittedType;
         }
     }

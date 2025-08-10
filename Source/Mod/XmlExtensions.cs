@@ -93,7 +93,7 @@ namespace XmlExtensions
             {
                 try
                 {
-                    Type emittedModType = ModEmitter.EmitMod(menu);
+                    Type emittedModType = ModTypeEmitter.EmitModType(menu);
                     LoadedModManager.runningModClasses[emittedModType] = (Mod)Activator.CreateInstance(emittedModType, menu.modContentPack);
                     emiitedMods += 1;
                 }

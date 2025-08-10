@@ -16,9 +16,9 @@
             Prints the stack of errors, then clears them.
             </summary>
         </member>
-        <member name="T:XmlExtensions.ModEmitter">
+        <member name="T:XmlExtensions.ModTypeEmitter">
             <summary>
-            Class for emitting a Mod subclass with given SettignsMenuDef
+            Class for emitting a Mod subclass with given SettingsMenuDef
             </summary>
         </member>
         <member name="T:XmlExtensions.ErrorHandler">
