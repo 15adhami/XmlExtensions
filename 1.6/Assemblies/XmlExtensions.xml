@@ -363,6 +363,12 @@
             <param name="settings">The list of settings</param>
             <returns>The total height of the settings</returns>
         </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.FilterBox(UnityEngine.Rect)">
+            <summary>
+            Draws an animated box in the given Rect.
+            </summary>
+            <param name="inRect">Rect to draw animated box.</param>
+        </member>
         <member name="T:XmlExtensions.SettingsManager">
             <summary>
             This class contains methods to access settings that XML Extensions manages
@@ -484,6 +490,11 @@
         <member name="F:XmlExtensions.SettingsMenuDef.tagMap">
             <summary>
             Used to identify a Setting based on its tag
+            </summary>
+        </member>
+        <member name="F:XmlExtensions.SettingsMenuDef.ticksOpen">
+            <summary>
+            The number of ticks the menu has been opened
             </summary>
         </member>
         <member name="T:XmlExtensions.SlateDef">

@@ -14,6 +14,9 @@ namespace XmlExtensions
     /// </summary>
     public class SettingsMenuDef : Def
     { //TODO: Add stack traces to SettingsMenuDef
+
+        // Public fields
+
         /// <summary>
         /// Translation key for the label
         /// </summary>
@@ -64,12 +67,18 @@ namespace XmlExtensions
         /// </summary>
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
+        /// <summary>
+        /// The number of ticks the menu has been opened
+        /// </summary>
+        public int ticksOpen = 0;
+
         // Fields for filtering
         internal string searchText = "";
         internal string prevSearchText = "";
         internal bool searchTexts;
         internal bool searchLabels;
         internal bool searchToolTips;
+        internal bool animateHighlight = false;
         internal Color highlightColor = Color.white;
         internal int foundResults = 0;
         internal int prevFoundResults = 0;
@@ -193,12 +202,14 @@ namespace XmlExtensions
             prevFoundResults = foundResults;
             foreach (var key in settingFilterDict.Keys.ToList())
                 prevSettingFilterDict[key] = settingFilterDict[key];
+            ticksOpen++;
         }
 
         internal void PreOpen()
         {
             searchText = "";
             foundResults = 0;
+            ticksOpen = 0;
             if (settings != null)
             {
                 ErrorManager.ClearErrors();

@@ -233,7 +233,7 @@ namespace XmlExtensions.Setting
                                 DrawSettingContents(drawRect);
                             }
                         }
-                        DrawFilterBox(drawRect);
+                        DoFilterBox(drawRect);
                     }
                 }
                 catch
@@ -286,13 +286,7 @@ namespace XmlExtensions.Setting
         /// <param name="inRect">The <c>Rect</c> that the filter box will be drawn in</param>
         protected virtual void DrawFilterBox(Rect inRect)
         {
-            if ((searchType == SearchType.SearchDrawnAndHighlight || searchType == SearchType.SearchAllAndHighlight) && menuDef.prevSettingFilterDict[this] && allowSearch && !menuDef.searchText.NullOrEmpty())
-            {
-                Color originalColor = GUI.color;
-                GUI.color = menuDef.highlightColor;
-                Widgets.DrawBox(inRect);
-                GUI.color = originalColor;
-            }
+            FilterBox(inRect);
         }
 
         // Helpers
@@ -354,9 +348,28 @@ namespace XmlExtensions.Setting
             return h;
         }
 
+        /// <summary>
+        /// Draws an animated box in the given Rect.
+        /// </summary>
+        /// <param name="inRect">Rect to draw animated box.</param>
+        protected void FilterBox(Rect inRect)
+        {
+            Color originalColor = GUI.color;
+            Color c = menuDef.highlightColor;
+            if (menuDef.animateHighlight)
+            {
+                float t = (float)menuDef.ticksOpen / 60f;
+                float factor = 0.75f + 0.25f * Mathf.Cos(t * Mathf.PI * 0.2f);
+                c.a = Mathf.Clamp01(c.a * factor);
+            }
+            GUI.color = c;
+            Widgets.DrawBox(inRect);
+            GUI.color = originalColor;
+        }
+
         // Internal helpers
 
-        protected override internal bool FilterSetting()
+        protected sealed override internal bool FilterSetting()
         {
             bool flag = false;
             if (!menuDef.searchText.NullOrEmpty() && allowSearch)
@@ -422,5 +435,12 @@ namespace XmlExtensions.Setting
             return flag;
         }
 
+        private void DoFilterBox(Rect inRect)
+        {
+            if ((searchType == SearchType.SearchDrawnAndHighlight || searchType == SearchType.SearchAllAndHighlight) && menuDef.prevSettingFilterDict[this] && allowSearch && !menuDef.searchText.NullOrEmpty())
+            {
+                DrawFilterBox(inRect);
+            }
+        }
     }
 }
