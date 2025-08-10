@@ -152,7 +152,7 @@ namespace XmlExtensions.Setting
         /// Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
-        public virtual void DrawSetting(Rect inRect, bool isVisible = true) // TODO: Complete optimization based on visibility
+        public virtual void DrawSetting(Rect inRect, bool isVisible = true) // TODO: Implement optimization based on visibility
         {
             if (isVisible || needsDraw)
             {
@@ -167,7 +167,8 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        if (!menuDef.searchText.NullOrEmpty() && allowSearch)
+                        // Filter setting
+                        if (allowSearch && !menuDef.searchText.NullOrEmpty())
                         {
                             if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
                             {
@@ -186,6 +187,7 @@ namespace XmlExtensions.Setting
                             }
                         }
 
+                        // Apply padding and translate
                         float topPad = padAbove > 0 ? padAbove : 0f;
                         float bottomPad = padBelow > 0 ? padBelow : 0f;
                         float leftPad = padLeft > 0 ? padLeft : 0f;
@@ -193,7 +195,7 @@ namespace XmlExtensions.Setting
                         float spacing = addDefaultSpacing ? GetDefaultSpacing() : 0f;
 
                         inRect.x += translateX;
-                        //inRect.y += translateY;
+                        //inRect.y += translateY; TODO: implement translateY
 
                         Rect drawRect = new(
                             inRect.x + leftPad,
@@ -233,6 +235,8 @@ namespace XmlExtensions.Setting
                                 DrawSettingContents(drawRect);
                             }
                         }
+
+                        // Draw filter box
                         DoFilterBox(drawRect);
                     }
                 }

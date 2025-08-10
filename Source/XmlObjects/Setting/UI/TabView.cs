@@ -15,11 +15,11 @@ namespace XmlExtensions.Setting
 
         public List<Tab> tabs;
         public int rows = 1;
+        public float maxTabWidth = 200;
 
         private List<TabRecord> tabRecords;
         private int selectedTab = 0;
-        private float tabHeight = 31;
-        private float maxTabWidth = 200;
+        private float tabHeight = 31; // Game-defined constant
 
         protected override bool Init()
         {
@@ -58,6 +58,11 @@ namespace XmlExtensions.Setting
             inRect.yMin += rows*tabHeight;
             TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
             DrawSettingsList(inRect, tabs[selectedTab].settings);
+        }
+
+        protected override void DrawFilterBox(Rect inRect)
+        {
+            // Get Rects of all tabs with filtered settings then call FilterBox(Rect) on each one
         }
     }
 }
