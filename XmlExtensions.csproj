@@ -91,7 +91,7 @@
     <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
     <Compile Include="Source\Core\ErrorManager\ErrorContext.cs" />
     <Compile Include="Source\Core\ErrorManager\ErrorManager.cs" />
-    <Compile Include="Source\Core\ModEmitter.cs" />
+    <Compile Include="Source\Core\ModTypeEmitter.cs" />
     <Compile Include="Source\Core\PatchManager\PatchCoordinator.cs" />
     <Compile Include="Source\Core\PatchManager\PatchFilter.cs" />
     <Compile Include="Source\Core\PatchManager\PatchProfiler.cs" />
