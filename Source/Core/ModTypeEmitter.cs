@@ -7,7 +7,7 @@ using Verse;
 namespace XmlExtensions
 {
     /// <summary>
-    /// Class for emitting a Mod subclass with given SettingsMenuDef
+    /// Class for emitting a Mod Subtype with given SettingsMenuDef
     /// </summary>
     internal static class ModTypeEmitter
     {
@@ -27,7 +27,7 @@ namespace XmlExtensions
             var asmBuilder = AssemblyBuilder.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
             var moduleBuilder = asmBuilder.DefineDynamicModule(modName + "Module");
 
-            // Define the Mod subclass
+            // Define the Mod Subtype
             TypeBuilder typeBuilder = moduleBuilder.DefineType(modName, TypeAttributes.Public | TypeAttributes.Class, typeof(Mod));
 
             // Define constructor
