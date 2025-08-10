@@ -110,7 +110,7 @@ namespace XmlExtensions
         /// <param name="containers">The list of settings</param>
         /// <param name="name">The name of the list (for error reporting purposes)</param>
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
-        protected bool InitializeContainers(IEnumerable<Container> containers, string name = null)
+        protected virtual bool InitializeContainers(IEnumerable<Container> containers, string name = null)
         {
             if (containers != null)
             {

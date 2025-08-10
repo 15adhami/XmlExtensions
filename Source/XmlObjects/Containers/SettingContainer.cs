@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using Verse;
 
@@ -11,6 +13,8 @@ namespace XmlExtensions.Setting
     /// </summary>
     public abstract class SettingContainer : Container
     {
+        // Public fields
+
         /// <summary>
         /// The key that this setting manages (if needed)
         /// </summary>
@@ -60,11 +64,9 @@ namespace XmlExtensions.Setting
         /// </summary>
         protected string tag;
 
-        private float cachedHeight = -1f;
-        private int errHeight = -1;
-        private bool needsDraw = false;
-
+        // Fields for search
         protected bool allowSearch = true;
+
         protected SearchType? searchType = null;
 
         protected enum SearchType
@@ -75,7 +77,15 @@ namespace XmlExtensions.Setting
             SearchDrawn,
         }
 
+        protected internal Dictionary<IEnumerable<Container>, bool> containedFiltered = [];
+
+        // For caching text fields
         protected internal string cachedText;
+
+        // Private fields
+        private bool needsDraw = false;
+        private float cachedHeight = -1f;
+        private int errHeight = -1;
 
         // Public methods
 
@@ -168,6 +178,8 @@ namespace XmlExtensions.Setting
                     else
                     {
                         // Filter setting
+                        foreach (var key in containedFiltered.Keys.ToList())
+                            containedFiltered[key] = false;
                         if (allowSearch && !menuDef.searchText.NullOrEmpty())
                         {
                             if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
@@ -326,6 +338,7 @@ namespace XmlExtensions.Setting
                     if (menuDef.settingFilterDict[setting])
                     {
                         menuDef.settingFilterDict[this] = true;
+                        containedFiltered[settings] = true;
                     }
                 }
                 listing.End();
@@ -369,6 +382,15 @@ namespace XmlExtensions.Setting
             GUI.color = c;
             Widgets.DrawBox(inRect);
             GUI.color = originalColor;
+        }
+
+        protected override bool InitializeContainers(IEnumerable<Container> containers, string name = null)
+        {
+            if (containers != null)
+            {
+                containedFiltered.Add(containers, false);
+            }
+            return base.InitializeContainers(containers, name);
         }
 
         // Internal helpers
@@ -432,6 +454,7 @@ namespace XmlExtensions.Setting
                 {
                     if (container.FilterSetting())
                     {
+                        containedFiltered[containers] = true;
                         flag = true;
                     }
                 }

@@ -23,6 +23,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            searchType = SearchType.SearchAllAndHighlight;
             addDefaultSpacing = false;
             if (tabs != null)
             {
@@ -35,14 +36,11 @@ namespace XmlExtensions.Setting
                 }
             }
 
-            tabRecords = new List<TabRecord>();
+            tabRecords = [];
             for (int i = 0; i < tabs.Count; i++)
             {
                 int t = i;
-                TabRecord temp = new TabRecord(tabs[t].label, delegate ()
-                {
-                    selectedTab = t;
-                }, () => selectedTab == t);
+                TabRecord temp = new(tabs[t].label, delegate () { selectedTab = t; }, () => selectedTab == t);
                 tabRecords.Add(temp);
             }
             return true;
@@ -63,6 +61,13 @@ namespace XmlExtensions.Setting
         protected override void DrawFilterBox(Rect inRect)
         {
             // Get Rects of all tabs with filtered settings then call FilterBox(Rect) on each one
+            foreach(Tab tab in tabs)
+            {
+                if (containedFiltered[tab.settings])
+                {
+                    // Get Rect of tab, then call FilterBox(Rect);
+                }
+            }
         }
     }
 }
