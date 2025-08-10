@@ -27,10 +27,13 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
+            // Get searchText
             string searchText = menuDef.searchText;
             string newSearchText = Widgets.TextField(inRect, searchText);
             menuDef.searchText = newSearchText;
 
+
+            // Draw search count
             Color colorTemp = GUI.color;
             GUI.color = new Color(0.5f, 0.5f, 0.5f);
             if (menuDef.searchText.NullOrEmpty() || !showCount)

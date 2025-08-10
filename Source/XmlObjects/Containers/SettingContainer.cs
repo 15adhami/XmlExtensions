@@ -247,57 +247,6 @@ namespace XmlExtensions.Setting
             cachedHeight = -1f;
         }
 
-        protected override internal bool FilterSetting()
-        {
-            bool flag = false;
-            if (!menuDef.searchText.NullOrEmpty() && allowSearch)
-            {
-                if (!menuDef.settingFilterDict[this])
-                {
-                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                }
-                else
-                {
-                    flag = true;
-                }
-                if (searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight)
-                {
-                    foreach (IEnumerable<Container> containers in initializedContainerLists.Keys)
-                    {
-                        if (!initializedContainerLists[containers] && FilterSettings(containers))
-                        {
-                            flag = true;
-                            menuDef.settingFilterDict[this] = true;
-                        }
-                    }
-                }
-                foreach (IEnumerable<Container> containers in initializedContainerLists.Keys.ToList())
-                {
-                    initializedContainerLists[containers] = false;
-                }
-            }
-            
-            return flag;
-        }
-        
-
         // Methods to override
 
         /// <summary>
@@ -405,7 +354,57 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        // Private helpers
+        // Internal helpers
+
+        protected override internal bool FilterSetting()
+        {
+            bool flag = false;
+            if (!menuDef.searchText.NullOrEmpty() && allowSearch)
+            {
+                if (!menuDef.settingFilterDict[this])
+                {
+                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                }
+                else
+                {
+                    flag = true;
+                }
+                if (searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight)
+                {
+                    foreach (IEnumerable<Container> containers in initializedContainerLists.Keys)
+                    {
+                        if (!initializedContainerLists[containers] && FilterSettings(containers))
+                        {
+                            flag = true;
+                            menuDef.settingFilterDict[this] = true;
+                        }
+                    }
+                }
+                foreach (IEnumerable<Container> containers in initializedContainerLists.Keys.ToList())
+                {
+                    initializedContainerLists[containers] = false;
+                }
+            }
+
+            return flag;
+        }
 
         private bool FilterSettings(IEnumerable<Container> containers)
         {

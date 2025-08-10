@@ -17,6 +17,27 @@ namespace XmlExtensions
         // Bool represents wheither the list was drawn that frame or not
         protected internal Dictionary<IEnumerable<Container>, bool> initializedContainerLists = [];
 
+        // Public methods
+        internal virtual bool Initialize(SettingsMenuDef menuDef)
+        {
+            if (!initialized)
+            {
+                initialized = true;
+                this.menuDef ??= menuDef;
+                modId = menuDef.modId;
+                try
+                {
+                    return Init();
+                }
+                catch (Exception e)
+                {
+                    Error("Failed to initialize:\n" + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         internal virtual bool PreOpenContainer()
         { // TODO: Add stacktraces
             if (!PreOpen())
@@ -49,6 +70,8 @@ namespace XmlExtensions
             return true;
         }
 
+        // Methods to override
+
         /// <summary>
         /// This method gets called right when the user open the settings menu
         /// </summary>
@@ -77,25 +100,7 @@ namespace XmlExtensions
             return true;
         }
 
-        internal virtual bool Initialize(SettingsMenuDef menuDef)
-        {
-            if (!initialized)
-            {
-                initialized = true;
-                this.menuDef ??= menuDef;
-                modId = menuDef.modId;
-                try
-                {
-                    return Init();
-                }
-                catch (Exception e)
-                {
-                    Error("Failed to initialize:\n" + e.Message);
-                    return false;
-                }
-            }
-            return true;
-        }
+        // Helpers
 
         /// <summary>
         /// Applies the <c>Init()</c> method on every container in the list, error handling done automatically<br/>If the name of the list is provided, it will be used for error reporting
@@ -134,6 +139,8 @@ namespace XmlExtensions
             }
             return true;
         }
+
+        // Internal helpers
 
         private bool PreOpenContainers(IEnumerable<Container> containers, string name = null)
         {
@@ -201,7 +208,6 @@ namespace XmlExtensions
                 BaseSettingsWindow.SetActiveMenu(defName);
             }
         }
-
 
         protected internal void WarnUsingObselete(Type[] alternatives)
         {

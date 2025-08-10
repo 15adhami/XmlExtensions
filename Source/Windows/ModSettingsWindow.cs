@@ -13,7 +13,6 @@ namespace XmlExtensions
 
         public ModSettingsWindow(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false) : base(initialMenu, isXmlExtensions)
         {
-            // Set initial menu
             if (initialMenu != null)
             {
                 SetSelectedMod(new ModContainer(initialMenu.modId));

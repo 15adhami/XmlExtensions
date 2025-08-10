@@ -64,6 +64,7 @@ namespace XmlExtensions
         /// </summary>
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
+        // Fields for filtering
         internal string searchText = "";
         internal string prevSearchText = "";
         internal bool searchTexts;
@@ -74,6 +75,8 @@ namespace XmlExtensions
         internal int prevFoundResults = 0;
         internal Dictionary<SettingContainer, bool> settingFilterDict = [];
         internal Dictionary<SettingContainer, bool> prevSettingFilterDict = [];
+
+        // Public methods
 
         internal bool Init()
         {
@@ -192,44 +195,6 @@ namespace XmlExtensions
                 prevSettingFilterDict[key] = settingFilterDict[key];
         }
 
-        internal void FilterSettings()
-        {
-            foreach (SettingContainer setting in settings)
-            {
-                setting.FilterSetting();
-            }
-        }
-
-        internal void RunPostCloseActions()
-        {
-            if (postCloseActions != null)
-            {
-                ErrorManager.ClearErrors();
-                foreach (ActionContainer action in postCloseActions)
-                {
-                    if (!action.DoAction())
-                    {
-                        ErrorManager.PrintErrors();
-                    }
-                }
-            }
-        }
-
-        internal void RunPreOpenActions()
-        {
-            if (preOpenActions != null)
-            {
-                ErrorManager.ClearErrors();
-                foreach (ActionContainer action in preOpenActions)
-                {
-                    if (!action.DoAction())
-                    {
-                        ErrorManager.PrintErrors();
-                    }
-                }
-            }
-        }
-
         internal void PreOpen()
         {
             searchText = "";
@@ -295,6 +260,45 @@ namespace XmlExtensions
                 if (!tagMap.ContainsKey(tag))
                     tagMap.Add(tag, new());
                 tagMap[tag].Add(setting);
+            }
+        }
+
+        // Private methods
+        private void FilterSettings()
+        {
+            foreach (SettingContainer setting in settings)
+            {
+                setting.FilterSetting();
+            }
+        }
+
+        private void RunPostCloseActions()
+        {
+            if (postCloseActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (ActionContainer action in postCloseActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+        }
+
+        private void RunPreOpenActions()
+        {
+            if (preOpenActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (ActionContainer action in preOpenActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
             }
         }
     }
