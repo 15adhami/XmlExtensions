@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -63,9 +64,8 @@ namespace XmlExtensions.Setting
         private int errHeight = -1;
         private bool needsDraw = false;
 
-        protected internal bool filtered = false;
         protected bool allowSearch = true;
-        protected SearchType searchType = SearchType.SearchAll;
+        protected SearchType? searchType = null;
 
         protected enum SearchType
         {
@@ -74,6 +74,8 @@ namespace XmlExtensions.Setting
             SearchAll,
             SearchDrawn,
         }
+
+        protected internal string cachedText;
 
         // Public methods
 
@@ -89,6 +91,8 @@ namespace XmlExtensions.Setting
                 {
                     this.menuDef ??= menuDef;
                     modId = menuDef.modId;
+                    menuDef.settingFilterDict.Add(this, false);
+                    menuDef.prevSettingFilterDict.Add(this, false);
                     if (!SetDefaultValue())
                     {
                         return false;
@@ -99,7 +103,9 @@ namespace XmlExtensions.Setting
                     Error("Failed to set default value:\n" + e.Message);
                     return false;
                 }
-                return base.Initialize(menuDef);
+                bool flag = base.Initialize(menuDef);
+                searchType ??= initializedContainerLists.Count > 0 ? SearchType.SearchDrawn : SearchType.SearchDrawnAndHighlight;
+                return flag;
             }
             return true;
         }
@@ -150,20 +156,6 @@ namespace XmlExtensions.Setting
         {
             if (isVisible || needsDraw)
             {
-                if (!menuDef.searchText.NullOrEmpty() && allowSearch)
-                {
-                    filtered = false;
-                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.searchText.ToLower()))
-                    {
-                        filtered = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.searchText.ToLower()))
-                    {
-                        filtered = true;
-                        menuDef.foundResults += 1;
-                    }
-                }
                 try
                 {
                     if (errHeight > 0)
@@ -175,6 +167,25 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
+                        if (!menuDef.searchText.NullOrEmpty() && allowSearch)
+                        {
+                            if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                            {
+                                menuDef.settingFilterDict[this] = true;
+                                menuDef.foundResults += 1;
+                            }
+                            else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                            {
+                                menuDef.settingFilterDict[this] = true;
+                                menuDef.foundResults += 1;
+                            }
+                            else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                            {
+                                menuDef.settingFilterDict[this] = true;
+                                menuDef.foundResults += 1;
+                            }
+                        }
+
                         float topPad = padAbove > 0 ? padAbove : 0f;
                         float bottomPad = padBelow > 0 ? padBelow : 0f;
                         float leftPad = padLeft > 0 ? padLeft : 0f;
@@ -210,7 +221,6 @@ namespace XmlExtensions.Setting
                         }
                         else
                         {
-                            //DrawSettingContents(drawRect);
                             if (color != null)
                             {
                                 Color originalColor = GUI.color;
@@ -223,7 +233,7 @@ namespace XmlExtensions.Setting
                                 DrawSettingContents(drawRect);
                             }
                         }
-                        PostDrawSetting(inRect);
+                        DrawFilterBox(drawRect);
                     }
                 }
                 catch
@@ -237,50 +247,56 @@ namespace XmlExtensions.Setting
             cachedHeight = -1f;
         }
 
-        protected internal bool FilterSetting(string searchText)
-        {
-            return true;
-        }
-        private bool FilterSettings(IEnumerable<SettingContainer> settings, string searchtext)
+        protected override internal bool FilterSetting()
         {
             bool flag = false;
-            if (settings != null)
+            if (!menuDef.searchText.NullOrEmpty() && allowSearch)
             {
-                foreach (SettingContainer setting in settings)
+                if (!menuDef.settingFilterDict[this])
                 {
-                    if (setting.FilterSetting(searchtext))
+                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
                     {
-                        flag =  true;
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
                     }
                 }
+                else
+                {
+                    flag = true;
+                }
+                if (searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight)
+                {
+                    foreach (IEnumerable<Container> containers in initializedContainerLists.Keys)
+                    {
+                        if (!initializedContainerLists[containers] && FilterSettings(containers))
+                        {
+                            flag = true;
+                            menuDef.settingFilterDict[this] = true;
+                        }
+                    }
+                }
+                foreach (IEnumerable<Container> containers in initializedContainerLists.Keys.ToList())
+                {
+                    initializedContainerLists[containers] = false;
+                }
             }
+            
             return flag;
         }
-
-        internal void PostDrawSetting(Rect inRect, bool isVisible = true)
-        {
-            if (filtered && allowSearch && !menuDef.searchText.NullOrEmpty())
-            {
-                Color originalColor = GUI.color;
-                GUI.color = menuDef.highlightColor;
-                Widgets.DrawBox(inRect);
-                GUI.color = originalColor;
-            }
-            PostDrawSettingContents(inRect);
-        }
-
-        internal override bool PreOpenContainer()
-        {
-            filtered = false;
-            return base.PreOpenContainer();
-        }
-
-        internal override bool PostCloseContainer()
-        {
-            filtered = false;
-            return base.PostCloseContainer();
-        }
-
+        
 
         // Methods to override
 
@@ -310,10 +326,25 @@ namespace XmlExtensions.Setting
         }
 
         /// <summary>
-        /// Draw the setting in the given <c>Rect</c>
+        /// Draw the setting in the given <c>Rect</c>.
         /// </summary>
         /// <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
         protected abstract void DrawSettingContents(Rect inRect);
+
+        /// <summary>
+        /// Override to implement a custom DrawFilterBox method.
+        /// </summary>
+        /// <param name="inRect">The <c>Rect</c> that the filter box will be drawn in</param>
+        protected virtual void DrawFilterBox(Rect inRect)
+        {
+            if ((searchType == SearchType.SearchDrawnAndHighlight || searchType == SearchType.SearchAllAndHighlight) && menuDef.prevSettingFilterDict[this] && allowSearch && !menuDef.searchText.NullOrEmpty())
+            {
+                Color originalColor = GUI.color;
+                GUI.color = menuDef.highlightColor;
+                Widgets.DrawBox(inRect);
+                GUI.color = originalColor;
+            }
+        }
 
         // Helpers
 
@@ -345,8 +376,13 @@ namespace XmlExtensions.Setting
                 foreach (SettingContainer setting in settings)
                 {
                     setting.DrawSetting(listing.GetRect(setting.GetHeight(rect.width)));
+                    if (menuDef.settingFilterDict[setting])
+                    {
+                        menuDef.settingFilterDict[this] = true;
+                    }
                 }
                 listing.End();
+                initializedContainerLists[settings] = true;
             }
         }
 
@@ -369,11 +405,23 @@ namespace XmlExtensions.Setting
             return h;
         }
 
-        internal virtual void PostDrawSettingContents(Rect inRect) { }
+        // Private helpers
 
-        protected void RequestPostDraw(Rect inRect)
+        private bool FilterSettings(IEnumerable<Container> containers)
         {
-            menuDef.postDrawSettings.Add((this, inRect));
+            bool flag = false;
+            if (containers != null)
+            {
+                foreach (Container container in containers)
+                {
+                    if (container.FilterSetting())
+                    {
+                        flag = true;
+                    }
+                }
+            }
+            return flag;
         }
+
     }
 }

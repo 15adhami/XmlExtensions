@@ -14,7 +14,8 @@ namespace XmlExtensions
 
         protected SettingsMenuDef menuDef;
 
-        protected internal HashSet<IEnumerable<Container>> initializedContainerLists = [];
+        // Bool represents wheither the list was drawn that frame or not
+        protected internal Dictionary<IEnumerable<Container>, bool> initializedContainerLists = [];
 
         internal virtual bool PreOpenContainer()
         { // TODO: Add stacktraces
@@ -22,7 +23,7 @@ namespace XmlExtensions
             {
                 return false;
             }
-            foreach (IEnumerable<Container> containerList in initializedContainerLists)
+            foreach (IEnumerable<Container> containerList in initializedContainerLists.Keys)
             {
                 if (!PreOpenContainers(containerList))
                 {
@@ -38,7 +39,7 @@ namespace XmlExtensions
             {
                 return false;
             }
-            foreach (IEnumerable<Container> containerList in initializedContainerLists)
+            foreach (IEnumerable<Container> containerList in initializedContainerLists.Keys)
             {
                 if (!PostCloseContainers(containerList))
                 {
@@ -108,7 +109,7 @@ namespace XmlExtensions
         {
             if (containers != null)
             {
-                initializedContainerLists.Add(containers);
+                initializedContainerLists.Add(containers, false);
                 int c = 0;
                 foreach (Container container in containers)
                 {
@@ -182,6 +183,11 @@ namespace XmlExtensions
                 }
             }
             return true;
+        }
+
+        protected virtual internal bool FilterSetting()
+        {
+            return false;
         }
 
         /// <summary>

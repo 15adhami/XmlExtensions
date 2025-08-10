@@ -24,7 +24,6 @@ namespace XmlExtensions.Setting
             Right = TextAnchor.UpperRight
         }
 
-        private string cachedText;
         private float cachedHeight;
         private Vector2 cachedSize;
 
@@ -70,17 +69,6 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {//M: 29 S: 22 T:18
-            if (!menuDef.searchText.NullOrEmpty() && allowSearch)
-            {
-                if (text != null && menuDef.searchTexts && Helpers.TryTranslate(text, tKey).ToLower().Contains(menuDef.searchText.ToLower()))
-                {
-                    if (!filtered)
-                    {
-                        menuDef.foundResults += 1;
-                    }
-                    filtered = true;
-                }
-            }
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())
@@ -144,6 +132,19 @@ namespace XmlExtensions.Setting
             {
                 text = PatchManager.XmlDocs.MainDocument.SelectSingleNode(xpath).InnerText;
             }
+            string str = Helpers.TryTranslate(text, tKey);
+            if (keys != null)
+            {
+                foreach (string key in keys)
+                {
+                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
+                }
+            }
+            if (key != null)
+            {
+                str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, key), "{}");
+            }
+            cachedText = str;
             return true;
         }
     }

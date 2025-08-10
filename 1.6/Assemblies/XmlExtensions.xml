@@ -332,9 +332,15 @@
         </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSettingContents(UnityEngine.Rect)">
             <summary>
-            Draw the setting in the given <c>Rect</c>
+            Draw the setting in the given <c>Rect</c>.
             </summary>
             <param name="inRect">The <c>Rect</c> that the setting will be drawn in</param>
+        </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.DrawFilterBox(UnityEngine.Rect)">
+            <summary>
+            Override to implement a custom DrawFilterBox method.
+            </summary>
+            <param name="inRect">The <c>Rect</c> that the filter box will be drawn in</param>
         </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.GetDefaultSpacing">
             <summary>

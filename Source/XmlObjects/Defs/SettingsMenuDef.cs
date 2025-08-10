@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
@@ -63,13 +64,16 @@ namespace XmlExtensions
         /// </summary>
         public Dictionary<string, HashSet<SettingContainer>> tagMap;
 
-        internal HashSet<(SettingContainer, Rect)> postDrawSettings = [];
         internal string searchText = "";
+        internal string prevSearchText = "";
         internal bool searchTexts;
         internal bool searchLabels;
         internal bool searchToolTips;
         internal Color highlightColor = Color.white;
         internal int foundResults = 0;
+        internal int prevFoundResults = 0;
+        internal Dictionary<SettingContainer, bool> settingFilterDict = [];
+        internal Dictionary<SettingContainer, bool> prevSettingFilterDict = [];
 
         internal bool Init()
         {
@@ -167,8 +171,11 @@ namespace XmlExtensions
 
         internal void DrawSettings(Rect rect)
         {
+            // Reset each filter
             foundResults = 0;
-            postDrawSettings.Clear();
+            foreach (var key in settingFilterDict.Keys.ToList())
+                settingFilterDict[key] = false;
+
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(rect);
             listingStandard.verticalSpacing = 0;
@@ -178,9 +185,18 @@ namespace XmlExtensions
                 setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width)));
             }
             listingStandard.End();
-            foreach((SettingContainer setting, Rect inRect) in postDrawSettings)
+            FilterSettings();
+            prevSearchText = searchText;
+            prevFoundResults = foundResults;
+            foreach (var key in settingFilterDict.Keys.ToList())
+                prevSettingFilterDict[key] = settingFilterDict[key];
+        }
+
+        internal void FilterSettings()
+        {
+            foreach (SettingContainer setting in settings)
             {
-                setting.PostDrawSettingContents(inRect);
+                setting.FilterSetting();
             }
         }
 

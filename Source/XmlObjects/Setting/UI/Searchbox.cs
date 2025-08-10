@@ -30,11 +30,7 @@ namespace XmlExtensions.Setting
             string searchText = menuDef.searchText;
             string newSearchText = Widgets.TextField(inRect, searchText);
             menuDef.searchText = newSearchText;
-            RequestPostDraw(inRect);
-        }
 
-        internal override void PostDrawSettingContents(Rect inRect)
-        {
             Color colorTemp = GUI.color;
             GUI.color = new Color(0.5f, 0.5f, 0.5f);
             if (menuDef.searchText.NullOrEmpty() || !showCount)
@@ -46,7 +42,7 @@ namespace XmlExtensions.Setting
                 Rect rect = new(inRect.x - 4f, inRect.y + 1f, inRect.width, inRect.height);
                 Verse.Text.Anchor = TextAnchor.UpperRight;
                 string translatedResults = Helpers.TryTranslate("{0} Result(s)", "XmlExtensions_SearchResults");
-                Widgets.Label(rect, translatedResults.Replace("{0}", menuDef.foundResults.ToString()));
+                Widgets.Label(rect, translatedResults.Replace("{0}", menuDef.prevFoundResults.ToString()));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
             }
             GUI.color = colorTemp;
