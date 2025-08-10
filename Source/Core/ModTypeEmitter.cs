@@ -67,10 +67,13 @@ namespace XmlExtensions
             // Define SettingsCategory() method
             MethodBuilder catMethod = typeBuilder.DefineMethod("SettingsCategory", MethodAttributes.Public | MethodAttributes.Virtual, typeof(string), Type.EmptyTypes);
 
+            // Get translated name of settings category label
+            string settingsCategory = Helpers.TryTranslate(settingsMenuDef.label, settingsMenuDef.tKey);
+
             // Emit IL of SettingsCategory() method
             ILGenerator ilCat = catMethod.GetILGenerator();
-            ilCat.Emit(OpCodes.Ldstr, Helpers.TryTranslate(settingsMenuDef.label, settingsMenuDef.tKey));
-            ilCat.Emit(OpCodes.Ret);
+            ilCat.Emit(OpCodes.Ldstr, settingsCategory); // load settiingsCategory string
+            ilCat.Emit(OpCodes.Ret);                     // return
 
             // Override SettingsCategory() method
             MethodInfo baseCategoryMethod = typeof(Mod).GetMethod("SettingsCategory", BindingFlags.Public | BindingFlags.Instance);
