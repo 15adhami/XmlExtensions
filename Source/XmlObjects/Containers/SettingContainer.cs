@@ -66,8 +66,8 @@ namespace XmlExtensions.Setting
 
         // Fields for search
         protected bool allowSearch = true;
-
         protected SearchType? searchType = null;
+        protected string searchTag = null;
 
         protected enum SearchType
         {
@@ -193,6 +193,11 @@ namespace XmlExtensions.Setting
                                 menuDef.foundResults += 1;
                             }
                             else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                            {
+                                menuDef.settingFilterDict[this] = true;
+                                menuDef.foundResults += 1;
+                            }
+                            else if (searchTag != null && searchTag.ToLower().Contains(menuDef.prevSearchText.ToLower()))
                             {
                                 menuDef.settingFilterDict[this] = true;
                                 menuDef.foundResults += 1;
@@ -415,6 +420,12 @@ namespace XmlExtensions.Setting
                         menuDef.foundResults += 1;
                     }
                     else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+                    {
+                        flag = true;
+                        menuDef.settingFilterDict[this] = true;
+                        menuDef.foundResults += 1;
+                    }
+                    else if (searchTag != null && searchTag.ToLower().Contains(menuDef.prevSearchText.ToLower()))
                     {
                         flag = true;
                         menuDef.settingFilterDict[this] = true;

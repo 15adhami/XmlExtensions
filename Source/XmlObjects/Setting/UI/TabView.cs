@@ -65,7 +65,7 @@ namespace XmlExtensions.Setting
             {
                 if (containedFiltered[tab.settings])
                 {
-                    // Get Rect of tab, then call FilterBox(Rect);
+                    // TODO: Get Rect of tab, then call FilterBox(Rect);
                 }
             }
         }
