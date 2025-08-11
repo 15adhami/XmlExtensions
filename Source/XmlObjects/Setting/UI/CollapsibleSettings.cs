@@ -136,6 +136,11 @@ namespace XmlExtensions.Setting
                 }
             }
 
+            if (state == State.Open)
+            {
+                DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settings);
+            }
+
             if (Widgets.ButtonInvisible(headerRect))
             {
                 if (state == State.Open)
@@ -150,11 +155,6 @@ namespace XmlExtensions.Setting
 
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-
-            if (state == State.Open)
-            {
-                DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settings);
-            }
         }
     }
 }

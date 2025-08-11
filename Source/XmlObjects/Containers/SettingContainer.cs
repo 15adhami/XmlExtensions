@@ -181,6 +181,10 @@ namespace XmlExtensions.Setting
             {
                 try
                 {
+                    // Reset filter
+                    foreach (var key in containedFiltered.Keys.ToList())
+                        containedFiltered[key] = false;
+
                     if (errHeight > 0)
                     {
                         GUI.color = Color.red;
@@ -190,31 +194,10 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        // Filter setting
-                        foreach (var key in containedFiltered.Keys.ToList())
-                            containedFiltered[key] = false;
+                        // Filter drawn setting
                         if (allowSearch && !menuDef.searchText.NullOrEmpty())
                         {
-                            if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                            {
-                                menuDef.settingFilterDict[this] = true;
-                                menuDef.foundResults += 1;
-                            }
-                            else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                            {
-                                menuDef.settingFilterDict[this] = true;
-                                menuDef.foundResults += 1;
-                            }
-                            else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                            {
-                                menuDef.settingFilterDict[this] = true;
-                                menuDef.foundResults += 1;
-                            }
-                            else if (searchTag != null && searchTag.ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                            {
-                                menuDef.settingFilterDict[this] = true;
-                                menuDef.foundResults += 1;
-                            }
+                            Filter();
                         }
 
                         // Apply padding and translate
@@ -398,7 +381,7 @@ namespace XmlExtensions.Setting
                 c.a = Mathf.Clamp01(c.a * factor);
             }
             GUI.color = c;
-            Widgets.DrawBox(inRect);
+            Widgets.DrawBox(inRect.ContractedBy(1f));
             GUI.color = originalColor;
         }
 
@@ -421,30 +404,7 @@ namespace XmlExtensions.Setting
             {
                 if (!menuDef.settingFilterDict[this])
                 {
-                    if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
-                    else if (searchTag != null && searchTag.ToLower().Contains(menuDef.prevSearchText.ToLower()))
-                    {
-                        flag = true;
-                        menuDef.settingFilterDict[this] = true;
-                        menuDef.foundResults += 1;
-                    }
+                    flag = Filter();
                 }
                 else
                 {
@@ -457,6 +417,7 @@ namespace XmlExtensions.Setting
                         if (!initializedContainerLists[containers] && FilterSettings(containers))
                         {
                             flag = true;
+                            containedFiltered[containers] = true;
                             menuDef.settingFilterDict[this] = true;
                         }
                     }
@@ -469,10 +430,11 @@ namespace XmlExtensions.Setting
                 {
                     prevContainedFiltered[key] = containedFiltered[key];
                 }
+                /*
                 foreach (var key in containedFiltered.Keys.ToList())
                 {
                     containedFiltered[key] = false;
-                }
+                }*/
             }
 
             return flag;
@@ -487,7 +449,6 @@ namespace XmlExtensions.Setting
                 {
                     if (container.FilterSetting())
                     {
-                        containedFiltered[containers] = true;
                         flag = true;
                     }
                 }
@@ -501,6 +462,36 @@ namespace XmlExtensions.Setting
             {
                 DrawFilterBox(inRect);
             }
+        }
+
+        private bool Filter()
+        {
+            bool flag = false;
+            if (label != null && menuDef.searchLabels && Helpers.TryTranslate(label, tKey).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+            {
+                flag = true;
+                menuDef.settingFilterDict[this] = true;
+                menuDef.foundResults += 1;
+            }
+            else if (tooltip != null && menuDef.searchToolTips && Helpers.TryTranslate(tooltip, tKeyTip).ToLower().Contains(menuDef.prevSearchText.ToLower()))
+            {
+                flag = true;
+                menuDef.settingFilterDict[this] = true;
+                menuDef.foundResults += 1;
+            }
+            else if (cachedText != null && menuDef.searchTexts && cachedText.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+            {
+                flag = true;
+                menuDef.settingFilterDict[this] = true;
+                menuDef.foundResults += 1;
+            }
+            else if (searchTag != null && searchTag.ToLower().Contains(menuDef.prevSearchText.ToLower()))
+            {
+                flag = true;
+                menuDef.settingFilterDict[this] = true;
+                menuDef.foundResults += 1;
+            }
+            return flag;
         }
     }
 }
