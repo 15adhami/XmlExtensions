@@ -34,12 +34,9 @@ namespace XmlExtensions.Setting
                 Error("<defaultTab> must be at most " + tabs.Count.ToString());
                 return false;
             }
-            if (rows > tabs.Count)
-            {
-                rows = tabs.Count;
-            }
-            selectedTab = defaultTab - 1;
             searchType = SearchType.SearchAllAndHighlight;
+            rows = Mathf.Min(rows, tabs.Count);
+            selectedTab = defaultTab - 1;
             addDefaultSpacing = false;
             if (tabs != null)
             {
@@ -76,13 +73,35 @@ namespace XmlExtensions.Setting
 
         protected override void DrawFilterBox(Rect inRect)
         {
-            // Get Rects of all tabs with filtered settings then call FilterBox(Rect) on each one
-            foreach(Tab tab in tabs)
+            float headerHeight = rows * tabHeight;
+            Rect headerRect = inRect.TopPartPixels(headerHeight);
+
+            int totalTabs = tabs.Count;
+            int totalRows = Mathf.Min(rows, totalTabs);
+            int basePerRow = totalTabs / totalRows;
+            int remainder = totalTabs % totalRows;
+
+            int tabIndex = 0;
+            float rowY = headerRect.y;
+
+            for (int r = 0; r < totalRows; r++)
             {
-                if (containedFiltered[tab.settings])
+                int tabsThisRow = basePerRow + (r < remainder ? 1 : 0);
+                if (tabsThisRow <= 0) break;
+
+                float tabWidth = headerRect.width / tabsThisRow;
+                float colX = headerRect.x;
+
+                for (int c = 0; c < tabsThisRow && tabIndex < totalTabs; c++, tabIndex++, colX += tabWidth)
                 {
-                    // TODO: Get Rect of tab, then call FilterBox(Rect);
+                    if (prevContainedFiltered[tabs[tabIndex].settings])
+                    {
+                        Rect tabRect = new Rect(colX, rowY, tabWidth, tabHeight);
+                        FilterBox(tabRect);
+                    }
                 }
+
+                rowY += tabHeight;
             }
         }
 

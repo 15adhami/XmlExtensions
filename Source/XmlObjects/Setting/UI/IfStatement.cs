@@ -23,6 +23,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            searchType = SearchType.SearchDrawn;
             addDefaultSpacing = false;
             if (evalFrequency == Frequency.OnLoad && !condition.Evaluate(ref cachedResult, null))
             {

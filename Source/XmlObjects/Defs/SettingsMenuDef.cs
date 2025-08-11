@@ -188,7 +188,7 @@ namespace XmlExtensions
             foreach (var key in settingFilterDict.Keys.ToList())
                 settingFilterDict[key] = false;
 
-            Listing_Standard listingStandard = new Listing_Standard();
+            Listing_Standard listingStandard = new();
             listingStandard.Begin(rect);
             listingStandard.verticalSpacing = 0;
             float width = listingStandard.ColumnWidth;

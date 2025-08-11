@@ -78,6 +78,7 @@ namespace XmlExtensions.Setting
         }
 
         protected internal Dictionary<IEnumerable<Container>, bool> containedFiltered = [];
+        protected internal Dictionary<IEnumerable<Container>, bool> prevContainedFiltered = [];
 
         // For caching text fields
         protected internal string cachedText;
@@ -114,7 +115,7 @@ namespace XmlExtensions.Setting
                     return false;
                 }
                 bool flag = base.Initialize(menuDef);
-                searchType ??= initializedContainerLists.Count > 0 ? SearchType.SearchDrawn : SearchType.SearchDrawnAndHighlight;
+                searchType ??= initializedContainerLists.Count > 0 ? SearchType.SearchAll : SearchType.SearchAllAndHighlight;
                 return flag;
             }
             return true;
@@ -156,6 +157,18 @@ namespace XmlExtensions.Setting
                 cachedHeight = errHeight;
                 return errHeight;
             }
+        }
+
+        /// <summary>
+        /// Returns the cached height of the setting
+        /// </summary>
+        public float GetHeight()
+        {
+            if (errHeight > 0)
+            {
+                return errHeight;
+            }
+            return cachedHeight;
         }
 
         /// <summary>
@@ -394,6 +407,7 @@ namespace XmlExtensions.Setting
             if (containers != null)
             {
                 containedFiltered.Add(containers, false);
+                prevContainedFiltered.Add(containers, false);
             }
             return base.InitializeContainers(containers, name);
         }
@@ -450,6 +464,14 @@ namespace XmlExtensions.Setting
                 foreach (IEnumerable<Container> containers in initializedContainerLists.Keys.ToList())
                 {
                     initializedContainerLists[containers] = false;
+                }
+                foreach (var key in containedFiltered.Keys)
+                {
+                    prevContainedFiltered[key] = containedFiltered[key];
+                }
+                foreach (var key in containedFiltered.Keys.ToList())
+                {
+                    containedFiltered[key] = false;
                 }
             }
 

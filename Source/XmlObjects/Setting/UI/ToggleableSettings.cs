@@ -10,6 +10,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            searchType = SearchType.SearchDrawn;
             addDefaultSpacing = false;
             if (!InitializeContainers(caseTrue, "caseTrue"))
             {

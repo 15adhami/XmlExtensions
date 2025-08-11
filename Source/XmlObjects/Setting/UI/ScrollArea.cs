@@ -15,7 +15,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            searchType = SearchType.SearchDrawnAndHighlight;
+            searchType = SearchType.SearchAllAndHighlight;
             return InitializeContainers(settings);
         }
 

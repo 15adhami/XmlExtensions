@@ -309,6 +309,11 @@
             <param name="selectedMod">The modId of the active mod in the settings menu</param>
             <returns>The height of the setting, in pixels</returns>
         </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight">
+            <summary>
+            Returns the cached height of the setting
+            </summary>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.DrawSetting(UnityEngine.Rect,System.Boolean)">
             <summary>
             Draw the setting in the given <c>Rect</c>. The height is equal to <c>cachedHeight</c>.
