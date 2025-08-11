@@ -15,7 +15,8 @@ namespace XmlExtensions.Setting
 
         public List<Tab> tabs;
         public int rows = 1;
-        public float maxTabWidth = 200;
+        public float? maxTabWidth = null; // Obsolete
+        public int defaultTab = 1;
 
         private List<TabRecord> tabRecords;
         private int selectedTab = 0;
@@ -23,6 +24,21 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
+            if (defaultTab <= 0)
+            {
+                Error("<defaultTab> must be at least 1");
+                return false;
+            }
+            if (defaultTab > tabs.Count)
+            {
+                Error("<defaultTab> must be at most " + tabs.Count.ToString());
+                return false;
+            }
+            if (rows > tabs.Count)
+            {
+                rows = tabs.Count;
+            }
+            selectedTab = defaultTab - 1;
             searchType = SearchType.SearchAllAndHighlight;
             addDefaultSpacing = false;
             if (tabs != null)
@@ -54,7 +70,7 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect)
         {
             inRect.yMin += rows*tabHeight;
-            TabDrawer.DrawTabs(inRect, tabRecords, rows, maxTabWidth);
+            TabDrawer.DrawTabs(inRect, tabRecords, rows, null);
             DrawSettingsList(inRect, tabs[selectedTab].settings);
         }
 
@@ -68,6 +84,12 @@ namespace XmlExtensions.Setting
                     // TODO: Get Rect of tab, then call FilterBox(Rect);
                 }
             }
+        }
+
+        protected override bool PreOpen()
+        {
+            selectedTab = defaultTab - 1;
+            return true;
         }
     }
 }
