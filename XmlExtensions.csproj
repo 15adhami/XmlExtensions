@@ -232,6 +232,7 @@
     <Compile Include="Source\XmlObjects\Setting\Keyed\ColorWheel.cs" />
     <Compile Include="Source\XmlObjects\Setting\Obsolete\DropdownButton.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\Button.cs" />
+    <Compile Include="Source\XmlObjects\Setting\UI\CollapsibleSettings.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\DrawColor.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\EmbedMenu.cs" />
     <Compile Include="Source\XmlObjects\Setting\Obsolete\DisplayMenu.cs" />
