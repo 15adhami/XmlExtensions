@@ -181,12 +181,6 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        // Filter drawn setting
-                        if (allowSearch && !menuDef.searchText.NullOrEmpty())
-                        {
-                            Filter();
-                        }
-
                         // Apply padding and translate
                         float topPad = padAbove > 0 ? padAbove : 0f;
                         float bottomPad = padBelow > 0 ? padBelow : 0f;
@@ -363,11 +357,6 @@ namespace XmlExtensions.Setting
                 foreach (SettingContainer setting in settings)
                 {
                     setting.DrawSetting(listing.GetRect(setting.GetHeight(rect.width)));
-                    if (setting.filtered)
-                    {
-                        filtered = true;
-                        containedFiltered[settings] = true;
-                    }
                 }
                 initializedContainerCollections[settings] = rect;
                 listing.End();
@@ -412,15 +401,6 @@ namespace XmlExtensions.Setting
             GUI.color = originalColor;
         }
 
-        protected override bool InitializeContainers(IEnumerable<Container> containers, string name = null)
-        {
-            if (containers != null)
-            {
-                containedFiltered.Add(containers, false);
-            }
-            return base.InitializeContainers(containers, name);
-        }
-
         // Internal helpers
 
         protected sealed override internal bool FilterContainer()
@@ -428,29 +408,18 @@ namespace XmlExtensions.Setting
             bool flag = false;
             if (!menuDef.searchText.NullOrEmpty() && allowSearch)
             {
-                if (!filtered)
+                flag = Filter();
+                foreach (IEnumerable<Container> containers in initializedContainerCollections.Keys)
                 {
-                    flag = Filter();
-                }
-                else
-                {
-                    flag = true;
-                }
-                if (searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight)
-                {
-                    foreach (IEnumerable<Container> containers in initializedContainerCollections.Keys)
+                    if ((searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight || ((searchType == SearchType.SearchDrawn || searchType == SearchType.SearchDrawnAndHighlight) && initializedContainerCollections[containers] != null)) && FilterSettings(containers))
                     {
-                        if (FilterSettings(containers))
-                        {
-                            flag = true;
-                            containedFiltered[containers] = true;
-                            filtered = true;
-                        }
+                        flag = true;
+                        containedFiltered[containers] = true;
                     }
                 }
                 
             }
-
+            filtered = flag;
             return flag;
         }
 

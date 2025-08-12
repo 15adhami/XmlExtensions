@@ -123,7 +123,6 @@ namespace XmlExtensions.Setting
             Widgets.Label(drawRect, cachedText);
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
-            cachedText = "";
         }
 
         protected override bool Init()

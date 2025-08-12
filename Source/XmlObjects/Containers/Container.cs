@@ -142,9 +142,10 @@ namespace XmlExtensions
         /// <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         protected virtual bool InitializeContainers(IEnumerable<Container> containers, string name = null)
         {
-            if (containers != null)
+            if (containers != null && !initializedContainerCollections.ContainsKey(containers))
             {
                 initializedContainerCollections.Add(containers, null);
+                containedFiltered.Add(containers, false);
                 int c = 0;
                 foreach (Container container in containers)
                 {
