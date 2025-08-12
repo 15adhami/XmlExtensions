@@ -210,10 +210,11 @@ namespace XmlExtensions
             {
                 if (SelectedMod.IsXmlMod())
                 {
-                    DrawModSettings(rect);
+                    activeMenu.DrawSettingsMenu(rect);
                 }
                 else
                 {
+                    
                     SelectedMod.mod.DoSettingsWindowContents(rect.BottomPartPixels(rect.height - 40));
                 }
             }

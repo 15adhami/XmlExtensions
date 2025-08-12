@@ -11,7 +11,6 @@ namespace XmlExtensions
     {
         public static SettingsMenuDef activeMenu = null;
 
-        public static Vector2 settingsPosition;
         public static ModContainer SelectedMod = null;
 
         // For KeyedActions
@@ -21,7 +20,6 @@ namespace XmlExtensions
 
         public BaseSettingsWindow(SettingsMenuDef initialMenu = null, bool isXmlExtensions = false)
         {
-            settingsPosition = new();
             soundAmbient = null;
             soundAppear = null;
             oldValuesCache = new();
@@ -121,23 +119,7 @@ namespace XmlExtensions
 
         protected void DrawModSettings(Rect rect)
         {
-            Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f));
-            Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
-            Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-            activeMenu.DrawSettingsMenu(rect2);
-            if (activeMenu.onFrameActions != null)
-            {
-                ErrorManager.ClearErrors();
-                foreach (ActionContainer action in activeMenu.onFrameActions)
-                {
-                    if (!action.DoAction())
-                    {
-                        ErrorManager.PrintErrors();
-                    }
-                }
-            }
-            GUI.color = Color.white;
-            Widgets.EndScrollView();
+            activeMenu.DrawSettingsMenu(rect);
         }
     }
 }

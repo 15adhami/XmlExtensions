@@ -81,6 +81,10 @@ namespace XmlExtensions
         internal bool animateHighlight = false;
         internal Color highlightColor = Color.white;
         internal int foundResults = 0;
+        
+        // Private Fields
+
+        private static Vector2 settingsPosition = new();
 
         // Public methods
 
@@ -183,9 +187,19 @@ namespace XmlExtensions
             // Reset search count
             foundResults = 0;
 
-            DrawSettings(rect);
+            GUI.BeginGroup(rect);
+            Rect scrollRect = new Rect(0, 0, rect.width - 20f, CalculateHeight(rect.width - 20f));
+            Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
+            Rect drawRect = new(0f, 0f, scrollRect.width, 999999f);
+
+            DrawSettings(drawRect);
             FilterSettings();
-            PostDrawSettings(rect);
+            PostDrawSettings(drawRect);
+            RunOnFrameActions();
+
+            GUI.color = Color.white;
+            Widgets.EndScrollView();
+            GUI.EndGroup();
             ticksOpen++;
         }
 
@@ -194,6 +208,7 @@ namespace XmlExtensions
             searchText = "";
             foundResults = 0;
             ticksOpen = 0;
+            settingsPosition = new();
             if (settings != null)
             {
                 ErrorManager.ClearErrors();
@@ -310,6 +325,21 @@ namespace XmlExtensions
             {
                 ErrorManager.ClearErrors();
                 foreach (ActionContainer action in preOpenActions)
+                {
+                    if (!action.DoAction())
+                    {
+                        ErrorManager.PrintErrors();
+                    }
+                }
+            }
+        }
+
+        private void RunOnFrameActions()
+        {
+            if (onFrameActions != null)
+            {
+                ErrorManager.ClearErrors();
+                foreach (ActionContainer action in onFrameActions)
                 {
                     if (!action.DoAction())
                     {
