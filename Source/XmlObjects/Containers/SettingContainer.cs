@@ -53,6 +53,8 @@ namespace XmlExtensions.Setting
 
         protected float translateX = 0;
 
+        protected float minHeight = -1f;
+
         //protected float translateY = 0;
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace XmlExtensions.Setting
                         cachedHeight += addDefaultSpacing ? GetDefaultSpacing() : 0f;
                     }
                 }
-                return cachedHeight;
+                return Mathf.Max(minHeight, cachedHeight);
             }
             catch
             {
