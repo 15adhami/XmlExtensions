@@ -124,7 +124,7 @@ namespace XmlExtensions
             Rect scrollRect = new Rect(0, 0, rect.width - 20f, activeMenu.CalculateHeight(rect.width - 20f));
             Widgets.BeginScrollView(rect.BottomPartPixels(rect.height - 40), ref settingsPosition, scrollRect);
             Rect rect2 = new Rect(0f, 0f, scrollRect.width, 999999f);
-            activeMenu.DrawSettings(rect2);
+            activeMenu.DrawSettingsMenu(rect2);
             if (activeMenu.onFrameActions != null)
             {
                 ErrorManager.ClearErrors();

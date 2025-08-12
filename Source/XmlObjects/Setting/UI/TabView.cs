@@ -94,7 +94,7 @@ namespace XmlExtensions.Setting
 
                 for (int c = 0; c < tabsThisRow && tabIndex < totalTabs; c++, tabIndex++, colX += tabWidth)
                 {
-                    if (prevContainedFiltered[tabs[tabIndex].settings])
+                    if (containedFiltered[tabs[tabIndex].settings])
                     {
                         Rect tabRect = new Rect(colX, rowY, tabWidth, tabHeight);
                         FilterBox(tabRect);

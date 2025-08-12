@@ -6,6 +6,7 @@ using UnityEngine;
 using Verse;
 using XmlExtensions.Action;
 using XmlExtensions.Setting;
+using static UnityEngine.Experimental.Rendering.RayTracingAccelerationStructure;
 
 namespace XmlExtensions
 {
@@ -74,16 +75,12 @@ namespace XmlExtensions
 
         // Fields for filtering
         internal string searchText = "";
-        internal string prevSearchText = "";
         internal bool searchTexts;
         internal bool searchLabels;
         internal bool searchToolTips;
         internal bool animateHighlight = false;
         internal Color highlightColor = Color.white;
         internal int foundResults = 0;
-        internal int prevFoundResults = 0;
-        internal Dictionary<SettingContainer, bool> settingFilterDict = [];
-        internal Dictionary<SettingContainer, bool> prevSettingFilterDict = [];
 
         // Public methods
 
@@ -181,27 +178,14 @@ namespace XmlExtensions
             return h;
         }
 
-        internal void DrawSettings(Rect rect)
+        internal void DrawSettingsMenu(Rect rect)
         {
-            // Reset each filter
+            // Reset search count
             foundResults = 0;
-            foreach (var key in settingFilterDict.Keys.ToList())
-                settingFilterDict[key] = false;
 
-            Listing_Standard listingStandard = new();
-            listingStandard.Begin(rect);
-            listingStandard.verticalSpacing = 0;
-            float width = listingStandard.ColumnWidth;
-            foreach (SettingContainer setting in settings)
-            {
-                setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(width)));
-            }
-            listingStandard.End();
+            DrawSettings(rect);
             FilterSettings();
-            prevSearchText = searchText;
-            prevFoundResults = foundResults;
-            foreach (var key in settingFilterDict.Keys.ToList())
-                prevSettingFilterDict[key] = settingFilterDict[key];
+            PostDrawSettings(rect);
             ticksOpen++;
         }
 
@@ -275,11 +259,33 @@ namespace XmlExtensions
         }
 
         // Private methods
+        private void DrawSettings(Rect rect)
+        {
+            Listing_Standard listingStandard = new();
+            listingStandard.Begin(rect);
+            listingStandard.verticalSpacing = 0;
+            foreach (SettingContainer setting in settings)
+            {
+                setting.DrawSetting(listingStandard.GetRect(setting.GetHeight(rect.width)));
+            }
+            listingStandard.End();
+        }
+
+        private void PostDrawSettings(Rect rect)
+        {
+            GUI.BeginGroup(rect);
+            foreach (SettingContainer setting in settings)
+            {
+                setting.PostDrawContainer();
+            }
+            GUI.EndGroup();
+        }
+
         private void FilterSettings()
         {
             foreach (SettingContainer setting in settings)
             {
-                setting.FilterSetting();
+                setting.FilterContainer();
             }
         }
 

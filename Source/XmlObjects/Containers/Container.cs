@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Verse;
+using Verse.Noise;
 
 namespace XmlExtensions
 {
@@ -14,8 +17,31 @@ namespace XmlExtensions
 
         protected SettingsMenuDef menuDef;
 
+        /// <summary>
+        /// Used to help reference the container via xpath
+        /// </summary>
+        protected string tag;
+
+        // Search and Filter properties
         // Bool represents wheither the list was drawn that frame or not
-        protected internal Dictionary<IEnumerable<Container>, bool> initializedContainerLists = [];
+        protected internal Dictionary<IEnumerable<Container>, Rect?> initializedContainerCollections = [];
+        protected internal Dictionary<IEnumerable<Container>, bool> containedFiltered = [];
+        protected internal bool filtered = false;
+        protected bool allowSearch = true;
+        protected SearchType? searchType = null;
+
+        /// <summary>
+        /// Determines how the Container interacts with <c>Setting.Searchbox</c>
+        /// </summary>
+        protected enum SearchType
+        {
+            SearchAllAndHighlight,
+            SearchDrawnAndHighlight,
+            SearchAll,
+            SearchDrawn,
+        }
+
+        protected Rect? postDrawRect = null;
 
         // Public methods
         internal virtual bool Initialize(SettingsMenuDef menuDef)
@@ -44,7 +70,7 @@ namespace XmlExtensions
             {
                 return false;
             }
-            foreach (IEnumerable<Container> containerList in initializedContainerLists.Keys)
+            foreach (IEnumerable<Container> containerList in initializedContainerCollections.Keys)
             {
                 if (!PreOpenContainers(containerList))
                 {
@@ -60,7 +86,7 @@ namespace XmlExtensions
             {
                 return false;
             }
-            foreach (IEnumerable<Container> containerList in initializedContainerLists.Keys)
+            foreach (IEnumerable<Container> containerList in initializedContainerCollections.Keys)
             {
                 if (!PostCloseContainers(containerList))
                 {
@@ -69,6 +95,8 @@ namespace XmlExtensions
             }
             return true;
         }
+
+
 
         // Methods to override
 
@@ -100,6 +128,8 @@ namespace XmlExtensions
             return true;
         }
 
+        public virtual float GetHeight(float width) { return 0f; }
+
         // Helpers
 
         /// <summary>
@@ -114,7 +144,7 @@ namespace XmlExtensions
         {
             if (containers != null)
             {
-                initializedContainerLists.Add(containers, false);
+                initializedContainerCollections.Add(containers, null);
                 int c = 0;
                 foreach (Container container in containers)
                 {
@@ -141,6 +171,13 @@ namespace XmlExtensions
         }
 
         // Internal helpers
+
+        protected virtual void PostDrawSettingContents(Rect inRect) { }
+
+        public virtual void PostDrawContainer(bool isVisible = true)
+        {
+            ResetFilters();
+        }
 
         private bool PreOpenContainers(IEnumerable<Container> containers, string name = null)
         {
@@ -192,9 +229,19 @@ namespace XmlExtensions
             return true;
         }
 
-        protected virtual internal bool FilterSetting()
+        protected virtual internal bool FilterContainer()
         {
             return false;
+        }
+
+        private void ResetFilters()
+        {
+            foreach (var key in containedFiltered.Keys.ToList())
+                containedFiltered[key] = false;
+            foreach (IEnumerable<Container> containers in initializedContainerCollections.Keys.ToList())
+                initializedContainerCollections[containers] = null;
+            postDrawRect = null;
+            filtered = false;
         }
 
         /// <summary>
