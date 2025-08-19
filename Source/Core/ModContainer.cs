@@ -38,7 +38,7 @@ namespace XmlExtensions
         {
             if (IsXmlMod())
             {
-                return Helpers.TryTranslate(XmlMod.settingsPerMod[modId].label, XmlMod.settingsPerMod[modId].tKey);
+                return XmlMod.settingsPerMod[modId].label.TryTKey(XmlMod.settingsPerMod[modId].tKey);
             }
             else
             {

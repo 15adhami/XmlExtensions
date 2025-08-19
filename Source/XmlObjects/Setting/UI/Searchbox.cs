@@ -48,7 +48,7 @@ namespace XmlExtensions.Setting
             {
                 Rect rect = new(inRect.x - 4f, inRect.y + 1f, inRect.width, inRect.height);
                 Verse.Text.Anchor = TextAnchor.UpperRight;
-                string translatedResults = Helpers.TryTranslate("{0} Result(s)", "XmlExtensions_SearchResults");
+                string translatedResults = "{0} Result(s)".TryTKey("XmlExtensions_SearchResults");
                 Widgets.Label(rect, translatedResults.Replace("{0}", menuDef.foundResults.ToString()));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
             }

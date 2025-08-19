@@ -31,7 +31,7 @@ namespace XmlExtensions.Setting
         {
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
-            string str = Helpers.TryTranslate(text, tKey);
+            string str = text.TryTKey(tKey);
             if (keys != null)
             {
                 foreach (string key in keys)
@@ -73,7 +73,7 @@ namespace XmlExtensions.Setting
             Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())
             {
-                string tooltipLabel = Helpers.TryTranslate(tooltip, tKeyTip);
+                string tooltipLabel = tooltip.TryTKey(tKeyTip);
                 if (keys != null)
                 {
                     foreach (string key in keys)
@@ -131,7 +131,7 @@ namespace XmlExtensions.Setting
             {
                 text = PatchManager.XmlDocs.MainDocument.SelectSingleNode(xpath).InnerText;
             }
-            string str = Helpers.TryTranslate(text, tKey);
+            string str = text.TryTKey(tKey);
             if (keys != null)
             {
                 foreach (string key in keys)

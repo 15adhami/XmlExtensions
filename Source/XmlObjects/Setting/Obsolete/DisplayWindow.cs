@@ -100,7 +100,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+            if (Widgets.ButtonText(inRect, label.TryTKey(tKey)))
             {
                 SettingsWindow window = new SettingsWindow();
                 window.initSize.x = size.x + 36 + 16;

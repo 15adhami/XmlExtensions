@@ -35,7 +35,7 @@ namespace XmlExtensions.Action
             var newOptions = new List<FloatMenuOption>();
             foreach (DropdownOption option in options)
             {
-                newOptions.Add(new FloatMenuOption(Helpers.TryTranslate(option.label, option.tKey), () => SettingsManager.SetSetting(modId, key, option.value)));
+                newOptions.Add(new FloatMenuOption(option.label.TryTKey(option.tKey), () => SettingsManager.SetSetting(modId, key, option.value)));
             }
             Find.WindowStack.Add(new Verse.FloatMenu(newOptions));
             return true;

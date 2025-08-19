@@ -34,9 +34,9 @@ namespace XmlExtensions.Setting
         {
             if (!tooltip.NullOrEmpty())
             {
-                TooltipHandler.TipRegion(inRect, Helpers.TryTranslate(tooltip, tKeyTip));
+                TooltipHandler.TipRegion(inRect, tooltip.TryTKey(tKeyTip));
             }
-            if (Widgets.ButtonText(inRect, Helpers.TryTranslate(label, tKey)))
+            if (Widgets.ButtonText(inRect, label.TryTKey(tKey)))
             {
                 if (actions != null)
                 {
@@ -55,7 +55,7 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(Helpers.TryTranslate(message, tKeyMessage), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(message.TryTKey(tKeyMessage), "Yes".Translate(), delegate ()
                         {
                             int c = 0;
                             foreach (ActionContainer action in actions)

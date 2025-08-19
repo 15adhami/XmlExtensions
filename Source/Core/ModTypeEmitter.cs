@@ -68,7 +68,7 @@ namespace XmlExtensions
             MethodBuilder catMethod = typeBuilder.DefineMethod("SettingsCategory", MethodAttributes.Public | MethodAttributes.Virtual, typeof(string), Type.EmptyTypes);
 
             // Get translated name of settings category label
-            string settingsCategory = Helpers.TryTranslate(settingsMenuDef.label, settingsMenuDef.tKey);
+            string settingsCategory = settingsMenuDef.label.TryTKey(settingsMenuDef.tKey);
 
             // Emit IL of SettingsCategory() method
             ILGenerator ilCat = catMethod.GetILGenerator();

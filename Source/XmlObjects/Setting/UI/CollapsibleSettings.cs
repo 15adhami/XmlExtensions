@@ -88,12 +88,12 @@ namespace XmlExtensions.Setting
             buttonRect.y -= 1;
             if (anchor == Anchor.Left) 
             {
-                Widgets.Label(labelRect.TrimLeftPartPixels(6f), Helpers.TryTranslate(label, tKey)); 
+                Widgets.Label(labelRect.TrimLeftPartPixels(6f), label.TryTKey(tKey)); 
             }
             else
             {
                 Verse.Text.Anchor = TextAnchor.UpperCenter;
-                Widgets.Label(headerRectInner, Helpers.TryTranslate(label, tKey));
+                Widgets.Label(headerRectInner, label.TryTKey(tKey));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
             }
             if (state == State.Open) { Widgets.DrawTextureRotated(buttonRect, TexButton.Reveal, 90); }
@@ -103,7 +103,7 @@ namespace XmlExtensions.Setting
 
             // Draw highlight and tooltip
             Widgets.DrawHighlightIfMouseover(headerRect);
-            if (!tooltip.NullOrEmpty()) { TooltipHandler.TipRegion(headerRect, Helpers.TryTranslate(tooltip, tKeyTip)); }
+            if (!tooltip.NullOrEmpty()) { TooltipHandler.TipRegion(headerRect, tooltip.TryTKey(tKeyTip)); }
 
             // Toggle settings
             if (Widgets.ButtonInvisible(headerRect)) { state = state == State.Open ? State.Closed : State.Open; }

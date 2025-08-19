@@ -26,7 +26,7 @@ namespace XmlExtensions.Setting
             if (label != null)
             {
                 Verse.Text.Anchor = (TextAnchor)anchor;
-                Widgets.Label(inRect.LeftHalf(), Helpers.TryTranslate(label, tKey));
+                Widgets.Label(inRect.LeftHalf(), label.TryTKey(tKey));
                 SettingsManager.SetSetting(modId, key, Widgets.TextField(inRect.RightHalf(), currStr));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
             }

@@ -384,22 +384,6 @@ namespace XmlExtensions
             }
         }
 
-        public static string TryTranslate(string str, string tKey)
-        {
-            if (tKey != null)
-            {
-                TaggedString temp = new TaggedString();
-                if (tKey.TryTranslate(out temp))
-                    return temp.RawText;
-                else
-                    return str;
-            }
-            else
-            {
-                return str;
-            }
-        }
-
         public static XmlNodeList SelectNodes(string path, XmlDocument xml, PatchOperation operation)
         {
             XmlNodeList list = xml.SelectNodes(path);

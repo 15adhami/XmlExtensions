@@ -50,7 +50,7 @@ namespace XmlExtensions.Setting
             { // Add extra space for this style
                 drawRect = inRect.TopPartPixels(inRect.height - 3f).BottomPartPixels(inRect.height - 6f);
             }
-            DrawCheckbox(drawRect, Helpers.TryTranslate(label, tKey), ref currBool, Helpers.TryTranslate(tooltip, tKeyTip));
+            DrawCheckbox(drawRect, label.TryTKey(tKey), ref currBool, tooltip.TryTKey(tKeyTip));
             SettingsManager.SetSetting(modId, key, currBool.ToString());
         }
 
