@@ -9,8 +9,7 @@ namespace XmlExtensions.Setting
         public GameFont headerFont = GameFont.Small;
         public State defaultState = State.Closed;
         public Anchor anchor = Anchor.Left;
-        public List<SettingContainer> settingsOpen;
-        public List<SettingContainer> settingsClosed;
+        public List<SettingContainer> settings;
 
         public enum Anchor
         {
@@ -50,8 +49,7 @@ namespace XmlExtensions.Setting
                 headerHeight = 18 + 2 * labelPadding;
                 buttonSize = 18;
             }
-            if (!InitializeContainers(settingsOpen)) { return false; }
-            if (!InitializeContainers(settingsClosed)) { return false; }
+            if (!InitializeContainers(settings)) { return false; }
             return true;
         }
 
@@ -65,13 +63,7 @@ namespace XmlExtensions.Setting
         {
             float height = headerHeight;
             if (state == State.Open)
-            {
-                height += CalculateHeightSettingsList(width, settingsOpen);
-            }
-            else
-            {
-                height += CalculateHeightSettingsList(width, settingsClosed);
-            }
+                height += CalculateHeightSettingsList(width, settings);
             return height;
         }
 
@@ -109,8 +101,7 @@ namespace XmlExtensions.Setting
             if (Widgets.ButtonInvisible(headerRect)) { state = state == State.Open ? State.Closed : State.Open; }
 
             // Draw settings
-            if (state == State.Open) { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settingsOpen); }
-            else { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settingsClosed); }
+            if (state == State.Open) { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settings); }
         }
     }
 }
