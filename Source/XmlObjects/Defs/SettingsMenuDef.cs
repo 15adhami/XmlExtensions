@@ -79,6 +79,7 @@ namespace XmlExtensions
         internal bool searchLabels;
         internal bool searchToolTips;
         internal bool animateHighlight = false;
+        internal int highlightThickness = 2;
         internal Color highlightColor = Color.white;
         internal int foundResults = 0;
         

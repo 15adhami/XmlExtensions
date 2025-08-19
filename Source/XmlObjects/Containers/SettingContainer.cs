@@ -397,7 +397,7 @@ namespace XmlExtensions.Setting
                 c.a = Mathf.Clamp01(c.a * factor);
             }
             GUI.color = c;
-            Widgets.DrawBox(inRect);
+            Widgets.DrawBox(inRect, menuDef.highlightThickness);
             GUI.color = originalColor;
         }
 

@@ -10,6 +10,7 @@ namespace XmlExtensions.Setting
         internal bool searchTexts = true;
         internal bool showCount = true;
         internal bool animate = false;
+        internal int highlightThickness = 2;
         internal Color highlightColor = Color.white;
 
         protected override bool Init()
@@ -19,6 +20,7 @@ namespace XmlExtensions.Setting
             menuDef.searchToolTips = searchToolTips;
             menuDef.searchTexts = searchTexts;
             menuDef.animateHighlight = animate;
+            menuDef.highlightThickness = highlightThickness;
             menuDef.highlightColor = highlightColor;
             return true;
         }
