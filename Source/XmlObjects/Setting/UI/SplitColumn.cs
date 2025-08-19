@@ -26,19 +26,13 @@ namespace XmlExtensions.Setting
 
         private float cachedLeftHeight, cachedRightHeight, cachedTotalHeight;
         private float cachedLeftWidth, cachedRightWidth;
-        private List<float> cachedRowHeights = new();
+        private List<float> cachedRowHeights = [];
 
         protected override bool Init()
         {
             addDefaultSpacing = false;
-            if (!InitializeContainers(leftCol, "leftCol"))
-            {
-                return false;
-            }
-            if (!InitializeContainers(rightCol, "rightCol"))
-            {
-                return false;
-            }
+            if (!InitializeContainers(leftCol, "leftCol")) { return false; }
+            if (!InitializeContainers(rightCol, "rightCol")) { return false; }
             return true;
         }
 

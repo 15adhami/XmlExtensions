@@ -18,14 +18,8 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            if (pixels > 0)
-            {
-                return CalculateHeightSettingsList(pixels, settings);
-            }
-            else
-            {
-                return CalculateHeightSettingsList(width * split, settings);
-            }
+            if (pixels > 0) { return CalculateHeightSettingsList(pixels, settings); }
+            else { return CalculateHeightSettingsList(width * split, settings); }
         }
 
         protected override void DrawSettingContents(Rect inRect)

@@ -56,7 +56,7 @@ namespace XmlExtensions.Setting
             Rect drawRect = inRect;
             if (style == Style.OptionButton)
             { // Add extra space for this style
-                drawRect = inRect.TopPartPixels(inRect.height - 3f).BottomPartPixels(inRect.height - 6f);
+                drawRect = inRect.ContractedBy(0f, 3f);
             }
             if (DrawButton(drawRect, buttonLabel))
             {

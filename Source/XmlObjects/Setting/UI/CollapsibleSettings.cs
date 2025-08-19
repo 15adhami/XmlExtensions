@@ -109,8 +109,8 @@ namespace XmlExtensions.Setting
             if (Widgets.ButtonInvisible(headerRect)) { state = state == State.Open ? State.Closed : State.Open; }
 
             // Draw settings
-            if (state == State.Open) { DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settingsOpen); }
-            else { DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settingsClosed); }
+            if (state == State.Open) { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settingsOpen); }
+            else { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settingsClosed); }
         }
     }
 }
