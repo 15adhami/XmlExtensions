@@ -1,31 +1,21 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using XmlExtensions.Action;
 
 namespace XmlExtensions.Setting
 {
     public class CollapsibleSettings : SettingContainer
     {
-        public Style style = Style.Standard;
-        public GameFont font = GameFont.Medium;
-        public Anchor? anchor = null;
+        public GameFont headerFont = GameFont.Medium;
         public State defaultState = State.Closed;
-        public List<SettingContainer> settings;
-
-        public enum Style
-        {
-            Standard,
-            OptionButton,
-            MainButton
-        }
+        public Anchor anchor = Anchor.Left;
+        public List<SettingContainer> settingsOpen;
+        public List<SettingContainer> settingsClosed;
 
         public enum Anchor
         {
             Left,
-            Middle,
-            Right
+            Middle
         }
 
         public enum State
@@ -35,32 +25,34 @@ namespace XmlExtensions.Setting
         }
 
         private float headerHeight = 0f;
-        private float labelPadding = 0;
+        private float labelPadding = 0f;
+        private float buttonSize = 0f;
         private State state = State.Closed;
 
         protected override bool Init()
         {
             searchType = SearchType.SearchAllAndHighlight;
-            if (style == Style.Standard)
-                anchor ??= Anchor.Left;
-            else
-                anchor ??= Anchor.Middle;
-            if (font == GameFont.Medium)
+            if (headerFont == GameFont.Medium)
             {
-                labelPadding = 6;
+                labelPadding = 3;
                 headerHeight = 29 + 2 * labelPadding;
+                buttonSize = 29;
             }
-            else if (font == GameFont.Small)
-            {
-                labelPadding = 4;
-                headerHeight = 22 + 2 * labelPadding;
-            }
-            else
+            else if (headerFont == GameFont.Small)
             {
                 labelPadding = 2;
-                headerHeight = 18 + 2 * labelPadding;
+                headerHeight = 22 + 2 * labelPadding;
+                buttonSize = 22;
             }
-            return InitializeContainers(settings);
+            else
+            {
+                labelPadding = 1;
+                headerHeight = 18 + 2 * labelPadding;
+                buttonSize = 18;
+            }
+            if (!InitializeContainers(settingsOpen)) { return false; }
+            if (!InitializeContainers(settingsClosed)) { return false; }
+            return true;
         }
 
         protected override bool PreOpen()
@@ -74,87 +66,51 @@ namespace XmlExtensions.Setting
             float height = headerHeight;
             if (state == State.Open)
             {
-                height += CalculateHeightSettingsList(width, settings);
+                height += CalculateHeightSettingsList(width, settingsOpen);
+            }
+            else
+            {
+                height += CalculateHeightSettingsList(width, settingsClosed);
             }
             return height;
         }
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            Verse.Text.Font = font;
-            Verse.Text.Anchor = (TextAnchor)anchor;
+            Verse.Text.Font = headerFont;
 
             Rect headerRect = inRect.TopPartPixels(headerHeight);
+            Rect headerRectInner = headerRect.ContractedBy(0f, labelPadding);
 
-            if (style == Style.Standard)
+            // Draw header
+            Widgets.DrawBoxSolid(headerRect, new(1f, 1f, 1f, 0.05f));
+            headerRectInner.SplitVertically(buttonSize, out Rect buttonRect, out Rect labelRect);
+            buttonRect.y -= 1;
+            if (anchor == Anchor.Left) 
             {
-                Widgets.DrawBoxSolid(headerRect, new(1f, 1f, 1f, 0.05f));
-            }
-
-            Widgets.DrawHighlightIfMouseover(headerRect);
-
-            if (!tooltip.NullOrEmpty())
-            { // Implement
-                //string tooltipLabel = Helpers.TryTranslate(tooltip, tKeyTip);
-                //TooltipHandler.TipRegion(headerRect, tooltipLabel);
-            }
-
-            Rect labelRect = headerRect.ContractedBy(0f, labelPadding);
-            if (anchor == Anchor.Left)
-            {
-                labelRect = labelRect.RightPartPixels(labelRect.width - labelPadding);
-                if (state == State.Closed)
-                {
-                    Widgets.Label(labelRect, "> " + Helpers.TryTranslate(label, tKey));
-                }
-                else
-                {
-                    Widgets.Label(labelRect,  Helpers.TryTranslate(label, tKey));
-                }
-            }
-            else if (anchor == Anchor.Right)
-            {
-                labelRect = labelRect.LeftPartPixels(labelRect.width - labelPadding);
-                if (state == State.Closed)
-                {
-                    Widgets.Label(labelRect, Helpers.TryTranslate(label, tKey) + " <");
-                }
-                else
-                {
-                    Widgets.Label(labelRect, Helpers.TryTranslate(label, tKey));
-                }
+                Widgets.Label(labelRect.TrimLeftPartPixels(6f), Helpers.TryTranslate(label, tKey)); 
             }
             else
             {
-                if (state == State.Closed)
-                {
-                    Widgets.Label(labelRect, "> " + Helpers.TryTranslate(label, tKey) + " <");
-                }
-                else
-                {
-                    Widgets.Label(labelRect, Helpers.TryTranslate(label, tKey));
-                }
+                Verse.Text.Anchor = TextAnchor.UpperCenter;
+                Widgets.Label(headerRectInner, Helpers.TryTranslate(label, tKey));
+                Verse.Text.Anchor = TextAnchor.UpperLeft;
             }
-
-            if (state == State.Open)
-            {
-                DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settings);
-            }
-
-            if (Widgets.ButtonInvisible(headerRect))
-            {
-                if (state == State.Open)
-                {
-                    state = State.Closed;
-                }
-                else
-                {
-                    state = State.Open;
-                }
-            }
+            if (state == State.Open) { Widgets.DrawTextureRotated(buttonRect, TexButton.Reveal, 90); }
+            else { GUI.DrawTexture(buttonRect, TexButton.Reveal); }
 
             Verse.Text.Font = GameFont.Small;
-            Verse.Text.Anchor = TextAnchor.UpperLeft;
+
+            // Draw highlight and tooltip
+            Widgets.DrawHighlightIfMouseover(headerRect);
+            if (!tooltip.NullOrEmpty()) { TooltipHandler.TipRegion(headerRect, Helpers.TryTranslate(tooltip, tKeyTip)); }
+
+            // Toggle settings
+            if (Widgets.ButtonInvisible(headerRect)) { state = state == State.Open ? State.Closed : State.Open; }
+
+            // Draw settings
+            if (state == State.Open) { DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settingsOpen); }
+            else { DrawSettingsList(inRect.BottomPartPixels(inRect.height - headerHeight), settingsClosed); }
         }
     }
 }

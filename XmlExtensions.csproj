@@ -96,6 +96,7 @@
     <Compile Include="Source\Core\PatchManager\PatchFilter.cs" />
     <Compile Include="Source\Core\PatchManager\PatchProfiler.cs" />
     <Compile Include="Source\Core\PatchManager\XmlDocumentManager.cs" />
+    <Compile Include="Source\Core\RectExtensions.cs" />
     <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
     <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
