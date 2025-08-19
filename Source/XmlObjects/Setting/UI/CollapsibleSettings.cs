@@ -6,7 +6,7 @@ namespace XmlExtensions.Setting
 {
     public class CollapsibleSettings : SettingContainer
     {
-        public GameFont headerFont = GameFont.Medium;
+        public GameFont headerFont = GameFont.Small;
         public State defaultState = State.Closed;
         public Anchor anchor = Anchor.Left;
         public List<SettingContainer> settingsOpen;
