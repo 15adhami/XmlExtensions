@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace XmlExtensions
     {
         public static List<ObjectContainer> SelectObjects(string objPath)
         {
-            List<ObjectContainer> list = new List<ObjectContainer>();
+            List<ObjectContainer> list = [];
             try
             {
                 if (objPath == null)
@@ -104,7 +105,7 @@ namespace XmlExtensions
             catch (Exception e)
             {
                 Verse.Log.Error(e.Message);
-                return new List<ObjectContainer>();
+                return [];
             }
         }
 
@@ -271,7 +272,15 @@ namespace XmlExtensions
             string noBrackets = RemoveBrackets(component);
             if (int.TryParse(noBrackets, out index))
             {
-                object tempItem = indexer.GetValue(list.value, new object[] { index - 1 });
+                object tempItem = null;
+                try
+                {
+                    tempItem = indexer.GetValue(list.value, new object[] { index - 1 });
+                }
+                catch
+                {
+                    return listObjects;
+                }
                 ObjectContainer tempContainer = new(tempItem, list);
                 tempContainer.objPath = tempContainer.parent.objPath + "/[" + index.ToString() + "]";
                 listObjects.Add(tempContainer);
