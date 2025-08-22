@@ -16,6 +16,18 @@
             Prints the stack of errors, then clears them.
             </summary>
         </member>
+        <member name="M:XmlExtensions.XmlNodeExtensions..ReplaceWith(System.Xml.XmlNode)">
+            <summary>
+            Replace all attributes and children of the current node with those of the given node.
+            </summary>
+            <param name="newNode">The node to replace with</param>
+        </member>
+        <member name="M:XmlExtensions.XmlNodeExtensions..ReplaceWith(System.Xml.XmlElement)">
+            <summary>
+            Replace all attributes and children of the current node with those of the given node.
+            </summary>
+            <param name="newElement">The node to replace with</param>
+        </member>
         <member name="T:XmlExtensions.ModTypeEmitter">
             <summary>
             Class for emitting a Mod Subtype with given SettingsMenuDef

@@ -25,30 +25,7 @@ namespace XmlExtensions
                     if (PatchManager.XmlDocs.NodeMapContainsKey(docName, node))
                     {
                         XmlNode existingNode = PatchManager.XmlDocs.GetNodeFromNodeMap(docName, node);
-
-                        // Clone node into temp doc
-                        XmlDocument tempDoc = new();
-                        XmlNode importedNode = tempDoc.ImportNode(node, true);
-                        tempDoc.AppendChild(importedNode);
-
-                        // Clear original node completely
-                        existingNode.RemoveAll();
-
-                        // Restore attributes
-                        foreach (XmlAttribute attr in importedNode.Attributes)
-                        {
-                            XmlAttribute newAttr = xml.CreateAttribute(attr.Name);
-                            newAttr.Value = attr.Value;
-                            ((XmlElement)existingNode).SetAttributeNode(newAttr);
-                        }
-
-                        // Restore child nodes
-                        foreach (XmlNode child in importedNode.ChildNodes)
-                        {
-                            XmlNode newChild = xml.ImportNode(child, true);
-                            existingNode.AppendChild(newChild);
-                        }
-
+                        existingNode.ReplaceWith(node);
                         PatchManager.XmlDocs.RemoveNodeFromNodeMap(docName, node);
                     }
                     else

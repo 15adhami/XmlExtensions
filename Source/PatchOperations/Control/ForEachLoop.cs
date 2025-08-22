@@ -109,20 +109,7 @@ namespace XmlExtensions
                         Error("Patch failed on local node:\n" + xmlNode.OuterXml);
                         return false;
                     }
-
-                    xmlNode.RemoveAll();
-                    foreach (XmlAttribute attr in importedNode.Attributes)
-                    {
-                        XmlAttribute newAttr = xml.OwnerDocument.CreateAttribute(attr.Name);
-                        newAttr.Value = attr.Value;
-                        ((XmlElement)xmlNode).SetAttributeNode(newAttr);
-                    }
-
-                    foreach (XmlNode child in importedNode.ChildNodes)
-                    {
-                        XmlNode newChild = xml.ImportNode(child, true);
-                        xmlNode.AppendChild(newChild);
-                    }
+                    xmlNode.ReplaceWith(importedNode);
                 }
             }
             return true;

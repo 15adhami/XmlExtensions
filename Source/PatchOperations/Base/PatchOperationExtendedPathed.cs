@@ -20,11 +20,7 @@ namespace XmlExtensions
                 nodes = [Helpers.SelectSingleNode(xpath, xml, this)];
             else
             {
-                nodes = [];
-                foreach (XmlNode node in Helpers.SelectNodes(xpath, xml, this))
-                {
-                    nodes.Add(node);
-                }
+                nodes = Helpers.SelectNodes(xpath, xml, this).ToList();
             }
             if (nodes == null || nodes.Count == 0 || nodes[0] == null)
             {
