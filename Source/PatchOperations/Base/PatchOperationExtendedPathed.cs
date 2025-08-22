@@ -17,16 +17,16 @@ namespace XmlExtensions
                 return false;
             }
             if (selectSingleNode)
-                nodes = new() { Helpers.SelectSingleNode(xpath, xml, this) };
+                nodes = [Helpers.SelectSingleNode(xpath, xml, this)];
             else
             {
-                nodes = new();
+                nodes = [];
                 foreach (XmlNode node in Helpers.SelectNodes(xpath, xml, this))
                 {
                     nodes.Add(node);
                 }
             }
-            if (nodes == null || nodes.Count == 0)
+            if (nodes == null || nodes.Count == 0 || nodes[0] == null)
             {
                 XPathError();
                 return false;
