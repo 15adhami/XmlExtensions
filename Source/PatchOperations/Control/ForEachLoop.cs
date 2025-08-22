@@ -18,7 +18,8 @@ namespace XmlExtensions
             XPath,
             InnerText,
             Node,
-            LocalPatch
+            LocalPatch, // Obsolete
+            SetScope
         }
 
         protected override void SetException()
@@ -88,7 +89,7 @@ namespace XmlExtensions
                     if (!RunPatches(newContainer, xml)) { return false; }
                 }
             }
-            else if (mode == Mode.LocalPatch)
+            else if (mode == Mode.SetScope || mode == Mode.LocalPatch)
             {
                 XmlNodeList nodes = xml.SelectNodes(xpath);
                 if (nodes.Count == 0)
