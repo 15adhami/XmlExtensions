@@ -7,6 +7,12 @@ namespace XmlExtensions
     {
         public XmlContainer apply;
 
+        protected override bool PreCheck(XmlDocument xml)
+        {
+            selectSingleNode = true;
+            return base.PreCheck(xml);
+        }
+
         protected override bool Patch(XmlDocument xml)
         {
             XmlNode originalNode = nodes[0];
