@@ -124,13 +124,14 @@ namespace XmlExtensions.Setting
             {
                 foreach (string key in keys)
                     inString = inString.SubstituteVariable(key, SettingsManager.GetSetting(modId, key));
-                if (keys.Count > 0)
+                if (keys.Count > 0 && inString.Contains("{defaultValue}"))
                     inString = inString.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, keys[0]));
             }
             if (key != null)
             {
                 inString = inString.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
-                inString = inString.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));
+                if (inString.Contains("{defaultValue}"))
+                    inString = inString.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));
             }
             return inString;
         }

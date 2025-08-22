@@ -26,7 +26,9 @@ namespace XmlExtensions.Setting
             if (label != null)
             {
                 string substiteLegacy = label.TryTKey(tKey).SubstituteVariable(key, currFloat.ToString());
-                string substiteDefaultValue = substiteLegacy.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));
+                string substiteDefaultValue = substiteLegacy;
+                if (substiteLegacy.Contains("{defaultValue}"))
+                    substiteDefaultValue = substiteLegacy.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));
                 listingStandard.Label(substiteDefaultValue.SubstituteVariable("key", currFloat.ToString()));
             }
             newFloat = listingStandard.Slider(currFloat, min, max);
