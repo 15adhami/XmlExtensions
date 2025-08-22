@@ -74,6 +74,7 @@ namespace XmlExtensions.Setting
         private bool needsDraw = false;
         private float cachedHeight = -1f;
         private float errHeight = -1;
+        private string defaultKey;
         
         
 
@@ -91,6 +92,7 @@ namespace XmlExtensions.Setting
                 {
                     this.menuDef ??= menuDef;
                     modId = menuDef.modId;
+                    defaultKey = key;
                     if (!SetDefaultValue())
                     {
                         return false;
@@ -106,6 +108,16 @@ namespace XmlExtensions.Setting
                 return flag;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Sets the key back to the value defined in the xml (for Action.ChangeKey)
+        /// </summary>
+        /// <returns></returns>
+        internal override bool PreOpenContainer()
+        {
+            key = defaultKey;
+            return base.PreOpenContainer();
         }
 
         /// <summary>

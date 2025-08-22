@@ -306,6 +306,12 @@
             </summary>
             <returns>Returns <c>false</c> if there was an error, <c>true</c> otherwise</returns>
         </member>
+        <member name="M:XmlExtensions.Setting.SettingContainer.PreOpenContainer">
+            <summary>
+            Sets the key back to the value defined in the xml (for Action.ChangeKey)
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:XmlExtensions.Setting.SettingContainer.GetHeight(System.Single)">
             <summary>
             Returns the height of the setting for the current frame
