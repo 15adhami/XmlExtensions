@@ -472,13 +472,13 @@ namespace XmlExtensions.Setting
         private bool Filter()
         {
             bool flag = false;
-            if (label != null && menuDef.searchLabels && label.TryTKey(tKey).ToLower().Contains(menuDef.searchText.ToLower()))
+            if (label != null && menuDef.searchLabels && label.TranslateIfTKeyAvailable(tKey).ToLower().Contains(menuDef.searchText.ToLower()))
             {
                 flag = true;
                 filtered = true;
                 menuDef.foundResults += 1;
             }
-            else if (tooltip != null && menuDef.searchToolTips && tooltip.TryTKey(tKeyTip).ToLower().Contains(menuDef.searchText.ToLower()))
+            else if (tooltip != null && menuDef.searchToolTips && tooltip.TranslateIfTKeyAvailable(tKeyTip).ToLower().Contains(menuDef.searchText.ToLower()))
             {
                 flag = true;
                 filtered = true;

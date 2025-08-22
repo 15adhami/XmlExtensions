@@ -29,7 +29,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            if (Widgets.ButtonText(inRect, label.TryTKey(tKey)))
+            if (Widgets.ButtonText(inRect, label.TranslateIfTKeyAvailable(tKey)))
             {
                 SetActiveMenu(menu);
             }

@@ -8,7 +8,7 @@ namespace XmlExtensions
     {
         extension(string str)
         {
-            internal string TryTKey(string tKey)
+            internal string TranslateIfTKeyAvailable(string tKey)
             {
                 if (tKey != null)
                 {

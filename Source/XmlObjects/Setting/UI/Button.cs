@@ -47,11 +47,11 @@ namespace XmlExtensions.Setting
         {
             if (!tooltip.NullOrEmpty())
             {
-                string tooltipLabel = tooltip.TryTKey(tKeyTip);
+                string tooltipLabel = tooltip.TranslateIfTKeyAvailable(tKeyTip);
                 tooltipLabel = tooltipLabel.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
                 TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
-            string buttonLabel = label.TryTKey(tKey);
+            string buttonLabel = label.TranslateIfTKeyAvailable(tKey);
             buttonLabel = buttonLabel.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
             Rect drawRect = inRect;
             if (style == Style.OptionButton)
@@ -77,7 +77,7 @@ namespace XmlExtensions.Setting
                     }
                     else
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox(message.TryTKey(tKeyMessage), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox(message.TranslateIfTKeyAvailable(tKeyMessage), "Yes".Translate(), delegate ()
                         {
                             int c = 0;
                             foreach (ActionContainer action in actions)

@@ -25,7 +25,7 @@ namespace XmlExtensions.Setting
             float newFloat;
             if (label != null)
             {
-                string substiteLegacy = label.TryTKey(tKey).SubstituteVariable(key, currFloat.ToString());
+                string substiteLegacy = label.TranslateIfTKeyAvailable(tKey).SubstituteVariable(key, currFloat.ToString());
                 string substiteDefaultValue = substiteLegacy;
                 if (substiteLegacy.Contains("{defaultValue}"))
                     substiteDefaultValue = substiteLegacy.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));

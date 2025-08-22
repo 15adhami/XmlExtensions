@@ -71,18 +71,18 @@ namespace XmlExtensions.Setting
             {
                 Color temp = GUI.color;
                 GUI.color = Color.red;
-                Widgets.Label(rLabel, "R".TryTKey("XmlExtensions_R") + ":");
+                Widgets.Label(rLabel, "R".TranslateIfTKeyAvailable("XmlExtensions_R") + ":");
                 GUI.color = Color.green;
-                Widgets.Label(gLabel, "G".TryTKey("XmlExtensions_G") + ":");
+                Widgets.Label(gLabel, "G".TranslateIfTKeyAvailable("XmlExtensions_G") + ":");
                 GUI.color = Color.blue;
-                Widgets.Label(bLabel, "B".TryTKey("XmlExtensions_B") + ":");
+                Widgets.Label(bLabel, "B".TranslateIfTKeyAvailable("XmlExtensions_B") + ":");
                 GUI.color = temp;
             }
             else
             {
-                Widgets.Label(rLabel, "R".TryTKey("XmlExtensions_R") + ":");
-                Widgets.Label(gLabel, "G".TryTKey("XmlExtensions_G") + ":");
-                Widgets.Label(bLabel, "B".TryTKey("XmlExtensions_B") + ":");
+                Widgets.Label(rLabel, "R".TranslateIfTKeyAvailable("XmlExtensions_R") + ":");
+                Widgets.Label(gLabel, "G".TranslateIfTKeyAvailable("XmlExtensions_G") + ":");
+                Widgets.Label(bLabel, "B".TranslateIfTKeyAvailable("XmlExtensions_B") + ":");
             }
 
             // Fields

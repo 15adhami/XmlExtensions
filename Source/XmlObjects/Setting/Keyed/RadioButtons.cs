@@ -89,7 +89,7 @@ namespace XmlExtensions.Setting
             {
                 bool selected = SettingsManager.GetSetting(modId, key) == button.value;
                 Rect rect = listingStandard.GetRect(height);
-                if (DrawRadioButton(rect, button.label.TryTKey(button.tKey), selected, highlight, button.tooltip.TryTKey(button.tKeyTip)))
+                if (DrawRadioButton(rect, button.label.TranslateIfTKeyAvailable(button.tKey), selected, highlight, button.tooltip.TranslateIfTKeyAvailable(button.tKeyTip)))
                 {
                     SettingsManager.SetSetting(modId, key, button.value);
                 }

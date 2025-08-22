@@ -63,7 +63,7 @@ namespace XmlExtensions.Setting
                 Rect rect2 = inRect.LeftHalf().Rounded();
                 Rect rect3 = inRect.RightHalf().Rounded();
                 Verse.Text.Anchor = (TextAnchor)anchor;
-                Widgets.Label(rect2, label.TryTKey(tKey));
+                Widgets.Label(rect2, label.TranslateIfTKeyAvailable(tKey));
                 Verse.Text.Anchor = TextAnchor.UpperLeft;
                 if (percent)
                     Widgets.TextFieldPercent(rect3, ref f, ref buf, min, max);

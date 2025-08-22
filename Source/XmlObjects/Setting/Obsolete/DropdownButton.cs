@@ -30,7 +30,7 @@ namespace XmlExtensions.Setting
 
         protected override void DrawSettingContents(Rect inRect)
         {
-            if (Widgets.ButtonText(inRect, label != null ? label.TryTKey(tKey) : SettingsManager.GetSetting(modId, key)))
+            if (Widgets.ButtonText(inRect, label != null ? label.TranslateIfTKeyAvailable(tKey) : SettingsManager.GetSetting(modId, key)))
             {
                 var newOptions = new List<FloatMenuOption>();
                 foreach (DropdownOption option in options)

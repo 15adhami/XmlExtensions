@@ -32,7 +32,7 @@ namespace XmlExtensions.Setting
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
 
-            string str = text.TryTKey(tKey);
+            string str = text.TranslateIfTKeyAvailable(tKey);
             cachedText = SubstituteVariables(str);
 
             // Workaround for Unity UI scaling bug
@@ -65,7 +65,7 @@ namespace XmlExtensions.Setting
             Verse.Text.Anchor = (TextAnchor)anchor;
             if (!tooltip.NullOrEmpty())
             {
-                string tooltipLabel = tooltip.TryTKey(tKeyTip);
+                string tooltipLabel = tooltip.TranslateIfTKeyAvailable(tKeyTip);
                 tooltipLabel = SubstituteVariables(tooltipLabel);
                 TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
@@ -113,7 +113,7 @@ namespace XmlExtensions.Setting
             {
                 text = PatchManager.XmlDocs.MainDocument.SelectSingleNode(xpath).InnerText;
             }
-            string str = text.TryTKey(tKey);
+            string str = text.TranslateIfTKeyAvailable(tKey);
             cachedText = SubstituteVariables(str);
             return true;
         }

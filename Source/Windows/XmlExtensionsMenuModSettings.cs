@@ -71,7 +71,7 @@ namespace XmlExtensions
             listing.Begin(headerRect);
             Text.Font = GameFont.Medium;
             listing.verticalSpacing = 0;
-            listing.Label("Mod settings for ".TryTKey("XmlExtensions_ModSettingsFor") + (SelectedMod != null ? SelectedMod.ToString() : "XML Extensions"));
+            listing.Label("Mod settings for ".TranslateIfTKeyAvailable("XmlExtensions_ModSettingsFor") + (SelectedMod != null ? SelectedMod.ToString() : "XML Extensions"));
             Text.Font = GameFont.Small;
             listing.GapLine(9f);
             listing.End();
@@ -149,7 +149,7 @@ namespace XmlExtensions
                             var newOptions = new List<FloatMenuOption>();
                             if (XmlMod.allSettings.PinnedMods.Contains(mod.ToString()))
                             {
-                                newOptions.Add(new FloatMenuOption("Unpin mod".TryTKey("XmlExtensions_Unpin"), delegate ()
+                                newOptions.Add(new FloatMenuOption("Unpin mod".TranslateIfTKeyAvailable("XmlExtensions_Unpin"), delegate ()
                                 {
                                     XmlMod.allSettings.PinnedMods.Remove(mod.ToString());
                                     FilterModlist();
@@ -162,7 +162,7 @@ namespace XmlExtensions
                             }
                             else
                             {
-                                newOptions.Add(new FloatMenuOption("Pin mod".TryTKey("XmlExtensions_Pin"), delegate ()
+                                newOptions.Add(new FloatMenuOption("Pin mod".TranslateIfTKeyAvailable("XmlExtensions_Pin"), delegate ()
                                 {
                                     XmlMod.allSettings.PinnedMods.Add(mod.ToString());
                                 }));
@@ -185,7 +185,7 @@ namespace XmlExtensions
             }
             if (pinned && cachedFilteredList.Count == 0)
             {
-                listingStandard.Label("Right-click a mod to pin it".TryTKey("XmlExtensions_HowToPin"));
+                listingStandard.Label("Right-click a mod to pin it".TranslateIfTKeyAvailable("XmlExtensions_HowToPin"));
             }
             listingStandard.GapLine(4);
             listingStandard.Gap(2);
@@ -193,7 +193,7 @@ namespace XmlExtensions
             {
                 GUI.color = new Color(0.7f, 0.7f, 0.7f);
             }
-            if (listingStandard.ButtonText("XML Extensions".TryTKey("XmlExtensions_Label")))
+            if (listingStandard.ButtonText("XML Extensions".TranslateIfTKeyAvailable("XmlExtensions_Label")))
             {
                 SetSelectedMod(null);
             }

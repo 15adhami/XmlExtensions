@@ -29,7 +29,7 @@ namespace XmlExtensions
             Rect keyListRect = rect.RightPartPixels(rect.width - 300f - 8f);
             Listing_Standard modListListing = new Listing_Standard();
             modListListing.Begin(modListRect);
-            modListListing.Label("Currently inactive mods:".TryTKey("XmlExtensions_InactiveMods"));
+            modListListing.Label("Currently inactive mods:".TranslateIfTKeyAvailable("XmlExtensions_InactiveMods"));
             modListListing.GapLine(4);
             modListListing.Gap(2);
             Rect modRect = modListListing.GetRect(rect.height - 30f);
@@ -40,7 +40,7 @@ namespace XmlExtensions
             modListing.Begin(rect2);
             if (XmlMod.unusedMods.Count == 0)
             {
-                modListing.Label("No extra settings at the moment".TryTKey("XmlExtensions_NoExtraSettings"));
+                modListing.Label("No extra settings at the moment".TranslateIfTKeyAvailable("XmlExtensions_NoExtraSettings"));
             }
             foreach (string mod in XmlMod.unusedMods)
             {
@@ -60,7 +60,7 @@ namespace XmlExtensions
             {
                 Listing_Standard keyListListing = new Listing_Standard();
                 keyListListing.Begin(keyListRect);
-                keyListListing.Label("Currently selected mod's unused settings:".TryTKey("XmlExtensions_SelectedModUnusedKeys"));
+                keyListListing.Label("Currently selected mod's unused settings:".TranslateIfTKeyAvailable("XmlExtensions_SelectedModUnusedKeys"));
                 keyListListing.GapLine(4);
                 keyListListing.Gap(2);
 
@@ -74,7 +74,7 @@ namespace XmlExtensions
                 foreach (string key in XmlMod.unusedSettings[selectedMod])
                 {
                     bool del = false;
-                    keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedMod, key), ref del, "Delete".TryTKey("XmlExtensions_Delete"));
+                    keyListing.CheckboxLabeled(key + ": " + SettingsManager.GetSetting(selectedMod, key), ref del, "Delete".TranslateIfTKeyAvailable("XmlExtensions_Delete"));
                     if (del)
                     {
                         SettingsManager.DeleteSetting(selectedMod, key);
@@ -101,9 +101,9 @@ namespace XmlExtensions
                     Rect firstRect = tempRect.LeftPart(0.495f);
                     Listing_Standard buttonLeftListing = new Listing_Standard();
                     buttonLeftListing.Begin(firstRect);
-                    if (buttonLeftListing.ButtonText("Delete {0} keys".TryTKey("XmlExtensions_DeleteKeys").Replace("{0}", XmlMod.unusedSettings[selectedMod].Count.ToString())))
+                    if (buttonLeftListing.ButtonText("Delete {0} keys".TranslateIfTKeyAvailable("XmlExtensions_DeleteKeys").Replace("{0}", XmlMod.unusedSettings[selectedMod].Count.ToString())))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox("Are you sure you want to delete every unused key of the current mod?".TryTKey("XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox("Are you sure you want to delete every unused key of the current mod?".TranslateIfTKeyAvailable("XmlExtensions_ConfirmationResetMod"), "Yes".Translate(), delegate ()
                         {
                             foreach (string key in XmlMod.unusedSettings[selectedMod])
                             {
@@ -125,9 +125,9 @@ namespace XmlExtensions
                     {
                         count += list.Count;
                     }
-                    if (buttonRightListing.ButtonText("Delete all {0} unused keys".TryTKey("XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
+                    if (buttonRightListing.ButtonText("Delete all {0} unused keys".TranslateIfTKeyAvailable("XmlExtensions_DeleteAllUnusedKeys").Replace("{0}", count.ToString()), null))
                     {
-                        Find.WindowStack.Add(new Dialog_MessageBox("Are you sure you want to delete all unused keys from every mod?".TryTKey("XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
+                        Find.WindowStack.Add(new Dialog_MessageBox("Are you sure you want to delete all unused keys from every mod?".TranslateIfTKeyAvailable("XmlExtensions_ConfirmResetAll"), "Yes".Translate(), delegate ()
                         {
                             foreach (string mod in XmlMod.unusedMods)
                             {

@@ -55,8 +55,8 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect)
         {
             bool selected = SettingsManager.GetSetting(modId, key) == value;
-            string resolvedLabel = label.TryTKey(tKey);
-            string resolvedTooltip = tooltip.TryTKey(tKeyTip);
+            string resolvedLabel = label.TranslateIfTKeyAvailable(tKey);
+            string resolvedTooltip = tooltip.TranslateIfTKeyAvailable(tKeyTip);
 
             if (resolvedLabel == null && style == Style.RadioButton)
             {

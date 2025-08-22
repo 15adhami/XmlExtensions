@@ -80,7 +80,7 @@ namespace XmlExtensions.Setting
 
             if (!tooltip.NullOrEmpty())
             {
-                TooltipHandler.TipRegion(alignedRect, tooltip.TryTKey(tKeyTip));
+                TooltipHandler.TipRegion(alignedRect, tooltip.TranslateIfTKeyAvailable(tKeyTip));
             }
 
             Rect inner = new(alignedRect.x + border, alignedRect.y + border, colorSize, colorSize);
