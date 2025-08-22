@@ -48,11 +48,11 @@ namespace XmlExtensions.Setting
             if (!tooltip.NullOrEmpty())
             {
                 string tooltipLabel = tooltip.TryTKey(tKeyTip);
-                tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
+                tooltipLabel = tooltipLabel.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
                 TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
             string buttonLabel = label.TryTKey(tKey);
-            buttonLabel = Helpers.SubstituteVariable(buttonLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
+            buttonLabel = buttonLabel.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
             Rect drawRect = inRect;
             if (style == Style.OptionButton)
             { // Add extra space for this style

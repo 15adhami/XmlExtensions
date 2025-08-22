@@ -48,26 +48,6 @@
             <param name="length">The number of nodes that appear in the xpath.</param>
             <returns>The prefix.</returns>
         </member>
-        <member name="M:XmlExtensions.Helpers.SubstituteVariable(System.String,System.String,System.String,System.String)">
-            <summary>
-            Substitutes a variable with its value in a given a string.
-            </summary>
-            <param name="str">The string that you want to edit.</param>
-            <param name="var">The name of the variable.</param>
-            <param name="val">The value of the variable.</param>
-            <param name="brackets">The left and right brackets that surround the variable.</param>
-            <returns>The new string after the substitution.</returns>
-        </member>
-        <member name="M:XmlExtensions.Helpers.SubstituteVariables(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
-            <summary>
-            Substitutes a list of variables with their corresponding values in a given string.
-            </summary>
-            <param name="str">The string that you want to edit.</param>
-            <param name="vars">The list of variable names.</param>
-            <param name="vals">The list of values for the variables.</param>
-            <param name="brackets">The left and right brackets that surround the variables.</param>
-            <returns>The new string after the substitution.</returns>
-        </member>
         <member name="M:XmlExtensions.Helpers.SubstituteVariableXmlContainer(Verse.XmlContainer,System.String,System.String,System.String)">
             <summary>
             Substitutes a variable with its value in a given XmlContainer.

@@ -33,40 +33,6 @@ namespace XmlExtensions
         }
 
         /// <summary>
-        /// Substitutes a variable with its value in a given a string.
-        /// </summary>
-        /// <param name="str">The string that you want to edit.</param>
-        /// <param name="var">The name of the variable.</param>
-        /// <param name="val">The value of the variable.</param>
-        /// <param name="brackets">The left and right brackets that surround the variable.</param>
-        /// <returns>The new string after the substitution.</returns>
-        public static string SubstituteVariable(string str, string var, string val, string brackets = "{}")
-        {
-            string variable = brackets[0] + var + brackets[1];
-            return str.Replace(variable, val);
-        }
-
-        /// <summary>
-        /// Substitutes a list of variables with their corresponding values in a given string.
-        /// </summary>
-        /// <param name="str">The string that you want to edit.</param>
-        /// <param name="vars">The list of variable names.</param>
-        /// <param name="vals">The list of values for the variables.</param>
-        /// <param name="brackets">The left and right brackets that surround the variables.</param>
-        /// <returns>The new string after the substitution.</returns>
-        public static string SubstituteVariables(string str, List<string> vars, List<string> vals, string brackets)
-        {
-            int i = 0;
-            StringBuilder builder = new StringBuilder(str);
-            foreach (string var in vars)
-            {
-                builder.Replace(brackets[0] + var + brackets[1], vals[i]);
-                i++;
-            }
-            return builder.ToString();
-        }
-
-        /// <summary>
         /// Substitutes a variable with its value in a given XmlContainer.
         /// </summary>
         /// <param name="container">The XmlContainer that you want to edit.</param>
@@ -77,9 +43,8 @@ namespace XmlExtensions
         public static XmlContainer SubstituteVariableXmlContainer(XmlContainer container, string var, string val, string brackets)
         {
             string oldXml = container.node.OuterXml;
-            string newXml;
-            newXml = Helpers.SubstituteVariable(oldXml, var, val, brackets);
-            return new XmlContainer() { node = Helpers.GetNodeFromString(newXml) };
+            string newXml = oldXml.SubstituteVariable(var, val, brackets); ;
+            return new XmlContainer() { node = GetNodeFromString(newXml) };
         }
 
         /// <summary>
@@ -90,11 +55,11 @@ namespace XmlExtensions
         /// <param name="val">The list of values for the variables.</param>
         /// <param name="brackets">The left and right brackets that surround the variables.</param>
         /// <returns>The new string after the substitution.</returns>
-        public static XmlContainer SubstituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets)
+        public static XmlContainer SubstituteVariablesXmlContainer(XmlContainer container, List<string> var, List<string> val, string brackets = "{}")
         {
             string oldXml = container.node.OuterXml;
             string newXml;
-            newXml = Helpers.SubstituteVariables(oldXml, var, val, brackets);
+            newXml = oldXml.SubstituteVariables(var, val, brackets);
             return new XmlContainer() { node = Helpers.GetNodeFromString(newXml) };
         }
         

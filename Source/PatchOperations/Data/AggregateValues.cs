@@ -16,7 +16,7 @@ namespace XmlExtensions
             for (int i = 0; i < valueOperations.node.ChildNodes.Count; i++)
             {
                 XmlDocument doc = new XmlDocument();
-                doc.LoadXml(Helpers.SubstituteVariables(valueOperations.node.ChildNodes[i].OuterXml, vars, values, "{}"));
+                doc.LoadXml(valueOperations.node.ChildNodes[i].OuterXml.SubstituteVariables(vars, values));
                 XmlNode newNode = doc.DocumentElement;
                 PatchOperationValue patchOperation = DirectXmlToObject.ObjectFromXml<PatchOperationValue>(newNode, false);
                 if (!patchOperation.GetValue(values, xml))

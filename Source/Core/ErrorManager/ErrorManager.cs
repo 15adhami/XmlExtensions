@@ -60,12 +60,20 @@ namespace XmlExtensions
 
         public static void AddError(ErrorContext context)
         {
-            errors.Add(context.ToString());
+            AddError(context.ToString());
+        }
+
+        public static void ThrowError(string msg)
+        {
+            AddError(msg);
+            PrintErrors();
         }
 
         public static int ErrorCount()
         {
             return errors.Count;
         }
+
+        
     }
 }

@@ -31,19 +31,9 @@ namespace XmlExtensions.Setting
         {
             Verse.Text.Font = font;
             Verse.Text.Anchor = (TextAnchor)anchor;
+
             string str = text.TryTKey(tKey);
-            if (keys != null)
-            {
-                foreach (string key in keys)
-                {
-                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
-                }
-            }
-            if (key != null)
-            {
-                str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, key), "{}");
-            }
-            cachedText = str;
+            cachedText = SubstituteVariables(str);
 
             // Workaround for Unity UI scaling bug
             float num = Prefs.UIScale / 2f;
@@ -65,6 +55,8 @@ namespace XmlExtensions.Setting
             Verse.Text.Font = GameFont.Small;
             Verse.Text.Anchor = TextAnchor.UpperLeft;
             return cachedHeight;
+
+            
         }
 
         protected override void DrawSettingContents(Rect inRect)
@@ -74,17 +66,7 @@ namespace XmlExtensions.Setting
             if (!tooltip.NullOrEmpty())
             {
                 string tooltipLabel = tooltip.TryTKey(tKeyTip);
-                if (keys != null)
-                {
-                    foreach (string key in keys)
-                    {
-                        tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, key, SettingsManager.GetSetting(modId, key), "{}");
-                    }
-                }
-                if (key != null)
-                {
-                    tooltipLabel = Helpers.SubstituteVariable(tooltipLabel, "key", SettingsManager.GetSetting(modId, key), "{}");
-                }
+                tooltipLabel = SubstituteVariables(tooltipLabel);
                 TooltipHandler.TipRegion(inRect, tooltipLabel);
             }
             Rect alignedRect;
@@ -132,19 +114,25 @@ namespace XmlExtensions.Setting
                 text = PatchManager.XmlDocs.MainDocument.SelectSingleNode(xpath).InnerText;
             }
             string str = text.TryTKey(tKey);
+            cachedText = SubstituteVariables(str);
+            return true;
+        }
+
+        private string SubstituteVariables(string inString)
+        {
             if (keys != null)
             {
                 foreach (string key in keys)
-                {
-                    str = Helpers.SubstituteVariable(str, key, SettingsManager.GetSetting(modId, key), "{}");
-                }
+                    inString = inString.SubstituteVariable(key, SettingsManager.GetSetting(modId, key));
+                if (keys.Count > 0)
+                    inString = inString.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, keys[0]));
             }
             if (key != null)
             {
-                str = Helpers.SubstituteVariable(str, "key", SettingsManager.GetSetting(modId, key), "{}");
+                inString = inString.SubstituteVariable("key", SettingsManager.GetSetting(modId, key));
+                inString = inString.SubstituteVariable("defaultValue", SettingsManager.GetDefaultValue(modId, key));
             }
-            cachedText = str;
-            return true;
+            return inString;
         }
     }
 }

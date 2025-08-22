@@ -1,4 +1,6 @@
-﻿using Verse;
+﻿using System.Collections.Generic;
+using System.Text;
+using Verse;
 
 namespace XmlExtensions
 {
@@ -17,6 +19,24 @@ namespace XmlExtensions
                 }
                 else
                     return str;
+            }
+
+            internal string SubstituteVariable(string var, string val, string brackets = "{}")
+            {
+                string variable = brackets[0] + var + brackets[1];
+                return str.Replace(variable, val);
+            }
+
+            internal string SubstituteVariables(List<string> vars, List<string> vals, string brackets = "{}")
+            {
+                int i = 0;
+                StringBuilder builder = new(str);
+                foreach (string var in vars)
+                {
+                    builder.Replace(brackets[0] + var + brackets[1], vals[i]);
+                    i++;
+                }
+                return builder.ToString();
             }
         }
     }
