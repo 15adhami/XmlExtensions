@@ -116,7 +116,7 @@
     <Compile Include="Source\PatchOperations\PatchOperations\HybridPatch.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationEditString.cs" />
     <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />
-    <Compile Include="Source\PatchOperations\Performance\ScopedPatch.cs" />
+    <Compile Include="Source\PatchOperations\Performance\SetScope.cs" />
     <Compile Include="Source\Windows\ModSettingsWindow.cs" />
     <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
     <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
