@@ -301,8 +301,8 @@
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
     <Content Include="LoadFolders.xml" />
-    <Content Include="Textures\UI\Buttons\MainButtons\MainButton_ModSettings.png" />
-    <Content Include="Textures\UI\Icons\XMLEIcon.png" />
+    <Content Include="Textures\XmlExtensions\UI\Buttons\MainButtons\MainButton_ModSettings.png" />
+    <Content Include="Textures\XmlExtensions\UI\Icons\XMLEIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About\Untitled.xcf" />

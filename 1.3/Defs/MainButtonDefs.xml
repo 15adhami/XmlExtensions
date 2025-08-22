@@ -8,6 +8,6 @@
 		<order>490</order>
 		<minimized>True</minimized>
 		<validWithoutMap>true</validWithoutMap>
-		<iconPath>UI/Buttons/MainButtons/MainButton_ModSettings</iconPath>
+		<iconPath>XmlExtensions/UI/Buttons/MainButtons/MainButton_ModSettings</iconPath>
 	</MainButtonDef>
 </Defs>
