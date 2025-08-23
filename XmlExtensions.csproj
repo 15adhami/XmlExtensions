@@ -205,7 +205,8 @@
     <Compile Include="Source\Windows\BaseSettingsWindow.cs" />
     <Compile Include="Source\XmlObjects\Actions\ChangeKey.cs" />
     <Compile Include="Source\XmlObjects\Actions\CloseMenu.cs" />
-    <Compile Include="Source\XmlObjects\Actions\FloatMenu.cs" />
+    <Compile Include="Source\XmlObjects\Actions\ContextMenu.cs" />
+    <Compile Include="Source\XmlObjects\Actions\Obsolete\FloatMenu.cs" />
     <Compile Include="Source\XmlObjects\Actions\Log.cs" />
     <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
     <Compile Include="Source\XmlObjects\Actions\PlayMusic.cs" />

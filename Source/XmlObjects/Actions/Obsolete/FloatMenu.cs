@@ -3,6 +3,7 @@ using Verse;
 
 namespace XmlExtensions.Action
 {
+    // Obsolete name
     internal class FloatMenu : ActionContainer
     {
         public string key;
