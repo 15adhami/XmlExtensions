@@ -1,5 +1,5 @@
-﻿using System.Xml;
-using Verse;
+﻿using System.Linq;
+using System.Xml;
 
 namespace XmlExtensions
 {
@@ -10,7 +10,7 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            substring ??= nodes[0].InnerText;
+            substring ??= nodes.First().InnerText;
             foreach (XmlNode xmlNode in nodes)
             {
                 if (xmlNode.NodeType == XmlNodeType.Element && xmlNode.InnerText.Contains(substring))

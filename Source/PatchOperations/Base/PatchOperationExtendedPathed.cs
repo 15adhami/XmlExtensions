@@ -7,7 +7,8 @@ namespace XmlExtensions
     {
         public string xpath;
         public bool selectSingleNode = false;
-        protected List<XmlNode> nodes;
+        protected IEnumerable<XmlNode> nodes;
+        protected int nodeCount = 0;
 
         protected override bool PreCheck(XmlDocument xml)
         {
@@ -17,12 +18,20 @@ namespace XmlExtensions
                 return false;
             }
             if (selectSingleNode)
-                nodes = [Helpers.SelectSingleNode(xpath, xml, this)];
+            {
+                XmlNode node = Helpers.SelectSingleNode(xpath, xml, this);
+                if (node != null)
+                    nodeCount = 1;
+                nodes = [node];
+            }
             else
             {
-                nodes = Helpers.SelectNodes(xpath, xml, this).ToList();
+                XmlNodeList nodeList = Helpers.SelectNodes(xpath, xml, this);
+                if (nodeList != null)
+                    nodeCount = nodeList.Count;
+                nodes = (IEnumerable<XmlNode>)nodeList;
             }
-            if (nodes == null || nodes.Count == 0 || nodes[0] == null)
+            if (nodes == null || nodeCount == 0)
             {
                 XPathError();
                 return false;

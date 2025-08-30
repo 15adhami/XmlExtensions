@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Linq;
+using System.Xml;
 using Verse;
 
 namespace XmlExtensions
@@ -15,7 +16,7 @@ namespace XmlExtensions
 
         protected override bool Patch(XmlDocument xml)
         {
-            XmlNode originalNode = nodes[0];
+            XmlNode originalNode = nodes.First();
             XmlDocument tempDoc = new();
             XmlNode clonedRoot = tempDoc.ImportNode(originalNode, true);
             tempDoc.AppendChild(clonedRoot);
