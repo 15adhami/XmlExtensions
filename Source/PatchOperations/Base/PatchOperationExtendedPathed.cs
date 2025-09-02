@@ -9,7 +9,6 @@ namespace XmlExtensions
         public string xpath;
         public bool selectSingleNode = false;
         protected IEnumerable<XmlNode> nodes;
-        //protected XmlNodeList nodes;
         protected int nodeCount = 0;
 
         protected override bool PreCheck(XmlDocument xml)
@@ -25,7 +24,6 @@ namespace XmlExtensions
                 if (node != null)
                     nodeCount = 1;
                 List<XmlNode> tempList = [node];
-                //nodes = (XmlNodeList)tempList;
                 nodes = (IEnumerable<XmlNode>)tempList;
             }
             else
