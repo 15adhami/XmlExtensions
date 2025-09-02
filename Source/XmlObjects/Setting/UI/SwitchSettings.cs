@@ -17,7 +17,7 @@ namespace XmlExtensions.Setting
 
         protected override bool Init()
         {
-            searchType = SearchType.SearchDrawn;
+            searchType = SearchType.SearchCustom;
             addDefaultSpacing = false;
             if (cases != null)
             {
@@ -42,6 +42,18 @@ namespace XmlExtensions.Setting
         protected override void DrawSettingContents(Rect inRect)
         {
             DrawSettingsList(inRect, valSettingDict[SettingsManager.GetSetting(modId, key)]);
+        }
+
+        protected override bool FilterSettingsCustom()
+        {
+            bool flag = false;
+            List<SettingContainer> selectedContainer = valSettingDict[SettingsManager.GetSetting(modId, key)];
+            if (FilterSettings(selectedContainer))
+            {
+                flag = true;
+                containedFiltered[selectedContainer] = true;
+            }
+            return flag;
         }
     }
 }

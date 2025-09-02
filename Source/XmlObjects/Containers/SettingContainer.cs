@@ -421,15 +421,22 @@ namespace XmlExtensions.Setting
             if (!menuDef.searchText.NullOrEmpty() && allowSearch)
             {
                 flag = Filter();
-                foreach (IEnumerable<Container> containers in initializedContainerCollections.Keys)
+                if (searchType == SearchType.SearchCustom)
                 {
-                    if ((searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight || ((searchType == SearchType.SearchDrawn || searchType == SearchType.SearchDrawnAndHighlight) && initializedContainerCollections[containers] != null)) && FilterSettings(containers))
-                    {
+                    if (FilterSettingsCustom())
                         flag = true;
-                        containedFiltered[containers] = true;
+                }
+                else
+                {
+                    foreach (IEnumerable<Container> containers in initializedContainerCollections.Keys)
+                    {
+                        if ((searchType == SearchType.SearchAll || searchType == SearchType.SearchAllAndHighlight || ((searchType == SearchType.SearchDrawn || searchType == SearchType.SearchDrawnAndHighlight) && initializedContainerCollections[containers] != null)) && FilterSettings(containers))
+                        {
+                            flag = true;
+                            containedFiltered[containers] = true;
+                        }
                     }
                 }
-                
             }
             filtered = flag;
             return flag;
@@ -445,7 +452,7 @@ namespace XmlExtensions.Setting
             GUI.EndGroup();
         }
 
-        private bool FilterSettings(IEnumerable<Container> containers)
+        protected bool FilterSettings(IEnumerable<Container> containers)
         {
             bool flag = false;
             if (containers != null)
@@ -459,6 +466,11 @@ namespace XmlExtensions.Setting
                 }
             }
             return flag;
+        }
+
+        protected virtual bool FilterSettingsCustom()
+        {
+            return false;
         }
 
         private void DoFilterBox(Rect inRect)

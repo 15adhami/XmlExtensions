@@ -8,9 +8,11 @@ namespace XmlExtensions.Setting
         public List<SettingContainer> caseTrue;
         public List<SettingContainer> caseFalse;
 
+        private bool parsedSetting = false;
+
         protected override bool Init()
         {
-            searchType = SearchType.SearchDrawn;
+            searchType = SearchType.SearchCustom;
             addDefaultSpacing = false;
             if (!InitializeContainers(caseTrue, "caseTrue"))
             {
@@ -25,13 +27,14 @@ namespace XmlExtensions.Setting
 
         protected override float CalculateHeight(float width)
         {
-            return bool.Parse(SettingsManager.GetSetting(modId, key)) ? CalculateHeightSettingsList(width, caseTrue) : CalculateHeightSettingsList(width, caseFalse);
+            parsedSetting = bool.Parse(SettingsManager.GetSetting(modId, key));
+            return parsedSetting ? CalculateHeightSettingsList(width, caseTrue) : CalculateHeightSettingsList(width, caseFalse);
         }
 
         protected override void DrawSettingContents(Rect inRect)
         {
             List<SettingContainer> settings;
-            if (bool.Parse(SettingsManager.GetSetting(modId, key)))
+            if (parsedSetting)
             {
                 settings = caseTrue;
             }
@@ -43,6 +46,28 @@ namespace XmlExtensions.Setting
             {
                 DrawSettingsList(inRect, settings);
             }
+        }
+
+        protected override bool FilterSettingsCustom()
+        {
+            bool flag = false;
+            if (bool.Parse(SettingsManager.GetSetting(modId, key)))
+            {
+                if (FilterSettings(caseTrue))
+                {
+                    flag = true;
+                    containedFiltered[caseTrue] = true;
+                }
+            }
+            else
+            {
+                if (FilterSettings(caseFalse))
+                {
+                    flag = true;
+                    containedFiltered[caseFalse] = true;
+                }
+            }
+            return flag;
         }
     }
 }

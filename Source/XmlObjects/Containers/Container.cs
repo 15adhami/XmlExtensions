@@ -39,6 +39,7 @@ namespace XmlExtensions
             SearchDrawnAndHighlight,
             SearchAll,
             SearchDrawn,
+            SearchCustom
         }
 
         protected Rect? postDrawRect = null;
