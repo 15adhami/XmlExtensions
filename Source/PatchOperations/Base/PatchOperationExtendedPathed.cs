@@ -33,15 +33,7 @@ namespace XmlExtensions
                 XmlNodeList nodeList = Helpers.SelectNodes(xpath, xml, this);
                 if (nodeList != null)
                     nodeCount = nodeList.Count;
-                try
-                {
-                    //nodes = (IEnumerable<XmlNode>)nodeList;
-                    nodes = nodeList.Cast<XmlNode>();
-                }
-                catch
-                {
-                    Verse.Log.Error("failed");
-                }
+                nodes = nodeList.Cast<XmlNode>();
             }
             if (nodes == null || nodeCount == 0)
             {
