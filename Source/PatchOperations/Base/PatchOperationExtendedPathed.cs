@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace XmlExtensions
@@ -8,6 +9,7 @@ namespace XmlExtensions
         public string xpath;
         public bool selectSingleNode = false;
         protected IEnumerable<XmlNode> nodes;
+        //protected XmlNodeList nodes;
         protected int nodeCount = 0;
 
         protected override bool PreCheck(XmlDocument xml)
@@ -22,14 +24,24 @@ namespace XmlExtensions
                 XmlNode node = Helpers.SelectSingleNode(xpath, xml, this);
                 if (node != null)
                     nodeCount = 1;
-                nodes = [node];
+                List<XmlNode> tempList = [node];
+                //nodes = (XmlNodeList)tempList;
+                nodes = (IEnumerable<XmlNode>)tempList;
             }
             else
             {
                 XmlNodeList nodeList = Helpers.SelectNodes(xpath, xml, this);
                 if (nodeList != null)
                     nodeCount = nodeList.Count;
-                nodes = (IEnumerable<XmlNode>)nodeList;
+                try
+                {
+                    //nodes = (IEnumerable<XmlNode>)nodeList;
+                    nodes = nodeList.Cast<XmlNode>();
+                }
+                catch
+                {
+                    Verse.Log.Error("failed");
+                }
             }
             if (nodes == null || nodeCount == 0)
             {
