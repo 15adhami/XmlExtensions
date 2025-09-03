@@ -103,5 +103,11 @@ namespace XmlExtensions.Setting
             // Draw settings
             if (state == State.Open) { DrawSettingsList(inRect.TrimTopPartPixels(headerHeight), settings); }
         }
+
+        protected override void DrawFilterBox(Rect inRect)
+        {
+            Rect headerRect = inRect.TopPartPixels(headerHeight);
+            FilterBox(headerRect);
+        }
     }
 }
