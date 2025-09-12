@@ -50,22 +50,27 @@ namespace XmlExtensions
             // Initializing unloaded mod settings
             int c = 0;
             string tId = "";
+            string tVal = "";
             List<KeyValuePair<string, string>> kvpList = XmlMod.allSettings.dataDict.ToList<KeyValuePair<string, string>>();
             kvpList.Sort(delegate (KeyValuePair<string, string> pair1, KeyValuePair<string, string> pair2) { return pair1.Key.CompareTo(pair2.Key); });
             foreach (KeyValuePair<string, string> pair in kvpList)
             {
                 if (pair.Key.Contains(";"))
                 {
-                    if (!XmlMod.loadedXmlMods.Contains(pair.Key.Split(';')[0]) || !XmlMod.settingsPerMod[pair.Key.Split(';')[0]].keys.Contains(pair.Key.Split(';')[1]))
+                    if (tId != pair.Key.Split(';')[0])
                     {
-                        if (tId != pair.Key.Split(';')[0])
+                        tId = pair.Key.Split(';')[0];
+                    }
+                    tVal = pair.Key.Split(';')[1];
+                    if (!XmlMod.loadedXmlMods.Contains(tId) || !XmlMod.settingsPerMod[tId].keys.Contains(tVal))
+                    {
+                        if (!XmlMod.unusedMods.Contains(tId))
                         {
-                            tId = pair.Key.Split(';')[0];
                             XmlMod.unusedMods.Add(tId);
-                            XmlMod.unusedSettings.Add(tId, new List<string>());
+                            XmlMod.unusedSettings.Add(tId, []);
                         }
                         c++;
-                        XmlMod.unusedSettings[tId].Add(pair.Key.Split(';')[1]);
+                        XmlMod.unusedSettings[tId].Add(tVal);
                     }
                 }
                 else
