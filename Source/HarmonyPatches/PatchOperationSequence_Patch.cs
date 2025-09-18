@@ -9,33 +9,38 @@ namespace XmlExtensions
     [HarmonyPatch(typeof(PatchOperationSequence), "ApplyWorker")]
     internal static class PatchOperationSequence_Patch
     {
-        private static Exception Finalizer(Exception __exception, ref bool __result, XmlDocument xml)
+        private static Exception Finalizer(Exception __exception, PatchOperation __instance, ref bool __result, ref PatchOperation ___lastFailedOperation, ref List<PatchOperation> ___operations, XmlDocument xml)
         {
             if (__exception != null)
             {
-                ErrorManager.AddError("Verse.PatchOperationSequence: " + __exception.Message);
+                ErrorManager.AddPatchOperationError(__instance, ": " + __exception.Message);
                 __result = false;
             }
-            return null;
-        }
-
-        private static void Postfix(ref bool __result, ref PatchOperation ___lastFailedOperation, ref List<PatchOperation> ___operations, XmlDocument xml)
-        {
-            if (!__result)
+            else if (!__result)
             {
                 int num = 0;
                 int c = 0;
-                foreach (PatchOperation operation in ___operations)
+                if (___operations != null)
                 {
-                    c++;
-                    if (operation == ___lastFailedOperation && ___lastFailedOperation.GetType() != typeof(PatchOperationTest))
+                    foreach (PatchOperation operation in ___operations)
                     {
-                        num = c;
+                        c++;
+                        if (operation != null && operation == ___lastFailedOperation && ___lastFailedOperation.GetType() != typeof(PatchOperationTest))
+                        {
+                            num = c;
+                        }
                     }
+                    if (___operations.Count > 0 && num != 0)
+                        ErrorManager.AddPatchOperationError(__instance, ": Error in the operation at position=" + num.ToString());
+                    else
+                        ErrorManager.AddPatchOperationError(__instance, ": Operation failed");
                 }
-                if (___operations != null && ___operations.Count > 0 && num != 0)
-                    ErrorManager.AddError("Verse.PatchOperationSequence: Error in the operation at position=" + num.ToString());
+                else
+                {
+                    ErrorManager.AddPatchOperationError(__instance, ": <operations> is null");
+                }
             }
+            return null;
         }
     }
 }

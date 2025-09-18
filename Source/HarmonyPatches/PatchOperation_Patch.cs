@@ -31,9 +31,14 @@ namespace XmlExtensions
             }
         }
 
-        private static void Postfix(PatchOperation __instance, ref bool __result, XmlDocument xml)
+        private static Exception Finalizer(Exception __exception, PatchOperation __instance, ref bool __result, XmlDocument xml)
         {
             ErrorManager.depth -= 1;
+            if (__exception != null)
+            {
+                ErrorManager.AddPatchOperationError(__instance, ": " + __exception.Message);
+                __result = false;
+            }
             if (ErrorManager.depth == 0 && ErrorManager.ErrorCount() > 0 && !__result)
             {
                 PatchManager.Profiler.FailedPatches++;
@@ -46,10 +51,11 @@ namespace XmlExtensions
                     ErrorManager.PrintErrors();
                 }
             }
-            else if (__result)
+            if (__result)
             {
                 ErrorManager.ClearErrors();
             }
+            return null;
         }
     }
 }

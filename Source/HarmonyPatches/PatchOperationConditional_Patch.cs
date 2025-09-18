@@ -15,12 +15,7 @@ namespace XmlExtensions
                 ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): " + __exception.Message);
                 __result = false;
             }
-            return null;
-        }
-
-        static void Postfix(ref bool __result, ref string ___xpath, XmlDocument xml)
-        {
-            if (!__result)
+            else if (!__result)
             {
                 if (xml.SelectSingleNode(___xpath) == null)
                 {
@@ -31,6 +26,7 @@ namespace XmlExtensions
                     ErrorManager.AddError("Verse.PatchOperationConditional(xpath=" + ___xpath + "): Error in <match>");
                 }
             }
+            return null;
         }
     }
 }

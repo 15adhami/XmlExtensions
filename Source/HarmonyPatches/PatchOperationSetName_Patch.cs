@@ -16,18 +16,14 @@ namespace XmlExtensions
                 ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + ", name=" + ___name + "): " + __exception.Message);
                 __result = false;
             }
-            return null;
-        }
-
-        private static void Postfix(object __instance, ref bool __result, ref string ___xpath, ref string ___name, XmlDocument xml)
-        {
-            if (!__result)
+            else if (!__result)
             {
                 if (xml.SelectSingleNode(___xpath) == null)
                     ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + "): Failed to find a node with the given xpath");
                 else
                     ErrorManager.AddError("Verse.PatchOperationSetName(xpath=" + ___xpath + ", name=" + ___name + "): Error");
             }
+            return null;
         }
     }
 }

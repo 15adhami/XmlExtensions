@@ -58,6 +58,11 @@ namespace XmlExtensions
             errors.Add(msg);
         }
 
+        public static void AddPatchOperationError(PatchOperation operation, string msg)
+        {
+            errors.Add(operation.GetType().ToString() + msg);
+        }
+
         public static void AddError(ErrorContext context)
         {
             AddError(context.ToString());
