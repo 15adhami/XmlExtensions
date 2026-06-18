@@ -24,6 +24,23 @@ namespace XmlExtensions
 
         private bool DoHybridPatch(XmlNode parent, XmlNode child)
         {
+            XmlAttribute attributeCondition = child.Attributes["Condition"];
+            if (attributeCondition != null)
+            {
+                if (bool.TryParse(attributeCondition.InnerText, out bool condition))
+                {
+                    if (condition == false)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Error($"< {child.Name} > Did not receive a boolean value on Condition");
+                    return true;
+                }
+            }
+
             XmlAttribute attributeOperation = child.Attributes["Operation"];
             string operation = "Add";
             if (attributeOperation != null)
