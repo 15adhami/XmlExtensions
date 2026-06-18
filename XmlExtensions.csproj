@@ -281,6 +281,7 @@
     <Compile Include="Source\XmlObjects\Setting\UI\Text.cs" />
     <Compile Include="Source\XmlObjects\Setting\Keyed\Textbox.cs" />
     <Compile Include="Source\XmlObjects\Setting\UI\ToggleableSettings.cs" />
+    <Compile Include="Source\XmlObjects\XmlTextures.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="1.2\Assemblies\XmlExtensions.dll" />
