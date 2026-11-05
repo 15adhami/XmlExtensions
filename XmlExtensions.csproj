@@ -32,7 +32,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>1.6\Assemblies\</OutputPath>
+    <OutputPath>1.7\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -301,6 +301,8 @@
     <Content Include="1.6\Assemblies\XmlExtensions.xml" />
     <Content Include="1.6\Defs\MainButtonDefs.xml" />
     <Content Include="1.6\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
+    <Content Include="1.7\Defs\MainButtonDefs.xml" />
+    <Content Include="1.7\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
     <Content Include="About\About.xml" />
     <Content Include="About\Preview.png" />
     <Content Include="About\PublishedFileId.txt" />
@@ -326,5 +328,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="1.7\Assemblies\" />
+  </ItemGroup>
 </Project>
