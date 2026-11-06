@@ -1,334 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <LangVersion>preview</LangVersion>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{051DAF08-2AF5-4BBD-9108-F9269578FBAC}</ProjectGuid>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XmlExtensions</RootNamespace>
     <AssemblyName>XmlExtensions</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <LangVersion>preview</LangVersion>
     <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>1.6\Assemblies\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>XmlExtensions.xml</DocumentationFile>
-    <NoWarn>0649, 0169</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+
+    <!-- Versions come from Properties/AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!-- RimWorld output layout: 1.7/Assemblies/XmlExtensions.dll, nothing else -->
     <OutputPath>1.7\Assemblies\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>XmlExtensions.xml</DocumentationFile>
+    <NoWarn>$(NoWarn);0649;0169</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- Game and Harmony references. Private=false keeps them out of 1.7/Assemblies. -->
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\workshop\content\294100\2009463077\1.6\Assemblies\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
     </Reference>
-    <Reference Include="netstandard" />
-    <Reference Include="System">
-      <HintPath>..\..\..\..\..\..\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
+    <Reference Include="UnityStubs">
+      <HintPath>..\..\UnityStubs.dll</HintPath>
+      <Private>false</Private>
     </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq">
-      <HintPath>..\..\..\..\..\..\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.Linq.dll</HintPath>
+    <Reference Include="Waylith">
+      <HintPath>..\..\Waylith.dll</HintPath>
+      <Private>false</Private>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml">
-      <HintPath>..\..\..\..\..\..\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\workshop\content\294100\2009463077\1.7\Assemblies\0Harmony.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Source\Core\DefDatabaseSearcher.cs" />
-    <Compile Include="Source\Core\ErrorManager\ErrorContext.cs" />
-    <Compile Include="Source\Core\ErrorManager\ErrorManager.cs" />
-    <Compile Include="Source\Core\Extensions\XmlNodeExtensions.cs" />
-    <Compile Include="Source\Core\ModTypeEmitter.cs" />
-    <Compile Include="Source\Core\PatchManager\PatchCoordinator.cs" />
-    <Compile Include="Source\Core\PatchManager\PatchFilter.cs" />
-    <Compile Include="Source\Core\PatchManager\PatchProfiler.cs" />
-    <Compile Include="Source\Core\PatchManager\XmlDocumentManager.cs" />
-    <Compile Include="Source\Core\Extensions\RectExtensions.cs" />
-    <Compile Include="Source\Core\Extensions\StringExtensions.cs" />
-    <Compile Include="Source\HarmonyPatches\ApplyPatches_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationAttributeAdd_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationAttributeRemove_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationAttributeSet_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationConditional_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationFindMod_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationPathed_DefaultPatches.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationSequence_Patch.cs" />
-    <Compile Include="Source\HarmonyPatches\TrySortMods_Patch.cs" />
-    <Compile Include="Source\Core\MainButtonWorker_OpenMoreModSettings.cs" />
-    <Compile Include="Source\Core\ModContainer.cs" />
-    <Compile Include="Source\Core\ObjectContainer.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\HasModBeenUsed.cs" />
-    <Compile Include="Source\PatchOperations\Control\ForEachLoop.cs" />
-    <Compile Include="Source\PatchOperations\Data\Translate.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\HybridPatch.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationEditString.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemoveDuplicateNodes.cs" />
-    <Compile Include="Source\PatchOperations\Performance\SetScope.cs" />
-    <Compile Include="Source\Windows\ModSettingsWindow.cs" />
-    <Compile Include="Source\Windows\UnusedSettings_Window.cs" />
-    <Compile Include="Source\PatchOperations\Data\ApplyAction.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseCreateVariable.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseForEach.cs" />
-    <Compile Include="Source\PatchOperations\Base\DefDatabaseOperation.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAdd.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseConditional.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationAddDef.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationInsert.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseLog.cs" />
-    <Compile Include="Source\Core\ErrorManager\ErrorHandler.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationSafe.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationValuePathed.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\And.cs" />
-    <Compile Include="Source\PatchOperations\Base\BooleanBase.cs" />
-    <Compile Include="Source\PatchOperations\Obsolete\Comparision.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\Comparison.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\Conditional.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\FindMod.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\Not.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\Or.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\Xor.cs" />
-    <Compile Include="Source\PatchOperations\Control\Conditional.cs" />
-    <Compile Include="Source\PatchOperations\Control\ConditionalInherited.cs" />
-    <Compile Include="Source\PatchOperations\Control\FindMod.cs" />
-    <Compile Include="Source\PatchOperations\Obsolete\ForEach.cs" />
-    <Compile Include="Source\PatchOperations\Control\ForEachDescendant.cs" />
-    <Compile Include="Source\PatchOperations\Control\ForLoop.cs" />
-    <Compile Include="Source\PatchOperations\Control\IfStatement.cs" />
-    <Compile Include="Source\PatchOperations\Control\PatchByCase.cs" />
-    <Compile Include="Source\PatchOperations\Control\Sequence.cs" />
-    <Compile Include="Source\PatchOperations\Control\TryCatch.cs" />
-    <Compile Include="Source\PatchOperations\Control\WhileLoop.cs" />
-    <Compile Include="Source\PatchOperations\Data\AggregateValues.cs" />
-    <Compile Include="Source\PatchOperations\Data\CreateVariable.cs" />
-    <Compile Include="Source\PatchOperations\Data\CumulativeMath.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationRemove.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationReplace.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\ApplyValueOperation.cs" />
-    <Compile Include="Source\PatchOperations\DefDatabase\DefDatabaseOperationSortList.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\Nop.cs" />
-    <Compile Include="Source\PatchOperations\Performance\Test.cs" />
-    <Compile Include="Source\HarmonyPatches\Dialog_Options_Patch.cs" />
-    <Compile Include="Source\Core\Helpers.cs" />
-    <Compile Include="Source\PatchOperations\Data\EvaluateBoolean.cs" />
-    <Compile Include="Source\PatchOperations\Data\FindNodeInherited.cs" />
-    <Compile Include="Source\PatchOperations\Data\GetAttribute.cs" />
-    <Compile Include="Source\PatchOperations\Data\GetName.cs" />
-    <Compile Include="Source\PatchOperations\Performance\Log.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationValue.cs" />
-    <Compile Include="Source\PatchOperations\Obsolete\CreateSettings.cs" />
-    <Compile Include="Source\PatchOperations\ModSettings\OptionalPatchExternal.cs" />
-    <Compile Include="Source\PatchOperations\Obsolete\UseSetting.cs" />
-    <Compile Include="Source\PatchOperations\Obsolete\UseSettingExternal.cs" />
-    <Compile Include="Source\PatchOperations\ModSettings\UseSettings.cs" />
-    <Compile Include="Source\PatchOperations\ModSettings\UseSettingsExternal.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchContainer.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAddOrReplace.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationCopy.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationExtended.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationExtendedAttribute.cs" />
-    <Compile Include="Source\PatchOperations\Base\PatchOperationExtendedPathed.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationMath.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationReplace.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeAdd.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeAddOrReplace.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeCopy.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeRemove.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSafeReplace.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSetName.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationSortList.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAdd.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAddModExtension.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAttributeAdd.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAttributeRemove.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationAttributeSet.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationInsert.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\PatchOperationRemove.cs" />
-    <Compile Include="Source\PatchOperations\Performance\ApplyInDocument.cs" />
-    <Compile Include="Source\PatchOperations\Performance\CreateDocument.cs" />
-    <Compile Include="Source\PatchOperations\Performance\StopwatchPause.cs" />
-    <Compile Include="Source\PatchOperations\Performance\StopwatchResume.cs" />
-    <Compile Include="Source\PatchOperations\Performance\StopwatchStart.cs" />
-    <Compile Include="Source\PatchOperations\Performance\StopwatchStop.cs" />
-    <Compile Include="Source\Windows\BaseSettingsWindow.cs" />
-    <Compile Include="Source\XmlObjects\Actions\ChangeKey.cs" />
-    <Compile Include="Source\XmlObjects\Actions\CloseMenu.cs" />
-    <Compile Include="Source\XmlObjects\Actions\ContextMenu.cs" />
-    <Compile Include="Source\XmlObjects\Actions\Obsolete\FloatMenu.cs" />
-    <Compile Include="Source\XmlObjects\Actions\Log.cs" />
-    <Compile Include="Source\XmlObjects\Actions\OpenURL.cs" />
-    <Compile Include="Source\XmlObjects\Actions\PlayMusic.cs" />
-    <Compile Include="Source\XmlObjects\Actions\PlaySound.cs" />
-    <Compile Include="Source\XmlObjects\Actions\ResetSettings.cs" />
-    <Compile Include="Source\XmlObjects\Actions\SetActiveMenu.cs" />
-    <Compile Include="Source\XmlObjects\Containers\ActionContainer.cs" />
-    <Compile Include="Source\XmlObjects\Actions\ApplyOperations.cs" />
-    <Compile Include="Source\XmlObjects\Containers\KeyedAction.cs" />
-    <Compile Include="Source\XmlObjects\Actions\DisplayWindow.cs" />
-    <Compile Include="Source\XmlObjects\Actions\RestartGame.cs" />
-    <Compile Include="Source\PatchOperations\ModSettings\SetSetting.cs" />
-    <Compile Include="Source\XmlObjects\Actions\SetSetting.cs" />
-    <Compile Include="Source\XmlObjects\Containers\Container.cs" />
-    <Compile Include="Source\XmlObjects\Defs\PatchDef.cs" />
-    <Compile Include="Source\Core\PatchManager\PatchManager.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperation_Patch.cs" />
-    <Compile Include="Source\PatchOperations\Boolean\ConditionalInherited.cs" />
-    <Compile Include="Source\PatchOperations\ModSettings\OptionalPatch.cs" />
-    <Compile Include="Source\HarmonyPatches\PatchOperationSetName_Patch.cs" />
-    <Compile Include="Source\PatchOperations\PatchOperations\ApplyPatch.cs" />
-    <Compile Include="Source\PatchOperations\Performance\MergeDocument.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\ColorEntry.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Obsolete\ApplyActions.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\Checkbox.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\ColorPalette.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\ColorWheel.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Obsolete\DropdownButton.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Button.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\CollapsibleSettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\DrawColor.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\EmbedMenu.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Obsolete\DisplayMenu.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Obsolete\DisplayWindow.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\DrawImage.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Gap.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\GapLine.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Group.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\HeightTool.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\HorizontalScrollView.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\IntEntry.cs" />
-    <Compile Include="Source\XmlObjects\Containers\KeyedSettingContainer.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\IfStatement.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\MiddleColumn.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\Numeric.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\RadioButton.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\RadioButtons.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\Range.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\ResetSettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\ScrollArea.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\ScrollView.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Searchbox.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Section.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\SetColor.cs" />
-    <Compile Include="Source\Core\SettingsManager.cs" />
-    <Compile Include="Source\XmlObjects\Defs\SettingsMenuDef.cs" />
-    <Compile Include="Source\XmlObjects\Defs\SlateDef.cs" />
-    <Compile Include="Source\Mod\XmlExtensions.cs" />
-    <Compile Include="Source\Windows\XmlExtensionsMenuModSettings.cs" />
-    <Compile Include="Source\Mod\XmlMod.cs" />
-    <Compile Include="Source\Mod\XmlModBaseSettings.cs" />
-    <Compile Include="Source\Mod\XmlModSettings.cs" />
-    <Compile Include="Source\XmlObjects\Containers\SettingContainer.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\Slider.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\SplitColumn.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\SplitColumns.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\OverlaySettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\SwitchSettings.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\TabView.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\Text.cs" />
-    <Compile Include="Source\XmlObjects\Setting\Keyed\Textbox.cs" />
-    <Compile Include="Source\XmlObjects\Setting\UI\ToggleableSettings.cs" />
-    <Compile Include="Source\XmlObjects\XmlTextures.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="1.2\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.2\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.3\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.3\Defs\MainButtonDefs.xml" />
-    <Content Include="1.3\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.4\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.4\Assemblies\XmlExtensions.xml" />
-    <Content Include="1.4\Defs\MainButtonDefs.xml" />
-    <Content Include="1.4\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.5\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.5\Assemblies\XmlExtensions.xml" />
-    <Content Include="1.5\Defs\MainButtonDefs.xml" />
-    <Content Include="1.5\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.6\Assemblies\XmlExtensions.dll" />
-    <Content Include="1.6\Assemblies\XmlExtensions.xml" />
-    <Content Include="1.6\Defs\MainButtonDefs.xml" />
-    <Content Include="1.6\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="1.7\Defs\MainButtonDefs.xml" />
-    <Content Include="1.7\Languages\English\Keyed\XMLExtensions_Keyed_EN.xml" />
-    <Content Include="About\About.xml" />
-    <Content Include="About\Preview.png" />
-    <Content Include="About\PublishedFileId.txt" />
-    <Content Include="LoadFolders.xml" />
-    <Content Include="Textures\XmlExtensions\UI\Buttons\MainButtons\MainButton_ModSettings.png" />
-    <Content Include="Textures\XmlExtensions\UI\Icons\XMLEIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="About\Untitled.xcf" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Publicize Include="Assembly-CSharp;UnityEngine.CoreModule" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Krafs.Publicizer">
-      <Version>2.3.0</Version>
+    <Publicize Include="Assembly-CSharp;UnityStubs" />
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="1.7\Assemblies\" />
-  </ItemGroup>
+
 </Project>
