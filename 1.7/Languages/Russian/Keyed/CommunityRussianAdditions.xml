@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <XmlExtensions_AddMainButton>Добавить на главную панель кнопку настроек модов XML Extensions?</XmlExtensions_AddMainButton>
+  <XmlExtensions_AddMainButtonTip>Добавляет на главную панель кнопку, открывающую это дополнительное меню настроек модов.</XmlExtensions_AddMainButtonTip>
+  <XmlExtensions_Apply>Применить</XmlExtensions_Apply>
+  <XmlExtensions_ConfirmResetAll>Удалить все неиспользуемые ключи настроек всех модов?</XmlExtensions_ConfirmResetAll>
+  <XmlExtensions_Confirmation>Вы уверены?</XmlExtensions_Confirmation>
+  <XmlExtensions_ConfirmationResetMod>Удалить все неиспользуемые ключи настроек выбранного мода?</XmlExtensions_ConfirmationResetMod>
+  <XmlExtensions_Delete>Удалить</XmlExtensions_Delete>
+  <XmlExtensions_DeleteAllUnusedKeys>Удалить все неиспользуемые ключи ({0})</XmlExtensions_DeleteAllUnusedKeys>
+  <XmlExtensions_DeleteKeys>Удалить ключи ({0})</XmlExtensions_DeleteKeys>
+  <XmlExtensions_HowToPin>Щёлкните по моду правой кнопкой мыши, чтобы закрепить его.</XmlExtensions_HowToPin>
+  <XmlExtensions_InactiveMods>Сейчас отключены:</XmlExtensions_InactiveMods>
+  <XmlExtensions_ModSettingsFor>Настройки мода: </XmlExtensions_ModSettingsFor>
+  <XmlExtensions_NoExtraSettings>Дополнительных настроек пока нет</XmlExtensions_NoExtraSettings>
+  <XmlExtensions_Open>Открыть</XmlExtensions_Open>
+  <XmlExtensions_Pin>Закрепить мод</XmlExtensions_Pin>
+  <XmlExtensions_ResetSettings>Сбросить настройки</XmlExtensions_ResetSettings>
+  <XmlExtensions_SearchResults>Результатов: {0}</XmlExtensions_SearchResults>
+  <XmlExtensions_SelectedModUnusedKeys>Неиспользуемые ключи выбранного мода:</XmlExtensions_SelectedModUnusedKeys>
+  <XmlExtensions_ShowSettingsButton>Добавить кнопку «+» для открытия настроек модов XML Extensions?</XmlExtensions_ShowSettingsButton>
+  <XmlExtensions_ShowSettingsButtonTip>Рядом со стандартной кнопкой настроек модов появится небольшая кнопка «+», которая быстро открывает это дополнительное меню.</XmlExtensions_ShowSettingsButtonTip>
+  <XmlExtensions_Unpin>Открепить мод</XmlExtensions_Unpin>
+  <XmlExtensions_ViewUnusedSettings>Показать неиспользуемые настройки</XmlExtensions_ViewUnusedSettings>
+</LanguageData>
